@@ -1,0 +1,1150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ServantBasicInfoToatal1" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dm"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="queryServiceBasicInfo" uuid="7aa34393-f41b-4741-9055-19121581e24b">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dm"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT * FROM V_SERVANT_INFO_S]]>
+		</queryString>
+		<field name="ROWNUMBER" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="ROWNUMBER"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="POST_ID" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="POST_ID"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="POST_NAME" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="POST_NAME"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="SEX" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="SEX"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="NATION" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="NATION"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="POLITICS" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="POLITICS"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="DEGREE2" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="DEGREE2"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="DEGREE3" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="DEGREE3"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="DEGREE4" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="DEGREE4"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="EDUCATION1" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="EDUCATION1"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="EDUCATION2" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="EDUCATION2"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="EDUCATION3" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="EDUCATION3"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="EDUCATION4" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="EDUCATION4"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="SUB_LEADER" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="SUB_LEADER"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="YEAR1" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="YEAR1"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="YEAR2" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="YEAR2"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="YEAR3" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="YEAR3"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="YEAR4" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="YEAR4"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="YEAR5" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="YEAR5"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="YEAR6" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="YEAR6"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="YEAR7" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="YEAR7"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="YEAR8" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="YEAR8"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+		<field name="YEAR9" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="YEAR9"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="V_SERVANT_INFO_S"/>
+		</field>
+	</subDataset>
+	<parameter name="reportOrganId" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT * FROM CS_ORGAN_NODE WHERE ID =  $P{reportOrganId}]]>
+	</queryString>
+	<field name="ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="CREATE_TIME" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="CREATE_TIME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="CREATER" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CREATER"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="OPERATE_TIME" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="OPERATE_TIME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="OPERATOR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OPERATOR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="REMOVED" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REMOVED"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="CODE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CODE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="DESCRIPTION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESCRIPTION"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="ALL_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ALL_NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="BIZ_TYPE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="BIZ_TYPE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="DEPT_ADDRESS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DEPT_ADDRESS"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="FAX" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="FAX"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="FLAG" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="FLAG"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="PRINCIPAL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PRINCIPAL"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="PRINCIPAL_PHONE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PRINCIPAL_PHONE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="ADMIN_USER_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ADMIN_USER_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="ICON" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ICON"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<field name="ORGAN_NODE_TYPE_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORGAN_NODE_TYPE_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CS_ORGAN_NODE"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30">
+			<staticText>
+				<reportElement x="0" y="0" width="800" height="30" uuid="242b21e4-f781-4464-9911-b3b4dcbd6a60"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="黑体" size="22"/>
+				</textElement>
+				<text><![CDATA[公务员基本情况（县、市、区、旗机关）]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="33">
+			<textField>
+				<reportElement x="107" y="0" width="383" height="30" uuid="31917c98-ad92-449f-80bd-5aa405018a52"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="华文宋体" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALL_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="106" height="30" uuid="20887bd3-3787-45d3-b89a-efd4d08254df"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="华文宋体" size="16"/>
+				</textElement>
+				<text><![CDATA[填报单位：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="0" width="150" height="30" uuid="525c469c-7f8e-400d-980d-7719ad3b0d76"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="华文宋体" size="16"/>
+				</textElement>
+				<text><![CDATA[数据截止时间：]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="650" y="0" width="150" height="30" uuid="82f12c07-5cb0-40b9-8c5c-8a1cb7b4c6f2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new java.text.SimpleDateFormat("yyyy-MM-dd")).format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="121">
+			<componentElement>
+				<reportElement x="0" y="0" width="800" height="120" uuid="75f0b866-6104-4e60-98cf-d1a1629498ce">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="queryServiceBasicInfo" uuid="7b972e1d-563f-4719-8900-ccd72e7b3155">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="110" uuid="4e9c49cf-66b9-4d59-9d50-afa6f2b4f1a9">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+						<jr:tableHeader style="Table 1_TH" height="80" rowSpan="2">
+							<staticText>
+								<reportElement x="0" y="0" width="110" height="80" uuid="5220ba41-8f86-46c3-8dd6-5b8f770f3781"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="华文宋体" size="13"/>
+								</textElement>
+								<text><![CDATA[项目]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="110" uuid="85d2bd7c-3021-4889-b313-0a980e4638e2">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="110" height="20" uuid="c7889005-0b78-4b39-ab0d-68bf22fdc34a"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="13"/>
+									</textElement>
+									<text><![CDATA[行]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:detailCell style="Table 1_TD" height="20">
+								<textField>
+									<reportElement x="0" y="0" width="110" height="20" uuid="50ebb4a0-9733-4973-9fe6-0346436d2350"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="华文宋体"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{POST_NAME}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="30" uuid="18b05ab4-d58f-4a50-a347-3e0861d453c3">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+						<jr:tableHeader style="Table 1_TH" height="80" rowSpan="2">
+							<staticText>
+								<reportElement x="0" y="0" width="30" height="80" uuid="f9e658e8-3b24-46fc-878b-33545871aafb"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+									<font fontName="华文宋体" size="13"/>
+								</textElement>
+								<text><![CDATA[代码]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="30" uuid="7d4ec280-7d4f-455d-bc56-b22d3606d57a">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="20" uuid="039943a3-142a-43fd-9e03-fb0f5f86b4aa"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="13"/>
+									</textElement>
+									<text><![CDATA[列]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:detailCell style="Table 1_TD" height="20">
+								<textField>
+									<reportElement x="0" y="0" width="30" height="20" uuid="47f43453-d89f-4974-95f6-518d8431858f"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="宋体"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{ROWNUMBER}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="30" uuid="f66cf45f-1d17-4a33-bf11-2aec90e5f62f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+						<jr:tableHeader style="Table 1_TH" height="80" rowSpan="2">
+							<staticText>
+								<reportElement x="0" y="0" width="30" height="80" uuid="6d53fba5-863f-4f1f-a69f-5bfe23c4da6e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+									<font fontName="华文宋体" size="13"/>
+								</textElement>
+								<text><![CDATA[合计]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="30" uuid="a6d109bb-e22e-40e6-b2e5-eb9f19de033c">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+							<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="20" uuid="c971f0b4-c6a5-4bf4-9921-6bd9f90f8188"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="13"/>
+									</textElement>
+									<text><![CDATA[1]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:detailCell style="Table 1_TD" height="20">
+								<textField>
+									<reportElement x="0" y="0" width="30" height="20" uuid="f55d7a5d-afd9-45b1-98e0-8d77af73089a"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="宋体"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{SUB_LEADER}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="210" uuid="73d8bcda-e401-4949-9565-4258da19dd44">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [7]"/>
+						<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1"/>
+						<jr:columnGroup width="30" uuid="4d8008f0-a81f-47f5-9620-cc1096020fc3">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="42537e7c-e56c-472f-89fb-be6d72f91979"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="13"/>
+									</textElement>
+									<text><![CDATA[女]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="589b6437-3262-49e4-ad3e-c25cfb37bef3">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="318554fa-0d91-443f-883a-0571d2c9782e"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[2]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="67fc5e96-e580-49a1-a2c7-25f8048dca88"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{SEX}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="f2e9c331-2b1f-4b17-983c-990218446853">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="5def52c5-66ad-4163-9c44-23ffd749829b"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="13"/>
+									</textElement>
+									<text><![CDATA[少数民族]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="7d6f1e3e-a522-4b87-93d1-0298e4de21e1">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="6b01d44b-8a57-4f45-8bb6-86fc85275e40"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[3]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="607a90ec-bfc1-4ee9-8f3c-3cd97078677c"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{NATION}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="43cd37c9-d2ac-46d5-b961-a6c9d50b65e9">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="daf135ce-9cc0-4f04-8d83-8c2c9e0c5898"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="13"/>
+									</textElement>
+									<text><![CDATA[中共党员]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="ecccd3b6-6af3-45d1-a5f9-4c6c04ddf22b">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="4c9f2273-9add-480f-a36b-4858a47a3e2d"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[4]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="69d65c22-3a7d-431b-b771-140ea896a50c"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{POLITICS}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="048a7e49-0030-4358-bf40-289571feee82">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="81170f42-3881-4d5c-9076-58aca12295b2"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="13"/>
+									</textElement>
+									<text><![CDATA[博士]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="51a1bec6-937f-4ed7-b8c9-faf75874bcf3">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="a44631ac-d81b-4e70-8010-33769d631eea"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[5]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="095acb9c-5712-4c3a-8d9a-a2efa6e3f8c1"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{DEGREE2}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="3b0ccc4e-559c-4af6-815a-2f1717cb7dbe">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="4ad5c271-ae4c-4f1b-a241-615d590f573d"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="13"/>
+									</textElement>
+									<text><![CDATA[硕士]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="cdfe4de4-bf4f-42a3-85b2-033c5f15ee2c">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="5e5c2314-c224-443a-9bc8-b13af7ace30f"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[6]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="cf3a885d-b233-48d9-b638-932b2b7fce30"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{DEGREE3}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="8d601db5-6a8a-4652-b903-a2355e450f9b">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="9b7f69ea-c81e-4dc9-b3b3-2067fd701b1b"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="13"/>
+									</textElement>
+									<text><![CDATA[学术]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="779e4a58-e7b9-49c5-9686-d2031626eb2c">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="841342f6-fb42-4451-9b9d-dc6f400d1d5d"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[7]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="f2216c3f-bdc4-4185-8496-5fbe0068784d"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{DEGREE4}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="bb0f3337-3519-4069-bf99-66b0faa3ff8b">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="4628f065-e778-4050-94b4-885a69c961c1"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[兼任下级领导职务]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="b3fbcc55-2ea0-46ab-8391-d480f935a6a8">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="694d6244-13d0-4a43-8949-e1607b239619"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[8]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="cbe8cc9a-d2ac-4dcb-adac-ee880246f35c"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{SUB_LEADER}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="3d00c385-783b-493d-89e4-697c3a2befc4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [4]"/>
+						<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="120" height="20" uuid="7362cac7-f27e-4b72-b8a6-26fbd7e78a8c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+									<font fontName="华文宋体" size="13"/>
+								</textElement>
+								<text><![CDATA[学历]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnGroup width="30" uuid="5113831f-d71f-4fad-b7ab-cfc87281f5bc">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="a789bd0c-0771-4529-bc66-9fb8733d6dba"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[研究生]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="aaf33429-f0c7-40c0-8643-7dcec66ad458">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="771a2bd3-74fa-48ab-b886-01874a6148ea"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[9]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="631ac4b5-1d2d-4d41-8287-61f021cee26a"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{EDUCATION1}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="e13a3f40-f935-48ff-a3af-5e4767f6be4b">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="d35ddeee-3713-4b4d-8468-839c3a5c94cd"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[大学本科]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="c36ee144-24e3-4355-86f0-72e529597dd7">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="be6107bc-9309-4e23-8991-fbbe889cfc22"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[10]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="431b6e91-af0d-4710-896a-26bd171620c6"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{EDUCATION2}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="724eee23-00aa-4840-ba98-6dfba45def50">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="2cf6b4de-3a5f-4015-92eb-be90b0e89373"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[大学专科]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="c02e989b-828f-4904-9e23-340414d6d200">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="2762663c-0ea9-4861-a43a-e3aa5e6c11d2"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[11]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="93f8345f-db17-4d66-9ada-f7b93129c3d4"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{EDUCATION3}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="bd901b2f-d330-4da6-a3b5-19a1be5db49c">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="332164e1-b302-4158-b5bd-be44d85dfe42"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[中专及以下]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="e86d9675-9686-4744-a29b-104cf5f933ac">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="4ea10860-246b-44ed-87f3-280bc47c447d"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[12]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="7e348eda-8851-4d82-bd29-5e8253f03b57"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{EDUCATION4}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+					<jr:columnGroup width="300" uuid="f2950250-48b9-43e9-a811-217ad597c1e4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [10]"/>
+						<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="300" height="20" uuid="a81ffd3e-ea8b-4aec-96aa-60c640ec0562"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+									<font fontName="华文宋体" size="11"/>
+								</textElement>
+								<text><![CDATA[任职职务层次年限]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnGroup width="30" uuid="3d7f3553-986b-4ce5-9484-10c102089935">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="b671ed07-8e1f-4f24-9fa8-eb1feeb00040"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[不满两年]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="71f66730-58d2-4438-af13-9c26d894679d">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column15"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="d736f66d-6654-4e3c-9af1-037a1d8eedd4"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[13]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="780fa0d6-907b-4c5a-9bd3-38c708ac34e5"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR1}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="143125cb-9849-4d96-b73e-f743579cf6f5">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="006e1a35-7d71-4626-979a-fe1f7e93be42"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[2年至不满3年]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="37e18647-fb7a-45ad-a764-bdfc47e5c3d4">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column16"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="11581583-76ef-4e68-8381-bbf66e083c1c"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[14]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="2255cc0a-73a0-4542-ba74-81d1b307afe3"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR2}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="17b3f2f5-1d1e-4b7e-9616-861f5ad9e907">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="301f6e10-1495-4c5d-8a9c-5b895c67c81e"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[3年至不满4年]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="c304677c-f253-4f88-b164-8ba46f59b0ac">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column17"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="ebe69aa7-41bd-4f9b-9e9d-a43ef26354f8"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[15]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="8e5ef312-7602-4133-aec3-01ec7a9758d2"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR3}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="6e58d1de-2543-4d7e-b79f-9f7ee8b5b2d7">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="c7cd39cd-c74c-4fdc-88e8-3091a0a782f5"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[4年至不满5年]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="545f6fcc-4f32-4d86-a5d5-e27f59730d19">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column18"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="f2ad2537-d09a-4eec-9e29-b04a09015abb"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[16]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="b0a4b652-13c8-46d6-8879-cd9734911e0a"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR4}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="eeee740c-ce8b-46a3-beb0-4847b2532184">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="a0c29131-6b73-4e70-9947-2a1a7e8ddda9"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[5年至不满6年]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="76508ad1-afd1-45f8-a859-4d1f1883dc78">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column19"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="400a4450-a316-475a-85dd-90a2628b4849"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[17]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="2d6b514f-2f8d-4565-b8bd-69c5e2a0890a"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR5}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="bbc090b8-7440-4ba8-b22b-606fcf8fe96d">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="7e1ff453-de3d-4905-9840-6bf0c22a6ace"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[6年至不满7年]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="c648422b-aaff-4af9-b9d8-55af75cf2177">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column20"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="2a9715f8-76a3-4302-9af4-a0cb6c85058f"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[18]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="7964f83a-dc2b-441a-90b7-234504a70c4e"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR6}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="ae3993bf-34c2-4873-8d33-811c780ee077">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="e0d431f0-9e73-4781-bfec-8b4d70895f64"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[7年至不满8年]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="d6df1791-f4fb-454e-bbee-801487e346ed">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column21"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="34ea6068-a044-44f8-8d83-a3caea6ebe30"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[19]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="ee2bf85a-8ac1-48fe-9349-856410832368"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR7}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="36aa1b57-e33e-4c60-92ed-7908ba47a02e">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="c5b4a68a-8742-4e81-9d4c-f656d7001fae"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[8年至不满12年]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="a4aedeca-9804-4561-814d-a87d9c5db031">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column22"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="4d30cc55-a815-46df-affb-467c1643c7fc"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[20]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="fd770d53-666a-48e7-a5fe-aa0d4f87296c"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR8}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="52b91aa8-ba2f-47e5-a17d-7c91fcfe9385">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="2a47f81d-f0c8-4b8d-8398-f1ea5fe72ba1"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[12年至不满15年]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="231ed065-0a46-40a5-8399-0dd722e0e853">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column23"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="a97718e0-a1da-4878-92f8-b67fa5118b30"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[21]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="c2a4551c-70b2-4aa3-94f1-236b98e8e17e"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR8}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+						<jr:columnGroup width="30" uuid="84498125-eef7-469c-8fce-64991c8c6c2f">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+							<jr:tableHeader style="Table 1_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="30" height="60" uuid="1a52662e-f514-4e44-bdd8-24201838b4e0"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+										<font fontName="华文宋体" size="11"/>
+									</textElement>
+									<text><![CDATA[15年及以上]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:column width="30" uuid="fb55b357-5713-4865-af7e-69ad7c69674b">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column24"/>
+								<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="30" height="20" uuid="594f1ff8-c2ef-44c0-afb4-acbade6db627"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+											<font fontName="华文宋体" size="13"/>
+										</textElement>
+										<text><![CDATA[22]]></text>
+									</staticText>
+								</jr:tableHeader>
+								<jr:detailCell style="Table 1_TD" height="20">
+									<textField>
+										<reportElement x="0" y="0" width="30" height="20" uuid="bd589d73-1767-4057-9520-4b96639bcced"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{YEAR9}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21">
+			<textField>
+				<reportElement x="600" y="0" width="100" height="20" uuid="ef38352e-c711-4fcf-bca8-cd7fd13f8974"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="华文宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA["第" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="700" y="0" width="100" height="20" uuid="75e48c0c-acb9-4db4-9428-297e0c1ded5f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="华文宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" / " + $V{PAGE_NUMBER} + "页"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
