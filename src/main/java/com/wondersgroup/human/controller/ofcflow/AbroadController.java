@@ -46,6 +46,7 @@ import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.DateUtils;
 import com.wondersgroup.framework.util.SecurityUtils;
+import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.human.bo.ofcflow.AbroadPlan;
@@ -422,8 +423,14 @@ public class AbroadController extends GenericController{
 			if(StringUtils.isBlank(r)||(!FlowRecord.PASS.equals(r)&&!FlowRecord.NOPASS.equals(r))){
 				throw new BusinessException("审批结果信息不正确！");
 			}
-			AbroadPlan abroadPlan = abroadPlanService.load(temp.getId());
-			abroadPlanService.savePlan(abroadPlan,opinion,r);
+			if (StringUtils.isBlank(temp.getId())) {
+				DictUtils.operationCodeInfo(temp);//将CodeInfo中id为空的属性 设置为null
+				temp.setId(null);
+				abroadPlanService.savePlan(temp,opinion,r);// 保存
+			} else {
+				AbroadPlan abroadPlan = abroadPlanService.load(temp.getId());
+				abroadPlanService.savePlan(abroadPlan,opinion,r);
+			}
 			result.setMessage("操作成功！");
 		} catch (BusinessException e) {
 			result.setSuccess(false);

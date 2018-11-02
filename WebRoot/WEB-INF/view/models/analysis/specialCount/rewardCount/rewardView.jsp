@@ -25,7 +25,7 @@
 								<smart:gridRow>
 									<smart:textInput type="hidden" id="departId" value="${departId}"></smart:textInput>
 									
-									<smart:gridColumn colPart="8">
+									<smart:gridColumn>
 										<smart:gridRow>
 											<smart:gridColumn>
 												<div class="layui-card">
@@ -37,29 +37,6 @@
 											</smart:gridColumn>
 										</smart:gridRow>
 									</smart:gridColumn>
-									
-									<smart:gridColumn colPart="4">
-										<smart:gridRow>
-											<smart:gridColumn>
-													<smart:infoShowerLabel infoname="单位名称" infovalue="1"></smart:infoShowerLabel>
-											</smart:gridColumn>
-										</smart:gridRow>
-										
-										<smart:gridRow>
-											<smart:gridColumn>
-													<smart:infoShowerLabel infoname="单位名称" infovalue="1"></smart:infoShowerLabel>
-											</smart:gridColumn>
-										</smart:gridRow>
-										
-										<smart:gridRow>
-											<smart:gridColumn>
-													<smart:infoShowerLabel infoname="单位名称" infovalue="1"></smart:infoShowerLabel>
-											</smart:gridColumn>
-										</smart:gridRow>
-									</smart:gridColumn>
-									
-									
-									
 								</smart:gridRow>
 							</smart:grid>
 						</smart:gridColumn>

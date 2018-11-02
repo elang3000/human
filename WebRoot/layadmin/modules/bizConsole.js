@@ -22,14 +22,42 @@
 		var $ = layui.$,
 		jquery = layui.jquery,
 		element = layui.element,
+		createTpl = function(optionData) {
+			var html = '<div class="layui-progress" lay-showpercent="true" lay-filter="' + optionData.code + '">'
+				html += '<h3>' + optionData.name + '</h3>'
+				var p = (optionData.doingNum / optionData.allNum * 1000) / 100;
+				if (p >= 80) {
+					html += '<div class="layui-progress-bar" lay-percent="' + p + '%" style="width:' + p + '%;">';
+					html += '<span class="layui-progress-text">' + p +'%</span>'
+					html += '</div>';
+				} else {
+					html += '<div class="layui-progress-bar layui-bg-red" lay-percent="' + p + '%" style="width:' + p + '%;">';
+					html += '<span class="layui-progress-text">' + p +'%</span>'
+					html += '</div>';
+				}
+				html += '</div>'
+			return html;			
+		},
+		renderCount = function() {
+			var el = $('.layadmin-takerates');
+			jquery.get("main/model/doing/counter",function(result) {
+				$.each(result, function(key) {
+					el.append(createTpl(result[key]));
+				});
+			});
+		}
+		renderCount.call();
+	}),
+	layui.use(["element"],function(){
+		var $ = layui.$,
+		jquery = layui.jquery,
+		element = layui.element,
 		servant = $("#servantDoing p cite"),
 		biz = $("#bizDoing p cite"),
 		organ = $("#organDoing p cite"),
 		plan = $("#planDoing p cite"),
 		renderCount = function () {
 			jquery.get("main/doing/counter",function(result) {
-				console.log(result);
-				var counterList = result.data;
 				for (var i = 0; i < result.length; i++) {
 					if (i == 0) {
 						servant.html(result[i]);

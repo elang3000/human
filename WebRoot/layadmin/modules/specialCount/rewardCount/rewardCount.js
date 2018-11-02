@@ -15,11 +15,17 @@
         					fontSize:14
         				}
         			},
-        			color: ['#006699'],
+        			color: ['#006699', '#4cabce'],
         			url:'analysis/specialCount/reward/echarts?departId='+departId,
-        		    tooltip: {},
+        			 tooltip: {
+        			        trigger: 'axis',
+        			        formatter: '{b0}<br/>{a0}:{c0}人<br/>{a1}:{c1}%',
+        			        axisPointer: {
+        			            type: 'shadow'
+        			        }
+        			    },
         		    legend: {
-        		        data: ['人数']
+        		    	data: ['人数', '占比']
         		    },
         		    calculable: true,
         		    xAxis: [
@@ -41,6 +47,11 @@
         		            barGap: 0,
         		            data: []
         		        },
+        		        {
+        		            name: '占比',
+        		            type: 'bar',
+        		            data: []
+        		        }
         		    ]
         		};
 
@@ -50,6 +61,7 @@
             	debugger;
             	option.xAxis[0].data = result.xAxis;
             	option.series[0].data = result.series0;
+            	option.series[1].data = result.series1;
 				myChart.setOption(option);
 			});
         }),

@@ -25,7 +25,7 @@
 	<div class="layui-fluid">
 		<div class="layui-row layui-col-space15">
 			<c:if test="${idLeader}">
-			<div class="layui-col-md9">
+			<div class="layui-col-md8">
 			</c:if>
 			<c:if test="${!idLeader}">
 			<div class="layui-col-md12">
@@ -122,58 +122,11 @@
 				</div>
 			</div>
 			<c:if test="${idLeader}">
-				<div class="layui-col-md3">
+				<div class="layui-col-md4">
 					<div class="layui-card">
 						<div class="layui-card-header">当月事项完成情况</div>
 						<div class="layui-card-body layadmin-takerates">
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>录用计划上报事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>录用事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>试用期管理事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>公务员调任事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>同类别转任事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>跨类别转任事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>借调事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>挂职锻炼事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>参公交流事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>职务变动事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>考核事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
-							<div class="layui-progress" lay-showPercent="yes">
-								<h3>因公出国政审事项完成率</h3>
-								<div class="layui-progress-bar" lay-percent="0%"></div>
-							</div>
+
 						</div>
 					</div>
 				</div>

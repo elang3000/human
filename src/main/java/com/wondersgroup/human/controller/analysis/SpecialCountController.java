@@ -16,6 +16,7 @@
 package com.wondersgroup.human.controller.analysis;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -90,6 +91,7 @@ public class SpecialCountController  extends GenericController {
 		Iterator<Entry<String, BigDecimal>> iterator = reward.entrySet().iterator();
 		List<String> xAxis = new ArrayList<String>();
 		List<Integer> series0 = new ArrayList<Integer>();
+		List<Double> series1 = new ArrayList<Double>();
 		Double total = 0d;
 		while (iterator.hasNext()) {
 			Entry<String, BigDecimal> entry = iterator.next();
@@ -97,9 +99,17 @@ public class SpecialCountController  extends GenericController {
 			series0.add(entry.getValue().intValue());
 			total += entry.getValue().intValue();
 		}
+		iterator = reward.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, BigDecimal> entry = iterator.next();
+			series1.add(
+			        new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(2, RoundingMode.HALF_UP).doubleValue()
+			                * 100);
+		}
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("xAxis", xAxis);
 		result.put("series0", series0);
+		result.put("series1", series1);
 		return result;
 	}
 }

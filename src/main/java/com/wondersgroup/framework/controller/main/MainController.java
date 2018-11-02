@@ -66,6 +66,7 @@ import com.wondersgroup.framework.util.StringUtils;
 @Controller
 @RequestMapping("main")
 public class MainController extends GenericController {
+	
 	@Autowired
 	private AnnouncementService announcementService;
 	
@@ -76,13 +77,14 @@ public class MainController extends GenericController {
 	
 	@RequestMapping("/index")
 	public String index(Model model) {
-		String userId = SecurityUtils.getUserId();//当前登录人ID
+		
+		String userId = SecurityUtils.getUserId();// 当前登录人ID
 		String appCode = SecurityUtils.getPrincipal().getAppCode();
 		
 		AppNode appNode = getAppNodeService().findNodeByCode(appCode);
 		model.addAttribute("appNode", appNode);
 		SecurityUtils.getSession().setAttribute("appNode", appNode);
-		List<MenuResourceVO> menuResources = getMenuService().getAuthMenuByAppNodeAndUserId(appNode.getId(),userId);
+		List<MenuResourceVO> menuResources = getMenuService().getAuthMenuByAppNodeAndUserId(appNode.getId(), userId);
 		model.addAttribute("menus", menuResources);
 		List<MenuResourceVO> shortcutMenuResources = new ArrayList<MenuResourceVO>();
 		generateMeneResource(menuResources, shortcutMenuResources);
@@ -91,7 +93,7 @@ public class MainController extends GenericController {
 		MenuResource parentMenu = getMenuService().findUniqueBy("code", CommonConst.SYSTEM_REPORT_CODE);
 		MenuResource[] reportObjects = getMenuService().getChildMenuResourceOrderlyByParentMenu(parentMenu);
 		List<MenuResourceVO> reports = new ArrayList<MenuResourceVO>();
-		for (MenuResource menu : reportObjects ) {
+		for (MenuResource menu : reportObjects) {
 			reports.add(menu.toViewObject());
 		}
 		SecurityUtils.getSession().setAttribute("reports", reports);
@@ -102,13 +104,14 @@ public class MainController extends GenericController {
 		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(userId);
 		model.addAttribute("organNode", organNode);
 		
-		//获取自己未读消息数量
-		List<Announcement> list = announcementService.queryAnnouncementByUserIdAndState(userId,Announcement.ANNOUNCEMENT_STATUS_UNREAD);
-		if(list!=null&&list.size()>0){
-			model.addAttribute("unreadAnnouncement",list.size());
-			model.addAttribute("isUnreadAnnouncement",true);
-		}else{
-			model.addAttribute("isUnreadAnnouncement",false);
+		// 获取自己未读消息数量
+		List<Announcement> list = announcementService.queryAnnouncementByUserIdAndState(userId,
+		        Announcement.ANNOUNCEMENT_STATUS_UNREAD);
+		if (list != null && list.size() > 0) {
+			model.addAttribute("unreadAnnouncement", list.size());
+			model.addAttribute("isUnreadAnnouncement", true);
+		} else {
+			model.addAttribute("isUnreadAnnouncement", false);
 		}
 		return DEFAULT_MAIN_INDEX;
 	}
@@ -141,8 +144,8 @@ public class MainController extends GenericController {
 					}
 				}
 			}
-			if (group != null && (StringUtils.equals(SecurityGroup.SECURITY_GROUP_TYPE_LEVEL, group.getType()) 
-					|| StringUtils.equals(SecurityGroup.SECURITY_GROUP_TYPE_TOP, group.getType()))) {
+			if (group != null && (StringUtils.equals(SecurityGroup.SECURITY_GROUP_TYPE_LEVEL, group.getType())
+			        || StringUtils.equals(SecurityGroup.SECURITY_GROUP_TYPE_TOP, group.getType()))) {
 				List<MenuResourceVO> reports = (List<MenuResourceVO>) SecurityUtils.getSession()
 				        .getAttribute("reports");
 				if (reports != null && !reports.isEmpty()) {
@@ -238,10 +241,11 @@ public class MainController extends GenericController {
 	
 	@RequestMapping("doing/counter")
 	@ResponseBody
-	public List<Integer> queryDoingCounter () {
+	public List<Integer> queryDoingCounter() {
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("ofcFlowState", FlowRecord.DOING);
-		SecurityGroup group = (SecurityGroup)SecurityUtils.getSession().getAttribute("group");
+		SecurityGroup group = (SecurityGroup) SecurityUtils.getSession().getAttribute("group");
 		if (group != null) {
 			// 查询单位领导分组
 			if (StringUtils.equals(SecurityGroup.SECURITY_GROUP_TYPE_LEVEL, group.getType())) {
@@ -276,9 +280,88 @@ public class MainController extends GenericController {
 		return counter;
 	}
 	
+	@RequestMapping("model/doing/counter")
+	@ResponseBody
+	public List<Map<String,Object>> queryModelDoingCounter() {
+		
+		Map<String, Integer> all = flowRecordService.countWorkFLowBusinessNum(null, null,
+		        Calendar.getInstance().getTime());
+		Map<String, Integer> done = flowRecordService.countWorkFLowBusinessNum(null, FlowRecord.DONE,
+		        Calendar.getInstance().getTime());
+		
+		List<Map<String,Object>> result = new ArrayList<Map<String,Object>>();
+
+		
+		generateWorkFLowStatic("RecruitEmployPlan","招录计划上报事项完成率", all, done, result);
+		generateWorkFLowStatic("RecruitPost","招录职务上报事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("ProbationServant","试用期考核合格事项完成率", all, done, result);
+		generateWorkFLowStatic("CancelProbationServant","试用期考核不合格事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("ZhuanRenTLBIntoMgr_THIS","本区同类别转任事项完成率", all, done, result);
+		generateWorkFLowStatic("ZhuanRenTLBIntoMgr_OUTER","外区同类别转任事项完成率", all, done, result);
+		generateWorkFLowStatic("ZhuanRenTLBOutMgr","同类别转任转出事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("ZhuanRenKLBIntoMgr_THIS","本区跨类别转任事项完成率", all, done, result);
+		generateWorkFLowStatic("ZhuanRenKLBIntoMgr_OUTER","外区跨类别转任事项完成率", all, done, result);
+		generateWorkFLowStatic("ZhuanRenKLBOutMgr","跨类别转任转出事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("ReferenceExchange_THIS","本区参公交流事项完成率", all, done, result);
+		generateWorkFLowStatic("ReferenceExchange_OUTER","外区参公交流事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("DiaoRenIntoMgr_THIS","本区内调入事项完成率", all, done, result);
+		generateWorkFLowStatic("DiaoRenIntoMgr_OUTER","外区调入事项完成率", all, done, result);
+		generateWorkFLowStatic("DiaoRenOutMgr_THIS","调出到本区事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("ResignServant","公务员辞职事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("DeathServant","公务员死亡事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("Train","培训学时考核事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("PunishServant","公务员处分事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("JOBSHIFT_PROMOTE","公务员升职事项完成率", all, done, result);
+		generateWorkFLowStatic("JOBSHIFT_DEMOTE","公务员降职事项完成率", all, done, result);
+		generateWorkFLowStatic("JOBSHIFT_DEPOSE","公务员免职事项完成率", all, done, result);
+		generateWorkFLowStatic("JOBSHIFT_SHIFT","公务员轮岗事项完成率", all, done, result);
+		
+		generateWorkFLowStatic("ASSESS_REWARD","年度考核奖励事项完成率", all, done, result);
+		return result;
+	}
+
+	/** 
+	 * @Title: generateWorkFLowStatic 
+	 * @Description: TODO
+	 * @param all
+	 * @param done
+	 * @param result
+	 * @return: void
+	 */
+	private void generateWorkFLowStatic(String modelCode,String modelName,Map<String, Integer> all, Map<String, Integer> done,
+	        List<Map<String, Object>> result) {
+		if (all.containsKey(modelCode)) {
+			Map<String,Object> param = new HashMap<String,Object>();
+			Double allCounter = all.get(modelCode).doubleValue();
+			if (allCounter > 0) {
+				Integer t = done.get(modelCode);
+				Double doneCounter = 0D;
+				if (t != null) {
+					doneCounter = t.doubleValue();
+				}
+				param.put("code", modelCode);
+				param.put("name", modelName);
+				param.put("allNum", allCounter);
+				param.put("doingNum", doneCounter);
+				result.add(param);
+			}
+		}
+	}
+	
 	@RequestMapping("deploying/{id}")
 	public String waitDeploy(@PathVariable("id") String id) {
 		
 		return "main/deploying";
 	}
+	
 }
