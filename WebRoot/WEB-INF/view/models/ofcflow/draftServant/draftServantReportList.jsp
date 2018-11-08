@@ -125,7 +125,7 @@
 							<smart:textInput labelName="请示文件标题" name="requestFileName" ></smart:textInput>
 						</smart:gridColumn> --%>
 						<smart:gridColumn colPart="5" colOffset="1">
-							<smart:textInput labelName="单位名称" isNotNull="true" verify="required" name="unitName" ></smart:textInput>
+							<smart:textInput labelName="签发单位名称" isNotNull="true" verify="required" name="unitName" value="长宁区公务员局"></smart:textInput>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="5">
 							<smart:textInput labelName="编号" isNotNull="true" verify="required" name="serialNumber" ></smart:textInput>

@@ -15,6 +15,7 @@
  */
 package com.wondersgroup.human.service.ofcflow;
 
+import java.util.Date;
 import java.util.List;
 
 import com.wondersgroup.framework.core.bo.Page;
@@ -63,4 +64,5 @@ public interface TrainPersonService extends GenericService<TrainPerson>{
 	 */
 	List<?> exportByPerson(TrainYearPlan typ);
 
+	public int getTrainHours(String id,Date start,Date end);
 }

@@ -43,14 +43,14 @@
 						<smart:table id="navigationList" url="ofcflow/train/trainPersonList?planId=${trainPlan.id}"
 							height="full-225" text="未找到用户数据！" page="true">
 							<tr>
-								<smart:tableItem field="name" width="100" sort="false">姓名</smart:tableItem>
-								<smart:tableItem field="hours" width="100" sort="false">培训学时</smart:tableItem>
-								<smart:tableItem field="startDate" width="150" sort="false">开始时间</smart:tableItem>
-								<smart:tableItem field="endDate" width="150" sort="false">结束时间</smart:tableItem>
-								<smart:tableItem field="nature" width="150" sort="false">培训性质</smart:tableItem>
-								<smart:tableItem field="level" width="150" sort="false">培训组织单位级别</smart:tableItem>
-								<smart:tableItem field="funds" width="150" sort="false">培训经费（万元）</smart:tableItem>
-								<smart:tableItem field="isAbroad" width="125" sort="false">是否境外培训</smart:tableItem>
+								<smart:tableItem field="name" width=".1" sort="false">姓名</smart:tableItem>
+								<smart:tableItem field="hours" width=".1" sort="false">培训学时</smart:tableItem>
+								<smart:tableItem field="startDate" width=".1" sort="false">开始时间</smart:tableItem>
+								<smart:tableItem field="endDate" width=".1" sort="false">结束时间</smart:tableItem>
+								<smart:tableItem field="nature" width=".1" sort="false">培训性质</smart:tableItem>
+								<smart:tableItem field="level" width=".2" sort="false">培训组织单位级别</smart:tableItem>
+								<smart:tableItem field="funds" width=".2" sort="false">培训经费（万元）</smart:tableItem>
+								<smart:tableItem field="isAbroad" width=".1" sort="false">是否境外培训</smart:tableItem>
 							</tr>
 						</smart:table>
 					</smart:gridColumn>

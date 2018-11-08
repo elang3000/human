@@ -59,8 +59,8 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4" colOffset="3">
-								<smart:checkbox isSwitch="true" labelName="状态："
-									filter="checkstate" checkedKey="ON"  name="states" other="lay-text='ON|OFF'" />
+								<smart:checkbox isSwitch="true" labelName="状态"
+									filter="checkstate" checkedKey="${abroadYearPlan.state}"  name="states" other="lay-text='ON|OFF'" />
 								<smart:textInput type="hidden" id="state" name="state"></smart:textInput>
 							</smart:gridColumn>
 						</smart:gridRow>

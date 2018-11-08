@@ -113,7 +113,7 @@
 											
 										}
 										h += " <button class='del_btn'>x</button><input name='colName' value='"+treeNode.tableName+"."+treeNode.code+
-										"' type='hidden'><input name='tableName' value='"+treeNode.tableName+"' type='hidden'><input name='colType' value='"+treeNode.colType+"' type='hidden'></div>";
+										"' type='hidden'><input name='tableName' value='"+treeNode.tableName+"' type='hidden'><input name='colType' value='"+treeNode.colType+"' type='hidden'><input name='colNameb' value='"+treeNode.name+"' type='hidden'></div>";
 										$("#sqlDiv").append(h);
 									}
 								}
@@ -181,7 +181,7 @@
 		 	$("#sqlDiv").append("<div class='show_add_span'> "+data.value+" <button class='del_btn'>x</button>"+
 		 	"<input name='operation' type='hidden'><input name='condition' value='"+data.value+"' type='hidden'>"+
 		 	"<input name='colName' type='hidden'><input name='tableName' type='hidden'>"+
-		 	"<input name='colType' value='logic' type='hidden'>"+
+		 	"<input name='colType' value='logic' type='hidden'><input name='colNameb' type='hidden'>"+
 		 	"</div>");
 		 })
 		 //点击删除

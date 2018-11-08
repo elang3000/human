@@ -53,11 +53,11 @@
 										theme="primary" type="reset">
 										<smart:icon icon="history"></smart:icon>&nbsp;重置
 		   						    </smart:button>
-		   						     <shiro:hasPermission name="H002005002"> 
+		   						   <%--  <shiro:hasPermission name="H002005002"> --%>
 		   						    <smart:button size="sm" method="add" title="新增">
 									    <smart:icon icon="plus">&nbsp;新增人员交流轮岗</smart:icon>
 								    </smart:button>
-								     </shiro:hasPermission> 
+								   <%--  </shiro:hasPermission> --%>
 								</smart:buttonGroup>
 							</smart:gridColumn>
 						</smart:form>

@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -169,38 +170,28 @@
 										<smart:infoShowerLabel infoname="人事管理类型"
 											infovalue="${managerRecord.recordType.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="6">
-										<smart:infoShowerLabel infoname="进出管理类型"
-											infovalue="${managerRecord.managerType.name}"></smart:infoShowerLabel>
-									</smart:gridColumn>
+									<c:if test="${managerRecord.itemType==0}">
+										<smart:gridColumn colPart="6">
+											<smart:infoShowerLabel infoname="进出管理类型"
+												infovalue="进"></smart:infoShowerLabel>
+										</smart:gridColumn>
+									</c:if>
+									<c:if test="${managerRecord.itemType==1}">
+										<smart:gridColumn colPart="6">
+											<smart:infoShowerLabel infoname="进出管理类型"
+												infovalue="出"></smart:infoShowerLabel>
+										</smart:gridColumn>
+									</c:if>
+									<c:if test="${managerRecord.itemType==2}">
+										<smart:gridColumn colPart="6">
+											<smart:infoShowerLabel infoname="进出管理类型"
+												infovalue="管理"></smart:infoShowerLabel>
+										</smart:gridColumn>
+									</c:if>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
 									<smart:infoShowerLabel infoname="记录时间"
 										infovalue="${managerRecord.recordTime}"></smart:infoShowerLabel>
-								</smart:gridColumn>
-							</smart:gridRow>
-							<smart:gridRow>
-								<smart:gridColumn colPart="8">
-									<smart:gridColumn colPart="6">
-										<smart:infoShowerLabel infoname="上级领导批示"
-											infovalue="${managerRecord.leaderExamineOpinion}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-								</smart:gridColumn>
-							</smart:gridRow>
-							<smart:gridRow>
-								<smart:gridColumn colPart="8">
-									<smart:gridColumn colPart="6">
-										<smart:infoShowerLabel infoname="区领导批示"
-											infovalue="${managerRecord.areaExamineOpinion}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-								</smart:gridColumn>
-							</smart:gridRow>
-							<smart:gridRow>
-								<smart:gridColumn colPart="8">
-									<smart:gridColumn colPart="6">
-										<smart:infoShowerLabel infoname="市领导批示"
-											infovalue="${managerRecord.cityExamineOpinion}"></smart:infoShowerLabel>
-									</smart:gridColumn>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:grid>

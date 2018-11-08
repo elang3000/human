@@ -15,7 +15,6 @@
 
 package com.wondersgroup.framework.controller.main;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,14 +26,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.sf.json.JSONObject;
 
 import com.wondersgroup.common.contant.SystemParamContant;
 import com.wondersgroup.framework.controller.GenericController;
+import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.resource.connector.provider.SystemParamProvider;
 import com.wondersgroup.framework.security.bo.SecurityUser;
+import com.wondersgroup.framework.security.bo.UserLoginHistory;
 import com.wondersgroup.framework.security.service.UserService;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.util.StringUtils;
@@ -58,9 +60,11 @@ public class LoginController extends GenericController {
 	
 	private final static String CA_ERROR_VIEW = "ca";
 	
+	private final static String LOGIN_HISTORY_VIEW = "loginHistory";
+	
 	@Autowired
 	UserService userService;
-	
+
 	@Value("#{system['system.ca.login.enabled']}")
 	public Boolean enabledCA = false;
 	
@@ -254,5 +258,16 @@ public class LoginController extends GenericController {
 			default:
 				return "未知错误";
 		}
+	}
+	
+	@RequestMapping("/system/login/history")
+	public String loginHistory() {
+		return LOGIN_HISTORY_VIEW;
+	}
+	
+	@RequestMapping("/system/login/history/page")
+	@ResponseBody
+	public Page<UserLoginHistory> queryUserLoginHistory(String appId, String loginName, Integer limit, Integer page) {
+		return this.getUserService().queryUserLoginHistory(appId, loginName, limit, page);
 	}
 }

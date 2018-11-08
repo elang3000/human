@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import com.wondersgroup.framework.core.bo.Page;
+import com.wondersgroup.human.vo.analysis.MagCountVO;
+import com.wondersgroup.human.vo.analysis.PunishCountVO;
 import com.wondersgroup.human.vo.analysis.RewardCountVO;
 
 /** 
@@ -53,4 +55,48 @@ public interface SpecialCountService {
 	 * @return: Map<String,BigDecimal>
 	 */
 	public Map<String, BigDecimal> getRewardCountByDepartId(String departId, Integer year);
+
+	/** 
+	 * @Title: getPunishCount 
+	 * @Description: 专项统计-处分统计列表页面
+	 * @param departName
+	 * @param year
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<PunishCountVO>
+	 */
+	public Page<PunishCountVO> getPunishCount(String departName, Integer year, Integer page, Integer limit);
+
+	/** 
+	 * @Title: getPunishCountByDepartId 
+	 * @Description: 专项统计-处分统计柱状图详情
+	 * @param departId
+	 * @param year
+	 * @return
+	 * @return: Map<String,BigDecimal>
+	 */
+	public Map<String, BigDecimal> getPunishCountByDepartId(String departId, Integer year);
+
+	/** 
+	 * @Title: getMagCount 
+	 * @Description: 专项统计-进出管统计列表页面
+	 * @param departName
+	 * @param year
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<MagCountVO>
+	 */
+	public Page<MagCountVO> getMagCount(String departName, Integer year, Integer page, Integer limit);
+
+	/** 
+	 * @Title: getMagCountByDepartId 
+	 * @Description: 专项统计-进出管统计柱状图详情
+	 * @param departId
+	 * @param year
+	 * @return
+	 * @return: Map<String,BigDecimal>
+	 */
+	public Map<String, BigDecimal> getMagCountByDepartId(String departId, Integer year);
 }

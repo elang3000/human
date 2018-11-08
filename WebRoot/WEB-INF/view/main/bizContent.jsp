@@ -67,7 +67,8 @@
 									<div carousel-item>
 										<ul class="layui-row layui-col-space10">
 											<li class="layui-col-xs6"><a
-												lay-href="workflow/doing/index?category=G" id="servantDoing"
+												lay-href="workflow/doing/index?category=G" id="servantDoing" 
+												lay-text="公务员事项待审"
 												class="layadmin-backlog-body">
 													<h3>公务员事项待审</h3>
 													<p>
@@ -75,7 +76,8 @@
 													</p>
 											</a></li>
 											<li class="layui-col-xs6"><a
-												lay-href="workflow/doing/indexPublic" id="bizDoing"
+												lay-href="workflow/doing/indexPublic" id="bizDoing" 
+												lay-text="事业单位事项待审"
 												class="layadmin-backlog-body">
 													<h3>事业单位事项待审</h3>
 													<p>
@@ -83,14 +85,15 @@
 													</p>
 											</a></li>
 											<li class="layui-col-xs6"><a
-												lay-href="workflow/doing/index?category=O" id="organDoing"
+												lay-href="workflow/doing/index?category=O" id="organDoing" lay-text="组织信息待审"
 												class="layadmin-backlog-body">
 													<h3>组织信息待审</h3>
 													<p>
 														<cite>0</cite>
 													</p>
 											</a></li>
-											<li class="layui-col-xs6"><a href="workflow/doing/index?category=P" id="planDoing"
+											<li class="layui-col-xs6"><a 
+												lay-href="workflow/doing/index?category=P" id="planDoing" lay-text="编制信息待审"
 												class="layadmin-backlog-body">
 													<h3>编制信息待审</h3>
 													<p>

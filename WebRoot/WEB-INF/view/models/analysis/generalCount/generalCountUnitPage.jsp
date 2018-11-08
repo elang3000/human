@@ -5,6 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript">
 	var orgId='${orgId}';
+	var orgName='${orgName}';
 </script>
 <!DOCTYPE html >
 <html>
@@ -25,7 +26,7 @@
 				<smart:gridRow>
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form >
-							<smart:gridColumn colPart="3">
+							<smart:gridColumn colPart="8">
 								<script type="text/javascript">
                                     function singleChange(data){
                                         layui.use('echarts',function(){
@@ -64,7 +65,7 @@
                                                     // myChart.setOption(option);
                                                     myChart.setOption({
                                                         title : {
-                                                            text: '单位'+selectData.elem[selectData.elem.selectedIndex].text+'统计',
+                                                            text: '${orgName}'+selectData.elem[selectData.elem.selectedIndex].text+'统计',
                                                             x:'center'
                                                         },
                                                         tooltip : {
@@ -85,7 +86,6 @@
 															y:20,
 															orient:'vertical',
                                                             feature: {
-                                                                dataView : {show: true, readOnly: false},
                                                                 restore : {show: true},
                                                                 saveAsImage : {show: true}
                                                             }
@@ -120,7 +120,7 @@
                                         });
                                     }
 								</script>
-								<smart:singleSelect name="season" id="season" display="inline" changeCallBack="singleChange"
+								<smart:singleSelect  name="season" id="season" display="inline" changeCallBack="singleChange"
 													labelName="统计类型" data="[{'key':'5','value':'职务'},{'key':'1','value':'性别'},{'key':'2','value':'民族'},{'key':'3','value':'学历'},{'key':'4','value':'学位'},{'key':'6','value':'职级'}]"></smart:singleSelect>
 							</smart:gridColumn>
 

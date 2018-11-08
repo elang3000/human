@@ -480,6 +480,10 @@ public class TrainController  extends GenericController{
 
 		if (StringUtils.isNotBlank(id)) {
 			TrainYearPlan trainYearPlan = trainYearPlanService.get(id);
+			
+			if(trainYearPlan.getState()==0){
+				trainYearPlan.setState(null);
+			}
 			model.addAttribute("trainYearPlan", trainYearPlan);
 		}
 
@@ -595,6 +599,10 @@ public class TrainController  extends GenericController{
 			List<Predicate> filter = new ArrayList<>();// 查询条件
 			Predicate p = new Predicate("state", Operator.EQ, 1, "");
 			filter.add(p);
+			Predicate p1 = new Predicate("startDate", Operator.LTE, new Date(), "");
+			filter.add(p1);
+			Predicate p2 = new Predicate("endDate", Operator.GTE, new Date(), "");
+			filter.add(p2);
 			list = trainYearPlanService.findByFilter(filter, sort);
 
 		} catch (Exception e) {

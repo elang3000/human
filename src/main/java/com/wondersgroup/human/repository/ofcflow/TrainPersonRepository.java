@@ -19,6 +19,7 @@ import com.wondersgroup.framework.core.dao.GenericRepository;
 import com.wondersgroup.human.bo.ofcflow.TrainPerson;
 import com.wondersgroup.human.bo.ofcflow.TrainYearPlan;
 
+import java.util.Date;
 import java.util.List;
 
 /** 
@@ -42,5 +43,16 @@ public interface TrainPersonRepository extends GenericRepository<TrainPerson> {
 	 * @return: List
 	 */
 	public List<?> exportByPerson(TrainYearPlan typ);
+
+	/** 
+	 * @Title: getTrainHours 
+	 * @Description: TODO
+	 * @param id
+	 * @param start
+	 * @param end
+	 * @return
+	 * @return: int
+	 */
+	public int getTrainHours(String id, Date start, Date end);
 
 }

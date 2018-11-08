@@ -57,12 +57,12 @@
 							height="full-215" text="未获取到数据！">
 							<tr>
 								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
-								<smart:tableItem field="yearTip" width="100" sort="true">年度</smart:tableItem>
-								<smart:tableItem field="draftUnitName" width="150" sort="true">录用单位</smart:tableItem>
+								<smart:tableItem field="yearTip" width="107" sort="true">年度</smart:tableItem>
+								<smart:tableItem field="draftUnitName" width="200" sort="true">录用单位</smart:tableItem>
 								<smart:tableItem field="draftDeptName" width="150" sort="true">录用部门</smart:tableItem>
-								<smart:tableItem field="name" width="100" sort="false">姓名</smart:tableItem>
+								<smart:tableItem field="name" width="130" sort="false">姓名</smart:tableItem>
 								<smart:tableItem field="sex" width="100" sort="false">性别</smart:tableItem>
-								<smart:tableItem field="cardNo" width="170" sort="false">身份证</smart:tableItem>
+								<smart:tableItem field="cardNo" width="190" sort="false">身份证</smart:tableItem>
 								<smart:tableItem field="servantType" width="150" sort="false">人员类型</smart:tableItem>
 								<smart:tableItem field="employComment" width="150" sort="false">录用鉴定评语</smart:tableItem>
 								<smart:tableItem field="employSituation" width="100" sort="false">录用情况</smart:tableItem>

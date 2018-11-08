@@ -45,6 +45,15 @@ public class BaseEventIntoMgr<T> extends GenericEntity {
 	
 	private static final long serialVersionUID = 6228280994777281146L;
 	
+	/**
+	 * @fieldName: isLowToHigh
+	 * @fieldType: java.lang.Boolean
+	 * @Description: 职务是否高职低配。
+	 */
+	@Column(name = "IS_LOW_TO_HIGH")
+	@org.hibernate.annotations.Type(type = "yes_no")
+	private Boolean isLowToHigh = false;
+	
 	// 人员基本信息
 	/**
 	 * @fieldName: servant
@@ -966,6 +975,16 @@ public class BaseEventIntoMgr<T> extends GenericEntity {
 	public void setFilePath(String filePath) {
 		
 		this.filePath = filePath;
+	}
+	
+	public Boolean getIsLowToHigh() {
+		
+		return isLowToHigh;
+	}
+	
+	public void setIsLowToHigh(Boolean isLowToHigh) {
+		
+		this.isLowToHigh = isLowToHigh;
 	}
 	
 }

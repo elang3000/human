@@ -24,7 +24,7 @@
 					<smart:tabPanelParent filter="tab"
 						style="margin-left:10px;margin-right:10px;">
 						<smart:tabPanel>
-							<smart:tabPanelItem show="true" eId="" itemName="职务变动名单列表"></smart:tabPanelItem>
+							<smart:tabPanelItem show="true" eId="" itemName="职务变动列表"></smart:tabPanelItem>
 							<smart:tabPanelItem turnurl="ofcflow/jobchange/flow" show="false" eId="" itemName="流程审批"></smart:tabPanelItem>
 						</smart:tabPanel>
 					</smart:tabPanelParent>
@@ -47,7 +47,11 @@
 									<smart:button size="sm" method="history" title="重置"
 										theme="primary" type="reset">
 										<smart:icon icon="history"></smart:icon>&nbsp;重置
-		   						</smart:button>
+		   							</smart:button>
+									<smart:button size="sm" method="addJobShift" title="新增职务变动"
+										theme="normal" >
+										<smart:icon icon="plus"></smart:icon>&nbsp;新增
+		   							</smart:button>
 								</smart:buttonGroup>
 							</smart:gridColumn>
 						</smart:form>
@@ -55,20 +59,23 @@
 				</smart:gridRow>
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn colPart="12" deviceType="md">
-						<smart:table  id="navigationList" url="ofc/pageList"
+						<smart:table  id="navigationList" url="ofcflow/jobchange/indexData"
 							height="full-215" 
 							text="未找到有效数据！">
 							<tr>
-								<smart:tableItem field="name" width=".2" sort="true">姓名</smart:tableItem>
-								<smart:tableItem field="sex" width=".2" sort="true">性别</smart:tableItem>
+								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
+								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
 								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
-								<smart:tableItem field="departName" width=".2" sort="false">单位部门</smart:tableItem>
-								<smart:tableItem align="center" width=".2" fixed="right"
+								<smart:tableItem field="postChangeDate" width=".2" sort="false">变动发起时间</smart:tableItem>
+								<smart:tableItem field="jobChangeType" width=".1" sort="false">职务变动类别</smart:tableItem>
+								<smart:tableItem field="formerPostName" width=".1" sort="false">变动前职位</smart:tableItem>
+								<smart:tableItem field="newPostName" width=".1" sort="false">变动后职位</smart:tableItem>
+								<smart:tableItem align="center" width=".1" fixed="right"
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar  id="navListToolBar">
-									<smart:tableToolBtn theme="warm" event="edit" title="编辑">
-										<smart:icon icon="edit"></smart:icon>
+									<smart:tableToolBtn theme="warm" event="edit" title="查看">
+										<smart:icon icon="eye"></smart:icon>
 									</smart:tableToolBtn>
 							</smart:tableToolBar>
 						</smart:table>
@@ -99,6 +106,14 @@
 					page : {
 						curr : 1
 					}
+				});
+			},
+			addJobShift:function(){
+				smart.show({
+				title : '职务变动',
+				size : 'full',
+				url : 'ofcflow/jobchange/humanPick',
+				scrollbar : false
 				});
 			}
 		};

@@ -17,20 +17,20 @@ package com.wondersgroup.human.controller.ofc;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.Servant;
+import com.wondersgroup.human.dto.ofc.ManagerRecordParam;
 import com.wondersgroup.human.service.ofc.ManagerRecordService;
 import com.wondersgroup.human.service.ofc.ServantService;
+import com.wondersgroup.human.vo.ofc.ItemRecordVO;
 import com.wondersgroup.human.vo.ofc.ManagerRecordVO;
 
 /**
@@ -120,5 +120,19 @@ public class ManagerRecordController extends GenericController {
 			filter.put("managerType", managerRecordVO.getManagerType());
 		}
 		return managerRecordService.queryManagerRecord(filter, page, limit);
+	}
+	
+	/**
+	 * @Title: query
+	 * @Description: 人事管理信息列表
+	 * @param 查询条件
+	 * @param limit页大小
+	 * @param page页码
+	 * @return: Page<Servant>
+	 */
+	@ResponseBody
+	@RequestMapping("/getPage")
+	public Page<ItemRecordVO> getPage(ManagerRecordParam param, Integer limit, Integer page) {
+		return managerRecordService.getPage(param, page, limit);
 	}
 }

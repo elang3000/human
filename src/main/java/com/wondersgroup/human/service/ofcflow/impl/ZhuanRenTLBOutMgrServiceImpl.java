@@ -17,11 +17,16 @@ package com.wondersgroup.human.service.ofcflow.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.wondersgroup.common.contant.DictTypeCodeContant;
+import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
+import com.wondersgroup.framework.announcement.event.SystemAnnouncementEvent;
+import com.wondersgroup.framework.announcement.util.AnnouncementManger;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
@@ -33,6 +38,7 @@ import com.wondersgroup.human.bo.ofcflow.ZhuanRenTLBOutMgr;
 import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.ZhuanRenTLBOutMgrService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofcflow.ZhuanRenTLBOutMgrVO;
 
 /** 
@@ -53,6 +59,15 @@ public class ZhuanRenTLBOutMgrServiceImpl extends GenericServiceImpl<ZhuanRenTLB
 	private DictableService dictableService;
 	@Autowired
 	private OutMgrService outMgrService;
+
+	@Autowired
+	private FormationControlService formationControlService;
+
+	/**
+	 * 读取message.properties配置文件数据
+	 */
+	@Autowired
+	private MessageSource messageSource;
 	/**
 	 * @Title: findbyHQLforVO 
 	 * @Description: 转换为VO的分页列表
@@ -80,7 +95,16 @@ public class ZhuanRenTLBOutMgrServiceImpl extends GenericServiceImpl<ZhuanRenTLB
 	 * @return: void
 	 */
 	public void saveFlow(ZhuanRenTLBOutMgr temp){
+		//锁未调出编制
+		if(ZhuanRenTLBOutMgr.STATUS_ZHUANCHU_STATE==temp.getStatus()){
+			formationControlService.executeLockOutFormationNum(temp.getSourceOrgan().getId());
+		}
+				
 		if(temp.getStatus()==ZhuanRenTLBOutMgr.STATUS_ZHUANCHU_CONFIRM){
+			//流程结束，改变编制
+			formationControlService.executeUnlockOutFormationNum(temp.getSourceOrgan().getId());//1.解锁调出单位未调出编制
+			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//2.减少调出单位实际编制数
+			
 			//修改原数据状态为调出
 			Servant oldServant = servantService.get(temp.getServant().getId());
 			CodeInfo outer = dictableService.getCodeInfoByCode("3", DictTypeCodeContant.CODE_HUMAN_STATUS);// 调出CODE
@@ -96,8 +120,13 @@ public class ZhuanRenTLBOutMgrServiceImpl extends GenericServiceImpl<ZhuanRenTLB
 			out.setProposeType(temp.getProposeType());//提出调动类型
 			out.setRemark(temp.getRemark());//调出备注
 			outMgrService.save(out);
+			
+			//发送通知
+			String title = messageSource.getMessage("zhuanRenTitle", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
+			String content = messageSource.getMessage("zhuanRenContent", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
+			AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "")));
 		}
 		temp.setStatus(temp.getStatus()+1);//流程状态加1，到下一个节点
-		update(temp);
+		saveOrUpdate(temp);
 	}
 }

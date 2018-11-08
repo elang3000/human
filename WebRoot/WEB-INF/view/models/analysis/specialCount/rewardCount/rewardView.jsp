@@ -6,7 +6,7 @@
 <!DOCTYPE html >
 <html>
 <head>
-<smart:initHead title="长宁区公务员信息管理系统--通用统计" />
+<smart:initHead title="长宁区公务员信息管理系统--专项统计" />
 </head>
 <smart:body>
 	<smart:grid>
@@ -24,6 +24,8 @@
 							<smart:grid>
 								<smart:gridRow>
 									<smart:textInput type="hidden" id="departId" value="${departId}"></smart:textInput>
+									<smart:textInput type="hidden" id="year" value="${year}"></smart:textInput>
+									<smart:textInput type="hidden" id="departName" value="${departName}"></smart:textInput>
 									
 									<smart:gridColumn>
 										<smart:gridRow>

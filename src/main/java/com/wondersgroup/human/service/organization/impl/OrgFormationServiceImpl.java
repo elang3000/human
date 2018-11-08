@@ -19,6 +19,7 @@ import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.organization.OrgFormation;
+import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.repository.organization.OrgFormationRepository;
 import com.wondersgroup.human.service.organization.OrgFormationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,4 +59,5 @@ public class OrgFormationServiceImpl extends GenericServiceImpl<OrgFormation> im
 		Page<OrgFormation> result = this.findByHQL(hql.toString(), ifilter, page, limit);
 		return result;
 	}
+
 }

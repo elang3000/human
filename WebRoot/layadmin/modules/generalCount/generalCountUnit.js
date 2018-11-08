@@ -23,7 +23,7 @@
                     // 使用刚指定的配置项和数据显示图表。
                     myChart.setOption({
                         title : {
-                            text: '单位职务统计',
+                            text: orgName+'单位职务统计',
                             x:'center'
                         },
                         toolbox: {
@@ -32,7 +32,6 @@
                             y:20,
                             orient:'vertical',
                             feature: {
-                                dataView : {show: true, readOnly: false},
                                 restore : {show: true},
                                 saveAsImage : {show: true}
                             }

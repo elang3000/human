@@ -134,7 +134,7 @@
 					<smart:gridColumn>
 						<smart:buttonGroup container="true">
 							<smart:button id="save" other="lay-submit" size="sm" method="add"
-								title="确认电子介绍信,录用人员试用期开始">
+								title="提交当前表单">
 								<smart:icon icon="check">提交</smart:icon>
 							</smart:button>
 							<smart:button theme="warm" size="sm" title="返回" method="goBack">

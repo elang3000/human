@@ -229,7 +229,7 @@
 					<smart:gridColumn colPart="2" deviceType="md" colOffset="5">
 						<smart:buttonGroup container="true">
 							<smart:button theme="warm" size="sm" method="back" title="返回">
-								<smart:icon icon="pencil">&nbsp;返回</smart:icon>
+								<smart:icon icon="reply">&nbsp;返回</smart:icon>
 							</smart:button>
 						</smart:buttonGroup>
 					</smart:gridColumn>

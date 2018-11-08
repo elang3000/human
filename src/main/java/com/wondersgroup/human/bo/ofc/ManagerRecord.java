@@ -16,7 +16,6 @@
 package com.wondersgroup.human.bo.ofc;
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +27,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 
@@ -42,21 +40,93 @@ import com.wondersgroup.framework.dict.bo.CodeInfo;
  * @since     [产品/模块版本]
  */
 @Entity
-@Table(name = "HUMAN_MANAGE_RECORD")
+@Table(name = "HUMAN_ITEM_RECORD")
 public class ManagerRecord extends GenericEntity {
 	
-	//进出管理：进
+	//进
 	@Transient
-	public static final String MANAGER_MANAGER_TYPE_IN = "managerType01";
+	public static final Integer IN  = 0;
 	
-	//进出管理：出
+	//出
 	@Transient
-	public static final String MANAGER_MANAGER_TYPE_OUT = "managerType02";
+	public static final Integer OUT  = 1;
 	
-	//进出管理：管理
-	@Transient 
-	public static final String MANAGER_MANAGER_TYPE_MANAGER = "managerType03";
+	//管理
+	@Transient
+	public static final Integer MAG  = 2;
+	
+	//人事管理类型：公务员录用
+	@Transient
+	public static final String HUMAN_LY  = "HUMAN_LY";
+	
+	//人事管理类型：公务员试用期管理
+	@Transient
+	public static final String HUMAN_SY  = "HUMAN_SY";
+	
+	//人事管理类型：公务员调任调入
+	@Transient
+	public static final String HUMAN_DRDR  = "HUMAN_DRDR";
+	
+	//人事管理类型：公务员调任调出
+	@Transient
+	public static final String HUMAN_DRDC  = "HUMAN_DRDC";
+	
+	//人事管理类型：同类别转任转入
+	@Transient
+	public static final String HUMAN_TLZR  = "HUMAN_TLZR";
+	
+	//人事管理类型：同类别转任转出
+	@Transient
+	public static final String HUMAN_TLZC  = "HUMAN_TLZC";
+	
+	//人事管理类型：跨类别转任转入
+	@Transient
+	public static final String HUMAN_KLZR  = "HUMAN_KLZR";
+	
+	//人事管理类型：跨类别转任转出
+	@Transient
+	public static final String HUMAN_KLZC  = "HUMAN_TLZC";
+	
+	//人事管理类型：借调
+	@Transient
+	public static final String HUMAN_JD  = "HUMAN_JD";
+	
+	//人事管理类型：挂职锻炼
+	@Transient
+	public static final String HUMAN_GZDL  = "HUMAN_GZDL";
+	
+	//人事管理类型：参公交流
+	@Transient
+	public static final String HUMAN_CGJL  = "HUMAN_CGJL";
+	
+	//人事管理类型：职务变动
+	@Transient
+	public static final String HUMAN_ZWBD  = "HUMAN_ZWBD";
+	
+	//人事管理类型：辞职
+	@Transient
+	public static final String HUMAN_CZ  = "HUMAN_CZ";
+	
+	//人事管理类型：死亡
+	@Transient
+	public static final String HUMAN_SW  = "HUMAN_SW";
+	
+	//人事管理类型：年度考核
+	@Transient
+	public static final String HUMAN_NDKH  = "HUMAN_NDKH";
 
+	//人事管理类型：处分
+	@Transient
+	public static final String HUMAN_CF  = "HUMAN_CF";
+	
+	//人事管理类型：公务员因公出国
+	@Transient
+	public static final String HUMAN_YGCG  = "HUMAN_YGCG";
+	
+	//人事管理类型：培训考核
+	@Transient
+	public static final String HUMAN_PXKH  = "HUMAN_PXKH";
+		
 	private static final long serialVersionUID = -1145573454260614055L;
 
 	/**
@@ -65,7 +135,7 @@ public class ManagerRecord extends GenericEntity {
 	 * @Description: 人事信息ID。
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "HUMAN_ID")
+	@JoinColumn(name = "SERVANT_ID")
 	private Servant servant;
 
 	/**
@@ -80,11 +150,10 @@ public class ManagerRecord extends GenericEntity {
 	/**
 	 * @fieldName: unitType
 	 * @fieldType: java.lang.String
-	 * @Description: 进出管理类型。
+	 * @Description: 进出管理类型。(0：进、1：出、2：管理)
 	 */
-	@ManyToOne(fetch = FetchType.LAZY, optional = true)
-	@JoinColumn(name = "UNIT_TYPE")
-	private CodeInfo managerType;
+	@Column(name = "ITEM_TYPE", length = 2)
+	private Integer itemType;
 
 	/**
 	 * @fieldName: recordTime
@@ -96,6 +165,22 @@ public class ManagerRecord extends GenericEntity {
 	@Temporal(TemporalType.DATE)
 	private Date recordTime;
 
+	/**
+	 * @fieldName: humanID
+	 * @fieldType: java.lang.String
+	 * @Description: 当时单位ID。
+	 */
+	@Column(name = "ORGAN_ID", length = 120)
+	private String organId;
+	
+	/**
+	 * @fieldName: humanID
+	 * @fieldType: java.lang.String
+	 * @Description: 当时单位名。
+	 */
+	@Column(name = "ORGAN_NAME", length = 120)
+	private String organName;
+	
 	/**
 	 * @fieldName: businessEntityId
 	 * @fieldType: java.lang.String
@@ -111,92 +196,6 @@ public class ManagerRecord extends GenericEntity {
 	 */
 	@Column(name = "BUSINESS_ENTITY_Table", length = 120)
 	private String businessEntityTable;
-
-	/**
-	 * @fieldName: status
-	 * @fieldType: java.lang.String
-	 * @Description: 审批状态。
-	 */
-	@Column(name = "STATUS", length = 120)
-	private String status;
-
-	/**
-	 * @fieldName: areaExamineOpinion
-	 * @fieldType: java.lang.String
-	 * @Description: 上级领导审批意见。
-	 */
-	@Column(name = "LEADER_EXAMINE_OPINION", length = 120)
-	private String leaderExamineOpinion;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 上级领导审批人。
-	 */
-	@Column(name = "LEADER_EXAMINE_AUDIT", length = 120)
-	private String leaderExamineAudit;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 上级领导审批时间。
-	 */
-	@Column(name = "LEADER_EXAMINE_Time")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.DATE)
-	private Date leaderExamineTime;
-
-	/**
-	 * @fieldName: areaExamineOpinion
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批意见。
-	 */
-	@Column(name = "AREA_EXAMINE_OPINION", length = 120)
-	private String areaExamineOpinion;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批人。
-	 */
-	@Column(name = "AREA_EXAMINE_AUDIT", length = 120)
-	private String areaExamineAudit;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批时间。
-	 */
-	@Column(name = "AREA_EXAMINE_Time")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.DATE)
-	private Date areaExamineTime;
-
-	/**
-	 * @fieldName: areaExamineOpinion
-	 * @fieldType: java.lang.String
-	 * @Description: 市审批意见。
-	 */
-	@Column(name = "CITY_EXAMINE_OPINION", length = 120)
-	private String cityExamineOpinion;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批人。
-	 */
-	@Column(name = "CITY_EXAMINE_AUDIT", length = 120)
-	private String cityExamineAudit;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批时间。
-	 */
-	@Column(name = "CITY_EXAMINE_TIME")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.DATE)
-	private Date cityExamineTime;
 
 	/**
 	 * @fieldName: description
@@ -256,8 +255,7 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param servant
-	 *            the servant to set
+	 * @param servant the servant to set
 	 */
 	public void setServant(Servant servant) {
 		this.servant = servant;
@@ -271,26 +269,24 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param recordType
-	 *            the recordType to set
+	 * @param recordType the recordType to set
 	 */
 	public void setRecordType(CodeInfo recordType) {
 		this.recordType = recordType;
 	}
 
 	/**
-	 * @return the managerType
+	 * @return the itemType
 	 */
-	public CodeInfo getManagerType() {
-		return managerType;
+	public Integer getItemType() {
+		return itemType;
 	}
 
 	/**
-	 * @param managerType
-	 *            the managerType to set
+	 * @param itemType the itemType to set
 	 */
-	public void setManagerType(CodeInfo managerType) {
-		this.managerType = managerType;
+	public void setItemType(Integer itemType) {
+		this.itemType = itemType;
 	}
 
 	/**
@@ -301,8 +297,7 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param recordTime
-	 *            the recordTime to set
+	 * @param recordTime the recordTime to set
 	 */
 	public void setRecordTime(Date recordTime) {
 		this.recordTime = recordTime;
@@ -316,8 +311,7 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param businessEntityId
-	 *            the businessEntityId to set
+	 * @param businessEntityId the businessEntityId to set
 	 */
 	public void setBusinessEntityId(String businessEntityId) {
 		this.businessEntityId = businessEntityId;
@@ -331,161 +325,10 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param businessEntityTable
-	 *            the businessEntityTable to set
+	 * @param businessEntityTable the businessEntityTable to set
 	 */
 	public void setBusinessEntityTable(String businessEntityTable) {
 		this.businessEntityTable = businessEntityTable;
-	}
-
-	/**
-	 * @return the status
-	 */
-	public String getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	/**
-	 * @return the leaderExamineOpinion
-	 */
-	public String getLeaderExamineOpinion() {
-		return leaderExamineOpinion;
-	}
-
-	/**
-	 * @param leaderExamineOpinion
-	 *            the leaderExamineOpinion to set
-	 */
-	public void setLeaderExamineOpinion(String leaderExamineOpinion) {
-		this.leaderExamineOpinion = leaderExamineOpinion;
-	}
-
-	/**
-	 * @return the leaderExamineAudit
-	 */
-	public String getLeaderExamineAudit() {
-		return leaderExamineAudit;
-	}
-
-	/**
-	 * @param leaderExamineAudit
-	 *            the leaderExamineAudit to set
-	 */
-	public void setLeaderExamineAudit(String leaderExamineAudit) {
-		this.leaderExamineAudit = leaderExamineAudit;
-	}
-
-	/**
-	 * @return the leaderExamineTime
-	 */
-	public Date getLeaderExamineTime() {
-		return leaderExamineTime;
-	}
-
-	/**
-	 * @param leaderExamineTime
-	 *            the leaderExamineTime to set
-	 */
-	public void setLeaderExamineTime(Date leaderExamineTime) {
-		this.leaderExamineTime = leaderExamineTime;
-	}
-
-	/**
-	 * @return the areaExamineOpinion
-	 */
-	public String getAreaExamineOpinion() {
-		return areaExamineOpinion;
-	}
-
-	/**
-	 * @param areaExamineOpinion
-	 *            the areaExamineOpinion to set
-	 */
-	public void setAreaExamineOpinion(String areaExamineOpinion) {
-		this.areaExamineOpinion = areaExamineOpinion;
-	}
-
-	/**
-	 * @return the areaExamineAudit
-	 */
-	public String getAreaExamineAudit() {
-		return areaExamineAudit;
-	}
-
-	/**
-	 * @param areaExamineAudit
-	 *            the areaExamineAudit to set
-	 */
-	public void setAreaExamineAudit(String areaExamineAudit) {
-		this.areaExamineAudit = areaExamineAudit;
-	}
-
-	/**
-	 * @return the areaExamineTime
-	 */
-	public Date getAreaExamineTime() {
-		return areaExamineTime;
-	}
-
-	/**
-	 * @param areaExamineTime
-	 *            the areaExamineTime to set
-	 */
-	public void setAreaExamineTime(Date areaExamineTime) {
-		this.areaExamineTime = areaExamineTime;
-	}
-
-	/**
-	 * @return the cityExamineOpinion
-	 */
-	public String getCityExamineOpinion() {
-		return cityExamineOpinion;
-	}
-
-	/**
-	 * @param cityExamineOpinion
-	 *            the cityExamineOpinion to set
-	 */
-	public void setCityExamineOpinion(String cityExamineOpinion) {
-		this.cityExamineOpinion = cityExamineOpinion;
-	}
-
-	/**
-	 * @return the cityExamineAudit
-	 */
-	public String getCityExamineAudit() {
-		return cityExamineAudit;
-	}
-
-	/**
-	 * @param cityExamineAudit
-	 *            the cityExamineAudit to set
-	 */
-	public void setCityExamineAudit(String cityExamineAudit) {
-		this.cityExamineAudit = cityExamineAudit;
-	}
-
-	/**
-	 * @return the cityExamineTime
-	 */
-	public Date getCityExamineTime() {
-		return cityExamineTime;
-	}
-
-	/**
-	 * @param cityExamineTime
-	 *            the cityExamineTime to set
-	 */
-	public void setCityExamineTime(Date cityExamineTime) {
-		this.cityExamineTime = cityExamineTime;
 	}
 
 	/**
@@ -496,8 +339,7 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param ext1
-	 *            the ext1 to set
+	 * @param ext1 the ext1 to set
 	 */
 	public void setExt1(String ext1) {
 		this.ext1 = ext1;
@@ -511,8 +353,7 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param ext2
-	 *            the ext2 to set
+	 * @param ext2 the ext2 to set
 	 */
 	public void setExt2(String ext2) {
 		this.ext2 = ext2;
@@ -526,8 +367,7 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param ext3
-	 *            the ext3 to set
+	 * @param ext3 the ext3 to set
 	 */
 	public void setExt3(String ext3) {
 		this.ext3 = ext3;
@@ -541,8 +381,7 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param ext4
-	 *            the ext4 to set
+	 * @param ext4 the ext4 to set
 	 */
 	public void setExt4(Date ext4) {
 		this.ext4 = ext4;
@@ -556,8 +395,7 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param ext5
-	 *            the ext5 to set
+	 * @param ext5 the ext5 to set
 	 */
 	public void setExt5(Date ext5) {
 		this.ext5 = ext5;
@@ -571,11 +409,37 @@ public class ManagerRecord extends GenericEntity {
 	}
 
 	/**
-	 * @param ext6
-	 *            the ext6 to set
+	 * @param ext6 the ext6 to set
 	 */
 	public void setExt6(Integer ext6) {
 		this.ext6 = ext6;
 	}
 
+	/**
+	 * @return the organId
+	 */
+	public String getOrganId() {
+		return organId;
+	}
+
+	/**
+	 * @param organId the organId to set
+	 */
+	public void setOrganId(String organId) {
+		this.organId = organId;
+	}
+
+	/**
+	 * @return the organName
+	 */
+	public String getOrganName() {
+		return organName;
+	}
+
+	/**
+	 * @param organName the organName to set
+	 */
+	public void setOrganName(String organName) {
+		this.organName = organName;
+	}
 }

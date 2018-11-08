@@ -120,8 +120,10 @@ public class MainController extends GenericController {
 	@RequestMapping("/content")
 	public String content(Model model) {
 		
-		List<MenuResourceVO> shortcutMenuResources = (List<MenuResourceVO>) SecurityUtils.getSession()
+		List<MenuResourceVO> menuResources = (List<MenuResourceVO>) SecurityUtils.getSession()
 		        .getAttribute("shortcut");
+		List<MenuResourceVO> shortcutMenuResources = new ArrayList<MenuResourceVO>();
+		shortcutMenuResources.addAll(menuResources);
 		model.addAttribute("shortcut", shortcutMenuResources);
 		String appCode = (String) SecurityUtils.getSession().getAttribute("appCode");
 		if (StringUtils.equals(appCode, SystemParamProvider.getString(SystemParamContant.DEFAULT_APPLICATION_CODE))) {

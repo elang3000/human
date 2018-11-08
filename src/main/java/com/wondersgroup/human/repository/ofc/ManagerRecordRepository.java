@@ -15,11 +15,13 @@
  */
 package com.wondersgroup.human.repository.ofc;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.GenericRepository;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
+import com.wondersgroup.human.vo.analysis.MagCountVO;
 import com.wondersgroup.human.vo.ofc.ManagerRecordVO;
 
 /** 
@@ -43,5 +45,27 @@ public interface ManagerRecordRepository  extends GenericRepository<ManagerRecor
 	 * @return: Page<HumanKeepRecordVO>
 	 */
 	Page<ManagerRecordVO> queryManagerRecord(Map<String, Object> filter, Integer page, Integer limit);
+
+	/** 
+	 * @Title: getMagCount 
+	 * @Description: 专项统计进出管列表
+	 * @param departName
+	 * @param year
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<MagCountVO>
+	 */
+	Page<MagCountVO> getMagCount(String departName, Integer year, Integer page, Integer limit);
+
+	/** 
+	 * @Title: getMagCountByDepartId 
+	 * @Description: 专项统计进出管柱状图
+	 * @param departId
+	 * @param year
+	 * @return
+	 * @return: Map<String,BigDecimal>
+	 */
+	Map<String, BigDecimal> getMagCountByDepartId(String departId, Integer year);
 
 }

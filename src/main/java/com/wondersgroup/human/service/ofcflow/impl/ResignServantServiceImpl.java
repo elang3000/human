@@ -30,7 +30,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.common.utils.FtpTool;
 import com.wondersgroup.framework.core.bo.Page;
@@ -43,12 +42,19 @@ import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
 import com.wondersgroup.framework.util.DateUtils;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
+import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofc.ManagerRecord;
+import com.wondersgroup.human.bo.ofc.OutMgr;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.ResignServant;
+import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.dto.ofcflow.ResignServantQueryParam;
+import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
+import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.ResignServantService;
 import com.wondersgroup.human.util.WordUtils;
@@ -77,6 +83,8 @@ public class ResignServantServiceImpl extends GenericServiceImpl<ResignServant> 
 	ServantService servantService;
 	@Autowired
 	private DictableService dictableService;
+	@Autowired
+	private OutMgrService outMgrService;
 	
 	/** (non Javadoc) 
 	 * @Title: saveResign
@@ -187,9 +195,7 @@ public class ResignServantServiceImpl extends GenericServiceImpl<ResignServant> 
 				e.printStackTrace();
 			}
 			
-			CodeInfo isOnHold = dictableService.getCodeInfoByCode("21", "DM200");// 辞职CODE
-			s.setIsOnHold(isOnHold);
-			servantService.update(s);
+			createServant(temp);
 		}else{
 			temp.setStatus(ResignServant.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
@@ -218,7 +224,7 @@ public class ResignServantServiceImpl extends GenericServiceImpl<ResignServant> 
 		}
 		
 		if(x.getCode().equals(CommonConst.HR_ROOT_ORGAN_CODE)){//如果x是人社局
-//			detachedcriteria.add(Restrictions.eq("lastOperator", SecurityUtils.getUserId()));
+			detachedcriteria.add(Restrictions.eq("lastOperator", SecurityUtils.getUserId()));
 		}else{
 			detachedcriteria.add(Restrictions.eq("creater", SecurityUtils.getUserId()));
 		}
@@ -235,4 +241,52 @@ public class ResignServantServiceImpl extends GenericServiceImpl<ResignServant> 
 		return result;
 	}
 
+	
+	public void createServant(ResignServant temp){
+		//主表
+		Servant s = servantService.get(temp.getServant().getId());
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("21", "DM200");// 死亡CODE
+		s.setIsOnHold(isOnHold);
+		servantService.update(s);
+		
+		//转出子集表
+		CodeInfo category = dictableService.getCodeInfoByCode("92", "GBT_12405_2008");// 调出本单位类别-辞职
+		CodeInfo reasonType = dictableService.getCodeInfoByCode("9", "DM015");// 调动原因-其他
+		CodeInfo proposeType = dictableService.getCodeInfoByCode("9", "DM039");// 提出调动类型-其他
+		
+		OutMgr out = new OutMgr();
+		out.setServant(s);//人员基本信息
+		out.setCategory(category);//调出本单位类别
+		out.setReasonType(reasonType);//调动原因
+		out.setOutDate(new Date());//调出本单位日期
+		out.setGotoUnitName(temp.getResignWhereabouts().getName());//调往单位名称(去向)
+		out.setProposeType(proposeType);//提出调动类型
+		out.setRemark(temp.getRemark());//调出备注
+		DictUtils.operationCodeInfo(out);//将CodeInfo中id为空的属性 设置为null
+		
+		outMgrService.save(out);
+		
+		ManagerRecordDTO dto = new ManagerRecordDTO(s.getId(),ManagerRecord.HUMAN_CZ);
+		ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
+		EventManager.send(event);
+	}
+
+	/** 
+	 * @see com.wondersgroup.human.service.ofcflow.ResignServantService#getByServantId(java.lang.String) 
+	 */
+	@Override
+	public ResignServant getByServantId(String servantId) {
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(ResignServant.class);
+		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");
+		s.add(Restrictions.eq("s.id", servantId));
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		
+		List<ResignServant> list = this.findByCriteria(detachedcriteria);
+		
+		if(list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
 }

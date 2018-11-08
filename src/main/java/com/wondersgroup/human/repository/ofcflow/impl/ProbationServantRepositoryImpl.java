@@ -15,11 +15,19 @@
  */
 package com.wondersgroup.human.repository.ofcflow.impl;
 
+import org.apache.velocity.runtime.directive.Foreach;
+import org.hibernate.Query;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.springframework.stereotype.Repository;
 
 import com.wondersgroup.framework.core.dao.impl.GenericRepositoryImpl;
 import com.wondersgroup.human.bo.ofcflow.ProbationServant;
 import com.wondersgroup.human.repository.ofcflow.ProbationServantRepository;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /** 
  * @ClassName: ProbationServantRepositoryImpl 
@@ -35,5 +43,26 @@ public class ProbationServantRepositoryImpl extends GenericRepositoryImpl<Probat
 	
 	public Class<ProbationServant> getEntityClass() {
 		return ProbationServant.class;
+	}
+
+	@Override
+	public Map<String, Integer> getUnitProbationCount() {
+		StringBuilder sql=new StringBuilder();
+		sql.append("select count(p.id) value, b.id ");
+		sql.append("  from HUMAN_PROBATION_SERVANT p ");
+		sql.append(" inner join HUMAN_DRAFT_SERVANT d ");
+		sql.append("    on p.DRAFT_SERVANT_ID = d.id ");
+		sql.append("  left join B01 b ");
+		sql.append("    on d.DRAFT_UNIT_ID = b.id ");
+		sql.append(" where p.STATUS in (0, 1, 2, 3, 4, 5, 7) ");
+		sql.append(" group by b.id ");
+		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+		Map<String, Integer> resultMap = new HashMap();
+		List<Map<String, Object>> list =queryObject.list();
+		for(Map<String, Object> map : list){
+			resultMap.put((String)map.get("ID"),((BigDecimal)map.get("VALUE")).intValue());
+		}
+		return resultMap;
 	}
 }

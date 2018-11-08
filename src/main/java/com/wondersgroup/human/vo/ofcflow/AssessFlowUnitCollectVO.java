@@ -1,15 +1,13 @@
 package com.wondersgroup.human.vo.ofcflow;
 
+import com.wondersgroup.framework.core.exception.BusinessException;
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.wondersgroup.framework.core.exception.BusinessException;
 
 public class AssessFlowUnitCollectVO {
 	
@@ -26,8 +24,6 @@ public class AssessFlowUnitCollectVO {
 			this.season=((BigDecimal)map.get("SEASON")).intValue();
 		if(map.get("REMARK")!=null)
 			this.remark=(String)map.get("REMARK");
-		if(map.get("FLOW_STATUS")!=null)
-			this.flowStatus=((BigDecimal)map.get("FLOW_STATUS")).intValue();
 		if(map.get("DRAFT_OUTSTANDING_PERCENT")!=null)
 			this.draftOutstandingPercent=((BigDecimal)map.get("DRAFT_OUTSTANDING_PERCENT")).intValue();
 		if(map.get("ASSESSMENT_TYPE")!=null)
@@ -38,6 +34,12 @@ public class AssessFlowUnitCollectVO {
 			this.setStatus(((BigDecimal)map.get("STATUS")).intValue());
 		if(map.get("CREATE_TIME")!=null){
 			this.createTime=(Timestamp)map.get("CREATE_TIME");
+		}
+		if(map.get("ALLNUM")!=null){
+			this.allNum=((BigDecimal)map.get("ALLNUM")).intValue();
+		}
+		if(map.get("ASSESSNUM")!=null){
+			this.assessNum=((BigDecimal)map.get("ASSESSNUM")).intValue();
 		}
 	}
 	
@@ -76,6 +78,11 @@ public class AssessFlowUnitCollectVO {
 	private Integer flowStatus;
 	
 	private Timestamp createTime;
+
+
+	private Integer allNum;
+
+	private Integer assessNum;
 	
 	
 	
@@ -224,13 +231,51 @@ public class AssessFlowUnitCollectVO {
 	}
 
 
+	public String getUnitStatus(){
+		if(this.assessmentType==ASSESSYEAR){
+			// 考核状态       -1 未开始流程  0开始流程 1完成流程
+			if(flowStatus==0){
+				return "流程开始";
+			}
+			if(flowStatus==1){
+				return "考核完成";
+			}
+			if(flowStatus==-1){
+				return "考核未完成";
+			}
+			return "";
+		}
+		else if(this.assessmentType==ASSESSSEASON){
+			if(allNum!=null&&assessNum!=null&&allNum==assessNum){
+				return "考核完成";
+			}
+			return "考核未完成";
+		}
+		return "";
+	}
+
+
 
 	public void setStatus(int status) {
 		
 		this.status = status;
 	}
 
-	
 
-	
+	public Integer getAllNum() {
+		return allNum;
+	}
+
+	public void setAllNum(Integer allNum) {
+		this.allNum = allNum;
+	}
+
+	public Integer getAssessNum() {
+		return assessNum;
+	}
+
+	public void setAssessNum(Integer assessNum) {
+		this.assessNum = assessNum;
+	}
+
 }

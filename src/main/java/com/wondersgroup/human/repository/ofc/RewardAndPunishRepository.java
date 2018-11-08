@@ -23,6 +23,7 @@ import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.GenericRepository;
 import com.wondersgroup.human.bo.ofc.RewardAndPunish;
 import com.wondersgroup.human.bo.ofc.Servant;
+import com.wondersgroup.human.vo.analysis.PunishCountVO;
 import com.wondersgroup.human.vo.analysis.RewardCountVO;
 
 /** 
@@ -57,5 +58,27 @@ public interface RewardAndPunishRepository  extends GenericRepository<RewardAndP
 	 * @return: Map<String,Integer>
 	 */
 	Map<String, BigDecimal> getRewardCountByDepartId(String departId, Integer year);
+
+	/** 
+	 * @Title: getPunishCount 
+	 * @Description: 专项统计-处分统计列表
+	 * @param departName
+	 * @param year
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<PunishCountVO>
+	 */
+	Page<PunishCountVO> getPunishCount(String departName, Integer year, Integer page, Integer limit);
+
+	/** 
+	 * @Title: getPunishCountByDepartId 
+	 * @Description: 专项统计-处分统计柱状图详情
+	 * @param departId
+	 * @param year
+	 * @return
+	 * @return: Map<String,BigDecimal>
+	 */
+	Map<String, BigDecimal> getPunishCountByDepartId(String departId, Integer year);
 
 }

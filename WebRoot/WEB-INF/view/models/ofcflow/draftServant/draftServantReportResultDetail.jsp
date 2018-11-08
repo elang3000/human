@@ -201,7 +201,7 @@
 							</div>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="6">
-							<smart:infoShowerLabel infoname="单位名称"
+							<smart:infoShowerLabel infoname="签发单位名称"
 								infovalue="${dsr.unitName}"></smart:infoShowerLabel>
 						</smart:gridColumn>
 

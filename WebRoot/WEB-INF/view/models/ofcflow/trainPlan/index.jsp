@@ -82,8 +82,8 @@
 							height="full-240" text="未找到用户数据！" page="true" doneCallBack="fixedCol">
 							<tr>
 								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
-								<smart:tableItem field="trainOrgan" width=".15" sort="false">培训机关</smart:tableItem>
-								<smart:tableItem field="inputOrgan" width=".15" sort="false">录入机关</smart:tableItem>
+								<smart:tableItem field="trainOrgan" width=".15" sort="false">在学单位</smart:tableItem>
+								<smart:tableItem field="inputOrgan" width=".15" sort="false">主办单位</smart:tableItem>
 								<smart:tableItem field="yearPlan" width=".2" sort="false">年度培训考核</smart:tableItem>
 								<smart:tableItem field="trainName" width=".2" sort="false">培训名</smart:tableItem>
 								<smart:tableItem field="hours" width=".1" sort="false">培训学时</smart:tableItem>

@@ -31,7 +31,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.human.service.analysis.SpecialCountService;
+import com.wondersgroup.human.vo.analysis.PunishCountVO;
 import com.wondersgroup.human.vo.analysis.RewardCountVO;
+import com.wondersgroup.human.vo.analysis.MagCountVO;
 
 /** 
  * @ClassName: SpecialCountController 
@@ -54,10 +56,22 @@ public class SpecialCountController  extends GenericController {
     
     //专项统计奖励详情
     private static final String REWARD_COUNT_VIEW = "models/analysis/specialCount/rewardCount/rewardView";
+    
+    //专项统计惩罚首页
+    private static final String PUNISH_COUNT_INDEX = "models/analysis/specialCount/punishCount/punishIndex";
+    
+    //专项统计惩罚详情
+    private static final String PUNISH_COUNT_VIEW = "models/analysis/specialCount/punishCount/punishView";
+    
+    //专项统计惩罚首页
+    private static final String MAG_COUNT_INDEX = "models/analysis/specialCount/magCount/magIndex";
+    
+    //专项统计惩罚详情
+    private static final String MAG_COUNT_VIEW = "models/analysis/specialCount/magCount/magView";
 
     //专项统计奖励首页
     @RequestMapping("/reward/index")
-    public String index() {
+    public String rewardIndex() {
         return REWARD_COUNT_INDEX;
     }
     
@@ -72,20 +86,22 @@ public class SpecialCountController  extends GenericController {
 	 */
 	@ResponseBody
 	@RequestMapping("/reward/list")
-	public Page<RewardCountVO> query(String departName,Integer year,Integer limit,Integer page) {
+	public Page<RewardCountVO> getRewardCount(String departName,Integer year,Integer limit,Integer page) {
 		Page<RewardCountVO> pageInfo = specialCountService.getRewardCount(departName,year,page,limit);
 		return pageInfo;
 	}
     //专项统计奖励详情
     @RequestMapping("/reward/view")
-    public String view(Model model,String departId) {
+    public String rewardView(Model model,String departId,String departName,Integer year) {
     	model.addAttribute("departId", departId);
+    	model.addAttribute("departName", departName);
+    	model.addAttribute("year", year);
         return REWARD_COUNT_VIEW;
     }
     
     @RequestMapping("/reward/echarts")
 	@ResponseBody
-	public Map<String, Object> statistServantYears(String departId,Integer year) {
+	public Map<String, Object> getRewardCountByDepartId(String departId,Integer year) {
 		
 		Map<String, BigDecimal> reward = specialCountService.getRewardCountByDepartId(departId,year);
 		Iterator<Entry<String, BigDecimal>> iterator = reward.entrySet().iterator();
@@ -102,9 +118,141 @@ public class SpecialCountController  extends GenericController {
 		iterator = reward.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, BigDecimal> entry = iterator.next();
-			series1.add(
-			        new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(2, RoundingMode.HALF_UP).doubleValue()
-			                * 100);
+			if(total!=0d){
+				series1.add(
+						new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(2, RoundingMode.HALF_UP).doubleValue()
+						* 100);
+			}else{
+				series1.add(0d);
+			}
+		}
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("xAxis", xAxis);
+		result.put("series0", series0);
+		result.put("series1", series1);
+		return result;
+	}
+    
+    //专项统计奖励首页
+    @RequestMapping("/punish/index")
+    public String punishIndex() {
+        return PUNISH_COUNT_INDEX;
+    }
+    
+    //专项统计奖励列表
+    /**
+	 * @Title: query
+	 * @Description: 
+	 * @param 查询条件
+	 * @param limit页大小
+	 * @param page页码
+	 * @return: 
+	 */
+	@ResponseBody
+	@RequestMapping("/punish/list")
+	public Page<PunishCountVO> getPunishCount(String departName,Integer year,Integer limit,Integer page) {
+		Page<PunishCountVO> pageInfo = specialCountService.getPunishCount(departName,year,page,limit);
+		return pageInfo;
+	}
+    //专项统计奖励详情
+    @RequestMapping("/punish/view")
+    public String punishView(Model model,String departId,String departName,Integer year) {
+    	model.addAttribute("departId", departId);
+    	model.addAttribute("departName", departName);
+    	model.addAttribute("year", year);
+        return PUNISH_COUNT_VIEW;
+    }
+    
+    @RequestMapping("/punish/echarts")
+	@ResponseBody
+	public Map<String, Object> getPunishCountByDepartId(String departId,Integer year) {
+		
+		Map<String, BigDecimal> reward = specialCountService.getPunishCountByDepartId(departId,year);
+		Iterator<Entry<String, BigDecimal>> iterator = reward.entrySet().iterator();
+		List<String> xAxis = new ArrayList<String>();
+		List<Integer> series0 = new ArrayList<Integer>();
+		List<Double> series1 = new ArrayList<Double>();
+		Double total = 0d;
+		while (iterator.hasNext()) {
+			Entry<String, BigDecimal> entry = iterator.next();
+			xAxis.add(entry.getKey());
+			series0.add(entry.getValue().intValue());
+			total += entry.getValue().intValue();
+		}
+		iterator = reward.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, BigDecimal> entry = iterator.next();
+			if(total!=0d){
+				series1.add(
+						new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(2, RoundingMode.HALF_UP).doubleValue()
+						* 100);
+			}else{
+				series1.add(0d);
+			}
+		}
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("xAxis", xAxis);
+		result.put("series0", series0);
+		result.put("series1", series1);
+		return result;
+	}
+    
+    //专项统计进出管理首页
+    @RequestMapping("/mag/index")
+    public String magIndex() {
+        return MAG_COUNT_INDEX;
+    }
+    
+    //专项统计进出管理列表
+    /**
+	 * @Title: query
+	 * @Description: 
+	 * @param 查询条件
+	 * @param limit页大小
+	 * @param page页码
+	 * @return: 
+	 */
+	@ResponseBody
+	@RequestMapping("/mag/list")
+	public Page<MagCountVO> getMagCount(String departName,Integer year,Integer limit,Integer page) {
+		Page<MagCountVO> pageInfo = specialCountService.getMagCount(departName,year,page,limit);
+		return pageInfo;
+	}
+    //专项统计进出管理详情
+    @RequestMapping("/mag/view")
+    public String magView(Model model,String departId,String departName,Integer year) {
+    	model.addAttribute("departId", departId);
+    	model.addAttribute("departName", departName);
+    	model.addAttribute("year", year);
+        return MAG_COUNT_VIEW;
+    }
+    
+    @RequestMapping("/mag/echarts")
+	@ResponseBody
+	public Map<String, Object> getMagCountByDepartId(String departId,Integer year) {
+		
+		Map<String, BigDecimal> reward = specialCountService.getMagCountByDepartId(departId,year);
+		Iterator<Entry<String, BigDecimal>> iterator = reward.entrySet().iterator();
+		List<String> xAxis = new ArrayList<String>();
+		List<Integer> series0 = new ArrayList<Integer>();
+		List<Double> series1 = new ArrayList<Double>();
+		Double total = 0d;
+		while (iterator.hasNext()) {
+			Entry<String, BigDecimal> entry = iterator.next();
+			xAxis.add(entry.getKey());
+			series0.add(entry.getValue().intValue());
+			total += entry.getValue().intValue();
+		}
+		iterator = reward.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, BigDecimal> entry = iterator.next();
+			if(total!=0d){
+				series1.add(
+						new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(2, RoundingMode.HALF_UP).doubleValue()
+						* 100);
+			}else{
+				series1.add(0d);
+			}
 		}
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("xAxis", xAxis);

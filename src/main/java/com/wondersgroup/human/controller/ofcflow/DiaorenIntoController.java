@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,18 +28,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wondersgroup.common.contant.DictTypeCodeContant;
-import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
@@ -64,6 +58,7 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.service.company.NationalCompanyService;
 import com.wondersgroup.human.service.ofcflow.DiaoRenIntoMgrService;
 import com.wondersgroup.human.service.ofcflow.DiaoRenOutMgrService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.util.WordUtils;
 import com.wondersgroup.human.vo.ofcflow.DiaoRenIntoMgrVO;
@@ -81,7 +76,7 @@ import net.sf.json.JSONArray;
  */
 @Controller
 @RequestMapping("ofcflow/diaoren")
-public class DiaorenIntoController extends GenericController implements ApplicationContextAware{
+public class DiaorenIntoController extends GenericController{
 	@Autowired
 	private DiaoRenIntoMgrService diaoRenIntoMgrService;
 	@Autowired
@@ -103,16 +98,8 @@ public class DiaorenIntoController extends GenericController implements Applicat
 	@Autowired
 	private NationalCompanyService nationalCompanyService;
 	
-	/**
-	 * 读取message.properties配置文件数据
-	 */
 	@Autowired
-	private MessageSource messageSource;
-	
-	/**
-	 * 通知消息
-	 */
-	private ApplicationContext applicationContext;
+	private FormationControlService formationControlService;
 	
 	/**
 	 * 调入情况列表
@@ -473,6 +460,9 @@ public class DiaorenIntoController extends GenericController implements Applicat
 		try {
 			if(StringUtils.isNotBlank(temp.getId())){//更新
 				DiaoRenIntoMgr post = diaoRenIntoMgrService.get(temp.getId());
+				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+				formationControlService.queryJudgeFormationNum(post.getTargetOrgan().getId());
+				
 				BeanUtils.copyPropertiesIgnoreNull(temp, post);
 				DictUtils.operationCodeInfo(post);//将CodeInfo中id为空的属性 设置为null
 				diaoRenIntoMgrService.saveOrUpdate(post);//保存
@@ -482,6 +472,9 @@ public class DiaorenIntoController extends GenericController implements Applicat
 				if(x==null||StringUtils.isBlank(x.getId())){
 					throw new BusinessException("单位信息不能为空！");
 				}
+				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+				formationControlService.queryJudgeFormationNum(x.getId());
+				
 				temp.setId(null);
 				temp.setStatus(DiaoRenIntoMgr.STATUS_DIAOREN_STATE);//流程状态，待提交
 				temp.setTargetOrgan(x);//调入单位为当前单位
@@ -534,6 +527,9 @@ public class DiaorenIntoController extends GenericController implements Applicat
 		try {
 			if(StringUtils.isNotBlank(temp.getId())){//更新
 				DiaoRenIntoMgr post = diaoRenIntoMgrService.get(temp.getId());
+				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+				formationControlService.queryJudgeFormationNum(post.getTargetOrgan().getId());
+				
 				BeanUtils.copyPropertiesIgnoreNull(temp, post);
 				DictUtils.operationCodeInfo(post);//将CodeInfo中id为空的属性 设置为null
 				diaoRenIntoMgrService.saveOrUpdate(post);//保存
@@ -543,6 +539,9 @@ public class DiaorenIntoController extends GenericController implements Applicat
 				if(x==null||StringUtils.isBlank(x.getId())){
 					throw new BusinessException("单位信息不能为空！");
 				}
+				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+				formationControlService.queryJudgeFormationNum(x.getId());
+				
 				temp.setId(null);
 				temp.setStatus(DiaoRenIntoMgr.STATUS_DIAOREN_STATE);//流程状态，待提交
 				temp.setTargetOrgan(x);//调入单位为当前单位
@@ -647,16 +646,9 @@ public class DiaorenIntoController extends GenericController implements Applicat
 				diaoRenIntoMgrService.saveFlow(temp,opinion,r);//提交流程
 			} else {
 				DiaoRenIntoMgr post = diaoRenIntoMgrService.get(temp.getId());
-				temp.setStatus(post.getStatus());//设置一下，后面发送通知时在使用
 				BeanUtils.copyPropertiesIgnoreNull(temp, post);
 				DictUtils.operationCodeInfo(post);//将CodeInfo中id为空的属性 设置为null
 				diaoRenIntoMgrService.saveFlow(post,opinion,r);//提交流程
-			}
-			if(DiaoRenIntoMgr.STATUS_DIAOREN_PRINT==temp.getStatus()&&FlowRecord.PASS.equals(r)){
-				//发送通知
-				String title = messageSource.getMessage("diaoRenTitle", new Object[]{temp.getName()}, Locale.CHINESE);
-				String content = messageSource.getMessage("diaoRenContent", new Object[]{temp.getName()}, Locale.CHINESE);
-				applicationContext.publishEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, ""));
 			}
 			result.setMessage("操作成功！");
 		} catch (BusinessException e) {
@@ -701,16 +693,9 @@ public class DiaorenIntoController extends GenericController implements Applicat
 				diaoRenIntoMgrService.saveFlowOuter(temp,opinion,r);//提交流程
 			} else {
 				DiaoRenIntoMgr post = diaoRenIntoMgrService.get(temp.getId());
-				temp.setStatus(post.getStatus());//设置一下，后面发送通知时在使用
 				BeanUtils.copyPropertiesIgnoreNull(temp, post);
 				DictUtils.operationCodeInfo(post);//将CodeInfo中id为空的属性 设置为null
 				diaoRenIntoMgrService.saveFlowOuter(post,opinion,r);//提交流程
-			}
-			if(DiaoRenIntoMgr.STATUS_DIAOREN_PRINT==temp.getStatus()&&FlowRecord.PASS.equals(r)){
-				//发送通知
-				String title = messageSource.getMessage("diaoRenTitle", new Object[]{temp.getName()}, Locale.CHINESE);
-				String content = messageSource.getMessage("diaoRenContent", new Object[]{temp.getName()}, Locale.CHINESE);
-				applicationContext.publishEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, ""));
 			}
 			result.setMessage("操作成功！");
 		} catch (BusinessException e) {
@@ -777,16 +762,5 @@ public class DiaorenIntoController extends GenericController implements Applicat
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	/** (non Javadoc) 
-	 * @Title: setApplicationContext
-	 * @Description: 通知消息
-	 * @param applicationContext
-	 * @throws BeansException 
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext) 
-	 */
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
 	}
 }

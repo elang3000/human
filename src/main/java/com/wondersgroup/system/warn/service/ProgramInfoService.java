@@ -44,4 +44,6 @@ public interface ProgramInfoService extends GenericService<ProgramInfo>{
 	 * @return: Page<ProgramInfoVO>
 	 */
 	public Page<ProgramInfoVO> findbyHQLforVO(String hql,List<QueryParameter> listqueryparametry,Integer pageNo,Integer pagesize);
+	
+	public void getJob();
 }

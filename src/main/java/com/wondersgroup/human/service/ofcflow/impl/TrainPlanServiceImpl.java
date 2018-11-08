@@ -31,10 +31,19 @@ import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
+import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofc.ManagerRecord;
+import com.wondersgroup.human.bo.ofc.Study;
+import com.wondersgroup.human.bo.ofcflow.TrainPerson;
 import com.wondersgroup.human.bo.ofcflow.TrainPlan;
+import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
+import com.wondersgroup.human.event.ofc.ManagerManageRecordEvent;
+import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
+import com.wondersgroup.human.service.ofc.StudyService;
 import com.wondersgroup.human.service.ofcflow.TrainPlanService;
 import com.wondersgroup.human.vo.ofcflow.TrainPlanVO;
 
@@ -54,6 +63,8 @@ public class TrainPlanServiceImpl extends GenericServiceImpl<TrainPlan> implemen
 	private WorkflowService workflowService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private StudyService studyService;
 
 	/** 
 	 * @see com.wondersgroup.human.service.ofcflow.TrainPlanService#pageList(com.wondersgroup.human.bo.ofcflow.TrainPlan, java.lang.Integer, java.lang.Integer) 
@@ -120,6 +131,8 @@ public class TrainPlanServiceImpl extends GenericServiceImpl<TrainPlan> implemen
 			flow = workflowService.completeWorkItem(flow);//提交下个节点
 		}
 		if(TrainPlan.STATUS_TRAIN_PLAN_STEP8 == temp.getStatus()&&FlowRecord.PASS.equals(r)){//培训考核最后环节
+			createServant(temp);
+			
 			temp.setStatus(TrainPlan.STATUS_TRAIN_PLAN_PASS);//
 			temp.setFlowRecord(null);//修改当前业务的流程节点
 		}else{
@@ -160,6 +173,8 @@ public class TrainPlanServiceImpl extends GenericServiceImpl<TrainPlan> implemen
 			flow = workflowService.completeWorkItem(flow);//提交下个节点
 		}
 		if(TrainPlan.STATUS_TRAIN_PLAN_STEP8 == temp.getStatus()&&FlowRecord.PASS.equals(r)){//培训考核最后环节
+			createServant(temp);
+			
 			temp.setStatus(TrainPlan.STATUS_TRAIN_PLAN_PASS);//
 			temp.setFlowRecord(null);//修改当前业务的流程节点
 		}else{
@@ -169,4 +184,27 @@ public class TrainPlanServiceImpl extends GenericServiceImpl<TrainPlan> implemen
 		update(temp);
 	}
 
+	public void createServant(TrainPlan temp){
+		
+		for(TrainPerson s:temp.getTrainPerson()){
+			Study study = new Study();
+			
+			study.setServant(s.getServant());
+			study.setCategory(null);//培训类别
+			study.setStartDate(s.getStartDate());//开始时间
+			study.setEndDate(s.getEndDate());//结束时间
+			study.setHostUnitName(temp.getInputOrgan().getName());//主办单位名称名称
+			study.setStudyUnitName(temp.getTrainOrgan().getName());//在学单位名称
+			study.setIsAbroadStudy(s.getIsAbroad());//出国标识
+			study.setStudyLengthOfTime(s.getDay());//天数
+			study.setStudyHours(s.getHours());//学时
+			DictUtils.operationCodeInfo(study);//将CodeInfo中id为空的属性 设置为null
+			
+			studyService.save(study);
+			
+			ManagerRecordDTO dto = new ManagerRecordDTO(s.getId(),ManagerRecord.HUMAN_PXKH);
+			ManagerManageRecordEvent event = new ManagerManageRecordEvent(dto);
+			EventManager.send(event);
+		}
+	}
 }

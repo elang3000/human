@@ -18,13 +18,19 @@ package com.wondersgroup.system.warn.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.system.warn.bo.ProgramInfo;
+import com.wondersgroup.system.warn.controller.QuartzJobController;
+import com.wondersgroup.system.warn.dao.ProgramInfoRepository;
 import com.wondersgroup.system.warn.service.ProgramInfoService;
+import com.wondersgroup.system.warn.util.QuartzManager;
 import com.wondersgroup.system.warn.vo.ProgramInfoVO;
 
 /** 
@@ -38,6 +44,13 @@ import com.wondersgroup.system.warn.vo.ProgramInfoVO;
  */
 @Service
 public class ProgramInfoServiceImpl extends GenericServiceImpl<ProgramInfo> implements ProgramInfoService{
+	
+	@Autowired
+	private QuartzManager quartzManager;
+	
+	@Autowired
+	private ProgramInfoRepository programInfoRepository;
+	
 	/**
 	 * @Title: findbyHQLforVO 
 	 * @Description: 转换为VO的分页列表
@@ -57,5 +70,24 @@ public class ProgramInfoServiceImpl extends GenericServiceImpl<ProgramInfo> impl
 		}
 		Page<ProgramInfoVO> page = new Page<>(temppage.getStart(), temppage.getCurrentPageSize(), temppage.getTotalSize(), temppage.getPageSize(), voList);
 		return page;
+	}
+	
+	/**
+	 * @Title: initJob 
+	 * @Description: 启动预警预告定时器
+	 * @return: void
+	 */
+	public void getJob(){
+		DetachedCriteria c = DetachedCriteria.forClass(ProgramInfo.class);
+		c.add(Restrictions.eq("removed", false));
+		c.add(Restrictions.eq("programState", ProgramInfo.WARN));//查询出启动状态的定时器
+		List<ProgramInfo> list = programInfoRepository.findByCriteria(c);
+		
+		if(list!=null&&list.size()>0){
+			for(ProgramInfo info:list){
+				//启动定时器
+				quartzManager.addJob(info.getName(), info.getId(), info.getName(),info.getId(), QuartzJobController.class, info.getProgramTime());
+			}
+		}
 	}
 }

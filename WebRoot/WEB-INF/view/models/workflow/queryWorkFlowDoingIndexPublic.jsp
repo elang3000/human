@@ -56,7 +56,7 @@
 								<smart:tableItem align="center" width=".2" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar">
-								{{# if (d.targetSecurityUser == '${userId}') { }}
+								{{# if (d.targetSecurityUserId == '${userId}') { }}
 								<smart:tableToolBtn theme="warm" event="complete" title="处理相关事项">
 									<smart:icon icon="edit"></smart:icon>
 								</smart:tableToolBtn>

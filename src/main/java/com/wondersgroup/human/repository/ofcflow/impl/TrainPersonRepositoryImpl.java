@@ -15,8 +15,12 @@
  */
 package com.wondersgroup.human.repository.ofcflow.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.SQLQuery;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.wondersgroup.framework.core.dao.impl.GenericRepositoryImpl;
@@ -109,6 +113,28 @@ public class TrainPersonRepositoryImpl extends GenericRepositoryImpl<TrainPerson
 		query.setString("status",String.valueOf(TrainPlan.STATUS_TRAIN_PLAN_PASS));
 		List<?> list = query.list();
 		return list;
+	}
+
+	/**
+	 * @see com.wondersgroup.human.repository.ofcflow.TrainPersonRepository#getTrainHours(java.lang.String, java.util.Date, java.util.Date) 
+	 */
+	@Override
+	public int getTrainHours(String id, Date start, Date end) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		StringBuilder sql=new StringBuilder();
+		sql.append("select ifnull(sum(htp.hours),0) as trainHours from human_train_person htp");
+		sql.append("left join human_train_plan tp on tp.id = htp.train_Id ");
+		sql.append("where htp.removed = 'N' and tp.removed = 'N' and tp.status :status ");
+		sql.append("and htp.servant_id = :id ");
+		sql.append("and htp.START_DATE <= :start ");
+		sql.append("and htp.END_DATE >= :end ");
+		SQLQuery query =this.currentSession().createSQLQuery(sql.toString());
+		query.setParameter("status", TrainPlan.STATUS_TRAIN_PLAN_PASS);
+		query.setParameter("id", id);
+		query.setParameter("start", sdf.format(start));
+		query.setParameter("end", sdf.format(end));
+		Integer result = ((Integer) query.uniqueResult()).intValue();
+		return result;
 	}
 
 }

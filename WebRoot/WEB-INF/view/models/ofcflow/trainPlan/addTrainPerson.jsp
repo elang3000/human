@@ -118,7 +118,7 @@
 				<smart:gridRow>
 					<smart:gridColumn>
 						<smart:table id="navigationList" url="ofcflow/train/trainPersonList?planId=${trainPlan.id}"
-							height="full-500" text="未找到用户数据！" page="true">
+							 text="未找到用户数据！" page="true">
 							<tr>
 								<smart:tableItem field="name" width=".2" sort="false">姓名</smart:tableItem>
 								<smart:tableItem field="hours" width=".1" sort="false">培训学时</smart:tableItem>

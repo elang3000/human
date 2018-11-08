@@ -232,11 +232,12 @@ public class ProgramInfoController extends GenericEntity{
 	 * @param colName	查询条件的字段名  格式：表名.字段名  多表查询时不报错  例：A01.ID
 	 * @param tableName	查询条件涉及的表名
 	 * @param colType	查询条件类型  logic:逻辑运算符  1:字符串  2：日期   3：数据字典
+	 * @param colNameb	查询条件的字段描述，如name字段的描述是：姓名
 	 * @return: AjaxResult
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public AjaxResult save(ProgramInfo temp,String[] operation,String[] condition,String[] colName,String[] tableName,String[] colType){
+	public AjaxResult save(ProgramInfo temp,String[] operation,String[] condition,String[] colName,String[] tableName,String[] colType,String[] colNameb){
 		AjaxResult result = new AjaxResult(true);
 		try {
 			if(StringUtils.isNotBlank(temp.getId())){//更新
@@ -245,18 +246,26 @@ public class ProgramInfoController extends GenericEntity{
 				DictUtils.operationCodeInfo(p);//将CodeInfo中id为空的属性 设置为null
 				programInfoService.saveOrUpdate(p);//保存
 			}else{//新增
+				if(StringUtils.isBlank(temp.getProgramCode())){
+					throw new BusinessException("请选择该方案的数据类型！");
+				}
 				if(colType==null||colType.length==0){
 					throw new BusinessException("请选择该方案的数据条件！");
 				}
 				if(colType.length!=operation.length||colType.length!=condition.length||colType.length!=colName.length||colType.length!=tableName.length){
 					throw new BusinessException("方案的条件数据不正确！");
 				}
-				StringBuffer resultSql = new StringBuffer("select A01.* from ");//最终生成sql
+				String programCode = "A01";//表名
+				if(ProgramInfo.PREVIEW.equals(temp.getProgramCode())){
+					programCode = "B01";
+				}
+				StringBuffer news = new StringBuffer();//查询条件生成的通知消息
+				StringBuffer resultSql = new StringBuffer("select ").append(programCode).append(".* from ");//最终生成sql
 				StringBuffer tableName2 = new StringBuffer();//拼接的表名
 				StringBuffer tableCondition = new StringBuffer();//表之间的关联条件
 				StringBuffer condition2 = new StringBuffer();//拼接的查询条件
 				Set<String> tableSet =  new HashSet<>();//将表名去重
-				tableSet.add("A01");//A01表必需
+				tableSet.add(programCode);//基本信息表必需
 				for(int i=0;i<colType.length;i++){//遍历条件
 					String colType2 = colType[i];
 					if("logic".equals(colType2)){//逻辑运算符，or,and,(,)这些
@@ -265,19 +274,42 @@ public class ProgramInfoController extends GenericEntity{
 						}else if("& #41;".equals(condition[i])){
 							condition2.append(" ) ");
 						}else{
+							//拼接查询条件的通知消息
+							if("OR".equals(condition[i])){
+								news.append("或者");
+							}else if("AND".equals(condition[i])){
+								news.append("并且");
+							}
+							
 							condition2.append(" ").append(condition[i]).append(" ");
 						}
 					}else{
 						tableSet.add(tableName[i]);
+						
+						//拼接查询条件的通知消息
+						news.append(colNameb[i]);
+						
 						if("1".equals(colType2)){//字符串
 							condition2.append(" ").append(colName[i]).append(" ");
 							if("like".equals(operation[i].trim())){
+								//拼接查询条件的通知消息
+								news.append("包含").append(condition[i]);
+								
 								condition2.append(operation[i]).append(" '%").append(condition[i]).append("%' ");
 							}else if("lt".equals(operation[i].trim())){
+								//拼接查询条件的通知消息
+								news.append("小于").append(condition[i]);
+								
 								condition2.append(" < '").append(condition[i]).append("' ");
 							}else if("gt".equals(operation[i].trim())){
+								//拼接查询条件的通知消息
+								news.append("大于").append(condition[i]);
+								
 								condition2.append(" > '").append(condition[i]).append("' ");
 							}else{
+								//拼接查询条件的通知消息
+								news.append("等于").append(condition[i]);
+								
 								condition2.append(operation[i]).append(" '").append(condition[i]).append("' ");
 							}
 						}else if("2".equals(colType2)){//日期
@@ -291,12 +323,18 @@ public class ProgramInfoController extends GenericEntity{
 				String table2 = "";
 				String tableCondition2 = "";
 				if(tableSet.size()==1){
-					table2 = " A01 ";
+					table2 = " "+programCode+" ";
 				}else{
 					for(String table : tableSet){
 						tableName2.append(",").append(table);
-						if(!"A01".equals(table)){//基本信息表不生成表关联条件
-							tableCondition.append(" and A01.ID=").append(table).append(".SERVANT_ID(+)");
+						if(!programCode.equals(table)){//基本信息表不生成表关联条件
+							tableCondition.append(" and ").append(programCode).append(".ID=").append(table);
+							if("A01".equals(programCode)){
+								tableCondition.append(".SERVANT_ID(+)");
+							}else if("B01".equals(programCode)){
+								tableCondition.append(".ORGINFO_ID(+)");
+							}
+							
 						}
 					}
 					table2 = tableName2.substring(1, tableName2.length());
@@ -306,10 +344,11 @@ public class ProgramInfoController extends GenericEntity{
 				if("".equals(tableCondition2)){//单表查询
 					resultSql.append(table2).append(" where removed='N' AND ( ").append(condition2).append(" ) ");
 				}else{
-					resultSql.append(table2).append(" where ").append(tableCondition2).append(" AND A01.removed='N' AND ( ").append(condition2).append(" ) ");
+					resultSql.append(table2).append(" where ").append(tableCondition2).append(" AND ").append(programCode).append(".removed='N' AND ( ").append(condition2).append(" ) ");
 				}
 				
 				temp.setResultSql(resultSql.toString());
+				temp.setNewsContent(temp.getNewsContent()+"，"+news.toString());
 				DictUtils.operationCodeInfo(temp);//将CodeInfo中id为空的属性 设置为null
 				temp.setProgramState(ProgramInfo.PREVIEW);//默认未启动
 				programInfoService.saveOrUpdate(temp);

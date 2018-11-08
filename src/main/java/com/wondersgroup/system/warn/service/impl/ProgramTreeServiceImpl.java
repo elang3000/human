@@ -15,10 +15,14 @@
  */
 package com.wondersgroup.system.warn.service.impl;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wondersgroup.framework.core.service.impl.GenericTreeServiceImpl;
 import com.wondersgroup.system.warn.bo.ProgramTree;
+import com.wondersgroup.system.warn.service.ProgramInfoService;
 import com.wondersgroup.system.warn.service.ProgramTreeService;
 
 /** 
@@ -33,4 +37,16 @@ import com.wondersgroup.system.warn.service.ProgramTreeService;
 @Service
 public class ProgramTreeServiceImpl extends GenericTreeServiceImpl<ProgramTree> implements ProgramTreeService{
 	
+	@Autowired
+	private ProgramInfoService programInfoService;
+	
+	/**
+	 * @Title: init 
+	 * @Description: 系统启动成功之后进入该方法：将预警预告的定时器启动
+	 * @return: void
+	 */
+	@PostConstruct
+	public void init() {
+		programInfoService.getJob();
+	}
 }

@@ -20,7 +20,9 @@ import java.util.Map;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
+import com.wondersgroup.human.dto.ofc.ManagerRecordParam;
 import com.wondersgroup.human.event.ofc.ManagerRecordEvent;
+import com.wondersgroup.human.vo.ofc.ItemRecordVO;
 import com.wondersgroup.human.vo.ofc.ManagerRecordVO;
 
 /**
@@ -52,5 +54,16 @@ public interface ManagerRecordService extends GenericService<ManagerRecord> {
 	 * @return: Page<HumanKeepRecordVO>
 	 */
 	Page<ManagerRecordVO> queryManagerRecord(Map<String, Object> filter, Integer page, Integer limit);
+
+	/** 
+	 * @Title: getPage 
+	 * @Description: 进出管理页面
+	 * @param param
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<ManagerRecordVO>
+	 */
+	public Page<ItemRecordVO> getPage(ManagerRecordParam param, Integer page, Integer limit);
 
 }

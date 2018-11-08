@@ -20,6 +20,7 @@ import com.wondersgroup.human.bo.ofcflow.JobShift;
 import com.wondersgroup.human.bo.ofcflow.JobShiftDepose;
 import com.wondersgroup.human.service.ofc.PostService;
 import com.wondersgroup.human.service.ofcflow.JobShiftDeposeService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 
 @Service
 public class JobShiftDeposeServiceImpl extends GenericServiceImpl<JobShiftDepose>
@@ -33,6 +34,9 @@ public class JobShiftDeposeServiceImpl extends GenericServiceImpl<JobShiftDepose
 	
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	private FormationControlService formationControlService;
 
 	@Override
 	public void updateDeposeFlow(JobShiftDepose jobShiftDepose, String opinion, String result) {
@@ -67,7 +71,6 @@ public class JobShiftDeposeServiceImpl extends GenericServiceImpl<JobShiftDepose
 			flow = workflowService.completeWorkItem(flow);// 提交下个节点
 		}
 		if (null == flow) {
-			//FIXME 免职之后 是否需要让出编制?
 			//数据库中的post
 			Post oldPost = jobShiftDepose.getPost();
 			System.out.println(jobShiftDepose.getPost().getId());
@@ -84,6 +87,14 @@ public class JobShiftDeposeServiceImpl extends GenericServiceImpl<JobShiftDepose
 			oldPost.setDismissalChange(jobShiftDepose.getDismissalChange());
 			oldPost.setDismissalMode(jobShiftDepose.getDismissalMode());
 			postService.update(oldPost);
+			
+			//FIXME 免职之后 是否需要让出编制?
+			//旧职位
+			Post formerPost = postService.load(jobShiftDepose.getPost().getId());
+			//解锁旧编制
+			formationControlService.executeUnlockPostOutNum(jobShiftDepose.getSourceOrganNode().getId(), formerPost.getPostCode().getCode(), jobShiftDepose.getPost().getIsLowToHigh());
+			//插入数据
+			formationControlService.executeOutPost(jobShiftDepose.getSourceOrganNode().getId(), formerPost.getPostCode().getCode(), jobShiftDepose.getPost().getIsLowToHigh());
 		}
 		jobShiftDepose.setFlowRecord(flow);
 		this.update(jobShiftDepose);

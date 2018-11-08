@@ -16,12 +16,15 @@
 package com.wondersgroup.human.service.ofc.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
@@ -30,10 +33,12 @@ import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
+import com.wondersgroup.human.dto.ofc.ManagerRecordParam;
 import com.wondersgroup.human.event.ofc.ManagerRecordEvent;
 import com.wondersgroup.human.repository.ofc.ManagerRecordRepository;
 import com.wondersgroup.human.service.ofc.ManagerRecordService;
 import com.wondersgroup.human.service.ofc.ServantService;
+import com.wondersgroup.human.vo.ofc.ItemRecordVO;
 import com.wondersgroup.human.vo.ofc.ManagerRecordVO;
 
 /**
@@ -65,32 +70,25 @@ public class ManagerRecordServiceImpl extends GenericServiceImpl<ManagerRecord> 
 	public void createManagerRecord(ManagerRecordEvent event) {
 		ManagerRecordDTO dto = (ManagerRecordDTO) event.getSource();
 		ManagerRecord record = new ManagerRecord();
-		Servant servant = servantService.get(dto.getHumanId());
-		CodeInfo recordTypeCodeInfo = dictableService.getCodeInfoByCode(dto.getRecordType(), "");
-		CodeInfo managerTypeCodeInfo = dictableService.getCodeInfoByCode(dto.getManagerType(), "");
+		Servant servant = servantService.get(dto.getServantId());
+		CodeInfo recordTypeCodeInfo = dictableService.getCodeInfoByCode(dto.getRecordType(), "HumanChange");
 
 		record.setServant(servant);
-		record.setAreaExamineAudit(dto.getAreaExamineAudit());
-		record.setAreaExamineOpinion(dto.getAreaExamineOpinion());
-		record.setAreaExamineTime(dto.getAreaExamineTime());
+		record.setRecordTime(new Date());
+		record.setRecordType(recordTypeCodeInfo);
+		record.setItemType(event.getItemType());
+		record.setOrganId(servant.getDepartId());
+		record.setOrganName(servant.getDepartName());
+		
 		record.setBusinessEntityId(dto.getBusinessEntityId());
 		record.setBusinessEntityTable(dto.getBusinessEntityTable());
-		record.setCityExamineAudit(dto.getCityExamineAudit());
-		record.setCityExamineOpinion(dto.getCityExamineOpinion());
-		record.setCityExamineTime(dto.getCityExamineTime());
 		record.setExt1(dto.getExt1());
 		record.setExt2(dto.getExt2());
 		record.setExt3(dto.getExt3());
 		record.setExt4(dto.getExt4());
 		record.setExt5(dto.getExt5());
 		record.setExt6(dto.getExt6());
-		record.setLeaderExamineAudit(dto.getLeaderExamineAudit());
-		record.setLeaderExamineOpinion(dto.getLeaderExamineOpinion());
-		record.setLeaderExamineTime(dto.getLeaderExamineTime());
-		record.setRecordTime(dto.getRecordTime());
-		record.setRecordType(recordTypeCodeInfo);
-		record.setManagerType(managerTypeCodeInfo);
-		record.setStatus(dto.getStatus());
+		
 		save(record);
 	}
 
@@ -126,5 +124,42 @@ public class ManagerRecordServiceImpl extends GenericServiceImpl<ManagerRecord> 
 		Page<ManagerRecordVO> page1 = new Page<>(list.getStart(), list.getCurrentPageSize(), list.getTotalSize(),
 				list.getPageSize(), list2);
 		return page1;
+	}
+
+	/** 
+	 * @see com.wondersgroup.human.service.ofc.ManagerRecordService#getPage(com.wondersgroup.human.dto.ofc.ManagerRecordParam, java.lang.Integer, java.lang.Integer) 
+	 */
+	@Override
+	public Page<ItemRecordVO> getPage(ManagerRecordParam param, Integer page, Integer limit) {
+		
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(ManagerRecord.class);
+		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");
+		if (StringUtils.isNotBlank(param.getName())) {// 姓名
+			s.add(Restrictions.like("s.name", param.getName(), MatchMode.ANYWHERE));
+		}
+		if (StringUtils.isNotBlank(param.getCardNo())) {// 身份证
+			s.add(Restrictions.like("s.cardNo",param.getCardNo(), MatchMode.ANYWHERE));
+		}
+		if (StringUtils.isNotBlank(param.getSex())) {// 性别
+			s.add(Restrictions.eq("s.sex.id",param.getSex()));
+		}
+		if (param.getItemType()!=null) {// 进出管理
+			detachedcriteria.add(Restrictions.eq("itemType", param.getItemType()));
+		}
+		if (StringUtils.isNotBlank(param.getRecordType())) {// 事项管理
+			detachedcriteria.add(Restrictions.eq("recordType.id", param.getRecordType()));
+		}
+		
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		detachedcriteria.addOrder(Order.desc("recordTime"));
+		Page<ManagerRecord> managerPage = this.findByCriteria(detachedcriteria, page, limit);
+		List<ItemRecordVO> voList = new ArrayList<>();
+		for (ManagerRecord ds : managerPage.getResult()) {
+			ItemRecordVO vo = new ItemRecordVO(ds);
+			voList.add(vo);
+		}
+		Page<ItemRecordVO> result = new Page<>(managerPage.getStart(), managerPage.getCurrentPageSize(),
+				managerPage.getTotalSize(), managerPage.getPageSize(), voList);
+		return result;
 	}
 }

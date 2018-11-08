@@ -51,6 +51,7 @@ import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.DiaoRenOutMgr;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.DiaoRenOutMgrService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofcflow.DiaoRenOutMgrVO;
 
 /** 
@@ -73,6 +74,9 @@ public class DiaorenOutController extends GenericController{
 	private DictableService dictableService;
 	@Autowired
 	private OrganNodeService organNodeService;
+
+	@Autowired
+	private FormationControlService formationControlService;
 	
 	/**
 	 * 调出情况列表
@@ -199,6 +203,8 @@ public class DiaorenOutController extends GenericController{
 			CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
 			detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
 			detachedCriteria.add(Restrictions.eq("removed", false));
+			OrganNode organ = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+			detachedCriteria.add(Restrictions.eq("departId", organ.getId()));//只查询自己单位的人员
 			List<CodeInfo> typeList = DictCacheProvider.getCodeInfoByCodeTypeAndParentCode(DictTypeCodeContant.CODE_TYPE_MEMBER_TYPE, "1");//人员类别为公务员的CODE
 			List<String> personType = new ArrayList<>();
 			for(CodeInfo t:typeList){
@@ -295,6 +301,11 @@ public class DiaorenOutController extends GenericController{
 	public AjaxResult save(DiaoRenOutMgr temp){
 		AjaxResult result = new AjaxResult(true);
 		try {
+			//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+			if(DiaoRenOutMgr.AREA_THIS.equals(temp.getAreaType())){//本区才校验编控
+				formationControlService.queryJudgeFormationNum(temp.getTargetOrgan().getId());
+			}
+			
 			if(StringUtils.isNotBlank(temp.getId())){//更新
 				DiaoRenOutMgr post = diaoRenOutMgrService.get(temp.getId());
 				BeanUtils.copyPropertiesIgnoreNull(temp, post);
@@ -327,6 +338,10 @@ public class DiaorenOutController extends GenericController{
 				diaoRenOutMgrService.saveOrUpdate(temp);
 			}
 			result.setMessage("保存成功！");
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMessage(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -407,12 +422,12 @@ public class DiaorenOutController extends GenericController{
 				}
 				DictUtils.operationCodeInfo(temp);//将CodeInfo中id为空的属性 设置为null
 				temp.setId(null);
-				temp.setStatus(DiaoRenOutMgr.STATUS_DIAOCHU_CONFIRM_OUTER);//流程状态，待调出单位备案
+				temp.setStatus(DiaoRenOutMgr.STATUS_DIAOCHU_STATE_OUTER);//流程状态，待调出单位备案
 				Servant servant = servantService.load(temp.getServant().getId());
 				OrganNode organ = organNodeService.load(servant.getDepartId());
 				temp.setSourceOrgan(organ);//调出单位
 				temp.setAreaType(DiaoRenOutMgr.AREA_OUTER);//外区调任
-				diaoRenOutMgrService.saveOrUpdate(temp);
+				diaoRenOutMgrService.saveFlowOuter(temp);
 			} else {
 				DiaoRenOutMgr out = diaoRenOutMgrService.get(temp.getId());
 				BeanUtils.copyPropertiesIgnoreNull(temp, out);

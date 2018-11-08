@@ -30,20 +30,21 @@ public abstract class ManagerRecordEvent extends ApplicationEvent{
 
 	private static final long serialVersionUID = 3758201596962103152L;
 	
-	private String managerType;
+	private Integer itemType = null;
 
+	
 	/**
-	 * @return the managerType
+	 * @return the itemType
 	 */
-	public String getManagerType() {
-		return managerType;
+	public Integer getItemType() {
+		return itemType;
 	}
 
 	/**
-	 * @param managerType the managerType to set
+	 * @param itemType the itemType to set
 	 */
-	public void setManagerType(String managerType) {
-		this.managerType = managerType;
+	public void setItemType(Integer itemType) {
+		this.itemType = itemType;
 	}
 
 	/** 
@@ -53,7 +54,7 @@ public abstract class ManagerRecordEvent extends ApplicationEvent{
 	 */
 	public ManagerRecordEvent(Object source) {
 		super(source);
-		managerType = null;
+		itemType = null;
 	}
 	
 	/** 
@@ -61,10 +62,9 @@ public abstract class ManagerRecordEvent extends ApplicationEvent{
 	 * @Description:TODO 
 	 * @param source 
 	 */
-	public ManagerRecordEvent(Object source,String managerType) {
+	public ManagerRecordEvent(Object source,Integer itemType) {
 		super(source);
-		this.managerType = null;
-		setManagerType(managerType);
+		this.itemType = itemType;
 	}
 
 }

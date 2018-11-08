@@ -40,6 +40,7 @@ import com.wondersgroup.human.service.ofcflow.DraftServantReportService;
 import com.wondersgroup.human.service.ofcflow.DraftServantService;
 import com.wondersgroup.human.service.ofcflow.ProbationServantService;
 import com.wondersgroup.human.service.ofcflow.ProbationTimeLengthService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 
 /** 
  * @ClassName: DraftServantReportServiceImpl 
@@ -65,6 +66,8 @@ public class DraftServantReportServiceImpl extends GenericServiceImpl<DraftServa
 	private CodeInfoService codeInfoService;
 	@Autowired
 	private ProbationTimeLengthService probationTimeLengthService;
+	@Autowired
+	private FormationControlService formationControlService;
 	
 	/**
 	 * @Title: createReportWork 
@@ -199,8 +202,14 @@ public class DraftServantReportServiceImpl extends GenericServiceImpl<DraftServa
 	@Override
 	public boolean addProbationServantSingle(String servantId) {
 		ProbationServant bp;
+		DraftServant draftServant = draftServantService.get(servantId);
+		//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+		formationControlService.queryJudgeFormationNum(draftServant.getDraftUnit().getOrgan().getId());
+		//启动流程，锁未调入编制
+		formationControlService.executeLockIntoFormationNum(draftServant.getDraftUnit().getOrgan().getId());
+		
 		try {
-				DraftServant draftServant = draftServantService.get(servantId);
+				
 				if(DraftServant.EMPLOY_RESULT_EMPLOY_ID.equals(codeInfoService.get(draftServant.getEmploySituation().getId()).getCode())){
 					bp = new ProbationServant();
 					bp.setDraftServant(draftServant);

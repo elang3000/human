@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.wondersgroup.human.bo.organization.OrgFormation;
+import com.wondersgroup.human.service.ofcflow.DraftServantReportService;
+import com.wondersgroup.human.service.organization.OrgFormationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +49,17 @@ public class DraftServantServiceImpl extends GenericServiceImpl<DraftServant> im
 	@Autowired
 	private DraftServantDAO draftServantDAO;
 
+	@Autowired
+	private DraftServantReportService draftServantReportService;
+
+	@Autowired
+	private OrgFormationService orgFormationService;
+
 	/** (non Javadoc) 
 	 * @Title: saveBatch
 	 * @Description: TODO
 	 * @param list 
-	 * @see com.wondersgroup.human.service.ofcflow.DraftServantService#saveBatch(java.util.List) 
+	 * @see com.wondersgroup.human.service.ofcflow.DraftServantService(java.util.List)
 	 */
 	@Override
 	public void saveBatchDraftServant(List<DraftServant> list) {
@@ -131,5 +140,19 @@ public class DraftServantServiceImpl extends GenericServiceImpl<DraftServant> im
 	public String getUnitIdByOrganId(String organId) {
 		return this.draftServantDAO.getUnitIdByOrganId(organId);
 	}
-	
+
+	/**
+	 * 确认电子介绍信service方法
+	 *
+	 * @param draft
+	 * @return
+	 */
+	@Override
+	public void confirmLetter(DraftServant draft) {
+		//保存当前对象
+		this.update(draft);// 保存
+		//添加试用期人员
+		draftServantReportService.addProbationServantSingle(draft.getId());
+	}
+
 }

@@ -198,8 +198,29 @@ public class JobShiftDepose extends GenericEntity {
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	@JoinColumn(name = "DISMISSAL_MODE")
 	private CodeInfo dismissalMode;
+	
+	@Column(name = "LOWTOHIGH")
+	@org.hibernate.annotations.Type(type = "yes_no")
+	private boolean lowToHigh;
 
 	
+	
+
+
+	
+	public boolean isLowToHigh() {
+		
+		return lowToHigh;
+	}
+
+
+	
+	public void setLowToHigh(boolean lowToHigh) {
+		
+		this.lowToHigh = lowToHigh;
+	}
+
+
 	public Servant getServant() {
 		
 		return servant;

@@ -31,10 +31,14 @@ import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofcflow.AbroadPlan;
+import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
+import com.wondersgroup.human.event.ofc.ManagerManageRecordEvent;
 import com.wondersgroup.human.service.ofcflow.AbroadPlanService;
 import com.wondersgroup.human.vo.ofcflow.AbroadPlanVO;
 
@@ -118,6 +122,8 @@ public class AbroadPlanServiceImpl extends GenericServiceImpl<AbroadPlan> implem
 			flow = workflowService.completeWorkItem(flow);//提交下个节点
 		}
 		if(AbroadPlan.STATUS_ABROAD_PLAN_STEP8 == temp.getStatus()&&FlowRecord.PASS.equals(r)){//因公出国最后环节
+			createServant(temp);
+			
 			temp.setStatus(AbroadPlan.STATUS_ABROAD_PLAN_PASS);//
 			temp.setFlowRecord(null);//修改当前业务的流程节点
 		}else{
@@ -125,6 +131,13 @@ public class AbroadPlanServiceImpl extends GenericServiceImpl<AbroadPlan> implem
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
 		}
 		update(temp);
+	}
+	
+	public void createServant(AbroadPlan temp){
+		
+		ManagerRecordDTO dto = new ManagerRecordDTO(temp.getServant().getId(),ManagerRecord.HUMAN_CGJL);
+		ManagerManageRecordEvent event = new ManagerManageRecordEvent(dto);
+		EventManager.send(event);
 	}
 
 }

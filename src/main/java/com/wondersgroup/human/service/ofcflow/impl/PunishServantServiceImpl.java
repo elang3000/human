@@ -32,11 +32,18 @@ import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
+import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofc.ManagerRecord;
+import com.wondersgroup.human.bo.ofc.RewardAndPunish;
 import com.wondersgroup.human.bo.ofcflow.PunishServant;
+import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.dto.ofcflow.PunishServantQueryParam;
+import com.wondersgroup.human.event.ofc.ManagerManageRecordEvent;
+import com.wondersgroup.human.service.ofc.RewardAndPunishService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.PunishServantService;
 import com.wondersgroup.human.vo.ofcflow.PunishServantVO;
@@ -59,6 +66,8 @@ public class PunishServantServiceImpl extends GenericServiceImpl<PunishServant> 
 	private UserService userService;
 	@Autowired
 	ServantService servantService;
+	@Autowired
+	private RewardAndPunishService rewardAndPunishService;
 	
 	/** 
 	 * @see com.wondersgroup.human.service.ofcflow.PunishServantService#pageList(com.wondersgroup.human.vo.ofc.PunishVO, java.lang.Integer, java.lang.Integer) 
@@ -137,11 +146,37 @@ public class PunishServantServiceImpl extends GenericServiceImpl<PunishServant> 
 			temp.setPunishApprovalEndDate(cal.getTime());//处分结束时间
 			temp.setWarnDate(cal1.getTime());//处分结束时前一个月预警时间
 			temp.setFlowRecord(null);//修改当前业务的流程节点
+			
+			createServant(temp);
 		}else{
 			temp.setStatus(PunishServant.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
 		}
 		update(temp);
+	}
+	
+	
+	public void createServant(PunishServant temp){
+		
+		//添加处分子集
+		RewardAndPunish rewardAndPunish = new RewardAndPunish();
+		rewardAndPunish.setServant(temp.getServant());
+		rewardAndPunish.setType(1);
+		rewardAndPunish.setPunishName(temp.getPunishCode().getName());//名称
+		rewardAndPunish.setPunishCode(temp.getPunishCode());//名称code
+		rewardAndPunish.setPunishNo(temp.getPunishFileName());//处分文件号
+		rewardAndPunish.setPunishApprovalDate(temp.getPunishApprovalDate());//处分时间
+		rewardAndPunish.setPunishRevokeDate(temp.getPunishApprovalEndDate());//处分解除时间
+		rewardAndPunish.setPunishApprovalUnitName(temp.getServant().getDepartName());//处分单位
+		rewardAndPunish.setPunishDescription(temp.getContent());//受惩戒说明
+		rewardAndPunish.setPunishReason(temp.getPunishReason());//处分原因
+		DictUtils.operationCodeInfo(rewardAndPunish);//将CodeInfo中id为空的属性 设置为null
+		
+		rewardAndPunishService.save(rewardAndPunish);
+		
+		ManagerRecordDTO dto = new ManagerRecordDTO(temp.getServant().getId(),ManagerRecord.HUMAN_CF);
+		ManagerManageRecordEvent event = new ManagerManageRecordEvent(dto);
+		EventManager.send(event);
 	}
 
 }

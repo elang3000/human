@@ -43,7 +43,7 @@
 									<smart:singleSelect isNotNull="true" verify="required"
 										name="sex.id" labelName="性别：" display="block"
 										initSelectedKey="${d.sex.id}"
-										url="dictquery/sub/code/GBT_2261_1_2003"></smart:singleSelect>
+										url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
 									<smart:date style="aa" isNotNull="true" verify="required"
@@ -56,12 +56,12 @@
 									<smart:singleSelect isNotNull="true" verify="required"
 										name="nation.id" labelName="民族：" display="block"
 										initSelectedKey="${d.nation.id}" isSearch="true"
-										url="dictquery/sub/code/GBT_3304_1991"></smart:singleSelect>
+										url="dictquery/sub/code/GBT_3304_1991" isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
 									<smart:singleSelect labelName="政治面貌：" name="politics.id"
 										initSelectedKey="${d.politics.id}" display="block" isSearch="true"
-										url="dictquery/sub/code/GBT_4762_1984"></smart:singleSelect>
+										url="dictquery/sub/code/GBT_4762_1984" isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
@@ -69,12 +69,12 @@
 									<smart:singleSelect isNotNull="true" verify="required"
 										name="personType.id" labelName="人员类别：" display="block"
 										initSelectedKey="${d.personType.id}"
-										url="dictquery/sub/code/DM199/1"></smart:singleSelect>
+										url="dictquery/sub/code/DM199/1" isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
 									<smart:singleSelect labelName="健康状况：" name="health.id"
 										initSelectedKey="${d.health.id}" display="block"
-										url="dictquery/sub/code/GBT_2261_3_2003"></smart:singleSelect>
+										url="dictquery/sub/code/GBT_2261_3_2003" isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>

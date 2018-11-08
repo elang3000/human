@@ -15,13 +15,14 @@
  */
 package com.wondersgroup.human.service.ofcflow;
 
-import java.util.List;
-
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.ofcflow.ProbationServant;
 import com.wondersgroup.human.vo.ofcflow.ProbationServantVO;
+
+import java.util.List;
+import java.util.Map;
 
 /** 
  * @ClassName: ProbationServantService 
@@ -73,4 +74,11 @@ public interface ProbationServantService extends GenericService<ProbationServant
 	 * @return: void
 	 */
 	public void saveFlowCancel(ProbationServant temp,String opinion,String r);
+
+
+	/**
+	 *
+	 * @return 获取各单位试用期人数统计 返回orginfoid 和 count数量
+	 */
+	public Map<String,Integer> getUnitProbationCount();
 }

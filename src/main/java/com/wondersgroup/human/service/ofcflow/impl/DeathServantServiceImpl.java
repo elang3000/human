@@ -16,6 +16,7 @@
 package com.wondersgroup.human.service.ofcflow.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
@@ -24,6 +25,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
@@ -33,12 +35,19 @@ import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
+import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofc.ManagerRecord;
+import com.wondersgroup.human.bo.ofc.OutMgr;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.DeathServant;
+import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.dto.ofcflow.DeathServantQueryParam;
+import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
+import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.DeathServantService;
 import com.wondersgroup.human.vo.ofcflow.DeathVO;
@@ -63,6 +72,8 @@ public class DeathServantServiceImpl extends GenericServiceImpl<DeathServant> im
 	ServantService servantService;
 	@Autowired
 	private DictableService dictableService;
+	@Autowired
+	private OutMgrService outMgrService;
 	
 	/** 
 	 * @see com.wondersgroup.human.service.ofcflow.DeathServantService#saveDeath(com.wondersgroup.human.bo.ofcflow.DeathServant, java.lang.String, java.lang.String) 
@@ -94,13 +105,10 @@ public class DeathServantServiceImpl extends GenericServiceImpl<DeathServant> im
 			flow = workflowService.completeWorkItem(flow);//提交下个节点
 		}
 		if(DeathServant.DEATH_EMPLOY_CONFIRM == temp.getStatus()&&FlowRecord.PASS.equals(r)){//死亡最后环节
+			createServant(temp);//更新人员基本信息
+			
 			temp.setStatus(DeathServant.DEATH_EMPLOY_DONE);//通过
 			temp.setFlowRecord(null);//修改当前业务的流程节点
-			
-			Servant s = servantService.get(temp.getServant().getId());
-			CodeInfo isOnHold = dictableService.getCodeInfoByCode("4", "DM200");// 死亡CODE
-			s.setIsOnHold(isOnHold);
-			servantService.update(s);
 		}else{
 			temp.setStatus(DeathServant.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
@@ -113,6 +121,8 @@ public class DeathServantServiceImpl extends GenericServiceImpl<DeathServant> im
 	 */
 	@Override
 	public Page<DeathVO> pageList(DeathServantQueryParam param, Integer page, Integer limit) {
+		OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());//当前登录所在单位
+		
 		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(DeathServant.class);
 		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");
 		if (StringUtils.isNotBlank(param.getName())) {// 姓名
@@ -124,7 +134,11 @@ public class DeathServantServiceImpl extends GenericServiceImpl<DeathServant> im
 		if (StringUtils.isNotBlank(param.getRemark())) {// 备注
 			detachedcriteria.add(Restrictions.like("remark", param.getRemark(), MatchMode.ANYWHERE));
 		}
-		detachedcriteria.add(Restrictions.eq("creater", SecurityUtils.getUserId()));
+		if(x.getCode().equals(CommonConst.HR_ROOT_ORGAN_CODE)){//如果x是人社局
+			detachedcriteria.add(Restrictions.eq("lastOperator", SecurityUtils.getUserId()));
+		}else{
+			detachedcriteria.add(Restrictions.eq("creater", SecurityUtils.getUserId()));
+		}
 		detachedcriteria.add(Restrictions.eq("removed", false));
 		detachedcriteria.addOrder(Order.desc("deathDate"));
 		Page<DeathServant> deathPage = this.findByCriteria(detachedcriteria, page, limit);
@@ -138,4 +152,51 @@ public class DeathServantServiceImpl extends GenericServiceImpl<DeathServant> im
 		return result;
 	}
 
+	public void createServant(DeathServant temp){
+		//主表
+		Servant s = servantService.get(temp.getServant().getId());
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("4", "DM200");// 死亡CODE
+		s.setIsOnHold(isOnHold);
+		servantService.update(s);
+		
+		//转出子集表
+		CodeInfo category = dictableService.getCodeInfoByCode("98", "GBT_12405_2008");// 调出本单位类别-死亡
+		CodeInfo reasonType = dictableService.getCodeInfoByCode("9", "DM015");// 调动原因-其他
+		CodeInfo proposeType = dictableService.getCodeInfoByCode("9", "DM039");// 提出调动类型-其他
+		
+		OutMgr out = new OutMgr();
+		out.setServant(s);//人员基本信息
+		out.setCategory(category);//调出本单位类别
+		out.setReasonType(reasonType);//调动原因
+		out.setOutDate(new Date());//调出本单位日期
+		out.setGotoUnitName(null);//调往单位名称
+		out.setProposeType(proposeType);//提出调动类型
+		out.setRemark(temp.getRemark());//调出备注
+		DictUtils.operationCodeInfo(out);//将CodeInfo中id为空的属性 设置为null
+		
+		outMgrService.save(out);
+		
+		ManagerRecordDTO dto = new ManagerRecordDTO(s.getId(),ManagerRecord.HUMAN_SW);
+		ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
+		EventManager.send(event);
+	}
+	
+	/** 
+	 * @see com.wondersgroup.human.service.ofcflow.ResignServantService#getByServantId(java.lang.String) 
+	 */
+	@Override
+	public DeathServant getByServantId(String servantId) {
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(DeathServant.class);
+		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");
+		s.add(Restrictions.eq("s.id", servantId));
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		
+		List<DeathServant> list = this.findByCriteria(detachedcriteria);
+		
+		if(list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
 }

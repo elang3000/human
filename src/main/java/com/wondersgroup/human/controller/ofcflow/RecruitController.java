@@ -136,6 +136,8 @@ public class RecruitController extends GenericController {
 	OrgInfoService unitbasciinfoservice;
 	@Autowired
 	private FlowRecordService flowRecordService;
+	//@Autowired
+	//private FormationControlService formationControlService;
 	/**
 	 * @Title: recruitList 
 	 * @Description: 职位简章主页
@@ -259,6 +261,10 @@ public class RecruitController extends GenericController {
 
 		if (StringUtils.isNotBlank(id)) {
 			RecruitYearPlan recruityearplan = recruityearplanservice.get(id);
+			
+			if(recruityearplan.getState()==0){
+				recruityearplan.setState(null);
+			}
 			model.addAttribute("recruityearplan", recruityearplan);
 		}
 
@@ -504,16 +510,27 @@ public class RecruitController extends GenericController {
 	public AjaxResult saveEmployPlan(RecruitEmployPlan recruitemployplan, HttpServletRequest request) {
 		AjaxResult result = new AjaxResult(true);
 		try {
-			if (StringUtils.isBlank(recruitemployplan.getId())) {
-				DictUtils.operationCodeInfo(recruitemployplan);//将CodeInfo中id为空的属性 设置为null
-				recruitemployplanservice.save(recruitemployplan);// 保存
-			} else {
-				RecruitEmployPlan employplan = recruitemployplanservice.load(recruitemployplan.getId());
-				BeanUtils.copyPropertiesIgnoreNull(recruitemployplan,employplan);
-				DictUtils.operationCodeInfo(employplan);//将CodeInfo中id为空的属性 设置为null
-				recruitemployplanservice.update(employplan);// 保存
-			}
-			result.setMessage("保存成功！");
+			//编控，校验编制数是否足够，判断数据能否保存
+//			boolean isTrue = formationControlService.queryJudgeFormationNum(recruitemployplan.getEmployOrgan().getId(), recruitemployplan.getPlanEmployNum());
+//			if(isTrue){
+				if (StringUtils.isBlank(recruitemployplan.getId())) {
+					DictUtils.operationCodeInfo(recruitemployplan);//将CodeInfo中id为空的属性 设置为null
+					recruitemployplanservice.save(recruitemployplan);// 保存
+				} else {
+					RecruitEmployPlan employplan = recruitemployplanservice.load(recruitemployplan.getId());
+					BeanUtils.copyPropertiesIgnoreNull(recruitemployplan,employplan);
+					DictUtils.operationCodeInfo(employplan);//将CodeInfo中id为空的属性 设置为null
+					recruitemployplanservice.update(employplan);// 保存
+				}
+				result.setMessage("保存成功！");
+//			}else{
+//				result.setSuccess(false);
+//				result.setMessage("编制校验不通过！");
+//			}
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMessage(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

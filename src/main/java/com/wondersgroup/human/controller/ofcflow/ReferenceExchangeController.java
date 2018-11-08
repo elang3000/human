@@ -53,9 +53,12 @@ import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.ReferenceExchange;
+import com.wondersgroup.human.bo.ofcflow.ReferenceExchangeOut;
 import com.wondersgroup.human.bo.ofcflow.ZhuanRenKLBIntoMgr;
 import com.wondersgroup.human.service.ofc.ServantService;
+import com.wondersgroup.human.service.ofcflow.ReferenceExchangeOutService;
 import com.wondersgroup.human.service.ofcflow.ReferenceExchangeService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.util.WordUtils;
 import com.wondersgroup.human.vo.ofcflow.ReferenceExchangeVO;
 
@@ -74,6 +77,8 @@ public class ReferenceExchangeController extends GenericController{
 	@Autowired
 	private ReferenceExchangeService referenceExchangeService;
 	@Autowired
+	private ReferenceExchangeOutService referenceExchangeOutService;
+	@Autowired
 	private ServantService servantService;
 	@Autowired
 	private OrganNodeService organNodeService;
@@ -81,6 +86,9 @@ public class ReferenceExchangeController extends GenericController{
 	private FlowRecordService flowRecordService;
 	@Autowired
 	private DictableService dictableService;
+
+	@Autowired
+	private FormationControlService formationControlService;
 	
 	/**
 	 * 参公交流列表
@@ -345,6 +353,9 @@ public class ReferenceExchangeController extends GenericController{
 		try {
 			if(StringUtils.isNotBlank(temp.getId())){//更新
 				ReferenceExchange post = referenceExchangeService.get(temp.getId());
+				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+				formationControlService.queryJudgeFormationNum(post.getTargetOrgan().getId());
+				
 				BeanUtils.copyPropertiesIgnoreNull(temp, post);
 				DictUtils.operationCodeInfo(post);//将CodeInfo中id为空的属性 设置为null
 				referenceExchangeService.saveOrUpdate(post);//保存
@@ -354,6 +365,9 @@ public class ReferenceExchangeController extends GenericController{
 				if(x==null||StringUtils.isBlank(x.getId())){
 					throw new BusinessException("单位信息不能为空！");
 				}
+				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+				formationControlService.queryJudgeFormationNum(x.getId());
+				
 				temp.setId(null);
 				temp.setStatus(ReferenceExchange.STATUS_EXCHANGE_STATE);//流程状态，待提交
 				temp.setTargetOrgan(x);//转入单位为当前单位
@@ -393,6 +407,9 @@ public class ReferenceExchangeController extends GenericController{
 		try {
 			if(StringUtils.isNotBlank(temp.getId())){//更新
 				ReferenceExchange post = referenceExchangeService.get(temp.getId());
+				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+				formationControlService.queryJudgeFormationNum(post.getTargetOrgan().getId());
+				
 				BeanUtils.copyPropertiesIgnoreNull(temp, post);
 				DictUtils.operationCodeInfo(post);//将CodeInfo中id为空的属性 设置为null
 				referenceExchangeService.saveOrUpdate(post);//保存
@@ -402,6 +419,9 @@ public class ReferenceExchangeController extends GenericController{
 				if(x==null||StringUtils.isBlank(x.getId())){
 					throw new BusinessException("单位信息不能为空！");
 				}
+				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+				formationControlService.queryJudgeFormationNum(x.getId());
+				
 				temp.setId(null);
 				temp.setStatus(ReferenceExchange.STATUS_EXCHANGE_STATE);//流程状态，待提交
 				temp.setTargetOrgan(x);//转入单位为当前单位
@@ -583,8 +603,8 @@ public class ReferenceExchangeController extends GenericController{
 					params.put("date", sdf.format(new Date()));//转任时间
 				}
 			}else{
-				ReferenceExchange out = referenceExchangeService.get(id);
-				params.put("sourceOrgan", out.getSourceOrganName());//源单位名称
+				ReferenceExchangeOut out = referenceExchangeOutService.get(id);
+				params.put("sourceOrgan", out.getSourceOrgan().getName());//源单位名称
 				params.put("targetOrgan", out.getGotoUnitName());//目标单位名称
 				params.put("name", out.getServant().getName());//转任人员名称
 				if(out.getOutDate()!=null){

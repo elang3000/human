@@ -65,4 +65,11 @@ public interface DraftServantService extends GenericService<DraftServant>{
 	 * @return: String
 	 */
 	public String getUnitIdByOrganId(String organId);
+
+	/**
+	 * 确认电子介绍信service方法
+	 * @param draft
+	 * @return
+	 */
+	public void confirmLetter(DraftServant draft);
 }

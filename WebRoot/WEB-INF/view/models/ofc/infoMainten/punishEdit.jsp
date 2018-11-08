@@ -59,7 +59,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:date labelName="惩戒解除日期：" display="block" name="punishRevokeDate" id="punishApprovalDate" value="${punish.punishRevokeDate}"></smart:date>
+										<smart:date labelName="惩戒解除日期：" display="block" name="punishRevokeDate" id="punishRevokeDate" value="${punish.punishRevokeDate}"></smart:date>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect labelName="是否监察机关直接给予惩戒：" name="punishIdentification.id" display="block" url="dictquery/sub/code/DM063" isAddDefaltOption="true" initSelectedKey="${punish.punishIdentification.id }"></smart:singleSelect>

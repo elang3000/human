@@ -20,11 +20,11 @@
 						</smart:gridColumn>
 						
 						<smart:gridColumn colPart="3">
-							<smart:linkSelect labelName="所属单位：" id="organNodeIdTag" display="block"/>
+							<smart:linkSelect labelName="在学单位：" id="organNodeIdTag" display="block"/>
 						</smart:gridColumn>
 						
 						<smart:gridColumn colPart="3">
-							<smart:textInput labelName="录入机关：" otherAttr="readonly"
+							<smart:textInput labelName="主办单位：" otherAttr="readonly"
 								value="${inputOrgan.name }" placeholder="" display="block"></smart:textInput>
 						</smart:gridColumn>
 					</smart:gridRow>

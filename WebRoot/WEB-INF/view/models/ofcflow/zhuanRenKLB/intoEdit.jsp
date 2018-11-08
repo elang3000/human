@@ -42,7 +42,7 @@
 								<smart:gridColumn colPart="6">
 									<smart:singleSelect isNotNull="true" verify="required"
 										name="sex.id" labelName="性别：" display="block"
-										initSelectedKey="${d.sex.id}"
+										initSelectedKey="${d.sex.id}"  isAddDefaltOption="true"
 										url="dictquery/sub/code/GBT_2261_1_2003"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
@@ -55,25 +55,25 @@
 								<smart:gridColumn colPart="6">
 									<smart:singleSelect isNotNull="true" verify="required"
 										name="nation.id" labelName="民族：" display="block"
-										initSelectedKey="${d.nation.id}" isSearch="true"
+										initSelectedKey="${d.nation.id}" isSearch="true" isAddDefaltOption="true"
 										url="dictquery/sub/code/GBT_3304_1991"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
-									<smart:singleSelect labelName="政治面貌：" name="politics.id"
+									<smart:singleSelect labelName="政治面貌：" name="politics.id"  isAddDefaltOption="true"
 										initSelectedKey="${d.politics.id}" display="block" isSearch="true"
 										url="dictquery/sub/code/GBT_4762_1984"></smart:singleSelect>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="6">
-									<smart:singleSelect isNotNull="true" verify="required"
+									<smart:singleSelect isNotNull="true" verify="required"  isAddDefaltOption="true"
 										name="personType.id" labelName="人员类别：" display="block"
 										initSelectedKey="${d.personType.id}"
 										url="dictquery/sub/code/DM199/1"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
 									<smart:singleSelect labelName="健康状况：" name="health.id"
-										initSelectedKey="${d.health.id}" display="block"
+										initSelectedKey="${d.health.id}" display="block"  isAddDefaltOption="true"
 										url="dictquery/sub/code/GBT_2261_3_2003"></smart:singleSelect>
 								</smart:gridColumn>
 							</smart:gridRow>

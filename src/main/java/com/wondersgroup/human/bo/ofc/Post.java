@@ -155,7 +155,7 @@ public class Post extends BasePost<Post> {
 	@JoinColumn(name = "SH_S0163")
 	private CodeInfo nowPostSign;
 	
-	@Column(name = "IS_LOW_TO_HIGH", nullable = false)
+	@Column(name = "IS_LOW_TO_HIGH")
 	@org.hibernate.annotations.Type(type = "yes_no")
 	private Boolean isLowToHigh = false;
 	

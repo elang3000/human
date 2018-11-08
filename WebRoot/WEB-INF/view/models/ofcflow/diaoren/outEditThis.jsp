@@ -113,7 +113,7 @@
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
 							<smart:singleSelect initSelectedKey="${d.category.id}" name="category.id"
-							labelName="调出本单位类别：" isNotNull="true" verify="required" url="dictquery/sub/code/GBT_12405_2008/70"
+							labelName="调出本单位类别：" isNotNull="true" verify="required" url="dictquery/sub/code/GBT_12405_2008/60"
 							display="block" isAddDefaltOption="true"></smart:singleSelect>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">

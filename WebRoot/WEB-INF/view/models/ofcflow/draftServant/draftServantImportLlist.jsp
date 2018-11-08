@@ -66,7 +66,7 @@
 							<tr>
 								<smart:tableItem field="yearTip" width=".1" sort="true">年度</smart:tableItem>
 								<smart:tableItem field="fileName" width=".2" sort="true">文件名称</smart:tableItem>
-								<smart:tableItem field="importDate" width=".1" sort="true">导入时间</smart:tableItem>
+								<smart:tableItem field="importDate" width=".2" sort="true">导入时间</smart:tableItem>
 								<smart:tableItem field="createUserName" width=".1" sort="false">创建者</smart:tableItem>
 								<smart:tableItem field="publish" width=".1" sort="false">状态</smart:tableItem>
 								<smart:tableItem field="servantType" width=".1" sort="false">人员类型</smart:tableItem>

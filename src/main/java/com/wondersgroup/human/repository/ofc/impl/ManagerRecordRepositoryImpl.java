@@ -16,19 +16,23 @@
 package com.wondersgroup.human.repository.ofc.impl;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.springframework.stereotype.Repository;
-
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.impl.GenericRepositoryImpl;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
+import com.wondersgroup.framework.util.DateUtils;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.repository.ofc.ManagerRecordRepository;
+import com.wondersgroup.human.vo.analysis.MagCountVO;
 import com.wondersgroup.human.vo.ofc.ManagerRecordVO;
 
 /**
@@ -84,5 +88,138 @@ public class ManagerRecordRepositoryImpl extends GenericRepositoryImpl<ManagerRe
 			params.add(new QueryParameter(entry.getKey(), entry.getValue()));
 		}
 		return findBySQLWithTranferClass(sql.toString(), params, page, limit, ManagerRecordVO.class);
+	}
+
+	/** 
+	 * @see com.wondersgroup.human.repository.ofc.ManagerRecordRepository#getMagCount(java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer) 
+	 */
+	@Override
+	public Page<MagCountVO> getMagCount(String departName, Integer year, Integer page, Integer limit) {
+		StringBuilder sql=new StringBuilder();
+		sql.append("select organid as departId,B01001 as departName,ifnull(A.aaa,0) as inMag, ");
+		sql.append("ifnull(B.bbb,0) as outMag,ifnull(C.ccc,0) as mag ");
+		sql.append("from B01 b1 ");
+
+		//进
+		sql.append("left join  ");
+		sql.append("(select departId,count(ir.item_type) as aaa from b01 b11 ");//开始
+		sql.append("join a01 a1 on b11.organid = a1.departId ");
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("where ir.removed = 'N' and ir.item_type = 0 "); //0-进
+		if(year!=null){
+			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
+		}
+		sql.append("group by departId) A on A.departId = b1.organid ");//结束
+		
+		//出
+		sql.append("left join  ");
+		sql.append("(select departId,count(ir.item_type) as bbb from b01 b11 ");//开始
+		sql.append("join a01 a1 on b11.organid = a1.departId ");
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("where ir.removed = 'N' and ir.item_type = 1 "); //0-出
+		if(year!=null){
+			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
+		}
+		sql.append("group by departId) B on B.departId = b1.organid ");//结束
+		
+		//管理
+		sql.append("left join  ");
+		sql.append("(select departId,count(ir.item_type) as ccc from b01 b11 ");//开始
+		sql.append("join a01 a1 on b11.organid = a1.departId ");
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("where ir.removed = 'N' and ir.item_type = 2 "); //0-管理
+		if(year!=null){
+			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
+		}
+		sql.append("group by departId) C on C.departId = b1.organid ");//结束
+		
+		
+		sql.append("where removed = 'N' ");
+		if(StringUtils.isNotBlank(departName)){
+			sql.append("and B01001 like :departName ");
+		}
+		sql.append("order by create_time desc ");
+		
+		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		if(StringUtils.isNotBlank(departName)){
+			queryObject.setParameter("departName", "%"+departName+"%");
+		}
+		if(year!=null){
+			queryObject.setParameter("start", DateUtils.getYearFirst(year));
+			queryObject.setParameter("end", DateUtils.getYearLast(year));
+		}
+	    List listAll=queryObject.list();
+	 	queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+        queryObject.setFirstResult((page - 1) * limit);  
+        queryObject.setMaxResults(limit); 
+		List list = queryObject.list();
+		List<MagCountVO> listVO=new ArrayList<>();
+		for (Object object : list) {
+			Map<String,Object> map=(Map<String,Object>)object;
+			listVO.add(new MagCountVO(map));
+		}
+
+		Page<MagCountVO> pages = new Page<>((page-1)*limit, page, listAll.size(), limit, listVO);
+		return pages;
+	}
+
+	/** 
+	 * @see com.wondersgroup.human.repository.ofc.ManagerRecordRepository#getMagCountByDepartId(java.lang.String, java.lang.Integer) 
+	 */
+	@Override
+	public Map<String, BigDecimal> getMagCountByDepartId(String departId, Integer year) {
+		StringBuilder sql=new StringBuilder();
+		sql.append("select ifnull(A.aaa,0) as \"1\", ");
+		sql.append("ifnull(B.bbb,0) as \"2\",ifnull(C.ccc,0) as \"3\" ");
+		sql.append("from B01 b1 ");
+
+		//进
+		sql.append("left join  ");
+		sql.append("(select departId,count(ir.item_type) as aaa from b01 b11 ");//开始
+		sql.append("join a01 a1 on b11.organid = a1.departId ");
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("where ir.removed = 'N' and ir.item_type = 0 "); //0-进
+		if(year!=null){
+			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
+		}
+		sql.append("group by departId) A on A.departId = b1.organid ");//结束
+		
+		//出
+		sql.append("left join  ");
+		sql.append("(select departId,count(ir.item_type) as bbb from b01 b11 ");//开始
+		sql.append("join a01 a1 on b11.organid = a1.departId ");
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("where ir.removed = 'N' and ir.item_type = 1 "); //0-出
+		if(year!=null){
+			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
+		}
+		sql.append("group by departId) B on B.departId = b1.organid ");//结束
+		
+		//管理
+		sql.append("left join  ");
+		sql.append("(select departId,count(ir.item_type) as ccc from b01 b11 ");//开始
+		sql.append("join a01 a1 on b11.organid = a1.departId ");
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("where ir.removed = 'N' and ir.item_type = 2 "); //0-管理
+		if(year!=null){
+			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
+		}
+		sql.append("group by departId) C on C.departId = b1.organid ");//结束
+		
+		
+		sql.append("where removed = 'N' ");
+		sql.append("and organid = :departId ");
+		sql.append("order by create_time desc ");
+		
+		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+		queryObject.setParameter("departId", departId);
+		if(year!=null){
+			queryObject.setParameter("start", DateUtils.getYearFirst(year));
+			queryObject.setParameter("end", DateUtils.getYearLast(year));
+		}
+		Map<String, BigDecimal> result = (Map<String, BigDecimal>) queryObject.uniqueResult();
+		
+		return result;
 	}
 }

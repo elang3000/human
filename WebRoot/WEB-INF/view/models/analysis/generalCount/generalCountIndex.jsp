@@ -49,16 +49,16 @@
                                      url="analysis/generalCount/indexData" height="full-215"
                                      limits="10,50,100" text="未找到有效数据！">
                             <tr>
-                                <smart:tableItem field="unitBasicSimpleName" width="300">单位</smart:tableItem>
-                                <smart:tableItem field="actualNumber" width="200">实有人数</smart:tableItem>
-                                <smart:tableItem field="unitPlanningTotal" width="200">核定批准编制总数</smart:tableItem>
-                                <smart:tableItem field="divisionChiefLevelNumber" width="200">处级人数</smart:tableItem>
-                                <smart:tableItem field="sectionChiefLevelNumber" width="200">科级人数</smart:tableItem>
+                                <smart:tableItem field="unitBasicSimpleName" width="270">单位</smart:tableItem>
+                                <smart:tableItem field="actualNumber" width="170">实有人数</smart:tableItem>
+                                <smart:tableItem field="unitPlanningTotal" width="170">核定批准编制总数</smart:tableItem>
+                                <smart:tableItem field="divisionChiefLevelNumber" width="170">处级人数</smart:tableItem>
+                                <smart:tableItem field="sectionChiefLevelNumber" width="170">科级人数</smart:tableItem>
                                 <smart:tableItem field="nonLeaderSectionChiefLevelNumber"
-                                                 width="200">副科人数</smart:tableItem>
-                                <smart:tableItem field="staffMembersNumber" width="200">科员、办事员及其他人员数</smart:tableItem>
-                                <smart:tableItem field="notIntoNum" width="200">试用期人数</smart:tableItem>
-                                <smart:tableItem align="center" width="200" fixed="right"
+                                                 width="170">副科人数</smart:tableItem>
+                                <smart:tableItem field="staffMembersNumber" width="170">科员、办事员及其他人员数</smart:tableItem>
+                                <smart:tableItem field="notIntoNum" width="170">试用期人数</smart:tableItem>
+                                <smart:tableItem align="center" width="170" fixed="right"
                                                  unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
                             </tr>
                             <smart:tableToolBar id="navListToolBar">

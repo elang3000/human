@@ -103,8 +103,8 @@ public class DeathController extends GenericController {
 
 	/**
 	 * @Title: save
-	 * @Description: 辞职保存
-	 * @param temp辞职信息
+	 * @Description: 死亡保存
+	 * @param temp死亡信息
 	 * @return: AjaxResult
 	 */
 	@ResponseBody
@@ -151,7 +151,7 @@ public class DeathController extends GenericController {
 	
 	
 	/**
-	 * @Title: resignFlow 
+	 * @Title: DeathFlow 
 	 * @Description: 审批详情页面
 	 * @param model
 	 * @param id
@@ -159,7 +159,7 @@ public class DeathController extends GenericController {
 	 * @return: String
 	 */
 	@RequestMapping("/deathFlow")
-	public String resignFlow(Model model,String id) {
+	public String DeathFlow(Model model,String id) {
 		FlowRecord flow = flowRecordService.load(id);
 		DeathServant d = deathServantService.get(flow.getBusId());
 		Servant s = servantService.get(d.getServant().getId());
@@ -183,11 +183,11 @@ public class DeathController extends GenericController {
 	
 	/**
 	 * @Title: pageList
-	 * @Description: 辞职申请列表
+	 * @Description: 死亡申请列表
 	 * @param params查询条件
 	 * @param limit页大小
 	 * @param page页码
-	 * @return: Page<ResignVO>
+	 * @return: Page<DeathVO>
 	 */
 	@ResponseBody
 	@RequestMapping("/pageList")
@@ -197,19 +197,42 @@ public class DeathController extends GenericController {
 	}
 	
 	/**
-	 * 辞职人员详情
+	 * 死亡人员详情
 	 * 
-	 * @Title: ResignDetail
-	 * @Description: 辞职人员列表
+	 * @Title: DeathDetail
+	 * @Description: 死亡人员列表
 	 * @return
 	 * @return: String
 	 */
 	@RequestMapping("/deathDetail")
-	public String resignDetail(String id, Model model) {
+	public String DeathDetail(String id, Model model) {
 		DeathServant d = deathServantService.get(id);
 		Servant servant = servantService.get(d.getServant().getId());
 		model.addAttribute("servant", servant);
 		model.addAttribute("deathServant", d);
 		return DEATH_DETAIL;
+	}
+	
+	/**
+	 */
+	@RequestMapping("/validate")
+	@ResponseBody
+	public AjaxResult valiateExistEmployPlan(Model model, String servantId) {
+		AjaxResult result = new AjaxResult(true);
+		try {
+			DeathServant DeathServant = deathServantService.getByServantId(servantId);
+			if(DeathServant!=null){
+				throw new BusinessException("该用户已进入流程！");
+			}
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMessage(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMessage("发起失败！");
+		}
+		return result;
 	}
 }

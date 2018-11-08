@@ -81,12 +81,12 @@
 							<tr>
 								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
 								<smart:tableItem field="name" width="150" sort="false">姓名</smart:tableItem>
-								<smart:tableItem field="cardNo" width="170" sort="false">身份证</smart:tableItem>
+								<smart:tableItem field="cardNo" width="200" sort="false">身份证</smart:tableItem>
 								<smart:tableItem field="draftUnitName" width="150" sort="true">录用单位</smart:tableItem>
 								<smart:tableItem field="draftDeptName" width="150" sort="true">录用部门</smart:tableItem>
 								<smart:tableItem field="yearTip" width="150" sort="true">年度</smart:tableItem>
 								<smart:tableItem field="sex" width="150" sort="false">性别</smart:tableItem>
-								<smart:tableItem field="servantType" width="100" sort="true">人员类型</smart:tableItem>
+								<smart:tableItem field="servantType" width="118" sort="true">人员类型</smart:tableItem>
 								<smart:tableItem field="employComment" width="200" sort="false">录用鉴定评语</smart:tableItem>
 								<smart:tableItem field="employSituation" width="80" sort="false">录用情况</smart:tableItem>
 								<smart:tableItem field="employResult" width="80" sort="false">录用标识</smart:tableItem>

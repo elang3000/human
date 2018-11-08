@@ -15,14 +15,6 @@
  */
 package com.wondersgroup.human.service.ofcflow.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.dao.support.Predicate.Operator;
@@ -45,6 +37,7 @@ import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.DraftServant;
 import com.wondersgroup.human.bo.ofcflow.DraftServantEduInfo;
 import com.wondersgroup.human.bo.ofcflow.ProbationServant;
+import com.wondersgroup.human.repository.ofcflow.ProbationServantRepository;
 import com.wondersgroup.human.service.ofc.EducationService;
 import com.wondersgroup.human.service.ofc.EmployService;
 import com.wondersgroup.human.service.ofc.ProbationService;
@@ -52,7 +45,16 @@ import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.DraftServantEduInfoService;
 import com.wondersgroup.human.service.ofcflow.DraftServantService;
 import com.wondersgroup.human.service.ofcflow.ProbationServantService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofcflow.ProbationServantVO;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 /** 
  * @ClassName: ProbationServantServiceImpl 
@@ -92,6 +94,12 @@ public class ProbationServantServiceImpl extends GenericServiceImpl<ProbationSer
 	
 	@Autowired
 	private DictableService dictableService;
+
+	@Autowired
+	private ProbationServantRepository probationServantRepository;
+
+	@Autowired
+	private FormationControlService formationControlService;
 	
 	/**
 	 * @Title: findbyHQLforVO 
@@ -274,6 +282,10 @@ public class ProbationServantServiceImpl extends GenericServiceImpl<ProbationSer
 			    save(probation);//新增一条相同数据，使其是新流程，删除原数据
 			    delete(temp);
 			}else{
+				//流程结束，改变编制
+				formationControlService.executeUnlockIntoFormationNum(temp.getDraftServant().getDraftUnit().getOrgan().getId());//1.解锁调入单位未调入编制
+				formationControlService.executeIntoFormation(temp.getDraftServant().getDraftUnit().getOrgan().getId());//2.增加调入单位实际编制数
+				
 				temp.setStatus(ProbationServant.STATUS_EMPLOY_TRIAL_PASS);//试用期审批通过
 				getServantNotMemory(temp.getId());//人员信息进入正式库
 			}
@@ -318,10 +330,21 @@ public class ProbationServantServiceImpl extends GenericServiceImpl<ProbationSer
 			temp.setStatus(ProbationServant.STATUS_EMPLOY_TRIAL_CONFIRM_DONE);//取消录用，区人事主管部门已备案确认
 			temp.setCancelFlag(ProbationServant.SEND_ED);//取消录用标识
 			temp.setFlowRecord(null);//该业务没有待办流程节点 
+			
+			//流程结束，改变编制
+			formationControlService.executeUnlockIntoFormationNum(temp.getDraftServant().getDraftUnit().getOrgan().getId());//1.解锁调入单位未调入编制
 		}else{
 			temp.setStatus(ProbationServant.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
 		}
 		update(temp);
+	}
+
+	/**
+	 * @return 获取各单位试用期人数统计 返回orginfoid 和 count数量
+	 */
+	@Override
+	public Map<String, Integer> getUnitProbationCount() {
+		return probationServantRepository.getUnitProbationCount();
 	}
 }

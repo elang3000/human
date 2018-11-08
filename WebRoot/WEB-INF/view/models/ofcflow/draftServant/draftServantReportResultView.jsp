@@ -70,13 +70,13 @@
 								<smart:tableItem field="unitName" width="150" sort="false">单位名称</smart:tableItem>
 								<smart:tableItem field="serialNumber" width="150" sort="false">序列号</smart:tableItem>
 								<smart:tableItem field="signer" width="150" sort="false">签发人</smart:tableItem>
-								<smart:tableItem field="isAgree" width="150" sort="false">是否市局同意</smart:tableItem>
-								<smart:tableItem field="total" width="150" sort="true">总共汇总条数</smart:tableItem>
-								<smart:tableItem field="total310" width="150" sort="true">总共310人数</smart:tableItem>
-								<smart:tableItem field="totalGwy" width="150" sort="false">公务员人数</smart:tableItem>
-								<smart:tableItem field="totalGwy310" width="150" sort="false">公务员310人数</smart:tableItem>
-								<smart:tableItem field="totalCg" width="150" sort="false">参公人数</smart:tableItem>
-								<smart:tableItem field="totalCg310" width="150" sort="false">参公310人数</smart:tableItem>
+								<smart:tableItem field="isAgree" width="120" sort="false">是否市局同意</smart:tableItem>
+								<smart:tableItem field="total" width="118" sort="true">总共汇总条数</smart:tableItem>
+								<smart:tableItem field="total310" width="118" sort="true">总共310人数</smart:tableItem>
+								<smart:tableItem field="totalGwy" width="118" sort="false">公务员人数</smart:tableItem>
+								<smart:tableItem field="totalGwy310" width="118" sort="false">公务员310人数</smart:tableItem>
+								<smart:tableItem field="totalCg" width="118" sort="false">参公人数</smart:tableItem>
+								<smart:tableItem field="totalCg310" width="118" sort="false">参公310人数</smart:tableItem>
 
 								<smart:tableItem align="center" fixed="right" width="150" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>

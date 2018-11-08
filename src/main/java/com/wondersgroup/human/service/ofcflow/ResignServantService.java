@@ -51,4 +51,13 @@ public interface ResignServantService  extends GenericService<ResignServant>{
 	 */
 	Page<ResignVO> pageList(ResignServantQueryParam param, Integer page, Integer limit);
 
+	/** 
+	 * @Title: getByServantId 
+	 * @Description: TODO
+	 * @param servantId
+	 * @return
+	 * @return: ResignServant
+	 */
+	ResignServant getByServantId(String servantId);
+
 }

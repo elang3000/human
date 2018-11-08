@@ -53,4 +53,13 @@ public interface DeathServantService extends GenericService<DeathServant> {
 	 */
 	public Page<DeathVO> pageList(DeathServantQueryParam param, Integer page, Integer limit);
 
+	/** 
+	 * @Title: getByServantId 
+	 * @Description: 校验是否在流程
+	 * @param servantId
+	 * @return
+	 * @return: DeathServant
+	 */
+	DeathServant getByServantId(String servantId);
+
 }

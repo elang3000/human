@@ -22,8 +22,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
-import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.human.bo.ofc.Servant;
+import com.wondersgroup.human.bo.organization.OrgInfo;
 
 /**
  * @ClassName: Warning
@@ -75,13 +75,13 @@ public class Warning extends GenericEntity {
 	private Servant servant;
 	
 	/**
-	 * @fieldName: organNode
-	 * @fieldType: com.wondersgroup.framework.organization.bo.OrganNode
+	 * @fieldName: orgInfo
+	 * @fieldType: com.wondersgroup.human.bo.organization.OrgInfo
 	 * @Description: 单位信息
 	 */
 	@ManyToOne
-	@JoinColumn(name = "ORGANNODE_ID")
-	private OrganNode organNode;
+	@JoinColumn(name = "ORGINFO_ID")
+	private OrgInfo orgInfo;
 	
 	public String getBulidDate() {
 		
@@ -123,13 +123,13 @@ public class Warning extends GenericEntity {
 		this.servant = servant;
 	}
 	
-	public OrganNode getOrganNode() {
+	public OrgInfo getOrgInfo() {
 		
-		return organNode;
+		return orgInfo;
 	}
 	
-	public void setOrganNode(OrganNode organNode) {
+	public void setOrgInfo(OrgInfo orgInfo) {
 		
-		this.organNode = organNode;
+		this.orgInfo = orgInfo;
 	}
 }

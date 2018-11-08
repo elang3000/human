@@ -56,12 +56,18 @@
 		    margin-left: 10px;
 		    border-radius: 11px;
 		    min-width: 8px;
-		    line-height: 15px;
+		    line-height: 18px;
 		    font-size: 13px;
 		    position: absolute;
 		    top: 12px;
 		    background: #ff0000;
 		    color: #fff;
+		}
+		.layui-side-menu .layui-nav .layui-nav-child .layui-nav-child a {
+		    padding-left: 40px;
+		}
+		.layui-nav * {
+		    font-size: 18px;
 		}
 	</style>
 </head>
@@ -88,7 +94,7 @@
 				</ul>
 				<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 					<li class="layui-nav-item" lay-unselect>
-						<a lay-href="announcement/index" layadmin-event="message" lay-text="消息中心">
+						<a lay-href="announcement/index" layadmin-event="message" lay-text="消息中心" title="消息中心">
 							<i class="layui-icon layui-icon-notice"></i>
 							<c:if test="${isUnreadAnnouncement}">
 								<span class="shakespan">${unreadAnnouncement}</span>
@@ -96,15 +102,20 @@
 						</a>
 					</li>
 					<li class="layui-nav-item layui-hide-xs" lay-unselect>
-            			<a href="javascript:;" layadmin-event="theme">
+            			<a href="javascript:;" layadmin-event="theme" title="主页皮肤">
               				<i class="layui-icon layui-icon-theme"></i>
             			</a>
           			</li>
 					<li class="layui-nav-item layui-hide-xs" lay-unselect>
-						<a href="javascript:;" layadmin-event="note">
+						<a href="javascript:;" layadmin-event="note" title="便签">
 							<i class="layui-icon layui-icon-note"></i>
 						</a>
 					</li>
+					<li class="layui-nav-item layui-hide-xs" lay-unselect>
+			            <a href="javascript:;" layadmin-event="fullscreen" title="全屏模式">
+			              <i class="layui-icon layui-icon-screen-full"></i>
+			            </a>
+			        </li>
 					<li class="layui-nav-item" lay-unselect>
 						<a href="javascript:;">
 							<cite>
@@ -146,12 +157,12 @@
 					<ul class="layui-nav layui-nav-tree" lay-shrink="all" id="smart-system-side-menu" lay-filter="layadmin-system-side-menu">
 						<c:forEach items="${menus}" var="menu">
 							<li data-name="${menu.code}" class="layui-nav-item">
-								<a href="javascript:;">
+								<a href="javascript:;" title="${menu.resourceName}">
 									<c:if test="${empty menu.icon}">
-										<i class="fa fa-angle-right" style="font-size:18px;color:white;padding-right:1em"></i>
+										<i class="fa fa-angle-right" style="font-size:18px;color:white;padding-right:0.5em"></i>
 									</c:if>
 									<c:if test="${not empty menu.icon}">
-										<i class="fa ${menu.icon}" style="font-size:18px;color:white;padding-right:1em"></i>
+										<i class="fa ${menu.icon}" style="font-size:18px;color:white;padding-right:0.5em"></i>
 									</c:if>
 									<cite>${menu.resourceName}</cite>
 								</a>
@@ -160,12 +171,12 @@
 										<c:forEach items="${menu.children}" var="menu1">
 											<dd data-name="${menu1.code}">
 												<c:if test="${!menu1.isLeaf}">
-													<a href="javascript:;">
+													<a href="javascript:;" title="${menu1.resourceName}">
 														<c:if test="${empty menu1.icon}">
-															<i class="fa fa-angle-right" style="font-size:18px;color:white;padding-right:1em"></i>
+															<i class="fa fa-angle-right" style="font-size:20px;color:white;padding-right:0.5em"></i>
 														</c:if>
 														<c:if test="${not empty menu1.icon}">
-															<i class="fa ${menu1.icon}" style="font-size:18px;color:white;padding-right:1em"></i>
+															<i class="fa ${menu1.icon}" style="font-size:20px;color:white;padding-right:0.5em"></i>
 														</c:if>
 														${menu1.resourceName}
 													</a>
@@ -173,24 +184,24 @@
 														<c:forEach items="${menu1.children}" var="menu2">
 															<dd data-name="${menu2.code}">
 																<c:if test="${!menu2.isLeaf}">
-																	<a href="javascript:;">
+																	<a href="javascript:;"  title="${menu2.resourceName}">
 																		<c:if test="${empty menu2.icon}">
-																			<i class="fa fa-angle-right" style="font-size:18px;color:white;padding-right:1em"></i>
+																			<i class="fa fa-angle-right" style="font-size:20px;color:white;padding-right:1em"></i>
 																		</c:if>
 																		<c:if test="${not empty menu2.icon}">
-																			<i class="fa ${menu2.icon}" style="font-size:18px;color:white;padding-right:1em"></i>
+																			<i class="fa ${menu2.icon}" style="font-size:20px;color:white;padding-right:1em"></i>
 																		</c:if>
 																		${menu2.resourceName}
 																	</a>
 																	<dl class="layui-nav-child">
 																		<c:forEach items="${menu2.children}" var="menu3">
 																			<dd data-name="${menu3.code}">
-																				<a lay-href="${menu3.linkPath}">
+																				<a lay-href="${menu3.linkPath}" title="${menu3.resourceName}">
 																					<c:if test="${empty menu3.icon}">
-																						<i class="fa fa-angle-right" style="font-size:18px;color:white;padding-right:1em"></i>
+																						<i class="fa fa-angle-right" style="font-size:20px;color:white;padding-right:0.5em"></i>
 																					</c:if>
 																					<c:if test="${not empty menu3.icon}">
-																						<i class="fa ${menu3.icon}" style="font-size:18px;color:white;padding-right:1em"></i>
+																						<i class="fa ${menu3.icon}" style="font-size:20px;color:white;padding-right:0.5em"></i>
 																					</c:if>
 																					${menu3.resourceName}
 																				</a>
@@ -199,12 +210,12 @@
 																	</dl>
 																</c:if>
 																<c:if test="${menu2.isLeaf}">
-																	<a lay-href="${menu2.linkPath}">
+																	<a lay-href="${menu2.linkPath}" title="${menu2.resourceName}">
 																		<c:if test="${empty menu2.icon}">
-																			<i class="fa fa-angle-right" style="font-size:18px;color:white;padding-right:1em"></i>
+																			<i class="fa fa-angle-right" style="font-size:20px;color:white;padding-right:0.5em"></i>
 																		</c:if>
 																		<c:if test="${not empty menu2.icon}">
-																			<i class="fa ${menu2.icon}" style="font-size:18px;color:white;padding-right:1em"></i>
+																			<i class="fa ${menu2.icon}" style="font-size:20px;color:white;padding-right:0.5em"></i>
 																		</c:if>
 																		${menu2.resourceName}
 																	</a>
@@ -214,12 +225,12 @@
 													</dl>
 												</c:if>
 												<c:if test="${menu1.isLeaf}">
-													<a lay-href="${menu1.linkPath}">
+													<a lay-href="${menu1.linkPath}"  title="${menu1.resourceName}">
 														<c:if test="${empty menu1.icon}">
-															<i class="fa fa-angle-right" style="font-size:18px;color:white;padding-right:1em"></i>
+															<i class="fa fa-angle-right" style="font-size:20px;color:white;padding-right:0.5em"></i>
 														</c:if>
 														<c:if test="${not empty menu1.icon}">
-															<i class="fa ${menu1.icon}" style="font-size:18px;color:white;padding-right:1em"></i>
+															<i class="fa ${menu1.icon}" style="font-size:20px;color:white;padding-right:0.5em"></i>
 														</c:if>
 														${menu1.resourceName}
 													</a>

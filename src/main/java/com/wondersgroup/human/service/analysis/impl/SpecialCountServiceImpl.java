@@ -22,8 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wondersgroup.framework.core.bo.Page;
+import com.wondersgroup.human.repository.ofc.ManagerRecordRepository;
 import com.wondersgroup.human.repository.ofc.RewardAndPunishRepository;
 import com.wondersgroup.human.service.analysis.SpecialCountService;
+import com.wondersgroup.human.vo.analysis.MagCountVO;
+import com.wondersgroup.human.vo.analysis.PunishCountVO;
 import com.wondersgroup.human.vo.analysis.RewardCountVO;
 
 /** 
@@ -41,6 +44,9 @@ public class SpecialCountServiceImpl implements SpecialCountService {
 	@Autowired
 	RewardAndPunishRepository rewardAndPunishRepository;
 	
+	@Autowired
+	ManagerRecordRepository managerRecordRepository;
+	
 	/** 
 	 * @see com.wondersgroup.human.service.ofc.RewardAndPunishService#getRewardCount(java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer) 
 	 */
@@ -55,5 +61,37 @@ public class SpecialCountServiceImpl implements SpecialCountService {
 	@Override
 	public Map<String, BigDecimal> getRewardCountByDepartId(String departId, Integer year) {
 		return rewardAndPunishRepository.getRewardCountByDepartId(departId,year);
+	}
+
+	/** 
+	 * @see com.wondersgroup.human.service.analysis.SpecialCountService#getPunishCount(java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer) 
+	 */
+	@Override
+	public Page<PunishCountVO> getPunishCount(String departName, Integer year, Integer page, Integer limit) {
+		return rewardAndPunishRepository.getPunishCount(departName, year, page, limit);
+	}
+
+	/** 
+	 * @see com.wondersgroup.human.service.analysis.SpecialCountService#getPunishCountByDepartId(java.lang.String, java.lang.Integer) 
+	 */
+	@Override
+	public Map<String, BigDecimal> getPunishCountByDepartId(String departId, Integer year) {
+		return rewardAndPunishRepository.getPunishCountByDepartId(departId,year);
+	}
+
+	/**  
+	 * @see com.wondersgroup.human.service.analysis.SpecialCountService#getMagCount(java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer) 
+	 */
+	@Override
+	public Page<MagCountVO> getMagCount(String departName, Integer year, Integer page, Integer limit) {
+		return managerRecordRepository.getMagCount(departName, year, page, limit);
+	}
+
+	/**  
+	 * @see com.wondersgroup.human.service.analysis.SpecialCountService#getMagCountByDepartId(java.lang.String, java.lang.Integer) 
+	 */
+	@Override
+	public Map<String, BigDecimal> getMagCountByDepartId(String departId, Integer year) {
+		return managerRecordRepository.getMagCountByDepartId(departId,year);
 	}
 }

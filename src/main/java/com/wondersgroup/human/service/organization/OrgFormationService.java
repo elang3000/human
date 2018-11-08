@@ -18,6 +18,7 @@ package com.wondersgroup.human.service.organization;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.organization.OrgFormation;
+import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.vo.organization.OrgFormationVO;
 
 /** 
@@ -33,4 +34,5 @@ public interface OrgFormationService extends GenericService<OrgFormation>{
 
 
     public Page<OrgFormation> getOrgFormationByName(String orgName,Integer limit,Integer page);
+
 }

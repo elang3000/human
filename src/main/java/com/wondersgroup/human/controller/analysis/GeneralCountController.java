@@ -3,9 +3,14 @@ package com.wondersgroup.human.controller.analysis;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.exception.BusinessException;
+import com.wondersgroup.framework.organization.bo.OrganNode;
+import com.wondersgroup.framework.organization.service.OrganNodeService;
 import com.wondersgroup.human.bo.organization.OrgFormation;
+import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.service.analysis.GeneralCountService;
+import com.wondersgroup.human.service.ofcflow.ProbationServantService;
 import com.wondersgroup.human.service.organization.OrgFormationService;
+import com.wondersgroup.human.service.organization.OrgInfoService;
 import com.wondersgroup.human.vo.organization.OrgFormationCountVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +45,12 @@ public class GeneralCountController extends GenericController {
     @Resource
     private GeneralCountService generalCountService;
 
+    @Autowired
+    private ProbationServantService probationServantService;
+
+    @Autowired
+    private OrganNodeService organNodeService;
+
     //通用统计首页
     private static final String GENERAL_COUNT_INDEX = "models/analysis/generalCount/generalCountIndex";
 
@@ -56,9 +67,16 @@ public class GeneralCountController extends GenericController {
     @ResponseBody
     public Page<OrgFormationCountVO> indexData(Model model, String orgName, Integer limit, Integer page) {
         Page<OrgFormation> list = this.orgFormationService.getOrgFormationByName(orgName, limit, page);
+        Map<String, Integer> unitProbationCount = this.probationServantService.getUnitProbationCount();
         List<OrgFormationCountVO> listVO = new ArrayList<>();
         for (OrgFormation orgFormation : list.getResult()) {
             OrgFormationCountVO orgFormationVO = new OrgFormationCountVO(orgFormation);
+            Integer probationNum = unitProbationCount.get(orgFormation.getOrgInfo().getId());
+            if (null != probationNum) {
+                orgFormationVO.setNotIntoNum(probationNum);
+            } else {
+                orgFormationVO.setNotIntoNum(0);
+            }
             listVO.add(orgFormationVO);
         }
         Page<OrgFormationCountVO> pageVO = new Page<>(list.getStart(), list.getCurrentPageSize(),
@@ -70,6 +88,9 @@ public class GeneralCountController extends GenericController {
     @RequestMapping("/unitPage/{orgId}")
     public String unitPage(@PathVariable(value = "orgId", required = true) String id, Model model) {
         model.addAttribute("orgId", id);
+        OrganNode organNode = organNodeService.load(id);
+        model.addAttribute("orgName",organNode.getName());
+        System.out.println(organNode.getName());
         return GENERAL_COUNT_UNIT_PAGE;
     }
 

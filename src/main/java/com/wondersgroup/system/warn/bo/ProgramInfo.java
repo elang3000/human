@@ -113,9 +113,9 @@ public class ProgramInfo extends GenericEntity {
 	/**
 	 * @fieldName: newsContent
 	 * @fieldType: java.lang.String
-	 * @Description:通知消息主体
+	 * @Description:通知消息主体+查询条件生成的消息
 	 */
-	@Column(name = "NEWS_CONTENT", length = 400)
+	@Column(name = "NEWS_CONTENT", length = 2000)
 	private String newsContent;
 	
 	public String getName() {

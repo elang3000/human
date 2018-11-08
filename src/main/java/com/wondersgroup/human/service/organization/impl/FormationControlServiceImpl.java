@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.wondersgroup.common.contant.CommonConst;
@@ -71,6 +72,9 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	@Autowired
 	private DictableService dictableService;
 	
+	@Value("#{system['system.organ.formation.control.enabled']}")
+	public Boolean enabledFormationControl = true;
+	
 	@Override
 	public Page<FormationControlVO> getPage(DetachedCriteria detachedCriteria, Integer pageNo, Integer limit) {
 		
@@ -96,6 +100,8 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	@Override
 	public boolean queryJudgeFormationNum(String organId, Integer humanNum) throws BusinessException {
 		
+		if (enabledFormationControl == false)
+			return true;
 		int realNum;
 		OrgFormation orgFormation = validateFormation(organId);
 		
@@ -168,6 +174,8 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	public JudgePostResult queryJudgePostNum(String organId, String PostCode, Integer humanNum)
 			throws BusinessException {
 		
+		if (enabledFormationControl == false)
+			return new JudgePostResult(true, false);
 		OrgFormation orgFormation = validateFormation(organId);
 		
 		// 判断是否存在编控信息，若单位不存在，直接查询长宁区基础编控信息
@@ -262,9 +270,11 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	@Override
 	public void executeLockIntoFormationNum(String organId, Integer humanNum) throws BusinessException {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		orgFormation.setNotIntoNum(orgFormation.getNotIntoNum() + humanNum);
-		orgFormationService.update(orgFormation);
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			orgFormation.setNotIntoNum(orgFormation.getNotIntoNum() + humanNum);
+			orgFormationService.update(orgFormation);
+		}
 	}
 	
 	@Override
@@ -277,10 +287,11 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	@Override
 	public void executeUnlockIntoFormationNum(String organId, Integer humanNum) throws BusinessException {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		orgFormation.setNotIntoNum(orgFormation.getNotIntoNum() - humanNum);
-		orgFormationService.update(orgFormation);
-		
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			orgFormation.setNotIntoNum(orgFormation.getNotIntoNum() - humanNum);
+			orgFormationService.update(orgFormation);
+		}
 	}
 	
 	@Override
@@ -293,10 +304,11 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	@Override
 	public void executeLockOutFormationNum(String organId, Integer humanNum) throws BusinessException {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		orgFormation.setNotOutNum(orgFormation.getNotOutNum() + humanNum);
-		orgFormationService.update(orgFormation);
-		
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			orgFormation.setNotOutNum(orgFormation.getNotOutNum() + humanNum);
+			orgFormationService.update(orgFormation);
+		}
 	}
 	
 	@Override
@@ -309,10 +321,11 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	@Override
 	public void executeUnlockOutFormationNum(String organId, Integer humanNum) throws BusinessException {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		orgFormation.setNotOutNum(orgFormation.getNotOutNum() - humanNum);
-		orgFormationService.update(orgFormation);
-		
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			orgFormation.setNotOutNum(orgFormation.getNotOutNum() - humanNum);
+			orgFormationService.update(orgFormation);
+		}
 	}
 	
 	@Override
@@ -326,30 +339,33 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	public void executeLockPostIntoNum(String organId, String PostCode, Integer humanNum, Boolean isLowToHigh)
 			throws BusinessException {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		
-		// 首先判断职务
-		if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
-			// 正科长职务进入
-			// 直接处理占编业务
-			orgFormation.setNotIntoSectionChiefNum(orgFormation.getNotIntoSectionChiefNum() + humanNum);
-			orgFormationService.update(orgFormation);
-		} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
-			// 副科长进入
-			// 判断高职低配情况
-			if (isLowToHigh) {
-				// 如果是，将占用正科尚未调入数
+		if (enabledFormationControl == true) {
+			
+			OrgFormation orgFormation = validateFormation(organId);
+			
+			// 首先判断职务
+			if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
+				// 正科长职务进入
+				// 直接处理占编业务
 				orgFormation.setNotIntoSectionChiefNum(orgFormation.getNotIntoSectionChiefNum() + humanNum);
 				orgFormationService.update(orgFormation);
+			} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
+				// 副科长进入
+				// 判断高职低配情况
+				if (isLowToHigh) {
+					// 如果是，将占用正科尚未调入数
+					orgFormation.setNotIntoSectionChiefNum(orgFormation.getNotIntoSectionChiefNum() + humanNum);
+					orgFormationService.update(orgFormation);
+				} else {
+					// 如果否，占用副科尚未调入数
+					orgFormation
+							.setNotIntoDeputySectionChiefNum(orgFormation.getNotIntoDeputySectionChiefNum() + humanNum);
+					orgFormationService.update(orgFormation);
+				}
 			} else {
-				// 如果否，占用副科尚未调入数
-				orgFormation.setNotIntoDeputySectionChiefNum(orgFormation.getNotIntoDeputySectionChiefNum() + humanNum);
-				orgFormationService.update(orgFormation);
+				throw new BusinessException("职务信息异常，请联系管理员");
 			}
-		} else {
-			throw new BusinessException("职务信息异常，请联系管理员");
 		}
-		
 	}
 	
 	@Override
@@ -364,30 +380,33 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	public void executeUnlockPostIntoNum(String organId, String PostCode, Integer humanNum, Boolean isLowToHigh)
 			throws BusinessException {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		
-		// 首先判断职务
-		if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
-			// 正科长职务进入
-			// 直接处理解锁未调入业务
-			orgFormation.setNotIntoSectionChiefNum(orgFormation.getNotIntoSectionChiefNum() - humanNum);
-			orgFormationService.update(orgFormation);
-		} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
-			// 副科长进入
-			// 判断高职低配情况
-			if (isLowToHigh) {
-				// 如果是，将解锁正科尚未调入数
+		if (enabledFormationControl == true) {
+			
+			OrgFormation orgFormation = validateFormation(organId);
+			
+			// 首先判断职务
+			if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
+				// 正科长职务进入
+				// 直接处理解锁未调入业务
 				orgFormation.setNotIntoSectionChiefNum(orgFormation.getNotIntoSectionChiefNum() - humanNum);
 				orgFormationService.update(orgFormation);
+			} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
+				// 副科长进入
+				// 判断高职低配情况
+				if (isLowToHigh) {
+					// 如果是，将解锁正科尚未调入数
+					orgFormation.setNotIntoSectionChiefNum(orgFormation.getNotIntoSectionChiefNum() - humanNum);
+					orgFormationService.update(orgFormation);
+				} else {
+					// 如果否，解锁副科尚未调入数
+					orgFormation
+							.setNotIntoDeputySectionChiefNum(orgFormation.getNotIntoDeputySectionChiefNum() - humanNum);
+					orgFormationService.update(orgFormation);
+				}
 			} else {
-				// 如果否，解锁副科尚未调入数
-				orgFormation.setNotIntoDeputySectionChiefNum(orgFormation.getNotIntoDeputySectionChiefNum() - humanNum);
-				orgFormationService.update(orgFormation);
+				throw new BusinessException("职务信息异常，请联系管理员");
 			}
-		} else {
-			throw new BusinessException("职务信息异常，请联系管理员");
 		}
-		
 	}
 	
 	@Override
@@ -401,30 +420,32 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	public void executeLockPostOutNum(String organId, String PostCode, Integer humanNum, Boolean isLowToHigh)
 			throws BusinessException {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		
-		// 首先判断职务
-		if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
-			// 正科长职务进入
-			// 直接处理锁定尚未调出业务
-			orgFormation.setNotOutSectionChiefNum(orgFormation.getNotOutSectionChiefNum() + humanNum);
-			orgFormationService.update(orgFormation);
-		} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
-			// 副科长进入
-			// 判断高职低配情况
-			if (isLowToHigh) {
-				// 如果是，将锁定正科尚未出人数
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			
+			// 首先判断职务
+			if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
+				// 正科长职务进入
+				// 直接处理锁定尚未调出业务
 				orgFormation.setNotOutSectionChiefNum(orgFormation.getNotOutSectionChiefNum() + humanNum);
 				orgFormationService.update(orgFormation);
+			} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
+				// 副科长进入
+				// 判断高职低配情况
+				if (isLowToHigh) {
+					// 如果是，将锁定正科尚未出人数
+					orgFormation.setNotOutSectionChiefNum(orgFormation.getNotOutSectionChiefNum() + humanNum);
+					orgFormationService.update(orgFormation);
+				} else {
+					// 如果否，锁定副科尚未出人数
+					orgFormation
+							.setNotOutDeputySectionChiefNum(orgFormation.getNotOutDeputySectionChiefNum() + humanNum);
+					orgFormationService.update(orgFormation);
+				}
 			} else {
-				// 如果否，锁定副科尚未出人数
-				orgFormation.setNotOutDeputySectionChiefNum(orgFormation.getNotOutDeputySectionChiefNum() + humanNum);
-				orgFormationService.update(orgFormation);
+				throw new BusinessException("职务信息异常，请联系管理员");
 			}
-		} else {
-			throw new BusinessException("职务信息异常，请联系管理员");
 		}
-		
 	}
 	
 	@Override
@@ -438,30 +459,32 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	public void executeUnlockPostOutNum(String organId, String PostCode, Integer humanNum, Boolean isLowToHigh)
 			throws BusinessException {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		
-		// 首先判断职务
-		if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
-			// 正科长职务进入
-			// 直接处理解锁尚未调出业务
-			orgFormation.setNotOutSectionChiefNum(orgFormation.getNotOutSectionChiefNum() - humanNum);
-			orgFormationService.update(orgFormation);
-		} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
-			// 副科长进入
-			// 判断高职低配情况
-			if (isLowToHigh) {
-				// 如果是，将解锁正科尚未调入数
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			
+			// 首先判断职务
+			if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
+				// 正科长职务进入
+				// 直接处理解锁尚未调出业务
 				orgFormation.setNotOutSectionChiefNum(orgFormation.getNotOutSectionChiefNum() - humanNum);
 				orgFormationService.update(orgFormation);
+			} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
+				// 副科长进入
+				// 判断高职低配情况
+				if (isLowToHigh) {
+					// 如果是，将解锁正科尚未调入数
+					orgFormation.setNotOutSectionChiefNum(orgFormation.getNotOutSectionChiefNum() - humanNum);
+					orgFormationService.update(orgFormation);
+				} else {
+					// 如果否，解锁副科尚未调入数
+					orgFormation
+							.setNotOutDeputySectionChiefNum(orgFormation.getNotOutDeputySectionChiefNum() - humanNum);
+					orgFormationService.update(orgFormation);
+				}
 			} else {
-				// 如果否，解锁副科尚未调入数
-				orgFormation.setNotOutDeputySectionChiefNum(orgFormation.getNotOutDeputySectionChiefNum() - humanNum);
-				orgFormationService.update(orgFormation);
+				throw new BusinessException("职务信息异常，请联系管理员");
 			}
-		} else {
-			throw new BusinessException("职务信息异常，请联系管理员");
 		}
-		
 	}
 	
 	@Override
@@ -474,11 +497,13 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	@Override
 	public void executeIntoFormation(String organId, Integer humanNum) {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		// 操作 实有人数、缺（超）编人数
-		orgFormation.setActualNumber(orgFormation.getActualNumber() + humanNum);
-		orgFormation.setVacancyExcessNumber(orgFormation.getVacancyExcessNumber() - humanNum);
-		orgFormationService.update(orgFormation);
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			// 操作 实有人数、缺（超）编人数
+			orgFormation.setActualNumber(orgFormation.getActualNumber() + humanNum);
+			orgFormation.setVacancyExcessNumber(orgFormation.getVacancyExcessNumber() - humanNum);
+			orgFormationService.update(orgFormation);
+		}
 	}
 	
 	@Override
@@ -491,12 +516,13 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	@Override
 	public void executeOutFormation(String organId, Integer humanNum) {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		// 操作 实有人数、缺（超）编人数
-		orgFormation.setActualNumber(orgFormation.getActualNumber() - humanNum);
-		orgFormation.setVacancyExcessNumber(orgFormation.getVacancyExcessNumber() + humanNum);
-		orgFormationService.update(orgFormation);
-		
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			// 操作 实有人数、缺（超）编人数
+			orgFormation.setActualNumber(orgFormation.getActualNumber() - humanNum);
+			orgFormation.setVacancyExcessNumber(orgFormation.getVacancyExcessNumber() + humanNum);
+			orgFormationService.update(orgFormation);
+		}
 	}
 	
 	@Override
@@ -509,73 +535,77 @@ public class FormationControlServiceImpl extends GenericServiceImpl<FormationCon
 	@Override
 	public void executeIntoPost(String organId, String PostCode, Boolean isLowToHigh, Integer humanNum) {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		// 首先判断职务
-		if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
-			// 正科长职务进入
-			orgFormation.setSectionChiefLevelNumber(orgFormation.getSectionChiefLevelNumber() + humanNum);
-			orgFormation.setVacancySectionChiefLevelNumber(orgFormation.getVacancySectionChiefLevelNumber() - humanNum);
-			orgFormationService.update(orgFormation);
-		} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
-			// 副科长进入
-			// 判断高职低配情况
-			if (isLowToHigh) {
-				// 如果是，调整科级领导数
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			// 首先判断职务
+			if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
+				// 正科长职务进入
 				orgFormation.setSectionChiefLevelNumber(orgFormation.getSectionChiefLevelNumber() + humanNum);
 				orgFormation
 						.setVacancySectionChiefLevelNumber(orgFormation.getVacancySectionChiefLevelNumber() - humanNum);
 				orgFormationService.update(orgFormation);
+			} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
+				// 副科长进入
+				// 判断高职低配情况
+				if (isLowToHigh) {
+					// 如果是，调整科级领导数
+					orgFormation.setSectionChiefLevelNumber(orgFormation.getSectionChiefLevelNumber() + humanNum);
+					orgFormation.setVacancySectionChiefLevelNumber(
+							orgFormation.getVacancySectionChiefLevelNumber() - humanNum);
+					orgFormationService.update(orgFormation);
+				} else {
+					// 如果否，调整科级非领导数
+					orgFormation.setNonLeaderSectionChiefLevelNumber(
+							orgFormation.getNonLeaderSectionChiefLevelNumber() + humanNum);
+					orgFormation.setVacancyNonLeaderSectionChiefLevelNumber(
+							orgFormation.getVacancyNonLeaderSectionChiefLevelNumber() - humanNum);
+					orgFormationService.update(orgFormation);
+				}
 			} else {
-				// 如果否，调整科级非领导数
-				orgFormation.setNonLeaderSectionChiefLevelNumber(
-						orgFormation.getNonLeaderSectionChiefLevelNumber() + humanNum);
-				orgFormation.setVacancyNonLeaderSectionChiefLevelNumber(
-						orgFormation.getVacancyNonLeaderSectionChiefLevelNumber() - humanNum);
-				orgFormationService.update(orgFormation);
+				throw new BusinessException("职务信息异常，请联系管理员");
 			}
-		} else {
-			throw new BusinessException("职务信息异常，请联系管理员");
 		}
-		
 	}
 	
 	@Override
 	public void executeOutPost(String organId, String PostCode, Boolean isLowToHigh) {
 		
-		executeOutPost(organId,PostCode,isLowToHigh,1);
+		executeOutPost(organId, PostCode, isLowToHigh, 1);
 		
 	}
 	
 	@Override
 	public void executeOutPost(String organId, String PostCode, Boolean isLowToHigh, Integer humanNum) {
 		
-		OrgFormation orgFormation = validateFormation(organId);
-		// 首先判断职务
-		if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
-			// 正科长职务进入
-			orgFormation.setSectionChiefLevelNumber(orgFormation.getSectionChiefLevelNumber() - humanNum);
-			orgFormation.setVacancySectionChiefLevelNumber(orgFormation.getVacancySectionChiefLevelNumber() + humanNum);
-			orgFormationService.update(orgFormation);
-		} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
-			// 副科长进入
-			// 判断高职低配情况
-			if (isLowToHigh) {
-				// 如果是，调整科级领导数
+		if (enabledFormationControl == true) {
+			OrgFormation orgFormation = validateFormation(organId);
+			// 首先判断职务
+			if (PostCode.equals(FormationControl.SECTION_CHIEF)) {
+				// 正科长职务进入
 				orgFormation.setSectionChiefLevelNumber(orgFormation.getSectionChiefLevelNumber() - humanNum);
 				orgFormation
 						.setVacancySectionChiefLevelNumber(orgFormation.getVacancySectionChiefLevelNumber() + humanNum);
 				orgFormationService.update(orgFormation);
+			} else if (PostCode.equals(FormationControl.DEPUTY_SECTION_CHIEF)) {
+				// 副科长进入
+				// 判断高职低配情况
+				if (isLowToHigh) {
+					// 如果是，调整科级领导数
+					orgFormation.setSectionChiefLevelNumber(orgFormation.getSectionChiefLevelNumber() - humanNum);
+					orgFormation.setVacancySectionChiefLevelNumber(
+							orgFormation.getVacancySectionChiefLevelNumber() + humanNum);
+					orgFormationService.update(orgFormation);
+				} else {
+					// 如果否，调整科级非领导数
+					orgFormation.setNonLeaderSectionChiefLevelNumber(
+							orgFormation.getNonLeaderSectionChiefLevelNumber() - humanNum);
+					orgFormation.setVacancyNonLeaderSectionChiefLevelNumber(
+							orgFormation.getVacancyNonLeaderSectionChiefLevelNumber() + humanNum);
+					orgFormationService.update(orgFormation);
+				}
 			} else {
-				// 如果否，调整科级非领导数
-				orgFormation.setNonLeaderSectionChiefLevelNumber(
-						orgFormation.getNonLeaderSectionChiefLevelNumber() - humanNum);
-				orgFormation.setVacancyNonLeaderSectionChiefLevelNumber(
-						orgFormation.getVacancyNonLeaderSectionChiefLevelNumber() + humanNum);
-				orgFormationService.update(orgFormation);
+				throw new BusinessException("职务信息异常，请联系管理员");
 			}
-		} else {
-			throw new BusinessException("职务信息异常，请联系管理员");
 		}
-		
 	}
 }

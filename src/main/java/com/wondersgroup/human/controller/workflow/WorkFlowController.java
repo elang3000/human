@@ -139,6 +139,7 @@ public class WorkFlowController extends GenericController {
 		
 		model.addAttribute("category", category);//数据类型,区分公务员和事业单位等
 		model.addAttribute("busId", busId);
+		model.addAttribute("userId", SecurityUtils.getUserId());
 		return WORKFLOW_DOING_INDEX;
 	}
 	
@@ -158,6 +159,7 @@ public class WorkFlowController extends GenericController {
 	public String getWorkFlowDoingIndexPublic(String busId, Model model) {
 		
 		model.addAttribute("busId", busId);
+		model.addAttribute("userId", SecurityUtils.getUserId());
 		return WORKFLOW_DOING_INDEX_Public;
 	}
 	

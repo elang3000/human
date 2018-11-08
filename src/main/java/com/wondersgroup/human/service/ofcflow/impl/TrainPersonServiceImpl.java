@@ -16,6 +16,7 @@
 package com.wondersgroup.human.service.ofcflow.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -84,6 +85,21 @@ public class TrainPersonServiceImpl extends GenericServiceImpl<TrainPerson> impl
 	@Override
 	public List<?> exportByPerson(TrainYearPlan typ) {
 		return trainPersonRepository.exportByPerson(typ);
+	}
+
+	/** (non Javadoc) 
+	 * @Title: getTrainHours
+	 * @Description: TODO
+	 * @param id
+	 * @param start
+	 * @param end
+	 * @return 
+	 * @see com.wondersgroup.human.service.ofcflow.TrainPersonService#getTrainHours(java.lang.String, java.util.Date, java.util.Date) 
+	 */
+	@Override
+	public int getTrainHours(String id, Date start, Date end) {
+		
+		return trainPersonRepository.getTrainHours(id,start,end);
 	}
 
 }

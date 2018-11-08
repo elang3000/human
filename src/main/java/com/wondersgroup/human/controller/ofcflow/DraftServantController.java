@@ -15,24 +15,6 @@
  */
 package com.wondersgroup.human.controller.ofcflow;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
@@ -55,13 +37,27 @@ import com.wondersgroup.human.dto.ofcflow.UnitBasicInfoDTO;
 import com.wondersgroup.human.service.ofcflow.DraftServantEduInfoService;
 import com.wondersgroup.human.service.ofcflow.DraftServantImportRecordService;
 import com.wondersgroup.human.service.ofcflow.DraftServantRelationReportService;
-import com.wondersgroup.human.service.ofcflow.DraftServantReportService;
 import com.wondersgroup.human.service.ofcflow.DraftServantService;
 import com.wondersgroup.human.service.organization.OrgInfoService;
 import com.wondersgroup.human.vo.ofcflow.DraftServantImportRecordVO;
 import com.wondersgroup.human.vo.ofcflow.DraftServantVO;
-
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: DraftServantController
@@ -116,8 +112,7 @@ public class DraftServantController extends GenericController {
 	@Autowired
 	private DraftServantRelationReportService draftServantRelationReportService;
 	
-	@Autowired
-	private DraftServantReportService draftServantReportService;
+
 
 	// 公务员录用列表
 	@RequestMapping("/index")
@@ -135,7 +130,7 @@ public class DraftServantController extends GenericController {
 			isBureau=true;
 		} else {
 			isBureau=false;
-			return "redirect: employStatusList";
+			return "redirect:employStatusList";
 		}
 		model.addAttribute("isBureau", isBureau);
 		return DRAFT_SERVANT_IMPORT_LIST;
@@ -322,13 +317,12 @@ public class DraftServantController extends GenericController {
 			DraftServant draft = draftServantService.get(temp.getId());
 			BeanUtils.copyPropertiesIgnoreNull(temp, draft);
 			draft.setIsElecLetter(DraftServant.ISELECLETTER_YES);
-			draftServantService.update(draft);// 保存
+			this.draftServantService.confirmLetter(draft);
 			result.setMessage("保存成功！");
-			draftServantReportService.addProbationServantSingle(draft.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
-			result.setMessage("保存失败！");
+			result.setMessage("保存失败！"+e.getMessage());
 		}
 		return result;
 	}
@@ -509,8 +503,6 @@ public class DraftServantController extends GenericController {
 	/**
 	 * @Title: importDel 
 	 * @Description: 删除该次导入记录数据
-	 * @param model
-	 * @param request
 	 * @param id	 导入数据表记录ID
 	 * @return
 	 * @return: AjaxResult

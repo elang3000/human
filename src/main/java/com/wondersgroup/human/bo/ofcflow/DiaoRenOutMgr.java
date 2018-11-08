@@ -108,6 +108,15 @@ public class DiaoRenOutMgr extends BaseEventOutMgr<DiaoRenOutMgr> {
 	private CodeInfo personType;
 	
 	/**
+	 * @fieldName: isLowToHigh
+	 * @fieldType: java.lang.Boolean
+	 * @Description: 职务是否高职低配。
+	 */
+	@Column(name = "IS_LOW_TO_HIGH")
+	@org.hibernate.annotations.Type(type = "yes_no")
+	private Boolean isLowToHigh = false;
+	
+	/**
 	 * @fieldName: postCode
 	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
 	 * @Description: 拟任职务代码,GB/T 12403-1990 该人担任职务的代码。
@@ -333,6 +342,16 @@ public class DiaoRenOutMgr extends BaseEventOutMgr<DiaoRenOutMgr> {
 	public void setAttribute(CodeInfo attribute) {
 		
 		this.attribute = attribute;
+	}
+	
+	public Boolean getIsLowToHigh() {
+		
+		return isLowToHigh;
+	}
+	
+	public void setIsLowToHigh(Boolean isLowToHigh) {
+		
+		this.isLowToHigh = isLowToHigh;
 	}
 	
 }

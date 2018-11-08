@@ -18,6 +18,8 @@ package com.wondersgroup.human.repository.ofcflow;
 import com.wondersgroup.framework.core.dao.GenericRepository;
 import com.wondersgroup.human.bo.ofcflow.ProbationServant;
 
+import java.util.Map;
+
 /** 
  * @ClassName: ProbationServantRepository 
  * @Description: 试用期管理	知识库接口
@@ -28,5 +30,7 @@ import com.wondersgroup.human.bo.ofcflow.ProbationServant;
  * @since     [产品/模块版本] 
  */
 public interface ProbationServantRepository extends GenericRepository<ProbationServant>{
+
+    public Map<String, Integer> getUnitProbationCount();
 	
 }

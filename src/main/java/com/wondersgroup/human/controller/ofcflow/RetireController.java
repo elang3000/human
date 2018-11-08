@@ -134,19 +134,19 @@ public class RetireController extends GenericController {
 				servantService.update(servant);
 				
 				//保存进出管理
-				ManagerRecordDTO mrdto = new ManagerRecordDTO();
-				mrdto.setHumanId(s);
-				mrdto.setRecordType(HumanKeepRecord.SERVANT_RETIRE);//退休备案
-				ManagerOutRecordEvent event = new ManagerOutRecordEvent(mrdto);
-				EventManager.send(event);
-				
-				//保存备案管理
-				HumankeepRecordDTO hkrdto = new HumankeepRecordDTO();
-				hkrdto.setHumanId(s);
-				hkrdto.setRecordType(HumanKeepRecord.SERVANT_RETIRE);//退休备案
-				hkrdto.setUnitType(servant.getDepartName());//人事单位类型
-				ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(hkrdto);
-				EventManager.send(event2);
+//				ManagerRecordDTO mrdto = new ManagerRecordDTO();
+//				mrdto.setHumanId(s);
+//				mrdto.setRecordType(HumanKeepRecord.SERVANT_RETIRE);//退休备案
+//				ManagerOutRecordEvent event = new ManagerOutRecordEvent(mrdto);
+//				EventManager.send(event);
+//				
+//				//保存备案管理
+//				HumankeepRecordDTO hkrdto = new HumankeepRecordDTO();
+//				hkrdto.setHumanId(s);
+//				hkrdto.setRecordType(HumanKeepRecord.SERVANT_RETIRE);//退休备案
+//				hkrdto.setUnitType(servant.getDepartName());//人事单位类型
+//				ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(hkrdto);
+//				EventManager.send(event2);
 				result.setMessage("保存成功！");
 			}
 			result.setMessage("保存成功！");

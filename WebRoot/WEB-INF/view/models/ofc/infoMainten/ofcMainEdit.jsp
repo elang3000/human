@@ -220,7 +220,7 @@
 									<smart:gridColumn colPart="8">
 										<smart:gridRow>
 											<smart:gridColumn colPart="12">
-												<smart:continuousSelect id="personType" labelName="人员类别：" inputName="personType.id" codeTypeCode="DM199" inputVal="${servant.personType.id}" valType="ID" widthPercent="0.5"/>
+												<smart:continuousSelect id="personType" labelName="人员类别：" inputName="personType.id" codeTypeCode="DM199" inputVal="${servant.personType.id}" valType="ID" widthPercent="0.5" isNotNull="true" verify="required"/>
 											</smart:gridColumn>
 										</smart:gridRow>
 									</smart:gridColumn>

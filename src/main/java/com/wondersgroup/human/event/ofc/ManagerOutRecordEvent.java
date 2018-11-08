@@ -37,7 +37,7 @@ public class ManagerOutRecordEvent extends ManagerRecordEvent {
 	 * @param source 
 	 */
 	public ManagerOutRecordEvent(ManagerRecordDTO source) {
-		super(source,ManagerRecord.MANAGER_MANAGER_TYPE_OUT);
+		super(source,ManagerRecord.OUT);
 	}
 
 }

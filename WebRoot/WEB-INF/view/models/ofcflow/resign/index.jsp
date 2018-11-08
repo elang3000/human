@@ -110,12 +110,21 @@
 		<smart:tableScriptAction tableId="navigationList" checkbox="true"
 			sort="true" rowEdit="true">
 				edit : function(data) {
-					smart.show({
-					title : '公务员辞职申请',
-					size : 'full',
-					url : 'ofcflow/resign/resign?servantId='+data.data.id,
-					scrollbar : false,
-					});
+					var requestConfig = {};
+					requestConfig.url = "ofcflow/resign/validate";
+					requestConfig.data = {servantId:data.data.id};
+					requestConfig.success = function(result){
+						if (result.success) {
+							smart.show({
+								title : '公务员辞职申请',
+								size : 'full',
+								url : 'ofcflow/resign/resign?servantId='+data.data.id,
+								scrollbar : false,
+								});
+						}
+						layer.msg(result.message);
+					}
+					smart.request(requestConfig);
 				}
 			</smart:tableScriptAction>
 		var buttonInvokeMethod = {

@@ -177,6 +177,8 @@ public class ZhuanRenKLBOutController extends GenericController{
 			CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
 			detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
 			detachedCriteria.add(Restrictions.eq("removed", false));
+			OrganNode organ = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+			detachedCriteria.add(Restrictions.eq("departId", organ.getId()));//只查询自己单位的人员
 			List<CodeInfo> typeList = DictCacheProvider.getCodeInfoByCodeTypeAndParentCode(DictTypeCodeContant.CODE_TYPE_MEMBER_TYPE, "1");//人员类别为公务员的CODE
 			List<String> personType = new ArrayList<>();
 			for(CodeInfo t:typeList){
@@ -317,11 +319,11 @@ public class ZhuanRenKLBOutController extends GenericController{
 				}
 				DictUtils.operationCodeInfo(temp);//将CodeInfo中id为空的属性 设置为null
 				temp.setId(null);
-				temp.setStatus(ZhuanRenKLBOutMgr.STATUS_ZHUANCHU_CONFIRM);//流程状态，待转出单位备案
+				temp.setStatus(ZhuanRenKLBOutMgr.STATUS_ZHUANCHU_STATE);//流程状态
 				Servant servant = servantService.load(temp.getServant().getId());
 				OrganNode organ = organNodeService.load(servant.getDepartId());
 				temp.setSourceOrgan(organ);//转出单位
-				zhuanRenKLBOutMgrService.saveOrUpdate(temp);
+				zhuanRenKLBOutMgrService.saveFlow(temp);
 			} else {
 				ZhuanRenKLBOutMgr out = zhuanRenKLBOutMgrService.get(temp.getId());
 				BeanUtils.copyPropertiesIgnoreNull(temp, out);

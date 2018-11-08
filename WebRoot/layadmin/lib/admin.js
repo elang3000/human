@@ -128,6 +128,15 @@
 		 },
 		 closeThisTabs : function() {
 			 A.tabsPage.index && a(z).eq(A.tabsPage.index).find(".layui-tab-close").trigger("click")
+		 },
+		 fullScreen:function(){
+			 var e=document.documentElement,
+			 a =e.requestFullScreen || e.webkitRequestFullScreen || e.mozRequestFullScreen || e.msRequestFullscreen;
+			 "undefined" != typeof a && a && a.call(e)
+		 },
+		 exitScreen:function(){
+			 document.documentElement;
+			 document.exitFullscreen ? document.exitFullscreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitCancelFullScreen?document.webkitCancelFullScreen():document.msExitFullscreen&&document.msExitFullscreen()
 		 }
 	},
 	_=A.events={
@@ -182,6 +191,11 @@
 					 s(this.id).render("system/about")
 				 }
 			 })
+		 },
+		 fullScreen:function(){
+			 var e = document.documentElement,
+			 a = e.requestFullScreen || e.webkitRequestFullScreen || e.mozRequestFullScreen || e.msRequestFullscreen;
+			 "undefined" != typeof a && a && a.call(e)
 		 },
 		 more : function() {
 			 A.popupRight({
@@ -272,6 +286,12 @@
 		 },
 		 shade : function() {
 			A.sideFlexible()
+		 },
+		 fullscreen:function(e){
+			 var a="layui-icon-screen-full",
+			 i = "layui-icon-screen-restore",
+			 t = e.children("i");
+			 t.hasClass(a) ? (A.fullScreen(), t.addClass(i).removeClass(a)) :(A.exitScreen(), t.addClass(a).removeClass(i))
 		 }
 	 };
 	 !function() {
@@ -284,7 +304,7 @@
 	 t.on("tab("+p+")", function(e){
 		 A.tabsPage.index = e.index
 	 }),
-	 A.on("tabsPage(setMenustatus)", function(e){
+/*	 A.on("tabsPage(setMenustatus)", function(e){
 		 var i = e.url,
 		 t = function(e){
 			 return {
@@ -326,7 +346,7 @@
 		n.find("."+y).removeClass(y),
 		A.screen() < 2 && A.sideFlexible(),
 		l(n.children("li"))
-	 }),
+	 }),*/
 	 t.on("nav(layadmin-system-side-menu)", function(e) {
 		 e.siblings(".layui-nav-child")[0] && d.hasClass(C) && (A.sideFlexible("spread"),
 		 layer.close(e.data("index"))),

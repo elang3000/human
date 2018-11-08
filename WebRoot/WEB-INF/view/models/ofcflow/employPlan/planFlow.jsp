@@ -109,7 +109,7 @@
 						<smart:gridRow>
 							<c:if test="${recruitemployplan.planState>=2&&recruitemployplan.planState<=5}">
 								<smart:gridColumn colPart="4">
-									<smart:numberInput display="block" isNotNull="true" verify="required" name="employNum" max="500" min="1" type="text" labelName="初审招录人数:" placeholder="初审招录人数"></smart:numberInput>
+									<smart:numberInput display="block" isNotNull="true" verify="required" value="${recruitemployplan.firstEmployNum }" name="employNum" max="500" min="1" type="text" labelName="初审招录人数:" placeholder="初审招录人数"></smart:numberInput>
 								</smart:gridColumn>
 							</c:if>
 							<c:if test="${recruitemployplan.planState==6}">

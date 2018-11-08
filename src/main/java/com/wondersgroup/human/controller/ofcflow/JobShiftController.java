@@ -1,6 +1,8 @@
 
 package com.wondersgroup.human.controller.ofcflow;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,8 +15,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wondersgroup.common.contant.FlowBusTypeConstant;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
+import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.exception.BusinessException;
+import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.dict.service.CodeInfoService;
+import com.wondersgroup.framework.dict.service.DictableService;
+import com.wondersgroup.framework.organization.bo.OrganNode;
+import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.util.BeanUtils;
+import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.human.bo.ofc.Post;
@@ -25,6 +34,9 @@ import com.wondersgroup.human.service.ofc.PostService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.JobShiftDeposeService;
 import com.wondersgroup.human.service.ofcflow.JobShiftService;
+import com.wondersgroup.human.service.organization.FormationControlService;
+import com.wondersgroup.human.vo.ofcflow.JobShiftVO;
+import com.wondersgroup.human.vo.organization.JudgePostResult;
 
 /**
  * <p>
@@ -55,10 +67,22 @@ public class JobShiftController extends GenericController {
 	
 	@Autowired
 	private FlowRecordService flowRecordService;
+
+    @Autowired
+    private DictableService dictableService;
+    
+	@Autowired
+	private FormationControlService formationControlService;
 	
+	@Autowired
+	private CodeInfoService codeInfoService;
+
 	// 职务变动列表页面
 	private final static String JOBCHANGE_INDEX_PAGE = "models/ofcflow/jobChange/jobChangeIndex";
-	
+
+	// 职务变动列表页面
+	private final static String JOBCHANGE_HUMANPICK_PAGE = "models/ofcflow/jobChange/jobChangeHumanPick";
+
 	// 职务变动详情页面
 	private final static String JOBCHANGE_DETIAL_PAGE = "models/ofcflow/jobChange/jobChangeDetail";
 	
@@ -93,10 +117,52 @@ public class JobShiftController extends GenericController {
 	 * @return: String
 	 */
 	@RequestMapping("/index")
-	public String jobChangeIndexPage() {
+	public String jobChangeIndexPage(Model model) {
+		OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		String orgId = orgNode.getId();
+		model.addAttribute("orgId", orgId);
 		return JOBCHANGE_INDEX_PAGE;
 	}
-	
+
+	/**
+	 * 主页数据
+	 * @param page
+	 * @param limit
+	 * @return
+	 */
+	@RequestMapping("/indexData")
+    @ResponseBody
+	public Page<JobShiftVO> jobChangeIndexData(Integer page, Integer limit){
+        OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+        String orgId = orgNode.getId();
+        Page<JobShift> formRecordData = this.jobShiftService.getFormRecordData(orgId, null, null, page, limit);
+        return  JobShiftVO.JobShift2VO(formRecordData);
+    }
+
+    @RequestMapping("/detailView")
+    public String jobChangeView(Model model,String id){
+		//TODO
+		//职务变动代码DM006 职务晋升
+		CodeInfo fineCodeInfo = dictableService.getCodeInfoByCode("2", "DM006");
+        List<CodeInfo> codeInfos = dictableService.findCodeInfoByCodeType("DM006", "2");
+
+        return null;
+	}
+
+	/**
+	 * @Title: jobChangeIndex
+	 * @Description: 职务变动选择人员页面
+	 * @return
+	 * @return: String
+	 */
+	@RequestMapping("/humanPick")
+	public String jobChangeHumanPick(Model model) {
+		OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		String orgId = orgNode.getId();
+		model.addAttribute("orgId", orgId);
+		return JOBCHANGE_HUMANPICK_PAGE;
+	}
+
 	/**
 	 * @Title: flow
 	 * @Description: 流程审批列表页面
@@ -193,8 +259,7 @@ public class JobShiftController extends GenericController {
 	@ResponseBody
 	@RequestMapping(value = "/operatePromoteFlow")
 	public AjaxResult jobChangePromoteSave(JobShift jobShift, String opinion, String result) {
-		//FIXME 操作流程前要进行 超编判断,超编则不允许变动,并且返回提示.如果没有超编,则占用编制,继续以下代码
-		//FIXME 假如流程取消,则让出编制
+	
 		AjaxResult ajaxResult = new AjaxResult(true);
 		String examineFilePath = jobShift.getExamineFilePath();
 		String personInfoFilePath = jobShift.getPersonInfoFilePath();
@@ -202,6 +267,22 @@ public class JobShiftController extends GenericController {
 			jobShift = this.jobShiftService.get(jobShift.getId());
 		}
 		try {
+			
+			OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+			String orgId = orgNode.getId();
+			//新职位
+			CodeInfo newPost = codeInfoService.load(jobShift.getNewPostCode().getId());
+			//旧职位
+			CodeInfo formerPost = codeInfoService.load(jobShift.getFormerPostCode().getId());
+			//编控，校验职位编制数是否足够，判断数据能否保存，如果超编，抛出异常
+			JudgePostResult queryJudgePostNum = formationControlService.queryJudgePostNum(orgId, newPost.getCode());
+			//锁定职位调入编控
+			formationControlService.executeLockPostIntoNum(orgId, newPost.getCode(), queryJudgePostNum.isLowToHigh);
+			//锁定职位调出编控
+			formationControlService.executeLockPostOutNum(orgId, formerPost.getCode(), queryJudgePostNum.isLowToHigh);
+			//保存是否高职低配到业务表
+			jobShift.setLowToHigh(queryJudgePostNum.isLowToHigh);
+			
 			// 判断是否上传了人员信息任免表
 			if (jobShift.getAppointSheetFilePath() == null || jobShift.getAppointSheetFilePath().equals("")
 			        || jobShift.getAppointSheetFilePath().equals("[]")) { throw new BusinessException("请上传人员信息任免表!"); }
@@ -232,7 +313,7 @@ public class JobShiftController extends GenericController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setSuccess(false);
-			ajaxResult.setMessage(e.getMessage());
+			ajaxResult.setMessage("保存失败！"+e.getMessage());
 		}
 		return ajaxResult;
 	}
@@ -293,8 +374,7 @@ public class JobShiftController extends GenericController {
 	@ResponseBody
 	@RequestMapping(value = "/operateDemoteFlow")
 	public AjaxResult jobChangeDemoteSave(JobShift jobShift, String opinion, String result,boolean isShift) {
-		//FIXME 操作流程前要进行 超编判断,超编则不允许变动,并且返回提示.如果没有超编,则占用编制,继续以下代码
-		//FIXME 假如流程取消,则让出编制
+		
 		AjaxResult ajaxResult = new AjaxResult(true);
 		if (!StringUtils.isBlank(jobShift.getId())) {
 			JobShift jobShiftDB = this.jobShiftService.get(jobShift.getId());
@@ -302,6 +382,27 @@ public class JobShiftController extends GenericController {
 			jobShift = jobShiftDB;
 		}
 		try {
+			
+			
+			//YYDTODO 操作流程前要进行 超编判断,超编则不允许变动,并且返回提示.如果没有超编,则占用编制,继续以下代码
+			//YYDTODO 假如流程取消,则让出编制
+			OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+			String orgId = orgNode.getId();
+			
+			
+			
+			//新职位
+			CodeInfo newPost = codeInfoService.load(jobShift.getNewPostCode().getId());
+			//旧职位
+			CodeInfo formerPost = codeInfoService.load(jobShift.getFormerPostCode().getId());
+			//编控，校验职位编制数是否足够，判断数据能否保存，如果超编，抛出异常
+			JudgePostResult queryJudgePostNum = formationControlService.queryJudgePostNum(orgId, newPost.getCode());
+			//锁定职位调入编控
+			formationControlService.executeLockPostIntoNum(orgId, newPost.getCode(), queryJudgePostNum.isLowToHigh);
+			//锁定职位调出编控
+			formationControlService.executeLockPostOutNum(orgId, formerPost.getCode(), queryJudgePostNum.isLowToHigh);
+			
+			
 			if (StringUtils.isBlank(result) || (!FlowRecord.PASS.equals(result)
 			        && !FlowRecord.NOPASS.equals(result))) { throw new BusinessException("审批结果信息不正确！"); }
 			// 审批职务变动降职
@@ -378,6 +479,19 @@ public class JobShiftController extends GenericController {
 			jobShiftDepose = jobShiftDB;
 		}
 		try {
+			
+			
+			//YYDTODO 操作流程前要进行 超编判断,超编则不允许变动,并且返回提示.如果没有超编,则占用编制,继续以下代码
+			//YYDTODO 假如流程取消,则让出编制
+			OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+			String orgId = orgNode.getId();
+			
+			//旧职位
+			CodeInfo formerPost = codeInfoService.load(jobShiftDepose.getPost().getPostCode().getId());
+			//FIXME 锁定职位调出编控
+			formationControlService.executeLockPostOutNum(orgId, formerPost.getCode(), jobShiftDepose.getPost().getIsLowToHigh());
+			
+			
 			if (StringUtils.isBlank(result) || (!FlowRecord.PASS.equals(result)
 			        && !FlowRecord.NOPASS.equals(result))) { throw new BusinessException("审批结果信息不正确！"); }
 			// 审批职务变动降职

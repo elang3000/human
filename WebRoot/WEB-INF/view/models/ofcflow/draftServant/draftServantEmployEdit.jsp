@@ -332,6 +332,7 @@
 					url:'ofcflow/draftServant/updateDraft',
 					params : smart.json("#editForm"),
 					callback : function(){
+						parent.layui.table.reload('navigationList');
 						var index=parent.layer.getFrameIndex(window.name);
 						parent.layer.close(index);
 					}
@@ -352,6 +353,7 @@
 					url:'ofcflow/draftServant/confirmLetter',
 					params : smart.json("#editForm"),
 					callback : function(){
+						parent.layui.table.reload('navigationList');
 						var index=parent.layer.getFrameIndex(window.name);
 						parent.layer.close(index);
 					}

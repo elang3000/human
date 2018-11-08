@@ -40,7 +40,8 @@
 								<smart:tabPanelItem turnurl="ofcflow/diaorenOut/index" show="false" eId="" itemName="调出情况列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'ReferenceExchange_THIS,ReferenceExchange_OUTER'}">
-								<smart:tabPanelItem turnurl="ofcflow/exchange/index" show="false" eId="" itemName="参公交流情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/exchange/index" show="false" eId="" itemName="调入情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/exchangeOut/index" show="false" eId="" itemName="调出情况列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'ProbationServant,CancelProbationServant'}">
 								<smart:tabPanelItem turnurl="ofcflow/probation/index" eId="" show="false" itemName="试用期名单列表"></smart:tabPanelItem>

@@ -79,10 +79,11 @@
         <smart:tableScriptAction tableId="navigationList"
 			checkbox="true" sort="true" rowEdit="true">
             view : function(data) {
+            	var year = $('#year').val();
 	            smart.show({
 		            title : '单位详情查看',
 		            size : 'full',
-		            url : 'analysis/specialCount/reward/view?departId='+data.data.departId,
+		            url : 'analysis/specialCount/reward/view?departId='+data.data.departId+'&year='+year+'&departName='+data.data.departName,
 		            scrollbar : false
 	            });
             }

@@ -46,13 +46,14 @@
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
 									<smart:singleSelect labelName="人事管理类型：" display="block"
-										name="recordType" url="dictquery/sub/id/recordType/null"
+										name="recordType" url="dictquery/sub/code/HumanChange"
 										isAddDefaltOption="true">
 									</smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
 									<smart:singleSelect labelName="进出管理类型：" display="block"
-										name="managerType" url="dictquery/sub/id/managerType/null"
+										name="itemType" 
+										data="[{'key':'0','value':'进'},{'key':'1','value':'出'},{'key':'2','value':'管理'}]"
 										isAddDefaltOption="true">
 									</smart:singleSelect>
 								</smart:gridColumn>
@@ -75,16 +76,15 @@
 
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn>
-						<smart:table id="navigationList" url="ofc/managerRecord/query"
+						<smart:table id="navigationList" url="ofc/managerRecord/getPage"
 							height="full-215" sortField="" sortType="" text="未找到用户数据！"
 							page="true">
 							<tr>
-								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
-								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
-								<smart:tableItem field="cardNo" width="203" sort="true">身份证号</smart:tableItem>
-								<smart:tableItem field="managerType" width=".1" sort="true">进出管理类型</smart:tableItem>
-								<smart:tableItem field="status" width=".1" sort="false">审批状态</smart:tableItem>
-								<smart:tableItem field="recordType" width=".1" sort="false">人事管理类型</smart:tableItem>
+								<smart:tableItem field="name" width=".1" sort="false">姓名</smart:tableItem>
+								<smart:tableItem field="sex" width=".1" sort="false">性别</smart:tableItem>
+								<smart:tableItem field="cardNo" width=".2" sort="false">身份证号</smart:tableItem>
+								<smart:tableItem field="itemType" width=".15" sort="false">进出管理类型</smart:tableItem>
+								<smart:tableItem field="recordType" width=".15" sort="false">人事管理类型</smart:tableItem>
 								<smart:tableItem field="recordTime" width=".2" sort="false">记录时间</smart:tableItem>
 								<smart:tableItem align="center" width=".1" fixed="right"
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>

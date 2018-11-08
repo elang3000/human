@@ -76,10 +76,11 @@
 								<smart:tableItem field="seasonStr" width=".1" sort="true">考核季度</smart:tableItem>
 								<smart:tableItem field="draftOutstandingPercentStr" width=".1" sort="true">默认优秀比例</smart:tableItem>
 								<c:if test="${!isBureau }">
-								<smart:tableItem field="createTime" width=".2" sort="true">创建时间</smart:tableItem>
+									<smart:tableItem field="createTime" width=".1" sort="true">创建时间</smart:tableItem>
+									<smart:tableItem field="unitStatus" width=".1" sort="true">考核状态</smart:tableItem>
 								</c:if>
 								<c:if test="${isBureau }">
-								<smart:tableItem field="createTime" width=".1" sort="true">创建时间</smart:tableItem>
+								    <smart:tableItem field="createTime" width=".1" sort="true">创建时间</smart:tableItem>
 									<smart:tableItem field="statusStr" width=".1" sort="true">考核状态</smart:tableItem>
 								</c:if>
 								
@@ -99,10 +100,11 @@
 										</a>
  									{{#  } }}
 								</c:if>
-								<c:if test="${!isBureau }">
+
 									<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="unitCheck"  title="单位人员考核">
 										<i class="fa fa-legal"></i>
 									</a>
+									<c:if test="${!isBureau }">
 									{{#  if(d.assessmentTypeStr=="年度考核"){ }}
 										{{#  if(d.flowStatus!="0" && d.flowStatus!="1"){ }}
 											<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="startUnitAssess"  title="发起考核流程">
@@ -111,9 +113,9 @@
  										{{#  } }}
 
 										{{#  if(d.flowStatus=="0" || d.flowStatus=="1"){ }}
-											<a class="layui-btn layui-btn-xs layui-btn-disabled" lay-event=""  title="流程已经启动">
+											<%--<a class="layui-btn layui-btn-xs layui-btn-disabled" lay-event=""  title="流程已经启动">
 												<i class="fa fa-send"></i>
-											</a>
+											</a>--%>
  										{{#  } }}
  									{{#  } }}
 								</c:if>

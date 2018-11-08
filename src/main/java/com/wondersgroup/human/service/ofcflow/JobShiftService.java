@@ -1,8 +1,10 @@
 package com.wondersgroup.human.service.ofcflow;
 
+import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.ofcflow.JobShift;
-import com.wondersgroup.human.bo.ofcflow.JobShiftDepose;
+
+import java.util.List;
 
 public interface JobShiftService extends GenericService<JobShift>{
 
@@ -29,7 +31,13 @@ public interface JobShiftService extends GenericService<JobShift>{
 	 * @return: void
 	 */
 	public void updateDemoteFlow(JobShift jobShift, String opinion, String result,boolean isShift);
-	
-	
+
+	/**
+	 * 获取当前单位职务变动表单提交记录数据
+	 * @return
+	 */
+	public Page<JobShift> getFormRecordData(String orgId,String jobChangeType,String name,Integer page,Integer limit);
+
+
 	
 }

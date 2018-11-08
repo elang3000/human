@@ -357,6 +357,21 @@ public class JobShift extends GenericEntity {
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	private OrganNode sourceOrganNode;
 	
+	@Column(name = "LOWTOHIGH")
+	@org.hibernate.annotations.Type(type = "yes_no")
+	private boolean lowToHigh;
+	
+	public boolean isLowToHigh() {
+		
+		return lowToHigh;
+	}
+
+	
+	public void setLowToHigh(boolean lowToHigh) {
+		
+		this.lowToHigh = lowToHigh;
+	}
+
 	public Integer getStatus() {
 		
 		return status;

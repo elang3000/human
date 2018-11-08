@@ -23,7 +23,8 @@
 					<smart:tabPanelParent filter="tab"
 						style="margin-left:10px;margin-right:10px;">
 						<smart:tabPanel>
-							<smart:tabPanelItem show="true" eId="" itemName="参公交流情况列表"></smart:tabPanelItem>
+							<smart:tabPanelItem show="true" eId="" itemName="调入情况列表"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="ofcflow/exchangeOut/index" show="false" eId="" itemName="调出情况列表"></smart:tabPanelItem>
 							<smart:tabPanelItem turnurl="ofcflow/exchange/flow" show="false" eId="" itemName="流程审批"></smart:tabPanelItem>
 						</smart:tabPanel>
 					</smart:tabPanelParent>

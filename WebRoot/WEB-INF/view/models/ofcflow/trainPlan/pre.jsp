@@ -18,11 +18,11 @@
 							<smart:singleSelect labelName="汇总培训考核名称：" display="block" isNotNull="true" verify="required" id="myida" name="yearPlanId" url="ofcflow/train/year/find"></smart:singleSelect>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="3">
-							<smart:textInput labelName="培训机关：" otherAttr="readonly"
+							<smart:textInput labelName="在学单位：" otherAttr="readonly"
 								value="${trainOrgan.name }" placeholder="" display="block"></smart:textInput>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="3">
-							<smart:textInput labelName="录入机关：" otherAttr="readonly"
+							<smart:textInput labelName="主办单位：" otherAttr="readonly"
 								value="${inputOrgan.name }" placeholder="" display="block"></smart:textInput>
 						</smart:gridColumn>
 					</smart:gridRow>

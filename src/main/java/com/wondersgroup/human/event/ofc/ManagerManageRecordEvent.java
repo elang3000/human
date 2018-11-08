@@ -37,7 +37,7 @@ public class ManagerManageRecordEvent extends ManagerRecordEvent {
 	 * @param source 
 	 */
 	public ManagerManageRecordEvent(ManagerRecordDTO source) {
-		super(source,ManagerRecord.MANAGER_MANAGER_TYPE_MANAGER);
+		super(source,ManagerRecord.MAG);
 	}
 
 }

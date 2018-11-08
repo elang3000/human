@@ -27,9 +27,9 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.service.OrganNodeService;
 import com.wondersgroup.human.bo.ofc.Servant;
+import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.system.warn.bo.ProgramInfo;
 import com.wondersgroup.system.warn.bo.Warning;
@@ -65,6 +65,7 @@ public class QuartzJobController implements Job{
 		
 		DetachedCriteria criteria = DetachedCriteria.forClass(Warning.class);
 		
+		criteria.add(Restrictions.eq("removed", false));
 		criteria.add(Restrictions.eq("programInfo.id", id));
 		
 		List<Warning> list=warningService.findByCriteria(criteria);
@@ -94,9 +95,9 @@ public class QuartzJobController implements Job{
 			}
 		}else if(ProgramInfo.PREVIEW.equals(info.getProgramCode())){
 			
-			List<OrganNode> org =organNodeService.findByHQL(info.getResultSql(), null);
+			List<OrgInfo> org =organNodeService.findBySQL(info.getResultSql(), null,OrgInfo.class);
 			
-			for (OrganNode map : org) {
+			for (OrgInfo map : org) {
 				
 				DateFormat dateFormat =  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				Date date = new Date();
@@ -104,17 +105,11 @@ public class QuartzJobController implements Job{
 				
 				Warning warning = new Warning();
 				warning.setProgramInfo(info);//方案信息
-				warning.setOrganNode(map);//单位信息
+				warning.setOrgInfo(map);//单位信息
 				warning.setBulidDate(time);
 				warningService.save(warning);
 			}
 			
 		}
-		
-		
-		
-		System.out.println("★★★★★★★★★★★");
-
-		  
 	}
 }

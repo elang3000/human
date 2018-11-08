@@ -134,12 +134,42 @@ public class AssessmentFlowCollectRepositoryImpl extends GenericRepositoryImpl<A
 	@Override
 	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org, Integer page, Integer limit) {
 		StringBuilder sql=new StringBuilder();
-		sql.append("select ct.id,pt.flow_status, ct.year,ct.season,ct.ASSESSMENT_TYPE,ct.REMARK,ct.DRAFT_OUTSTANDING_PERCENT,ct.CREATE_TIME,ct.STATUS ");
+//		sql.append("select ct.id,pt.flow_status, ct.year,ct.season,ct.ASSESSMENT_TYPE,ct.REMARK,ct.DRAFT_OUTSTANDING_PERCENT,ct.CREATE_TIME,ct.STATUS ");
+//		sql.append("  from HUMAN_ASSESSMENT_FLOW_COLLECT ct ");
+//		sql.append("  left join (select * ");
+//		sql.append("               from HUMAN_ASSESSMENT_FLOW_UNIT_PERCENT t ");
+//		sql.append("              where t.orgnode = :orgId) pt ");
+//		sql.append("    on ct.id = pt.assessment_flow_collect order by ct.ASSESSMENT_TYPE asc,ct.year desc,ct.season desc");
+
+
+		sql.append("select ct.id, ");
+		sql.append("       pt.flow_status, ");
+		sql.append("       ct.year, ");
+		sql.append("       ct.season, ");
+		sql.append("       ct.ASSESSMENT_TYPE, ");
+		sql.append("       ct.REMARK, ");
+		sql.append("       ct.DRAFT_OUTSTANDING_PERCENT, ");
+		sql.append("       ct.CREATE_TIME, ");
+		sql.append("       ct.STATUS, ");
+		sql.append("       t1.allNum, ");
+		sql.append("       t1.assessNum ");
 		sql.append("  from HUMAN_ASSESSMENT_FLOW_COLLECT ct ");
 		sql.append("  left join (select * ");
 		sql.append("               from HUMAN_ASSESSMENT_FLOW_UNIT_PERCENT t ");
-		sql.append("              where t.orgnode = :orgId) pt ");
-		sql.append("    on ct.id = pt.assessment_flow_collect order by ct.ASSESSMENT_TYPE asc,ct.year desc,ct.season desc");
+		sql.append("              where t.orgnode = :orgId ) pt ");
+		sql.append("    on ct.id = pt.assessment_flow_collect ");
+		sql.append("  left join (select d.ASSESSMENT_FLOW_COLLECT collectId, ");
+		sql.append("                    count(d.id) allNum, ");
+		sql.append("                    count(d.status) assessNum ");
+		sql.append("               from HUMAN_ASSESSMENT_FLOW_DETAIL d ");
+		sql.append("               left join a01 a ");
+		sql.append("                 on d.servant = a.id ");
+		sql.append("              where a.DEPARTID = :orgId ");
+		sql.append("                and d.status = 1 ");
+		sql.append("              group by d.ASSESSMENT_FLOW_COLLECT) t1 ");
+		sql.append("    on ct.id = t1.collectId ");
+		sql.append(" order by ct.ASSESSMENT_TYPE asc, ct.year desc, ct.season desc ");
+
 
 		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 	    queryObject.setParameter("orgId", org.getId());
@@ -157,6 +187,7 @@ public class AssessmentFlowCollectRepositoryImpl extends GenericRepositoryImpl<A
 		Page<AssessFlowUnitCollectVO> pages = new Page<>((page-1)*limit, page, listAll.size(), limit, listVO);
 		return pages;
 	}
-	
+
+
 
 }

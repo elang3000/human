@@ -4,6 +4,9 @@ package com.wondersgroup.human.service.ofcflow.impl;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -14,7 +17,9 @@ import org.springframework.stereotype.Service;
 import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.common.contant.FlowBusTypeConstant;
 import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
+import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
+import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.CodeInfoService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
@@ -26,9 +31,12 @@ import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
 import com.wondersgroup.human.bo.ofc.JobChange;
+import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.bo.ofcflow.JobShift;
 import com.wondersgroup.human.service.ofc.JobChangeService;
+import com.wondersgroup.human.service.ofc.PostService;
 import com.wondersgroup.human.service.ofcflow.JobShiftService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 
 @Service
 public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
@@ -51,6 +59,12 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 	
 	@Autowired
 	private CodeInfoService codeInfoService;
+	
+	@Autowired
+	private PostService postService;
+	
+	@Autowired
+	private FormationControlService formationControlService;
 	
 	@Override
 	public void updateDemoteFlow(JobShift jobShift, String opinion, String result,boolean isShift) {
@@ -99,13 +113,49 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 			change.setNewPostName(jobShift.getNewPostCode().getName());
 			jobChangeService.save(change);
 			//FIXME 升职后将原职务设置为非现任职务,将新职务设置为现任职务 ???是否需要让出老职务的编制
+			//新职位
+			CodeInfo newPost = codeInfoService.load(jobShift.getNewPostCode().getId());
+			//旧职位
+			CodeInfo formerPost = codeInfoService.load(jobShift.getFormerPostCode().getId());
+			//解锁职位调入编控
+			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), newPost.getCode(), jobShift.isLowToHigh());
+			//进入编控
+			formationControlService.executeIntoPost(jobShift.getServant().getDepartId(), newPost.getCode(), jobShift.isLowToHigh());
+			//解锁职位调出编控
+			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), formerPost.getCode(), jobShift.isLowToHigh());
+			//出编控
+			formationControlService.executeOutPost(jobShift.getServant().getDepartId(), formerPost.getCode(), jobShift.isLowToHigh());
+
+			
+			
 			System.out.println("流程结束");
 		}
 		jobShift.setFlowRecord(flow);
 		this.update(jobShift);
 		
 	}
-	
+
+	/**
+	 * 获取当前单位职务变动表单提交记录数据
+	 *
+	 * @param orgId
+	 * @return
+	 */
+	@Override
+	public Page<JobShift> getFormRecordData(String orgId,String jobChangeType,String name,Integer page,Integer limit) {
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(JobShift.class);
+		detachedCriteria.add(Restrictions.eq("sourceOrganNode.id", orgId));
+		if(StringUtils.isNotBlank(jobChangeType)){
+			detachedCriteria.add(Restrictions.eq("sourceOrganNode.id", jobChangeType));
+		}
+		if(StringUtils.isNotBlank(name)){
+			detachedCriteria.add(Restrictions.eq("servant.name", name));
+		}
+		detachedCriteria.addOrder(Order.desc("createTime"));
+		Page<JobShift> jobShiftPage = this.findByCriteria(detachedCriteria, page, limit);
+		return jobShiftPage;
+	}
+
 	@Override
 	public void updatePromoteFlow(JobShift jobShift, String opinion, String result){
 		SecurityUser user = userService.load(SecurityUtils.getUserId());// 当前登录人
@@ -157,7 +207,23 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 			change.setNewUnitName(jobShift.getSourceOrganNode().getAllName());
 			change.setNewPostName(jobShift.getNewPostCode().getName());
 			jobChangeService.save(change);
+			
 			//FIXME 升职后将原职务设置为非现任职务,将新职务设置为现任职务  ???是否需要让出老职务的编制
+			//新职位
+			CodeInfo newPost = codeInfoService.load(jobShift.getNewPostCode().getId());
+			//旧职位
+			CodeInfo formerPost = codeInfoService.load(jobShift.getFormerPostCode().getId());
+			
+			//解锁职位调入编控
+			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), newPost.getCode(), jobShift.isLowToHigh());
+			//进入编控
+			formationControlService.executeIntoPost(jobShift.getServant().getDepartId(), newPost.getCode(), jobShift.isLowToHigh());
+			//解锁职位调出编控
+			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), formerPost.getCode(), jobShift.isLowToHigh());
+			//出编控
+			formationControlService.executeOutPost(jobShift.getServant().getDepartId(), formerPost.getCode(), jobShift.isLowToHigh());
+			
+			
 			System.out.println("流程结束");
 		}
 		jobShift.setFlowRecord(flow);

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,9 +27,13 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.procedure.ProcedureOutputs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.wondersgroup.common.contant.DictTypeCodeContant;
+import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
+import com.wondersgroup.framework.announcement.event.SystemAnnouncementEvent;
+import com.wondersgroup.framework.announcement.util.AnnouncementManger;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.dao.support.Predicate.Operator;
@@ -71,7 +76,9 @@ import com.wondersgroup.human.service.ofcflow.EventPostService;
 import com.wondersgroup.human.service.ofcflow.EventRewardAndPunishService;
 import com.wondersgroup.human.service.ofcflow.ZhuanRenKLBIntoMgrService;
 import com.wondersgroup.human.service.ofcflow.ZhuanRenKLBOutMgrService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofcflow.ZhuanRenKLBIntoMgrVO;
+import com.wondersgroup.human.vo.organization.JudgePostResult;
 
 /** 
  * @ClassName: ZhuanRenKLBIntoMgrServiceImpl 
@@ -115,6 +122,15 @@ public class ZhuanRenKLBIntoMgrServiceImpl extends GenericServiceImpl<ZhuanRenKL
 	private ZhuanRenTLBIntoMgrRepository repository;
 	@Autowired
 	private PostService postService;
+
+	@Autowired
+	private FormationControlService formationControlService;
+
+	/**
+	 * 读取message.properties配置文件数据
+	 */
+	@Autowired
+	private MessageSource messageSource;
 	
 	/**
 	 * @Title: findbyHQLforVO 
@@ -247,6 +263,7 @@ public class ZhuanRenKLBIntoMgrServiceImpl extends GenericServiceImpl<ZhuanRenKL
 		post.setAttribute(z.getAttribute());//职务属性
 		post.setPostName(z.getPostName());//职务名称
 		post.setPostCode(z.getPostCode());//职务代码
+		post.setIsLowToHigh(z.getIsLowToHigh());//高职低配
 		postService.saveOrUpdate(post);
 		
 		IntoMgr into = new IntoMgr();//转入子集信息
@@ -310,6 +327,22 @@ public class ZhuanRenKLBIntoMgrServiceImpl extends GenericServiceImpl<ZhuanRenKL
 		
 		FlowRecord flow;
 		if(ZhuanRenKLBIntoMgr.STATUS_ZHUANREN_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
+			//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+			formationControlService.queryJudgeFormationNum(temp.getTargetOrgan().getId());
+			//启动流程，锁未调入编制
+			formationControlService.executeLockIntoFormationNum(temp.getTargetOrgan().getId());
+			//锁未调出编制
+			formationControlService.executeLockOutFormationNum(temp.getSourceOrgan().getId());
+			
+			//职务
+			//校验职务
+			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getPostCode().getCode());
+			temp.setIsLowToHigh(j.isLowToHigh);//放入高职低配
+			//锁职务调入数
+			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getPostCode().getCode(), temp.getIsLowToHigh());
+			//锁职务调出数
+			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), temp.getPostCode().getCode(), temp.getIsLowToHigh());
+			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
@@ -343,8 +376,24 @@ public class ZhuanRenKLBIntoMgrServiceImpl extends GenericServiceImpl<ZhuanRenKL
 			}
 		}
 		if(flow==null&&FlowRecord.PASS.equals(r)){//流程最后环节
+			//流程结束，改变编制
+			formationControlService.executeUnlockIntoFormationNum(temp.getTargetOrgan().getId());//1.解锁调入单位未调入编制
+			formationControlService.executeUnlockOutFormationNum(temp.getSourceOrgan().getId());//2.解锁调出单位未调出编制
+			formationControlService.executeIntoFormation(temp.getTargetOrgan().getId());//3.增加调入单位实际编制数
+			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//4.减少调出单位实际编制数
+			//职务
+			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//1.解锁职务调入数
+			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//2.解锁职务调出数
+			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//3.增加调入单位实际职务数
+			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//4.减少调出单位实际职务数
+			
 			temp.setStatus(ZhuanRenKLBIntoMgr.STATUS_ZHUANREN_FINISH);
 			temp.setFlowRecord(null);//修改当前业务的流程节点
+
+			//发送通知
+			String title = messageSource.getMessage("zhuanRenTitle", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
+			String content = messageSource.getMessage("zhuanRenContent", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
+			AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "")));
 		}else{
 			temp.setStatus(ZhuanRenKLBIntoMgr.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
@@ -367,6 +416,18 @@ public class ZhuanRenKLBIntoMgrServiceImpl extends GenericServiceImpl<ZhuanRenKL
 		
 		FlowRecord flow;
 		if(ZhuanRenKLBIntoMgr.STATUS_ZHUANREN_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
+			//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+			formationControlService.queryJudgeFormationNum(temp.getTargetOrgan().getId());
+			//启动流程，锁未调入编制
+			formationControlService.executeLockIntoFormationNum(temp.getTargetOrgan().getId());
+
+			//职务
+			//校验职务
+			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getPostCode().getCode());
+			temp.setIsLowToHigh(j.isLowToHigh);//放入高职低配
+			//锁职务调入数
+			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getPostCode().getCode(), temp.getIsLowToHigh());
+			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
@@ -385,8 +446,21 @@ public class ZhuanRenKLBIntoMgrServiceImpl extends GenericServiceImpl<ZhuanRenKL
 			flow = workflowService.completeWorkItem(flow);//提交下个节点
 		}
 		if(flow==null&&FlowRecord.PASS.equals(r)){//流程最后环节
+			//流程结束，改变编制
+			formationControlService.executeUnlockIntoFormationNum(temp.getTargetOrgan().getId());//1.解锁调入单位未调入编制
+			formationControlService.executeIntoFormation(temp.getTargetOrgan().getId());//2.增加调入单位实际编制数
+
+			//职务
+			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//1.解锁职务调入数
+			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//2.增加调入单位实际职务数
+			
 			temp.setStatus(ZhuanRenKLBIntoMgr.STATUS_ZHUANREN_FINISH);
 			temp.setFlowRecord(null);//修改当前业务的流程节点
+			
+			//发送通知
+			String title = messageSource.getMessage("zhuanRenTitle", new Object[]{temp.getName()}, Locale.CHINESE);
+			String content = messageSource.getMessage("zhuanRenContent", new Object[]{temp.getName()}, Locale.CHINESE);
+			AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "")));
 		}else{
 			temp.setStatus(ZhuanRenKLBIntoMgr.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点

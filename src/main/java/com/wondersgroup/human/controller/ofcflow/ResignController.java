@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.common.utils.FtpTool;
 import com.wondersgroup.framework.controller.AjaxResult;
@@ -252,4 +251,27 @@ public class ResignController extends GenericController {
 	    byte[] ftpDownloadInByte = FtpTool.ftpDownloadInByte("/human/"+postFtpUrl, fileName);
 		out.write(ftpDownloadInByte);
     }
+	
+	/**
+	 */
+	@RequestMapping("/validate")
+	@ResponseBody
+	public AjaxResult valiateExistEmployPlan(Model model, String servantId) {
+		AjaxResult result = new AjaxResult(true);
+		try {
+			ResignServant resignServant = resignServantService.getByServantId(servantId);
+			if(resignServant!=null){
+				throw new BusinessException("该用户已进入流程！");
+			}
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMessage(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMessage("发起失败！");
+		}
+		return result;
+	}
 }

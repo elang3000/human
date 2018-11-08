@@ -17,14 +17,14 @@ package com.wondersgroup.human.dto.ofc;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-
 /**
  * @ClassName: ManagerRecord
  * @Description: TODO
  * @author: Administrator
- * @date: 2018年6月9日
- *        下午3:28:42 @version [版本号, YYYY-MM-DD] @see       [相关类/方法] @since     [产品/模块版本]
+ * @date: 2018年6月9日下午3:28:42 
+ * @version [版本号, YYYY-MM-DD] 
+ * @see       [相关类/方法] 
+ * @since     [产品/模块版本]
  */
 public class ManagerRecordDTO {
 
@@ -33,21 +33,21 @@ public class ManagerRecordDTO {
 	 * @fieldType: java.lang.String
 	 * @Description: 人事信息ID。
 	 */
-	private String humanId;
+	private String servantId;
 
 	/**
 	 * @fieldName: recordType
 	 * @fieldType: java.lang.String
-	 * @Description: 人事管理类型。
+	 * @Description: 记录类型名称。
 	 */
 	private String recordType;
 
 	/**
-	 * @fieldName: managerType
+	 * @fieldName: unitType
 	 * @fieldType: java.lang.String
-	 * @Description: 进出管理类型。
+	 * @Description: 进出管理类型。(0：进、1：出、2：管理)
 	 */
-	private String managerType;
+	private Integer itemType;
 
 	/**
 	 * @fieldName: recordTime
@@ -69,77 +69,6 @@ public class ManagerRecordDTO {
 	 * @Description: 业务实例表。
 	 */
 	private String businessEntityTable;
-
-	/**
-	 * @fieldName: status
-	 * @fieldType: java.lang.String
-	 * @Description: 审批状态。
-	 */
-	private String status;
-
-	/**
-	 * @fieldName: areaExamineOpinion
-	 * @fieldType: java.lang.String
-	 * @Description: 上级领导审批意见。
-	 */
-	private String leaderExamineOpinion;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 上级领导审批人。
-	 */
-	private String leaderExamineAudit;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 上级领导审批时间。
-	 */
-	private Date leaderExamineTime;
-
-	/**
-	 * @fieldName: areaExamineOpinion
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批意见。
-	 */
-	private String areaExamineOpinion;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批人。
-	 */
-	@Column(name = "AREA_EXAMINE_AUDIT", length = 120)
-	private String areaExamineAudit;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批时间。
-	 */
-	private Date areaExamineTime;
-
-	/**
-	 * @fieldName: areaExamineOpinion
-	 * @fieldType: java.lang.String
-	 * @Description: 市审批意见。
-	 */
-	private String cityExamineOpinion;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批人。
-	 */
-	private String cityExamineAudit;
-
-	/**
-	 * @fieldName: areaExamineAudit
-	 * @fieldType: java.lang.String
-	 * @Description: 区审批时间。
-	 */
-	private Date cityExamineTime;
 
 	/**
 	 * @fieldName: description
@@ -184,18 +113,37 @@ public class ManagerRecordDTO {
 	private Integer ext6;
 
 	/**
-	 * @return the humanId
+	 * @fieldName: humanID
+	 * @fieldType: java.lang.String
+	 * @Description: 当时单位ID。
 	 */
-	public String getHumanId() {
-		return humanId;
+	private String organId;
+	
+	/**
+	 * @fieldName: humanID
+	 * @fieldType: java.lang.String
+	 * @Description: 当时单位名。
+	 */
+	private String organName;
+	
+	public ManagerRecordDTO(String servantId,String recordType){
+		super();
+		this.servantId = servantId;
+		this.recordType = recordType;
+	}
+	
+	/**
+	 * @return the servantId
+	 */
+	public String getServantId() {
+		return servantId;
 	}
 
 	/**
-	 * @param humanId
-	 *            the humanId to set
+	 * @param servantId the servantId to set
 	 */
-	public void setHumanId(String humanId) {
-		this.humanId = humanId;
+	public void setServantId(String servantId) {
+		this.servantId = servantId;
 	}
 
 	/**
@@ -206,26 +154,24 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param recordType
-	 *            the recordType to set
+	 * @param recordType the recordType to set
 	 */
 	public void setRecordType(String recordType) {
 		this.recordType = recordType;
 	}
 
 	/**
-	 * @return the managerType
+	 * @return the itemType
 	 */
-	public String getManagerType() {
-		return managerType;
+	public Integer getItemType() {
+		return itemType;
 	}
 
 	/**
-	 * @param managerType
-	 *            the managerType to set
+	 * @param itemType the itemType to set
 	 */
-	public void setManagerType(String managerType) {
-		this.managerType = managerType;
+	public void setItemType(Integer itemType) {
+		this.itemType = itemType;
 	}
 
 	/**
@@ -236,8 +182,7 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param recordTime
-	 *            the recordTime to set
+	 * @param recordTime the recordTime to set
 	 */
 	public void setRecordTime(Date recordTime) {
 		this.recordTime = recordTime;
@@ -251,8 +196,7 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param businessEntityId
-	 *            the businessEntityId to set
+	 * @param businessEntityId the businessEntityId to set
 	 */
 	public void setBusinessEntityId(String businessEntityId) {
 		this.businessEntityId = businessEntityId;
@@ -266,161 +210,10 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param businessEntityTable
-	 *            the businessEntityTable to set
+	 * @param businessEntityTable the businessEntityTable to set
 	 */
 	public void setBusinessEntityTable(String businessEntityTable) {
 		this.businessEntityTable = businessEntityTable;
-	}
-
-	/**
-	 * @return the status
-	 */
-	public String getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	/**
-	 * @return the leaderExamineOpinion
-	 */
-	public String getLeaderExamineOpinion() {
-		return leaderExamineOpinion;
-	}
-
-	/**
-	 * @param leaderExamineOpinion
-	 *            the leaderExamineOpinion to set
-	 */
-	public void setLeaderExamineOpinion(String leaderExamineOpinion) {
-		this.leaderExamineOpinion = leaderExamineOpinion;
-	}
-
-	/**
-	 * @return the leaderExamineAudit
-	 */
-	public String getLeaderExamineAudit() {
-		return leaderExamineAudit;
-	}
-
-	/**
-	 * @param leaderExamineAudit
-	 *            the leaderExamineAudit to set
-	 */
-	public void setLeaderExamineAudit(String leaderExamineAudit) {
-		this.leaderExamineAudit = leaderExamineAudit;
-	}
-
-	/**
-	 * @return the leaderExamineTime
-	 */
-	public Date getLeaderExamineTime() {
-		return leaderExamineTime;
-	}
-
-	/**
-	 * @param leaderExamineTime
-	 *            the leaderExamineTime to set
-	 */
-	public void setLeaderExamineTime(Date leaderExamineTime) {
-		this.leaderExamineTime = leaderExamineTime;
-	}
-
-	/**
-	 * @return the areaExamineOpinion
-	 */
-	public String getAreaExamineOpinion() {
-		return areaExamineOpinion;
-	}
-
-	/**
-	 * @param areaExamineOpinion
-	 *            the areaExamineOpinion to set
-	 */
-	public void setAreaExamineOpinion(String areaExamineOpinion) {
-		this.areaExamineOpinion = areaExamineOpinion;
-	}
-
-	/**
-	 * @return the areaExamineAudit
-	 */
-	public String getAreaExamineAudit() {
-		return areaExamineAudit;
-	}
-
-	/**
-	 * @param areaExamineAudit
-	 *            the areaExamineAudit to set
-	 */
-	public void setAreaExamineAudit(String areaExamineAudit) {
-		this.areaExamineAudit = areaExamineAudit;
-	}
-
-	/**
-	 * @return the areaExamineTime
-	 */
-	public Date getAreaExamineTime() {
-		return areaExamineTime;
-	}
-
-	/**
-	 * @param areaExamineTime
-	 *            the areaExamineTime to set
-	 */
-	public void setAreaExamineTime(Date areaExamineTime) {
-		this.areaExamineTime = areaExamineTime;
-	}
-
-	/**
-	 * @return the cityExamineOpinion
-	 */
-	public String getCityExamineOpinion() {
-		return cityExamineOpinion;
-	}
-
-	/**
-	 * @param cityExamineOpinion
-	 *            the cityExamineOpinion to set
-	 */
-	public void setCityExamineOpinion(String cityExamineOpinion) {
-		this.cityExamineOpinion = cityExamineOpinion;
-	}
-
-	/**
-	 * @return the cityExamineAudit
-	 */
-	public String getCityExamineAudit() {
-		return cityExamineAudit;
-	}
-
-	/**
-	 * @param cityExamineAudit
-	 *            the cityExamineAudit to set
-	 */
-	public void setCityExamineAudit(String cityExamineAudit) {
-		this.cityExamineAudit = cityExamineAudit;
-	}
-
-	/**
-	 * @return the cityExamineTime
-	 */
-	public Date getCityExamineTime() {
-		return cityExamineTime;
-	}
-
-	/**
-	 * @param cityExamineTime
-	 *            the cityExamineTime to set
-	 */
-	public void setCityExamineTime(Date cityExamineTime) {
-		this.cityExamineTime = cityExamineTime;
 	}
 
 	/**
@@ -431,8 +224,7 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param ext1
-	 *            the ext1 to set
+	 * @param ext1 the ext1 to set
 	 */
 	public void setExt1(String ext1) {
 		this.ext1 = ext1;
@@ -446,8 +238,7 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param ext2
-	 *            the ext2 to set
+	 * @param ext2 the ext2 to set
 	 */
 	public void setExt2(String ext2) {
 		this.ext2 = ext2;
@@ -461,8 +252,7 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param ext3
-	 *            the ext3 to set
+	 * @param ext3 the ext3 to set
 	 */
 	public void setExt3(String ext3) {
 		this.ext3 = ext3;
@@ -476,8 +266,7 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param ext4
-	 *            the ext4 to set
+	 * @param ext4 the ext4 to set
 	 */
 	public void setExt4(Date ext4) {
 		this.ext4 = ext4;
@@ -491,8 +280,7 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param ext5
-	 *            the ext5 to set
+	 * @param ext5 the ext5 to set
 	 */
 	public void setExt5(Date ext5) {
 		this.ext5 = ext5;
@@ -506,11 +294,37 @@ public class ManagerRecordDTO {
 	}
 
 	/**
-	 * @param ext6
-	 *            the ext6 to set
+	 * @param ext6 the ext6 to set
 	 */
 	public void setExt6(Integer ext6) {
 		this.ext6 = ext6;
 	}
 
+	/**
+	 * @return the organId
+	 */
+	public String getOrganId() {
+		return organId;
+	}
+
+	/**
+	 * @param organId the organId to set
+	 */
+	public void setOrganId(String organId) {
+		this.organId = organId;
+	}
+
+	/**
+	 * @return the organName
+	 */
+	public String getOrganName() {
+		return organName;
+	}
+
+	/**
+	 * @param organName the organName to set
+	 */
+	public void setOrganName(String organName) {
+		this.organName = organName;
+	}
 }
