@@ -38,6 +38,7 @@ import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.dict.service.CodeInfoService;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
@@ -45,21 +46,27 @@ import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
 import com.wondersgroup.framework.util.BeanUtils;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
 import com.wondersgroup.human.bo.company.NationalCompany;
 import com.wondersgroup.human.bo.ofc.IntoMgr;
+import com.wondersgroup.human.bo.ofc.JobLevel;
+import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.OutMgr;
 import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.DiaoRenIntoMgr;
 import com.wondersgroup.human.bo.ofcflow.DiaoRenOutMgr;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
+import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
 import com.wondersgroup.human.repository.ofcflow.ZhuanRenTLBIntoMgrRepository;
 import com.wondersgroup.human.service.company.NationalCompanyService;
 import com.wondersgroup.human.service.ofc.IntoMgrService;
+import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.PostService;
 import com.wondersgroup.human.service.ofc.ServantService;
@@ -112,9 +119,13 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 	@Autowired
 	private DictableService dictableService;
 	@Autowired
+	private CodeInfoService codeInfoService;
+	@Autowired
 	private ZhuanRenTLBIntoMgrRepository repository;
 	@Autowired
 	private PostService postService;
+	@Autowired
+	private JobLevelService jobLevelService;
 
 	@Autowired
 	private FormationControlService formationControlService;
@@ -223,8 +234,15 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 		post.setAttribute(z.getAttribute());//职务属性
 		post.setPostName(z.getPostName());//职务名称
 		post.setPostCode(z.getPostCode());//职务代码
-		post.setIsLowToHigh(z.getIsLowToHigh());//高职低配
-		postService.saveOrUpdate(post);
+		postService.save(post);
+		//职级子集
+		JobLevel jobLevel = new JobLevel();
+		jobLevel.setServant(servant);//人员信息
+		jobLevel.setCurrentIdentification(YES);//现行职级
+		jobLevel.setName(z.getJobLevelName());//职级名称
+		jobLevel.setCode(z.getJobLevelCode());//职级代码
+		jobLevel.setIsLowToHigh(z.getIsLowToHigh());//高职低配
+		jobLevelService.save(jobLevel);
 		
 		IntoMgr into = new IntoMgr();//调入子集信息
 		into.setServant(servant);//人员信息
@@ -249,6 +267,10 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 			out.setRemark(o.getRemark());//调出备注
 			outMgrService.save(out);
 		}
+		//进出管理
+		ManagerRecordDTO dto = new ManagerRecordDTO(servant.getId(),ManagerRecord.HUMAN_DRDR);
+		ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
+		EventManager.send(event);
 	}
 	/**
 	 * @Title: createOut 
@@ -295,14 +317,16 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 			//锁未调出编制
 			formationControlService.executeLockOutFormationNum(temp.getSourceOrgan().getId());
 			
-			//职务
-			//校验职务
-			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getPostCode().getCode());
+			//职级
+			//校验职级
+			CodeInfo tempPost = codeInfoService.get(temp.getJobLevelCode().getId());
+			temp.setJobLevelCode(tempPost);
+			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode());
 			temp.setIsLowToHigh(j.isLowToHigh);//放入高职低配
-			//锁职务调入数
-			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getPostCode().getCode(), temp.getIsLowToHigh());
-			//锁职务调出数
-			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), temp.getPostCode().getCode(), temp.getIsLowToHigh());
+			//锁职级调入数
+			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
+			//锁职级调出数
+			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
 			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
@@ -350,19 +374,21 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 			formationControlService.executeUnlockOutFormationNum(temp.getSourceOrgan().getId());//2.解锁调出单位未调出编制
 			formationControlService.executeIntoFormation(temp.getTargetOrgan().getId());//3.增加调入单位实际编制数
 			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//4.减少调出单位实际编制数
-			//职务
-			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//1.解锁职务调入数
-			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//2.解锁职务调出数
-			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//3.增加调入单位实际职务数
-			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//4.减少调出单位实际职务数
+			//职级
+			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
+			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//2.解锁职级调出数
+//			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//3.增加调入单位实际职级数
+			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//4.减少调出单位实际职级数
 			
 			temp.setStatus(DiaoRenIntoMgr.STATUS_DIAOREN_FINISH);
 			temp.setFlowRecord(null);//修改当前业务的流程节点
 			
 			//发送通知
-			String title = messageSource.getMessage("diaoRenTitle", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
-			String content = messageSource.getMessage("diaoRenContent", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
-			AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "")));
+			if(DiaoRenIntoMgr.SOURCE_TYPE_1.equals(temp.getSourceType())){
+				String title = messageSource.getMessage("diaoRenTitle", new Object[]{temp.getPublicInstitution().getName()}, Locale.CHINESE);
+				String content = messageSource.getMessage("diaoRenContent", new Object[]{temp.getPublicInstitution().getName()}, Locale.CHINESE);
+				AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "")));
+			}
 		}else{
 			temp.setStatus(DiaoRenIntoMgr.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
@@ -390,12 +416,14 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 			//启动流程，锁未调入编制
 			formationControlService.executeLockIntoFormationNum(temp.getTargetOrgan().getId());
 			
-			//职务
-			//校验职务
-			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getPostCode().getCode());
+			//职级
+			//校验职级
+			CodeInfo tempPost = codeInfoService.get(temp.getJobLevelCode().getId());
+			temp.setJobLevelCode(tempPost);
+			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode());
 			temp.setIsLowToHigh(j.isLowToHigh);//放入高职低配
-			//锁职务调入数
-			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getPostCode().getCode(), temp.getIsLowToHigh());
+			//锁职级调入数
+			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
 			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
@@ -403,7 +431,7 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 			flow.setBusName("外区人员调入"+userOrg.getName());//流程业务名称
 			flow.setBusType("DiaoRenIntoMgr_OUTER");//流程业务类型
 			flow.setTargetOrganNode(userOrg);//流程业务目标组织
-			flow.setTargetSecurityUser(user);;//流程业务目标人员
+			flow.setTargetSecurityUser(user);//流程业务目标人员
 			flow = workflowService.createFlowRecord(flow, "STATUS_DIAOREN_OUTER_STATE");//初始节点
 		}else{
 			flow = temp.getFlowRecord();
@@ -419,9 +447,9 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 			formationControlService.executeUnlockIntoFormationNum(temp.getTargetOrgan().getId());//1.解锁调入单位未调入编制
 			formationControlService.executeIntoFormation(temp.getTargetOrgan().getId());//2.增加调入单位实际编制数
 			
-			//职务
-			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//1.解锁职务调入数
-			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getPostCode().getCode(),temp.getIsLowToHigh());//2.增加调入单位实际职务数
+			//职级
+			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
+//			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//2.增加调入单位实际职级数
 			
 			temp.setStatus(DiaoRenIntoMgr.STATUS_DIAOREN_FINISH);
 			temp.setFlowRecord(null);//修改当前业务的流程节点

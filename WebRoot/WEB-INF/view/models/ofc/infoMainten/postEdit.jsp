@@ -138,14 +138,7 @@
 										<smart:singleSelect labelName="是否兼任下级领导职务：" id="isLowerLeader" name="isLowerLeader.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${post.isLowerLeader.id }" verify="required" isNotNull="true"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
-								
-								<%-- <smart:gridRow>
-									<smart:gridColumn colPart="8">
-										<smart:continuousSelect labelName="政法人员职级：" inputName="lawPersonLevel.id" codeTypeCode="DM209" inputVal="${post.lawPersonLevel.id}" valType="ID" widthPercent="0.3333333"/>
-									</smart:gridColumn>
-								</smart:gridRow> --%>
-								
+																
 							</smart:grid>
 						</smart:gridColumn>
 					</smart:gridRow>

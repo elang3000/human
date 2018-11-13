@@ -155,10 +155,6 @@ public class Post extends BasePost<Post> {
 	@JoinColumn(name = "SH_S0163")
 	private CodeInfo nowPostSign;
 	
-	@Column(name = "IS_LOW_TO_HIGH")
-	@org.hibernate.annotations.Type(type = "yes_no")
-	private Boolean isLowToHigh = false;
-	
 	public CodeInfo getTenureForm() {
 		
 		return tenureForm;
@@ -287,16 +283,6 @@ public class Post extends BasePost<Post> {
 	public void setNowPostSign(CodeInfo nowPostSign) {
 		
 		this.nowPostSign = nowPostSign;
-	}
-	
-	public Boolean getIsLowToHigh() {
-		
-		return isLowToHigh;
-	}
-	
-	public void setIsLowToHigh(Boolean isLowToHigh) {
-		
-		this.isLowToHigh = isLowToHigh;
 	}
 	
 }

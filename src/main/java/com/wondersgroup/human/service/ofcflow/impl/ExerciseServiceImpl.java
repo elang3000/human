@@ -24,8 +24,12 @@ import org.springframework.stereotype.Service;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.human.bo.ofc.Experience;
 import com.wondersgroup.human.bo.ofcflow.Exercise;
+import com.wondersgroup.human.bo.record.HumanKeepRecord;
+import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
+import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
 import com.wondersgroup.human.service.ofc.ExperienceService;
 import com.wondersgroup.human.service.ofcflow.ExerciseService;
 import com.wondersgroup.human.vo.ofcflow.ExerciseVO;
@@ -78,5 +82,9 @@ public class ExerciseServiceImpl extends GenericServiceImpl<Exercise> implements
 		e.setStartDate(temp.getStartDate());//开始时间
 		e.setEndDate(temp.getEndDate());//结束时间
 		experienceService.save(e);
+		//备案管理
+		HumankeepRecordDTO dto2 = new HumankeepRecordDTO(temp.getServant().getId(),HumanKeepRecord.KEEP_GZDL);
+		ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(dto2);	
+		EventManager.send(event2);
 	}
 }

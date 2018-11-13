@@ -27,16 +27,20 @@ import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
 import com.wondersgroup.framework.util.BeanUtils;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
 import com.wondersgroup.human.bo.ofc.Education;
 import com.wondersgroup.human.bo.ofc.Employ;
+import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.Probation;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.DraftServant;
 import com.wondersgroup.human.bo.ofcflow.DraftServantEduInfo;
 import com.wondersgroup.human.bo.ofcflow.ProbationServant;
+import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
+import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
 import com.wondersgroup.human.repository.ofcflow.ProbationServantRepository;
 import com.wondersgroup.human.service.ofc.EducationService;
 import com.wondersgroup.human.service.ofc.EmployService;
@@ -223,6 +227,10 @@ public class ProbationServantServiceImpl extends GenericServiceImpl<ProbationSer
 				educationService.save(education);//保存学历信息
 			}
 		}
+		//进出管理
+		ManagerRecordDTO dto = new ManagerRecordDTO(servant.getId(),ManagerRecord.HUMAN_SY);
+		ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
+		EventManager.send(event);
 	}
 	/**
 	 * @Title: saveFlow 

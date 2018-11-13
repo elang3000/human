@@ -40,16 +40,22 @@ import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofc.JobLevel;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.OutMgr;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.DeathServant;
+import com.wondersgroup.human.bo.record.HumanKeepRecord;
 import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.dto.ofcflow.DeathServantQueryParam;
+import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
 import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
+import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
+import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.DeathServantService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofcflow.DeathVO;
 
 /**
@@ -74,6 +80,10 @@ public class DeathServantServiceImpl extends GenericServiceImpl<DeathServant> im
 	private DictableService dictableService;
 	@Autowired
 	private OutMgrService outMgrService;
+	@Autowired
+	private FormationControlService formationControlService;
+	@Autowired
+	JobLevelService jobLevelService;
 	
 	/** 
 	 * @see com.wondersgroup.human.service.ofcflow.DeathServantService#saveDeath(com.wondersgroup.human.bo.ofcflow.DeathServant, java.lang.String, java.lang.String) 
@@ -86,9 +96,14 @@ public class DeathServantServiceImpl extends GenericServiceImpl<DeathServant> im
 		if(StringUtils.isBlank(temp.getId())){
 			saveOrUpdate(temp);//保存业务数据
 		}
+		Servant s = servantService.get(temp.getServant().getId());
+		JobLevel jobLevel = jobLevelService.getJobLevelByServantId(temp.getServant().getId());
 		
 		FlowRecord flow;
 		if(DeathServant.DEATH_EMPLOY_APPLY==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
+			formationControlService.executeLockOutFormationNum(s.getDepartId());//锁为调出编制
+			formationControlService.executeLockPostOutNum(s.getDepartId(), jobLevel.getCode().getCode(), jobLevel.getIsLowToHigh());
+			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
@@ -105,6 +120,12 @@ public class DeathServantServiceImpl extends GenericServiceImpl<DeathServant> im
 			flow = workflowService.completeWorkItem(flow);//提交下个节点
 		}
 		if(DeathServant.DEATH_EMPLOY_CONFIRM == temp.getStatus()&&FlowRecord.PASS.equals(r)){//死亡最后环节
+			formationControlService.executeUnlockOutFormationNum(s.getDepartId());
+			formationControlService.executeOutFormation(s.getDepartId());//2.减少调出单位实际编制数
+			
+			formationControlService.executeUnlockPostOutNum(s.getDepartId(), jobLevel.getCode().getCode(), jobLevel.getIsLowToHigh());
+			formationControlService.executeOutPost(s.getDepartId(), jobLevel.getCode().getCode(), jobLevel.getIsLowToHigh());
+			
 			createServant(temp);//更新人员基本信息
 			
 			temp.setStatus(DeathServant.DEATH_EMPLOY_DONE);//通过
@@ -179,6 +200,10 @@ public class DeathServantServiceImpl extends GenericServiceImpl<DeathServant> im
 		ManagerRecordDTO dto = new ManagerRecordDTO(s.getId(),ManagerRecord.HUMAN_SW);
 		ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
 		EventManager.send(event);
+		
+		HumankeepRecordDTO dto2 = new HumankeepRecordDTO(s.getId(),HumanKeepRecord.KEEP_SW);
+		ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(dto2);	
+		EventManager.send(event2);
 	}
 	
 	/** 

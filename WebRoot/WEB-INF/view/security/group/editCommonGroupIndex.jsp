@@ -16,7 +16,7 @@
 						<smart:textInput type="hidden" name="id" value="${group.id}"></smart:textInput>
 						<smart:gridRow>
 							<smart:gridColumn colPart="12">
-								<smart:textInput labelName="用户群组代码：" autocomplete="off" placeholder="请输入用户群组代码" verify="required" name="code" value="${group.code}" isNotNull="true">
+								<smart:textInput labelName="用户群组代码：" autocomplete="off" placeholder="请输入用户群组代码" verify="required" name="code" value="${group.code}" otherAttr="readonly" isNotNull="true">
 								</smart:textInput>
 							</smart:gridColumn>
 						</smart:gridRow>

@@ -23,11 +23,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.dao.support.Predicate.Operator;
+import com.wondersgroup.framework.core.exception.BusinessException;
+import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.dict.service.CodeInfoService;
+import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.framework.utils.DictUtils;
@@ -36,8 +41,10 @@ import com.wondersgroup.human.bo.ofc.Probation;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.ServantService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofc.JobLevelVO;
 import com.wondersgroup.human.vo.ofc.ProbationVO;
+import com.wondersgroup.human.vo.organization.JudgePostResult;
 
 /**
  * @ClassName: JobLevelController
@@ -62,6 +69,15 @@ public class JobLevelController extends GenericController {
 	
 	@Autowired
 	ServantService servantService;
+	
+	@Autowired
+	DictableService dictableService;
+	
+	@Autowired
+	FormationControlService formationControlService;
+	
+	@Autowired
+	CodeInfoService codeInfoService;
 	
 	@RequestMapping("/edit")
 	public String jobLevelEdit(String servantId, String jobLevelId, Model model) {
@@ -108,17 +124,37 @@ public class JobLevelController extends GenericController {
 		
 		AjaxResult result = new AjaxResult(true);
 		try {
+			
 			if (StringUtils.isNotBlank(temp.getId())) {// 更新
-				JobLevel jobLevel = jobLevelService.get(temp.getId());
-				BeanUtils.copyPropertiesIgnoreNull(temp, jobLevel);
-				DictUtils.operationCodeInfo(jobLevel);// 将CodeInfo中id为空的属性 设置为null
-				jobLevelService.saveOrUpdate(jobLevel);// 保存
+//				JobLevel jobLevel = jobLevelService.get(temp.getId());
+//				BeanUtils.copyPropertiesIgnoreNull(temp, jobLevel);
+//				DictUtils.operationCodeInfo(jobLevel);// 将CodeInfo中id为空的属性 设置为null
+//				jobLevelService.update(jobLevel);// 保存
 			} else {// 新增
 				temp.setId(null);
 				DictUtils.operationCodeInfo(temp);// 将CodeInfo中id为空的属性 设置为null
-				jobLevelService.saveOrUpdate(temp);
+				
+				// 如果是现任职务，那么进行验编
+				CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
+				CodeInfo lvlCode = codeInfoService.get(temp.getCode().getId());
+				Servant servant = servantService.get(temp.getServant().getId());
+				if (temp.getCurrentIdentification().getId().equals(yesCodeInfo.getId())) {
+					JudgePostResult r = formationControlService.queryJudgePostNum(servant.getDepartId(),
+							lvlCode.getCode());
+					if (r.result == false) {
+						result.setSuccess(false);
+						result.setMessage("保存失败！原因：职务编制数不足，请联系相关人员！");
+						return result;
+					} else {
+						temp.setIsLowToHigh(r.isLowToHigh);
+					}
+				}
+				jobLevelService.save(temp);
 			}
 			result.setMessage("保存成功！");
+		} catch (BusinessException e) {
+			result.setSuccess(false);
+			result.setMessage("保存失败！原因：" + e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

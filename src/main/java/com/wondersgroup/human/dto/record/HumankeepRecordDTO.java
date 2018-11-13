@@ -21,8 +21,10 @@ import java.util.Date;
  * @ClassName: HumankeepRecordDTO
  * @Description: TODO
  * @author: Administrator
- * @date: 2018年6月5日
- *        下午6:24:09 @version [版本号, YYYY-MM-DD] @see       [相关类/方法] @since     [产品/模块版本]
+ * @date: 2018年6月5日下午6:24:09 
+ * @version [版本号, YYYY-MM-DD] 
+ * @see       [相关类/方法] 
+ * @since     [产品/模块版本]
  */
 public class HumankeepRecordDTO {
 
@@ -60,20 +62,6 @@ public class HumankeepRecordDTO {
 	 * @Description: 业务实例表名称
 	 */
 	private String businessEntityTable;
-
-	/**
-	 * @fieldName: returned
-	 * @fieldType: java.lang.String
-	 * @Description: 是否退回备案操作
-	 */
-	private String returned;
-
-	/**
-	 * @fieldName: description
-	 * @fieldType: java.lang.String
-	 * @Description: 描述信息
-	 */
-	private String description;
 
 	/**
 	 * @fieldName: description
@@ -116,8 +104,10 @@ public class HumankeepRecordDTO {
 	 */
 	private Integer ext6;
 
-	public HumankeepRecordDTO() {
-
+	public HumankeepRecordDTO(String servantId,String recordType) {
+		super();
+		this.humanId = servantId;
+		this.recordType = recordType;
 	}
 
 	/**
@@ -195,35 +185,6 @@ public class HumankeepRecordDTO {
 		this.businessEntityTable = businessEntityTable;
 	}
 
-	/**
-	 * @return the returned
-	 */
-	public String getReturned() {
-		return returned;
-	}
-
-	/**
-	 * @param returned
-	 *            the returned to set
-	 */
-	public void setReturned(String returned) {
-		this.returned = returned;
-	}
-
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * @param description
-	 *            the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
 	/**
 	 * @return the ext1

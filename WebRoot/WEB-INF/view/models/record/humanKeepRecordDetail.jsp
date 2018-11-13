@@ -162,25 +162,19 @@
 							</smart:gridRow>
 							<smart:title title="备案信息" style="margin-top: 5px;" color="blue" />
 							<smart:gridRow>
-								<smart:gridColumn colPart="8">
-									<smart:gridColumn colPart="6">
-										<smart:infoShowerLabel infoname="人事单位类型"
-											infovalue="${humanKeepRecord.unitType}"></smart:infoShowerLabel>
+								<smart:gridColumn>
+									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="人事单位"
+											infovalue="${humanKeepRecord.organName}"></smart:infoShowerLabel>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="6">
+									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="备案类型"
 											infovalue="${humanKeepRecord.recordType.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
-								</smart:gridColumn>
-								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="备案状态"
-										infovalue="${humanKeepRecord.returned.name}"></smart:infoShowerLabel>
-								</smart:gridColumn>
-							</smart:gridRow>
-							<smart:gridRow>
-								<smart:gridColumn colPart="8">
-									<smart:infoShowerLabel infoname="备案描述"
-										infovalue="${humanKeepRecord.description}"></smart:infoShowerLabel>
+									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="备案时间"
+											infovalue="${humanKeepRecord.recordTime}"></smart:infoShowerLabel>
+									</smart:gridColumn>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:grid>

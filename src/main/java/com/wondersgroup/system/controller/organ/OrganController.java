@@ -176,7 +176,7 @@ public class OrganController extends GenericController {
 			}
 			if (tree.getTreeType() != null) {
 				vo.setTreeTypeId(tree.getTreeType().getId());
-				vo.setTreeTypaName(tree.getTreeType().getName());
+				vo.setTreeTypeName(tree.getTreeType().getName());
 			}
 			result.add(vo);
 		}

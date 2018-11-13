@@ -16,12 +16,10 @@
 package com.wondersgroup.human.service.ofc;
 
 import java.util.List;
-
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.GenericService;
-import com.wondersgroup.human.bo.ofc.Degree;
 import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.vo.ofc.PostVO;
 
@@ -64,4 +62,13 @@ public interface PostService extends GenericService<Post>{
 	 * @see com.wondersgroup.framework.core.service.GenericService#delete(com.wondersgroup.framework.core.bo.GenericEntity)
 	 */
 	void delete(Post post);
+	
+	/**
+	 * 
+	 * @Title: getAllPost
+	 * @Description: 查询人员所有在职职务
+	 * @param entity 
+	 * @see com.wondersgroup.framework.core.service.GenericService#getAllPost(com.wondersgroup.framework.core.bo.GenericEntity)
+	 */
+	public List<Post> getAllPost(String id);
 }

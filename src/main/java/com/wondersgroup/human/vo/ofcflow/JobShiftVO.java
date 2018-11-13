@@ -3,10 +3,12 @@ package com.wondersgroup.human.vo.ofcflow;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.human.bo.ofcflow.JobShift;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class JobShiftVO {
 
@@ -32,13 +34,13 @@ public class JobShiftVO {
         this.id=jobShift.getId();
         this.name=jobShift.getServant().getName();
         this.cardNo =jobShift.getServant().getCardNo();
-        this.sex=jobShift.getServant().getSex().getName();
         this.jobChangeType=jobShift.getPostTenureChange().getName();
         this.remark=jobShift.getRemark();
         this.postChangeDate=jobShift.getCreateTime();
         this.formerPostName=jobShift.getFormerPostName();
         this.newPostName=jobShift.getNewPostCode().getName();
     }
+
 
     public String getName() {
         return name;

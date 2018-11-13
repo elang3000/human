@@ -34,10 +34,14 @@
 				<smart:gridRow>
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form id="jobChange_searchForm">
-							<smart:gridColumn colPart="5">
-								<smart:textInput labelName="姓名："  display="inline"
-									placeholder="请输入姓名" name="name"></smart:textInput>
-							</smart:gridColumn>
+								<smart:gridColumn colPart="3">
+									<smart:textInput labelName="姓名："  display="inline"
+										placeholder="请输入姓名" name="name"></smart:textInput>
+								</smart:gridColumn>
+								<smart:gridColumn colPart="3">
+									<smart:singleSelect name="jobChangeType" id="servantType" display="inline" labelName="职务变动类型"
+														data="[{'key':'-1','value':'请选择职务变动类型'},{'key':'JOBSHIFT_PROMOTE','value':'晋升'},{'key':'JOBSHIFT_DEPOSE','value':'免职'},{'key':'JOBSHIFT_DEMOTE','value':'降职'},{'key':'JOBSHIFT_SHIFT','value':'轮岗'}]"></smart:singleSelect>
+								</smart:gridColumn>
 							<smart:gridColumn colPart="3" >
 								<smart:buttonGroup container="true">
 									<smart:button size="sm" method="search" title="查询"
@@ -63,14 +67,14 @@
 							height="full-215" 
 							text="未找到有效数据！">
 							<tr>
-								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
-								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
-								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
-								<smart:tableItem field="postChangeDate" width=".2" sort="false">变动发起时间</smart:tableItem>
-								<smart:tableItem field="jobChangeType" width=".1" sort="false">职务变动类别</smart:tableItem>
-								<smart:tableItem field="formerPostName" width=".1" sort="false">变动前职位</smart:tableItem>
-								<smart:tableItem field="newPostName" width=".1" sort="false">变动后职位</smart:tableItem>
-								<smart:tableItem align="center" width=".1" fixed="right"
+								<smart:tableItem field="NAME" width=".1" sort="true">姓名</smart:tableItem>
+								<smart:tableItem field="CARDNO" width=".2" sort="true">身份证号</smart:tableItem>
+								<smart:tableItem field="CREATETIME" width=".1" sort="false">变动发起时间</smart:tableItem>
+								<smart:tableItem field="POSTTENURECHANGENAME" width=".1" sort="false">职务变动类别</smart:tableItem>
+								<smart:tableItem field="FORMERPOSTNAME" width=".1" sort="false">变动前职位</smart:tableItem>
+								<smart:tableItem field="NEWPOSTNAME" width=".1" sort="false">变动后职位</smart:tableItem>
+								<smart:tableItem field="REMARK" width=".2" sort="false">备注</smart:tableItem>
+								<smart:tableItem align="CENTER" width=".1" fixed="right"
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar  id="navListToolBar">
@@ -91,10 +95,10 @@
 			sort="true" rowEdit="true">
 				edit : function(data) {
 					smart.show({
-					title : '职务变动',
-					size : 'full',
-					url : 'ofcflow/jobchange/detail/'+data.data.id,
-					scrollbar : false
+						title : '职务变动详情',
+						size : 'full',
+						url : 'ofcflow/jobchange/detailView?id='+data.data.id+'&postTenureChangeCode='+data.data.POSTTENURECHANGE,
+						scrollbar : false
 					});
 				}
 			</smart:tableScriptAction>

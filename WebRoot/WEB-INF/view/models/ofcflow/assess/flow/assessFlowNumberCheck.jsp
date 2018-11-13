@@ -53,12 +53,12 @@
 							<smart:gridRow>
 								<c:if test="${empty percent.flowRecord }" >
 										<smart:gridColumn colPart="8">
-												<smart:numberInput labelName="申请优秀人数:" name="unitOutStandingNumb" value="${percent.outstandingNumb }" type="text" display="block" isNotNull="true" verify="required"></smart:numberInput>
+												<smart:numberInput labelName="申请优秀人数" name="unitOutStandingNumb" value="${percent.outstandingNumb }" type="text" display="block" isNotNull="true" verify="required"></smart:numberInput>
 										</smart:gridColumn>
 								</c:if>
 								<c:if test="${not empty percent.flowRecord }" >
 																<smart:infoShowerLabel infoname="申请优秀人数:"
-										infovalue="${percent.outstandingNumb }"></smart:infoShowerLabel>
+										infovalue="${percent.unitOutStandingNumb }"></smart:infoShowerLabel>
 								</c:if>
 							</smart:gridRow>
 							<smart:gridRow>

@@ -81,7 +81,6 @@ public class AssessmentRepositoryImpl extends GenericRepositoryImpl<Assessment> 
 	 * @Description: 季度考核是否全是优秀
 	 * @param servant
 	 * @return 
-	 * @see com.wondersgroup.human.repository.ofc.AssessmentRepository#isCurrentYearSeasonFine(com.wondersgroup.human.bo.ofc.Servant)
 	 */
 	@Override
 	public boolean isCurrentYearSeasonFine(Servant servant,Integer year) {

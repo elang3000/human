@@ -63,7 +63,6 @@
 	<smart:scriptHead models="form,layer,element,table">
 		<smart:tableScriptAction tableId="groupList">
 			accredit : function(data) {
-				console.log(data);
 				smart.show({
 					title : '群组权限管理',
 					url : 'security/authc/group/accredit/index',

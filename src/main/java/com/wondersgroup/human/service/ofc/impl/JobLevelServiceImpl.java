@@ -14,9 +14,12 @@
  */
 package com.wondersgroup.human.service.ofc.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +29,15 @@ import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.dict.service.CodeInfoService;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.human.bo.ofc.JobLevel;
+import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.repository.ofc.JobLevelRepository;
 import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.ServantService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofc.JobLevelVO;
 
 /**
@@ -54,6 +60,12 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 	
 	@Autowired
 	private ServantService servantService;
+	
+	@Autowired
+	private CodeInfoService codeInfoService;
+	
+	@Autowired
+	private FormationControlService formationControlService;
 	
 	/**
 	 * (non Javadoc)
@@ -80,8 +92,7 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 				jobLevelPage.getPageSize(), voList);
 	}
 	
-	@Override
-	public void saveOrUpdate(JobLevel entity) {
+	private void updateServantByPostLvl(JobLevel entity) {
 		
 		CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
 		CodeInfo noCodeInfo = dictableService.getCodeInfoByCode("0", DictTypeCodeContant.CODE_TYPE_YESNO);
@@ -99,8 +110,6 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 				servantService.update(servant);
 			}
 		}
-		
-		super.saveOrUpdate(entity);
 	}
 	
 	/**
@@ -116,6 +125,29 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 		jobLevelRepository.updateServantAllCurrentLevelBySid(servantId, codeInfo);
 	}
 	
+	
+	
+	
+	@Override
+	public void update(JobLevel entity) {
+		updateServantByPostLvl(entity);
+		super.update(entity);
+	}
+
+	@Override
+	public Serializable save(JobLevel entity) {
+		Servant servant = servantService.get(entity.getServant().getId());
+		CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
+		if (entity.getCurrentIdentification().getId().equals(yesCodeInfo.getId())) {
+			// 如果是现行职级，那么就入职级编制数
+			CodeInfo postLvlCode = codeInfoService.get(entity.getCurrentIdentification().getId());
+			formationControlService.executeIntoPost(servant.getDepartId(), postLvlCode.getCode(),
+					entity.getIsLowToHigh());
+		}
+		updateServantByPostLvl(entity);
+		return super.save(entity);
+	}
+	
 	@Override
 	public void delete(JobLevel entity) {
 		
@@ -126,6 +158,35 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 			servant.setNowJobLevel(null);
 			servantService.update(servant);
 		}
+		if (entity.getCurrentIdentification().getId().equals(yesCodeInfo.getId())) {
+			// 如果是现行职级，那么就出职级编制数
+			CodeInfo postlvlCode = codeInfoService.get(entity.getCurrentIdentification().getId());
+			formationControlService.executeOutPost(entity.getServant().getDepartId(), postlvlCode.getCode(),
+					entity.getIsLowToHigh());
+		}
 		super.delete(entity);
+	}
+
+	/** (non Javadoc) 
+	 * @Title: getJobLevelByServantId
+	 * @Description: TODO
+	 * @param id
+	 * @return 
+	 * @see com.wondersgroup.human.service.ofc.JobLevelService#getJobLevelByServantId(java.lang.String) 
+	 */
+	@Override
+	public JobLevel getJobLevelByServantId(String id) {
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(JobLevel.class);
+		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");
+		s.add(Restrictions.eq("s.id", id));
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		
+		List<JobLevel> list = this.findByCriteria(detachedcriteria);
+		
+		if(list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}
 	}
 }

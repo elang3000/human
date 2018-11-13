@@ -14,23 +14,19 @@
  */
 package com.wondersgroup.human.controller.record;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
-import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.record.HumanKeepRecord;
+import com.wondersgroup.human.dto.record.HumanKeepRecordParam;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.record.HumanKeepRecordService;
-import com.wondersgroup.human.vo.record.HumanKeepRecordVO;
+import com.wondersgroup.human.vo.record.KeepRecordVO;
 
 /**
  * 备案记录控制器
@@ -77,32 +73,6 @@ public class HumanKeepRecordController extends GenericController {
 	}
 
 	/**
-	 * @Title: query
-	 * @Description: 备案列表
-	 * @param 查询条件
-	 * @param limit页大小
-	 * @param page页码
-	 * @return: Page<HumanKeepRecordVO>
-	 */
-	@ResponseBody
-	@RequestMapping("/query")
-	public Page<HumanKeepRecordVO> queryServantKeepRecord(HumanKeepRecordVO humanKeepRecordVO, Integer limit,
-			Integer page) {
-
-		Map<String, Object> filter = new HashMap<String, Object>();
-		if (StringUtils.isNotBlank(humanKeepRecordVO.getName())) {// 姓名
-			filter.put("name", "%" + humanKeepRecordVO.getName() + "%");
-		}
-		if (StringUtils.isNotBlank(humanKeepRecordVO.getCardNo())) {// 身份证
-			filter.put("cardNo", "%" + humanKeepRecordVO.getCardNo() + "%");
-		}
-		if (StringUtils.isNotBlank(humanKeepRecordVO.getRecordType())) {// 备案类型
-			filter.put("recordType", humanKeepRecordVO.getRecordType());
-		}
-		return humanKeepRecordService.queryServantKeepRecord(filter, page, limit);
-	}
-
-	/**
 	 * @Title: detail
 	 * @Description: 备案详情
 	 * @param id
@@ -111,10 +81,26 @@ public class HumanKeepRecordController extends GenericController {
 	@RequestMapping("/detail")
 	public String keepRecordDetail(String id, Model model) {
 		HumanKeepRecord humanKeepRecord = humanKeepRecordService.get(id);
-		Servant servant = servantService.get(humanKeepRecord.getHumanId());
+		Servant servant = servantService.get(humanKeepRecord.getServant().getId());
 		model.addAttribute("id", id);
 		model.addAttribute("servant", servant);
 		model.addAttribute("humanKeepRecord", humanKeepRecord);
 		return KEEP_RECORD_DETAIL;
+	}
+	
+	/**
+	 * @Title: query
+	 * @Description: 备案列表
+	 * @param 查询条件
+	 * @param limit页大小
+	 * @param page页码
+	 * @return: Page<HumanKeepRecordVO>
+	 */
+	@ResponseBody
+	@RequestMapping("/getPage")
+	public Page<KeepRecordVO> getPage(HumanKeepRecordParam param, Integer limit,
+			Integer page) {
+
+		return humanKeepRecordService.getPage(param, page, limit);
 	}
 }

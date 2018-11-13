@@ -118,6 +118,15 @@
 						</smart:gridColumn>
 					</smart:gridRow>
 					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:singleSelect labelName="职级名称：" name="jobLevelCode.id"
+								display="block" url="dictquery/sub/code/GBT_12407_2008/1"
+								isAddDefaltOption="true" initSelectedKey="${d.jobLevelCode.id }"
+								verify="required" isNotNull="true" isSaveShowName="true"
+								inputShowName="jobLevelName" initCludeKey="[141,142,150,160]"></smart:singleSelect>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
 						<smart:title title="附件信息" style="margin-top: 5px;" color="blue" />
 					</smart:gridRow>
 					<smart:gridRow>

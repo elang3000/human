@@ -233,17 +233,22 @@ public class AssessFlowUnitCollectVO {
 
 	public String getUnitStatus(){
 		if(this.assessmentType==ASSESSYEAR){
-			// 考核状态       -1 未开始流程  0开始流程 1完成流程
-			if(flowStatus==0){
-				return "流程开始";
-			}
-			if(flowStatus==1){
-				return "考核完成";
-			}
-			if(flowStatus==-1){
+			if(null==flowStatus){
+				return "";
+			}else{
+				// 考核状态       -1 未开始流程  0开始流程 1完成流程
+				if(0==flowStatus){
+					return "流程开始";
+				}
+				if(1==flowStatus){
+					return "考核完成";
+				}
+				if(-1==flowStatus){
+					return "考核未完成";
+				}
 				return "考核未完成";
 			}
-			return "";
+
 		}
 		else if(this.assessmentType==ASSESSSEASON){
 			if(allNum!=null&&assessNum!=null&&allNum==assessNum){

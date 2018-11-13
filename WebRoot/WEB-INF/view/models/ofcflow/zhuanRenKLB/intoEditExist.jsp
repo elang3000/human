@@ -115,16 +115,6 @@
 					</smart:gridRow>
 					<smart:gridRow>
 						<smart:gridColumn colPart="4">
-							<smart:singleSelect initSelectedKey="${d.enterTheUnitChangeType.id}" name="enterTheUnitChangeType.id"
-								labelName="进入本单位变动类别：" isNotNull="true" verify="required" url="dictquery/sub/code/GBT_12405_2008/40"
-								display="block" isAddDefaltOption="true"></smart:singleSelect>
-						</smart:gridColumn>
-						<smart:gridColumn colPart="8">
-							<smart:continuousSelect id="enterReason" labelName="进入本单位原因：" inputName="enterReason.id" codeTypeCode="DM015" inputVal="${d.enterReason.id}" valType="ID"/>
-						</smart:gridColumn>
-					</smart:gridRow>
-					<smart:gridRow>
-						<smart:gridColumn colPart="4">
 							<smart:date labelName="进入本单位日期：" display="block" name="enterTheUnitDate" id="enterTheUnitDate" value="${d.enterTheUnitDate}"></smart:date>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
@@ -135,6 +125,25 @@
 								name="personType.id" labelName="转任后人员类别：" display="block"
 								initSelectedKey="${d.personType.id}"
 								url="dictquery/sub/code/DM199/1"></smart:singleSelect>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:singleSelect initSelectedKey="${d.enterTheUnitChangeType.id}" name="enterTheUnitChangeType.id"
+								labelName="进入本单位变动类别：" isNotNull="true" verify="required" url="dictquery/sub/code/GBT_12405_2008/40"
+								display="block" isAddDefaltOption="true"></smart:singleSelect>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:singleSelect labelName="职级名称：" name="jobLevelCode.id"
+								display="block" url="dictquery/sub/code/GBT_12407_2008/1"
+								isAddDefaltOption="true" initSelectedKey="${d.jobLevelCode.id }"
+								verify="required" isNotNull="true" isSaveShowName="true"
+								inputShowName="jobLevelName" initCludeKey="[141,142,150,160]"></smart:singleSelect>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="8">
+							<smart:continuousSelect id="enterReason" labelName="进入本单位原因：" inputName="enterReason.id" codeTypeCode="DM015" inputVal="${d.enterReason.id}" valType="ID"/>
 						</smart:gridColumn>
 					</smart:gridRow>
 					<smart:gridRow>

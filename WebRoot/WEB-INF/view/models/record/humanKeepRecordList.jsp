@@ -37,7 +37,7 @@
 
 								<smart:gridColumn colPart="4">
 									<smart:singleSelect labelName="备案类型：" display="block"
-										name="recordType" url="dictquery/sub/id/recordType/null"
+										name="recordType" url="dictquery/sub/code/KeepRecord"
 										isAddDefaltOption="true">
 									</smart:singleSelect>
 								</smart:gridColumn>
@@ -64,7 +64,7 @@
 
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn>
-						<smart:table id="navigationList" url="keep/query"
+						<smart:table id="navigationList" url="keep/getPage"
 							height="full-210" sortField="" sortType="" text="未找到用户数据！"
 							page="true">
 							<tr>
@@ -72,14 +72,10 @@
 								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
 								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
 								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
-								<smart:tableItem field="departName" width=".1" sort="false">单位部门</smart:tableItem>
-								<smart:tableItem field="postName" width="120" sort="false">职务名称</smart:tableItem>
-								<smart:tableItem field="postAttributeName" width="120" sort="false">职务属性</smart:tableItem>
-								<smart:tableItem field="jobLevel" width="120" sort="false">职级名称</smart:tableItem>
-								<smart:tableItem field="unitType" width=".1" sort="false">人事单位类型</smart:tableItem>
-								<smart:tableItem field="recordType" width=".1" sort="false">备案类型</smart:tableItem>
-								<smart:tableItem field="returned" width=".1" sort="false">备案状态</smart:tableItem>
-								<smart:tableItem align="center" fixed="right" unresize="true"
+								<smart:tableItem field="organName" width=".1" sort="false">人事单位</smart:tableItem>
+								<smart:tableItem field="recordType" width=".15" sort="false">备案类型</smart:tableItem>
+								<smart:tableItem field="recordTime" width=".2" sort="false">备案时间</smart:tableItem>
+								<smart:tableItem align="center" width=".1" fixed="right" unresize="true"
 									toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar">

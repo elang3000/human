@@ -23,19 +23,19 @@
 					
 					<smart:gridRow>
 						<smart:gridColumn colPart="4">
-							<smart:textInput labelName="单位名称：" id="unitBasicName" name="unitBasicName" value="${orgInfoMgrFlow.unitBasicName }"></smart:textInput>
+							<smart:textInput labelName="单位名称：" id="unitBasicName" name="unitBasicName" value="${orgInfoMgrFlow.unitBasicName }" isNotNull="true" verify="required"></smart:textInput>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
-							<smart:textInput labelName="单位简称：" id="unitBasicSimpleName" name="unitBasicSimpleName" value="${orgInfoMgrFlow.unitBasicSimpleName }"></smart:textInput>
+							<smart:textInput labelName="单位简称：" id="unitBasicSimpleName" name="unitBasicSimpleName" value="${orgInfoMgrFlow.unitBasicSimpleName }" isNotNull="true" verify="required"></smart:textInput>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
-							<smart:textInput labelName="单位缩写：" id="unitBasicShortName" name="unitBasicShortName" value="${orgInfoMgrFlow.unitBasicShortName }"></smart:textInput>
+							<smart:textInput labelName="单位缩写：" id="unitBasicShortName" name="unitBasicShortName" value="${orgInfoMgrFlow.unitBasicShortName }" isNotNull="true" verify="required"></smart:textInput>
 						</smart:gridColumn>
 					</smart:gridRow>
 					
 					<smart:gridRow>
 						<smart:gridColumn colPart="4">
-							<smart:textInput labelName="社会信用代码：" name="xydm" id="xydm" value="${orgInfoMgrFlow.xydm }"></smart:textInput>
+							<smart:textInput labelName="社会信用代码：" name="xydm" id="xydm" value="${orgInfoMgrFlow.xydm }" isNotNull="true" verify="required"></smart:textInput>
 						</smart:gridColumn>
 						
 						<smart:gridColumn colPart="4">
@@ -159,7 +159,7 @@
 								url="dictquery/sub/code/DM047"></smart:singleSelect>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
-							<smart:singleSelect labelName="机构类别：" name="orgCategory.id" isAddDefaltOption="true" initSelectedKey="${orgInfoMgrFlow.orgCategory.id }"
+							<smart:singleSelect labelName="机构类别：" name="orgCategory.id" isAddDefaltOption="true" initSelectedKey="${orgInfoMgrFlow.orgCategory.id }" isNotNull="true" verify="required"
 								id="orgCategory" display="block" url="dictquery/sub/code/0305"></smart:singleSelect>
 						</smart:gridColumn>
 					</smart:gridRow>

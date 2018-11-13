@@ -47,16 +47,22 @@ import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofc.JobLevel;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.OutMgr;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.ResignServant;
+import com.wondersgroup.human.bo.record.HumanKeepRecord;
 import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.dto.ofcflow.ResignServantQueryParam;
+import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
 import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
+import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
+import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.ResignServantService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.util.WordUtils;
 import com.wondersgroup.human.vo.ofcflow.ResignVO;
 
@@ -85,6 +91,10 @@ public class ResignServantServiceImpl extends GenericServiceImpl<ResignServant> 
 	private DictableService dictableService;
 	@Autowired
 	private OutMgrService outMgrService;
+	@Autowired
+	private FormationControlService formationControlService;
+	@Autowired
+	JobLevelService jobLevelService;
 	
 	/** (non Javadoc) 
 	 * @Title: saveResign
@@ -100,9 +110,14 @@ public class ResignServantServiceImpl extends GenericServiceImpl<ResignServant> 
 		if(StringUtils.isBlank(temp.getId())){
 			saveOrUpdate(temp);//保存业务数据
 		}
+		Servant s = servantService.get(temp.getServant().getId());
+		JobLevel jobLevel = jobLevelService.getJobLevelByServantId(temp.getServant().getId());
 		
 		FlowRecord flow;
 		if(ResignServant.RESIGN_EMPLOY_APPLY==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
+			formationControlService.executeLockOutFormationNum(s.getDepartId());//锁为调出编制
+			formationControlService.executeLockPostOutNum(s.getDepartId(), jobLevel.getCode().getCode(), jobLevel.getIsLowToHigh());
+			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
@@ -119,9 +134,14 @@ public class ResignServantServiceImpl extends GenericServiceImpl<ResignServant> 
 			flow = workflowService.completeWorkItem(flow);//提交下个节点
 		}
 		if(ResignServant.RESIGN_EMPLOY_CONFIRM == temp.getStatus()&&FlowRecord.PASS.equals(r)){//辞职最后环节
+			formationControlService.executeUnlockOutFormationNum(s.getDepartId());
+			formationControlService.executeOutFormation(s.getDepartId());//2.减少调出单位实际编制数
+			
+			formationControlService.executeUnlockPostOutNum(s.getDepartId(), jobLevel.getCode().getCode(), jobLevel.getIsLowToHigh());
+			formationControlService.executeOutPost(s.getDepartId(), jobLevel.getCode().getCode(), jobLevel.getIsLowToHigh());
+			
 			temp.setStatus(ResignServant.DEATH_EMPLOY_DONE);//通过
 			temp.setFlowRecord(null);//修改当前业务的流程节点
-			Servant s = servantService.get(temp.getServant().getId());
 			try {
 				// 1.创建辞职批复文档,保存文档路径信息====================================================
 				// 1.设置文档参数
@@ -269,6 +289,10 @@ public class ResignServantServiceImpl extends GenericServiceImpl<ResignServant> 
 		ManagerRecordDTO dto = new ManagerRecordDTO(s.getId(),ManagerRecord.HUMAN_CZ);
 		ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
 		EventManager.send(event);
+		
+		HumankeepRecordDTO dto2 = new HumankeepRecordDTO(s.getId(),HumanKeepRecord.KEEP_CZ);
+		ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(dto2);	
+		EventManager.send(event2);
 	}
 
 	/** 

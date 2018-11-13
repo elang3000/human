@@ -24,8 +24,12 @@ import org.springframework.stereotype.Service;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.human.bo.ofc.Experience;
 import com.wondersgroup.human.bo.ofcflow.LoanTo;
+import com.wondersgroup.human.bo.record.HumanKeepRecord;
+import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
+import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
 import com.wondersgroup.human.service.ofc.ExperienceService;
 import com.wondersgroup.human.service.ofcflow.LoanToService;
 import com.wondersgroup.human.vo.ofcflow.LoanToVO;
@@ -77,5 +81,9 @@ public class LoanToServiceImpl extends GenericServiceImpl<LoanTo> implements Loa
 		e.setFormerUnit(temp.getTargetOrgan());//所在单位
 		e.setStartDate(temp.getStartDate());//开始时间
 		experienceService.save(e);
+		//备案管理
+		HumankeepRecordDTO dto2 = new HumankeepRecordDTO(temp.getServant().getId(),HumanKeepRecord.KEEP_JD);
+		ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(dto2);	
+		EventManager.send(event2);
 	}
 }

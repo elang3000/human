@@ -54,6 +54,23 @@ public class BaseEventIntoMgr<T> extends GenericEntity {
 	@org.hibernate.annotations.Type(type = "yes_no")
 	private Boolean isLowToHigh = false;
 	
+	/**
+	 * @fieldName: 职级名称
+	 * @fieldType: java.lang.String
+	 * @Description: 该人的职位等级或级别等级名称。
+	 */
+	@Column(name = "JOBLEVEL_NAME")
+	private String jobLevelName;
+	
+	/**
+	 * @fieldName: 职级代码
+	 * @fieldType: java.lang.String
+	 * @Description: 该人的职位等级或级别等级代码。GB/T 12407-2008
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "JOBLEVEL_CODE")
+	private CodeInfo jobLevelCode;
+	
 	// 人员基本信息
 	/**
 	 * @fieldName: servant
@@ -985,6 +1002,26 @@ public class BaseEventIntoMgr<T> extends GenericEntity {
 	public void setIsLowToHigh(Boolean isLowToHigh) {
 		
 		this.isLowToHigh = isLowToHigh;
+	}
+	
+	public String getJobLevelName() {
+		
+		return jobLevelName;
+	}
+	
+	public void setJobLevelName(String jobLevelName) {
+		
+		this.jobLevelName = jobLevelName;
+	}
+	
+	public CodeInfo getJobLevelCode() {
+		
+		return jobLevelCode;
+	}
+	
+	public void setJobLevelCode(CodeInfo jobLevelCode) {
+		
+		this.jobLevelCode = jobLevelCode;
 	}
 	
 }

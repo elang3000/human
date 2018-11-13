@@ -42,11 +42,21 @@ public class FormationControl extends GenericEntity {
 	
 	private static final long serialVersionUID = 299081902696419075L;
 	
-	public static final String SECTION_CHIEF = "220A";
-	public static final String DEPUTY_SECTION_CHIEF = "220B";
+	//正处
+	public static final String DIRECTOR = "131";
+	//副处
+	public static final String DEPUTY_DIRECTOR = "132";
+	//正科
+	public static final String SECTION_CHIEF = "141";
+	//副科
+	public static final String DEPUTY_SECTION_CHIEF = "142";
+	//科员
+	public static final String CLERK = "150";
+	//办事员
+	public static final String C_CLERK = "160";
 	
 	/**
-	 * 实空=定编数-在编数-处级领导空缺数-供给关系尚未调入人员（或+供给关系尚未调出人员）-尚未转入的新录用公务员数+允许溢出人员数
+	 * 实空=定编数-在编数-处级领导空缺数-供给关系尚未调入人员+允许溢出人员数
 	 */
 	
 	/**

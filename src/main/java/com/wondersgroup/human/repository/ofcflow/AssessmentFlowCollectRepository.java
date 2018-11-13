@@ -48,5 +48,5 @@ public interface AssessmentFlowCollectRepository extends GenericRepository<Asses
 	 */
 	public Page<AssessmentFlowUnitPercentVO> getUnitAssessProgress(String assessmentFlowCollectId,String unitName,Integer page,Integer limit);
 
-	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org, Integer page, Integer limit);
+	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org, Integer year,Integer page, Integer limit);
 }

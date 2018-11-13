@@ -135,7 +135,7 @@ public class AbroadPlanServiceImpl extends GenericServiceImpl<AbroadPlan> implem
 	
 	public void createServant(AbroadPlan temp){
 		
-		ManagerRecordDTO dto = new ManagerRecordDTO(temp.getServant().getId(),ManagerRecord.HUMAN_CGJL);
+		ManagerRecordDTO dto = new ManagerRecordDTO(temp.getServant().getId(),ManagerRecord.HUMAN_YGCG);
 		ManagerManageRecordEvent event = new ManagerManageRecordEvent(dto);
 		EventManager.send(event);
 	}

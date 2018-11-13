@@ -19,69 +19,56 @@
 		</triggeringPolicy>
 	</appender>
 
-	<logger name="java.sql" level="DEBUG" additivity="false">
+	<logger name="java.sql" level="ERROR" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="org.springframework" level="DEBUG" additivity="false">
+	<logger name="org.springframework" level="ERROR" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="org.springframework.aop" level="DEBUG" additivity="false">
+	<logger name="org.springframework.aop" level="ERROR" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="org.springframework.bean" level="DEBUG" additivity="false">
+	<logger name="org.springframework.bean" level="INFO" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="org.springframework.context" level="DEBUG" additivity="false">
+	<logger name="org.springframework.context" level="INFO" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="org.springframework.orm" level="DEBUG" additivity="false">
+	<logger name="org.springframework.orm" level="INFO" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="org.hibernate" level="DEBUG" additivity="false">
+	<logger name="org.hibernate" level="ERROR" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="net.sf.ehcache" level="DEBUG" additivity="false">
+	<logger name="net.sf.ehcache" level="ERROR" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="com.alibaba.druid" level="DEBUG" additivity="false">
+	<logger name="com.alibaba.druid" level="ERROR" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="org.apache.shiro" level="DEBUG" additivity="false">
+	<logger name="org.apache.shiro" level="ERROR" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
 	<logger name="com.wondersgroup" level="DEBUG" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<logger name="com.wondersgroup.framework.shiro" level="DEBUG" additivity="false">
+	<logger name="com.wondersgroup.framework.shiro" level="ERROR" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</logger>
 
-	<root level="DEBUG">
+	<root level="INFO">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</root>
 
 </configuration>

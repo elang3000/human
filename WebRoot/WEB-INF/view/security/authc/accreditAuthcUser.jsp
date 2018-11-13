@@ -90,16 +90,16 @@
 			params.resourceTypeId = value;
 			operationId.refresh(params);
 		}
-		<smart:initLinkSelect id="appNodeId" name="appNodeId" tips="请选择应用系统" url="app/query/all"  />
-		<smart:initLinkSelect id="resourceTypeId" name="resourceTypeId" tips="请选择资源类型" url="security/authc/resource/type"  linkFunction="linkOperationSelect"/>
-		<smart:initLinkSelect id="operationId" name="operationId" tips="请选择资源操作类型" url="security/authc/resource/operation" />
+		<smart:initLinkSelect verify="required" id="appNodeId" name="appNodeId" tips="请选择应用系统" url="app/query/all"  />
+		<smart:initLinkSelect verify="required" id="resourceTypeId" name="resourceTypeId" tips="请选择资源类型" url="security/authc/resource/type"  linkFunction="linkOperationSelect"/>
+		<smart:initLinkSelect verify="required" id="operationId" name="operationId" tips="请选择资源操作类型" url="security/authc/resource/operation" />
 		var linkOrganNodeSelect = function(value) {
 			var params = {};
 			params.organTreeId = value;
 			organNodeId.refresh(params);
 		}
-		<smart:initLinkSelect id="organTreeId" name="organTreeId" tips="请选择所用所在组织数" url="system/organ/tree/query"  linkFunction="linkOrganNodeSelect"/>
-		<smart:initLinkSelect id="organNodeId" name="organNodeId" tips="请选择所用所在组织节点" url="system/organ/node/user/query/${user.id}"/>
+		<smart:initLinkSelect verify="required" id="organTreeId" name="organTreeId" tips="请选择所用所在组织数" url="system/organ/tree/query"  linkFunction="linkOrganNodeSelect"/>
+		<smart:initLinkSelect verify="required" id="organNodeId" name="organNodeId" tips="请选择所用所在组织节点" url="system/organ/node/user/query/${user.id}"/>
 		
 		 var treeTable =treeGrid.render({
             elem: '#treeTable'
@@ -178,7 +178,7 @@
 				        'Accept': 'application/json',
 				        'Content-Type': 'application/json'
 				    },
-					params:JSON.stringify(params),
+					params:JSON.stringify(pArray),
 					callback : function() {
 						var params = smart.json($('#searchForm'));
 						treeGrid.reload('treeTable', {
@@ -192,7 +192,11 @@
 					title : '禁止',
 					message:'确认禁止相关权限？',
 					url:'security/authc/user/accredit/revoke',
-					params:JSON.stringify(params),
+					params:JSON.stringify(pArray),
+					headers : {
+				        'Accept': 'application/json',
+				        'Content-Type': 'application/json'
+				    },
 					callback : function() {
 						var params = smart.json($('#searchForm'));
 						treeGrid.reload('treeTable', {

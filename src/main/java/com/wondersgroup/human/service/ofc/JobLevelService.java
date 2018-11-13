@@ -23,6 +23,7 @@ import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.ofc.Degree;
 import com.wondersgroup.human.bo.ofc.JobLevel;
+import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.vo.ofc.JobLevelVO;
 
 /** 
@@ -54,4 +55,13 @@ public interface JobLevelService extends GenericService<JobLevel>{
 	 * @see com.wondersgroup.framework.core.service.GenericService#delete(com.wondersgroup.framework.core.bo.GenericEntity)
 	 */
 	void delete(JobLevel entity);
+	
+	/**
+	 * 
+	 * @Title: getAllPost
+	 * @Description: 查询人员职级
+	 * @param entity 
+	 * @see com.wondersgroup.framework.core.service.GenericService#getAllPost(com.wondersgroup.framework.core.bo.GenericEntity)
+	 */
+	public JobLevel getJobLevelByServantId(String id);
 }

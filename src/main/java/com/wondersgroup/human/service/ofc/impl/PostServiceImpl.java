@@ -16,11 +16,11 @@ package com.wondersgroup.human.service.ofc.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.bo.Sorts;
@@ -28,8 +28,6 @@ import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
-import com.wondersgroup.human.bo.ofc.Degree;
-import com.wondersgroup.human.bo.ofc.Education;
 import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.repository.ofc.PostRepository;
@@ -146,5 +144,23 @@ public class PostServiceImpl extends GenericServiceImpl<Post> implements PostSer
 			servantService.update(servant);
 		}
 		super.delete(entity);
+	}
+
+	/** 
+	 * @see com.wondersgroup.human.service.ofc.PostService#getAllPost(java.lang.String) 
+	 */
+	@Override
+	public List<Post> getAllPost(String id) {
+		CodeInfo tenureCode = dictableService.getCodeInfoByCode("2", "DM007");
+		
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(Post.class);
+		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");
+		s.add(Restrictions.eq("s.id", id));
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		detachedcriteria.add(Restrictions.eq("tenureStatus.id", tenureCode.getId()));
+		
+		List<Post> list = this.findByCriteria(detachedcriteria);
+		
+		return list;
 	}
 }

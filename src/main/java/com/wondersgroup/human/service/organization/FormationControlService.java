@@ -62,24 +62,24 @@ public interface FormationControlService extends GenericService<FormationControl
 	 * @Title: queryJudgePostNum
 	 * @Description: 检验职务人数
 	 * @param organId 组织节点ID
-	 * @param PostCode 职务编码
+	 * @param postLvlCode 职级编码
 	 * @return
 	 * @throws BusinessException
 	 * @return: boolean
 	 */
-	JudgePostResult queryJudgePostNum(String organId, String PostCode) throws BusinessException;
+	JudgePostResult queryJudgePostNum(String organId, String postLvlCode) throws BusinessException;
 	
 	/**
 	 * @Title: judgePostNum
 	 * @Description: 检验职务人数
 	 * @param organId 组织节点ID
-	 * @param PostCode 职务编码
+	 * @param postLvlCode 职级编码
 	 * @param humanNum 人数
 	 * @return
 	 * @throws BusinessException
 	 * @return: boolean
 	 */
-	JudgePostResult queryJudgePostNum(String organId, String PostCode, Integer humanNum) throws BusinessException;
+	JudgePostResult queryJudgePostNum(String organId, String postLvlCode, Integer humanNum) throws BusinessException;
 	
 	/**
 	 * @Title: executeLockIntoFormationNum
@@ -162,25 +162,25 @@ public interface FormationControlService extends GenericService<FormationControl
 	 * @Title: executeLockPostIntoNum 
 	 * @Description: 锁定职务调入数
 	 * @param organId 组织ID
-	 * @param PostCode 职务编码
+	 * @param postLvlCode 职级编码
 	 * @param isLowToHigh 是否高职低配
 	 * @throws BusinessException
 	 * @return: void
 	 */
-	void executeLockPostIntoNum(String organId, String PostCode, Boolean isLowToHigh) throws BusinessException;
+	void executeLockPostIntoNum(String organId, String postLvlCode, Boolean isLowToHigh) throws BusinessException;
 	
 	/**
 	 * 
 	 * @Title: executeLockPostIntoNum 
 	 * @Description: 锁定职务调入数
 	 * @param organId 组织ID
-	 * @param PostCode 职务编码
+	 * @param postLvlCode 职级编码
 	 * @param humanNum 人数
 	 * @param isLowToHigh 是否高职低配
 	 * @throws BusinessException
 	 * @return: void
 	 */
-	void executeLockPostIntoNum(String organId, String PostCode, Integer humanNum, Boolean isLowToHigh)
+	void executeLockPostIntoNum(String organId, String postLvlCode, Integer humanNum, Boolean isLowToHigh)
 			throws BusinessException;
 	
 	/**
@@ -188,26 +188,26 @@ public interface FormationControlService extends GenericService<FormationControl
 	 * @Title: executeUnlockPostIntoNum 
 	 * @Description: 解锁职务调入数
 	 * @param organId
-	 * @param PostCode
+	 * @param postLvlCode
 	 * @param isLowToHigh
 	 * @throws BusinessException
 	 * @return: void
 	 */
 	
-	void executeUnlockPostIntoNum(String organId, String PostCode, Boolean isLowToHigh) throws BusinessException;
+	void executeUnlockPostIntoNum(String organId, String postLvlCode, Boolean isLowToHigh) throws BusinessException;
 	
 	/**
 	 * 
 	 * @Title: executeUnlockPostIntoNum 
 	 * @Description: 解锁职务调入数
 	 * @param organId
-	 * @param PostCode
+	 * @param postLvlCode
 	 * @param humanNum
 	 * @param isLowToHigh
 	 * @throws BusinessException
 	 * @return: void
 	 */
-	void executeUnlockPostIntoNum(String organId, String PostCode, Integer humanNum, Boolean isLowToHigh)
+	void executeUnlockPostIntoNum(String organId, String postLvlCode, Integer humanNum, Boolean isLowToHigh)
 			throws BusinessException;
 	
 	/**
@@ -215,25 +215,25 @@ public interface FormationControlService extends GenericService<FormationControl
 	 * @Title: executeLockPostOutNum 
 	 * @Description: 锁职务调出数
 	 * @param organId
-	 * @param PostCode
+	 * @param postLvlCode
 	 * @param isLowToHigh
 	 * @throws BusinessException
 	 * @return: void
 	 */
-	void executeLockPostOutNum(String organId, String PostCode, Boolean isLowToHigh) throws BusinessException;
+	void executeLockPostOutNum(String organId, String postLvlCode, Boolean isLowToHigh) throws BusinessException;
 	
 	/**
 	 * 
 	 * @Title: executeLockPostOutNum 
 	 * @Description: 锁职务调出数
 	 * @param organId
-	 * @param PostCode
+	 * @param postLvlCode
 	 * @param humanNum
 	 * @param isLowToHigh
 	 * @throws BusinessException
 	 * @return: void
 	 */
-	void executeLockPostOutNum(String organId, String PostCode, Integer humanNum, Boolean isLowToHigh)
+	void executeLockPostOutNum(String organId, String postLvlCode, Integer humanNum, Boolean isLowToHigh)
 			throws BusinessException;
 	
 	/**
@@ -241,34 +241,38 @@ public interface FormationControlService extends GenericService<FormationControl
 	 * @Title: executeUnlockPostOutNum 
 	 * @Description: 解锁职务调出数
 	 * @param organId
-	 * @param PostCode
+	 * @param postLvlCode
 	 * @param isLowToHigh
 	 * @throws BusinessException
 	 * @return: void
 	 */
-	void executeUnlockPostOutNum(String organId, String PostCode, Boolean isLowToHigh) throws BusinessException;
+	void executeUnlockPostOutNum(String organId, String postLvlCode, Boolean isLowToHigh) throws BusinessException;
 	
 	/**
 	 * 
 	 * @Title: executeUnlockPostOutNum 
 	 * @Description: 解锁职务调出数
 	 * @param organId
-	 * @param PostCode
+	 * @param postLvlCode
 	 * @param humanNum
 	 * @param isLowToHigh
 	 * @throws BusinessException
 	 * @return: void
 	 */
-	void executeUnlockPostOutNum(String organId, String PostCode, Integer humanNum, Boolean isLowToHigh)
+	void executeUnlockPostOutNum(String organId, String postLvlCode, Integer humanNum, Boolean isLowToHigh)
 			throws BusinessException;
 	
+	/*入职编*/
 	void executeIntoFormation(String organId);
 	void executeIntoFormation(String organId, Integer humanNum);
+	/*出职编*/
 	void executeOutFormation(String organId);
 	void executeOutFormation(String organId, Integer humanNum);
 	
-	void executeIntoPost(String organId, String PostCode, Boolean isLowToHigh);
-	void executeIntoPost(String organId, String PostCode, Boolean isLowToHigh, Integer humanNum);
-	void executeOutPost(String organId, String PostCode, Boolean isLowToHigh);
-	void executeOutPost(String organId, String PostCode, Boolean isLowToHigh, Integer humanNum);
+	/*入职编*/
+	void executeIntoPost(String organId, String postLvlCode, Boolean isLowToHigh);
+	void executeIntoPost(String organId, String postLvlCode, Boolean isLowToHigh, Integer humanNum);
+	/*出职编*/
+	void executeOutPost(String organId, String postLvlCode, Boolean isLowToHigh);
+	void executeOutPost(String organId, String postLvlCode, Boolean isLowToHigh, Integer humanNum);
 }

@@ -43,7 +43,7 @@
 								<smart:tableItem field="loginTimeStr" width=".1">登录时间</smart:tableItem>
 								<smart:tableItem field="ipAddress" width=".1">IP地址</smart:tableItem>
 								<smart:tableItem field="browser" width=".2">浏览器信息</smart:tableItem>
-								<smart:tableItem field="errorInfo" width=".2">错误信息</smart:tableItem>
+								<smart:tableItem field="errorInfo" width=".2">提示信息</smart:tableItem>
 							</tr>
 						</smart:table>
 					</smart:gridColumn>

@@ -1,12 +1,8 @@
 
 package com.wondersgroup.human.repository.record;
 
-import java.util.Map;
-
-import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.GenericRepository;
 import com.wondersgroup.human.bo.record.HumanKeepRecord;
-import com.wondersgroup.human.vo.record.HumanKeepRecordVO;
 
 /**
  * @ClassName: HumanKeepRecordDAO
@@ -19,5 +15,4 @@ import com.wondersgroup.human.vo.record.HumanKeepRecordVO;
  */
 public interface HumanKeepRecordDAO extends GenericRepository<HumanKeepRecord> {
 	
-	Page<HumanKeepRecordVO> queryServantKeepRecord(Map<String, Object> filter, Integer pageNumber, Integer pageSize);
 }

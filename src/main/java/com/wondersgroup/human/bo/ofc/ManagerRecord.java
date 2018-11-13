@@ -95,9 +95,13 @@ public class ManagerRecord extends GenericEntity {
 	@Transient
 	public static final String HUMAN_GZDL  = "HUMAN_GZDL";
 	
-	//人事管理类型：参公交流
+	//人事管理类型：参公交流调入
 	@Transient
-	public static final String HUMAN_CGJL  = "HUMAN_CGJL";
+	public static final String HUMAN_CGDR  = "HUMAN_CGDR";
+	
+	//人事管理类型：参公交流调出
+	@Transient
+	public static final String HUMAN_CGDC  = "HUMAN_CGDC";
 	
 	//人事管理类型：职务变动
 	@Transient

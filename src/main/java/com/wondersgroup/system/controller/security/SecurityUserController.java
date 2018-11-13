@@ -15,12 +15,17 @@
 
 package com.wondersgroup.system.controller.security;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeanUtils;
@@ -42,8 +47,10 @@ import com.wondersgroup.framework.organization.service.PositionService;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.dto.UserDTO;
 import com.wondersgroup.framework.security.service.UserService;
+import com.wondersgroup.framework.security.vo.ResourceVO;
 import com.wondersgroup.framework.security.vo.UserQueryVO;
 import com.wondersgroup.framework.security.vo.UserVO;
+import com.wondersgroup.framework.shiro.session.SessionManager;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.util.StringUtils;
 
@@ -67,6 +74,8 @@ public class SecurityUserController extends GenericController {
 	
 	private final static String SECURITY_USER_QUERY_VIEW = "security/user/querySecurityUserView";
 	
+	private final static String SECURITY_USER_ONLINE_VIEW = "security/user/querySecurityOnlineView";
+	
 	@Value("#{system['default.security.user.password']}")
 	private String defaultPassword;
 	
@@ -81,6 +90,28 @@ public class SecurityUserController extends GenericController {
 	
 	@Autowired
 	OrganNodeService organNodeService;
+	
+	@Autowired
+	SessionManager sessionManager;
+	
+	@RequestMapping("/online")
+	public String querySecurityUserOnline() {
+		return SECURITY_USER_ONLINE_VIEW;
+	}
+	
+	@RequestMapping("/online/page")
+	public Page<UserVO> querySecurityUserOnline(String loginName, Integer limit, Integer page) {
+		List<UserVO> reuslt = new ArrayList<UserVO>();
+		SessionDAO sessionDAO = sessionManager.getSessionDAO();
+		Collection<?> sessions = sessionDAO.getActiveSessions();
+		for (Object session : sessions) {
+/*			if (session instanceOf(Session.class)) {
+				
+			}
+			logger.debug("SESSION:" + session.getHost());*/
+		}
+		return new Page<UserVO>(page, limit, sessions.size(),limit, reuslt);
+	}
 	
 	@RequestMapping("/info/edit")
 	public String editSecurityUserInfo(Model model, UserDTO dto) {

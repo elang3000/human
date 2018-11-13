@@ -32,9 +32,16 @@ import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
+import com.wondersgroup.framework.util.EventManager;
+import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.OutMgr;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.ZhuanRenKLBOutMgr;
+import com.wondersgroup.human.bo.record.HumanKeepRecord;
+import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
+import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
+import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
+import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
 import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.ZhuanRenKLBOutMgrService;
@@ -120,7 +127,14 @@ public class ZhuanRenKLBOutMgrServiceImpl extends GenericServiceImpl<ZhuanRenKLB
 			out.setProposeType(temp.getProposeType());//提出调动类型
 			out.setRemark(temp.getRemark());//调出备注
 			outMgrService.save(out);
-
+			//进出管理
+			ManagerRecordDTO dto = new ManagerRecordDTO(temp.getServant().getId(),ManagerRecord.HUMAN_KLZC);
+			ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
+			EventManager.send(event);
+			//备案管理
+			HumankeepRecordDTO dto2 = new HumankeepRecordDTO(temp.getServant().getId(),HumanKeepRecord.KEEP_KLZC);
+			ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(dto2);	
+			EventManager.send(event2);
 			//发送通知
 			String title = messageSource.getMessage("zhuanRenTitle", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
 			String content = messageSource.getMessage("zhuanRenContent", new Object[]{temp.getServant().getName()}, Locale.CHINESE);

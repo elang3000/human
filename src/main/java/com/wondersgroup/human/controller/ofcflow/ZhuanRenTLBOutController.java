@@ -169,7 +169,7 @@ public class ZhuanRenTLBOutController extends GenericController{
 	@RequestMapping("/checkServant")
 	public AjaxResult checkServant(String name,String cardNo){
 		AjaxResult result = new AjaxResult(false);
-		result.setMessage("系统中不存在该公务员，无法发起转任申请！");
+		result.setMessage("本单位中不存在该公务员，无法发起转任申请！");
 		try {
 			DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
 			detachedCriteria.add(Restrictions.eq("name", name));
@@ -214,7 +214,7 @@ public class ZhuanRenTLBOutController extends GenericController{
 					map.put("code", "1");
 					result.setData(map);
 					result.setSuccess(true);
-					result.setMessage("系统中存在该人员，请点击提交后录入信息发起转出流程！");
+					result.setMessage("本单位中存在该人员，请点击提交后录入信息发起转出流程！");
 				}
 			}
 		} catch (Exception e) {

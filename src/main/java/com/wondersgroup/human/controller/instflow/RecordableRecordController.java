@@ -143,7 +143,7 @@ public class RecordableRecordController extends GenericController{
 				PublicInstitution publicInstitution = publicInstitutionService.load(pId);
 				boolean flag = recordableService.operationPublicFlag(publicInstitution);
 				if (flag) {
-					//throw new BusinessException("当前用户正在离退备案处理中，不能重复提交！");
+					throw new BusinessException("当前用户正在离退备案处理中，不能重复提交！");
 				}
 				
 				

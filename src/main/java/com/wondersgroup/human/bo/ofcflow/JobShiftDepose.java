@@ -201,21 +201,21 @@ public class JobShiftDepose extends GenericEntity {
 	
 	@Column(name = "LOWTOHIGH")
 	@org.hibernate.annotations.Type(type = "yes_no")
-	private boolean lowToHigh;
+	private Boolean lowToHigh;
 
 	
 	
 
 
 	
-	public boolean isLowToHigh() {
+	public Boolean getLowToHigh() {
 		
 		return lowToHigh;
 	}
 
 
 	
-	public void setLowToHigh(boolean lowToHigh) {
+	public void setLowToHigh(Boolean lowToHigh) {
 		
 		this.lowToHigh = lowToHigh;
 	}

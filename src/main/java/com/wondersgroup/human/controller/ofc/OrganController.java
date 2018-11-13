@@ -1,3 +1,4 @@
+
 package com.wondersgroup.human.controller.ofc;
 
 import java.util.ArrayList;
@@ -9,9 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.framework.controller.GenericController;
+import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.service.OrganizationService;
+import com.wondersgroup.framework.organization.vo.OrganNodeVO;
 import com.wondersgroup.framework.util.StringUtils;
 
 /**
@@ -67,4 +71,12 @@ public class OrganController extends GenericController {
 		return treeData;
 	}
 	
+	@RequestMapping("/info/page")
+	@ResponseBody
+	public Page<OrganNodeVO> queryOrganNode(String organTreeId, String name, Integer page, Integer limit) {
+		List<String> organNodeTypeCode = new ArrayList<String>();
+		organNodeTypeCode.add(CommonConst.ORGAN_TYPE_D_CLASS_CODE);
+		organNodeTypeCode.add(CommonConst.ORGAN_TYPE_UNIT_CODE);
+		return organizationService.queryOrganNodeByType(organTreeId, name, organNodeTypeCode, page, limit);
+	}
 }

@@ -115,7 +115,7 @@
 					});
 				}else if($("#status").val()=="2"){
 					smart.message({
-						message : "系统中不存在该公务员，无法发起调出申请！"
+						message : "本单位中不存在该公务员，无法发起调出申请！"
 						,type : 'W' //S保存  I问号  W感叹号 E错误
 					});
 				}else if($("#status").val()=="4"){

@@ -95,7 +95,7 @@
 										</a>	
 
 									{{#  if(d.assessmentType=="1"){ }}
-										<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="editPercent"  title="编辑年度考核结果">
+										<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="editPercent"  title="编辑拟优秀人数">
 											<i class="fa fa-edit"></i>
 										</a>
  									{{#  } }}

@@ -1,17 +1,6 @@
 
 package com.wondersgroup.human.controller.ofcflow;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.wondersgroup.common.contant.FlowBusTypeConstant;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
@@ -35,8 +24,19 @@ import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.JobShiftDeposeService;
 import com.wondersgroup.human.service.ofcflow.JobShiftService;
 import com.wondersgroup.human.service.organization.FormationControlService;
-import com.wondersgroup.human.vo.ofcflow.JobShiftVO;
 import com.wondersgroup.human.vo.organization.JudgePostResult;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -122,6 +122,7 @@ public class JobShiftController extends GenericController {
 		String orgId = orgNode.getId();
 		model.addAttribute("orgId", orgId);
 		return JOBCHANGE_INDEX_PAGE;
+//		return JOBCHANGE_HUMANPICK_PAGE;
 	}
 
 	/**
@@ -132,21 +133,47 @@ public class JobShiftController extends GenericController {
 	 */
 	@RequestMapping("/indexData")
     @ResponseBody
-	public Page<JobShiftVO> jobChangeIndexData(Integer page, Integer limit){
+	public Page<Map> jobChangeIndexData(String name,Integer page,String jobChangeType, Integer limit){
         OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
         String orgId = orgNode.getId();
-        Page<JobShift> formRecordData = this.jobShiftService.getFormRecordData(orgId, null, null, page, limit);
-        return  JobShiftVO.JobShift2VO(formRecordData);
+        Page<Map> formRecordData = this.jobShiftService.getFormRecordData(orgId, jobChangeType, name, page, limit);
+        return  formRecordData;
     }
 
     @RequestMapping("/detailView")
-    public String jobChangeView(Model model,String id){
-		//TODO
-		//职务变动代码DM006 职务晋升
-		CodeInfo fineCodeInfo = dictableService.getCodeInfoByCode("2", "DM006");
-        List<CodeInfo> codeInfos = dictableService.findCodeInfoByCodeType("DM006", "2");
+    public String jobChangeView(Model model,String id,String postTenureChangeCode){
 
-        return null;
+		//职务变动代码DM006 职务晋升
+        List<CodeInfo> promoteCodes = dictableService.findCodeInfoByCodeType("DM006", "2");
+		List<String> codeStrs = new ArrayList<>();
+        promoteCodes.forEach(
+			codeInfo->{
+				codeStrs.add(codeInfo.getId());
+			}
+		);
+		if(codeStrs.contains(postTenureChangeCode)){
+			return JOBCHANGE_PROMOTE_PAGE;
+		}
+        //职务变动代码 降职
+		CodeInfo demoteCode = dictableService.getCodeInfoByCode("5", "DM006");
+		if(demoteCode.getId().equals(postTenureChangeCode)){
+			return "2";
+		}
+		//职务变动代码 免职
+		List<CodeInfo> deposeCodes = dictableService.findCodeInfoByCodeType("DM006", "4");
+		List<String> deposeCodeStrs = new ArrayList<>();
+		deposeCodes.forEach(codeInfo -> {
+			deposeCodeStrs.add(codeInfo.getId());
+		});
+		if (deposeCodeStrs.contains(postTenureChangeCode)){
+			return "3";
+		}
+		//职务变动代码 轮岗
+		CodeInfo shiftCode = dictableService.getCodeInfoByCode("6", "DM006");
+		if(shiftCode.getId().equals(postTenureChangeCode)){
+			return "4";
+		}
+		throw new BusinessException("没有对应的职务变动类型");
 	}
 
 	/**
@@ -485,11 +512,11 @@ public class JobShiftController extends GenericController {
 			//YYDTODO 假如流程取消,则让出编制
 			OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
 			String orgId = orgNode.getId();
-			
+			Post prePost = postService.load(jobShiftDepose.getPost().getId());
 			//旧职位
-			CodeInfo formerPost = codeInfoService.load(jobShiftDepose.getPost().getPostCode().getId());
-			//FIXME 锁定职位调出编控
-			formationControlService.executeLockPostOutNum(orgId, formerPost.getCode(), jobShiftDepose.getPost().getIsLowToHigh());
+			CodeInfo formerPost = codeInfoService.load(prePost.getPostCode().getId());
+			//YYDTODO 锁定职位调出编控
+//			formationControlService.executeLockPostOutNum(orgId, formerPost.getCode(), jobShiftDepose.getPost().getIsLowToHigh());
 			
 			
 			if (StringUtils.isBlank(result) || (!FlowRecord.PASS.equals(result)

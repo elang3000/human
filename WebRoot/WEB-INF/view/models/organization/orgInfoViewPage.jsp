@@ -209,6 +209,28 @@
 								<smart:infoShowerLabel infoname="（空缺）科级（非领导）职数" infovalue="${orgFormation.vacancyNonLeaderSectionChiefLevelNumber}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
+						<smart:gridRow>		
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="供给关系尚未调入人数" infovalue="${orgFormation.notIntoNum}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="供给关系尚未调出人数" infovalue="${orgFormation.notOutNum}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="科级（领导）未调入数" infovalue="${orgFormation.notIntoSectionChiefNum}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>		
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="科级（领导）未调出数" infovalue="${orgFormation.notOutSectionChiefNum}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="科级（非领导）未调入数" infovalue="${orgFormation.notIntoDeputySectionChiefNum}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="科级（非领导）未调出数" infovalue="${orgFormation.notOutDeputySectionChiefNum}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
 						<smart:gridRow>
 							<smart:title title="三定方案附件" style="margin-top: 5px;" color="blue" />
 						</smart:gridRow>

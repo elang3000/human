@@ -109,7 +109,7 @@
 								<smart:gridColumn colPart="4">
 									<smart:singleSelect isAddDefaltOption="true"
 										name="dismissalChange.id" labelName="免职变动类别：" display="block"
-										url="dictquery/sub/code/DM006"
+										url="dictquery/sub/code/DM006/4"
 										initSelectedKey="${jobShiftDepose.dismissalChange.id}"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">

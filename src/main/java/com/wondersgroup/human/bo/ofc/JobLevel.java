@@ -15,6 +15,7 @@
 
 package com.wondersgroup.human.bo.ofc;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -57,6 +58,10 @@ public class JobLevel extends BaseJobLevel<JobLevel> {
 	@JoinColumn(name = "SH_A0524")
 	private CodeInfo status;
 	
+	@Column(name = "IS_LOW_TO_HIGH")
+	@org.hibernate.annotations.Type(type = "yes_no")
+	private Boolean isLowToHigh = false;
+	
 	public Servant getServant() {
 		
 		return servant;
@@ -77,4 +82,13 @@ public class JobLevel extends BaseJobLevel<JobLevel> {
 		this.status = status;
 	}
 	
+	public Boolean getIsLowToHigh() {
+		
+		return isLowToHigh;
+	}
+	
+	public void setIsLowToHigh(Boolean isLowToHigh) {
+		
+		this.isLowToHigh = isLowToHigh;
+	}
 }

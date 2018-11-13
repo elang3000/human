@@ -121,6 +121,9 @@
 					</smart:gridRow>
 					<smart:gridRow>
 						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="职级名称" infovalue="${d.jobLevelName}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
 							<smart:infoShowerLabel infoname="进入本单位日期" infovalue="${d.enterTheUnitDate}"></smart:infoShowerLabel>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">

@@ -132,7 +132,7 @@ public class AssessmentFlowCollectRepositoryImpl extends GenericRepositoryImpl<A
 	}
 
 	@Override
-	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org, Integer page, Integer limit) {
+	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org,Integer year, Integer page, Integer limit) {
 		StringBuilder sql=new StringBuilder();
 //		sql.append("select ct.id,pt.flow_status, ct.year,ct.season,ct.ASSESSMENT_TYPE,ct.REMARK,ct.DRAFT_OUTSTANDING_PERCENT,ct.CREATE_TIME,ct.STATUS ");
 //		sql.append("  from HUMAN_ASSESSMENT_FLOW_COLLECT ct ");
@@ -168,10 +168,16 @@ public class AssessmentFlowCollectRepositoryImpl extends GenericRepositoryImpl<A
 		sql.append("                and d.status = 1 ");
 		sql.append("              group by d.ASSESSMENT_FLOW_COLLECT) t1 ");
 		sql.append("    on ct.id = t1.collectId ");
+		if(year!=null){
+			sql.append(" where ct.year= :year ");
+		}
 		sql.append(" order by ct.ASSESSMENT_TYPE asc, ct.year desc, ct.season desc ");
 
 
 		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		if(year!=null){
+			queryObject.setParameter("year", year);
+		}
 	    queryObject.setParameter("orgId", org.getId());
 	    List listAll=queryObject.list();
 	 	queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);

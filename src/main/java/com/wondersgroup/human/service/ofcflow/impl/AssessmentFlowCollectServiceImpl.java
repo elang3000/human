@@ -139,7 +139,7 @@ public class AssessmentFlowCollectServiceImpl extends GenericServiceImpl<Assessm
 	}
 
 	@Override
-	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org, Integer page, Integer limit) {
+	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org,Integer year, Integer page, Integer limit) {
 //		StringBuilder sql=new StringBuilder();
 //		sql.append("select pt.flow_status, ct.*, pt.*, pt.flowrecord_id ");
 //		sql.append("  from HUMAN_ASSESSMENT_FLOW_COLLECT ct ");
@@ -147,7 +147,7 @@ public class AssessmentFlowCollectServiceImpl extends GenericServiceImpl<Assessm
 //		sql.append("               from HUMAN_ASSESSMENT_FLOW_UNIT_PERCENT t ");
 //		sql.append("              where t.orgnode = :orgId) pt ");
 //		sql.append("    on ct.id = pt.assessment_flow_collect ");
-		Page<AssessFlowUnitCollectVO> map=this.assessmentFlowCollectRepository.getCollectAndFlowStatus(org,page,limit);
+		Page<AssessFlowUnitCollectVO> map=this.assessmentFlowCollectRepository.getCollectAndFlowStatus(org,year,page,limit);
 		return map;
 	}
 	

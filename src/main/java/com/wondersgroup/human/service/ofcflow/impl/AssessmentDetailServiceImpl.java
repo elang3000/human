@@ -198,7 +198,7 @@ public class AssessmentDetailServiceImpl extends GenericServiceImpl<AssessmentDe
 		List<AssessmentDetail> currentUnitDetails = getCurrentUnitDetails(org,assessCollectId);
 		List<AssessmentDetail> allAssessDetails = getAllAssessStatusDetails(org,assessCollectId);
 		//假如考核单下所有人员数和已经考核的人员数相等,则考核已经完成
-		if(currentUnitDetails.size()==allAssessDetails.size()){
+		if(currentUnitDetails.size()==allAssessDetails.size()&&currentUnitDetails.size()!=0){
 			return true;
 		}else{
 			return false;

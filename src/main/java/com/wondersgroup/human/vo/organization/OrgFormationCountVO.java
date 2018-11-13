@@ -143,7 +143,7 @@ public class OrgFormationCountVO {
 			this.unitBasicSimpleName=orgFormation.getOrgInfo().getUnitBasicName();
 		
 		if(orgFormation.getApproveDate() !=null){
-			this.approveDate = new SimpleDateFormat("yyyy-MM-dd").format(orgFormation.getApplyDate());
+			this.approveDate = new SimpleDateFormat("yyyy-MM-dd").format(orgFormation.getApproveDate());
 		}
 		if(orgFormation.getUnitPlanningProperty()!= null){
 			this.unitPlanningProperty = orgFormation.getUnitPlanningProperty().getName();
@@ -285,9 +285,16 @@ public class OrgFormationCountVO {
 	
 	public Integer getStaffMembersNumber() {
 		//实有人数-处级实有-科级实有-科级非领导实有
-		return this.actualNumber-divisionChiefLevelNumber-sectionChiefLevelNumber-nonLeaderSectionChiefLevelNumber;
+		return getNumberNotNuLL(actualNumber)-getNumberNotNuLL(divisionChiefLevelNumber)-getNumberNotNuLL(sectionChiefLevelNumber)-getNumberNotNuLL(nonLeaderSectionChiefLevelNumber);
 	}
 
+	private Integer getNumberNotNuLL(Integer numb){
+		if(null!=numb){
+			return numb;
+		}else{
+			return 0;
+		}
+	}
 	
 	public void setStaffMembersNumber(Integer staffMembersNumber) {
 		

@@ -15,29 +15,6 @@
 
 package com.wondersgroup.human.controller.ofcflow;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.common.contant.FlowBusTypeConstant;
 import com.wondersgroup.framework.controller.AjaxResult;
@@ -66,6 +43,18 @@ import com.wondersgroup.human.vo.ofcflow.AssessFlowUnitCollectVO;
 import com.wondersgroup.human.vo.ofcflow.AssessmentDetailVO;
 import com.wondersgroup.human.vo.ofcflow.AssessmentFlowUnitPercentEditVO;
 import com.wondersgroup.human.vo.ofcflow.AssessmentFlowUnitPercentVO;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
  * @ClassName: AccessmentController
@@ -253,7 +242,7 @@ public class AssessmentFlowController extends GenericController {
 //		detachedCriteria.add(Restrictions.eq("removed", false));
 //		detachedCriteria.addOrder(Order.desc("createTime"));
 		OrganNode org = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-		Page<AssessFlowUnitCollectVO> collectAndFlowStatus = this.assessmentFlowCollectService.getCollectAndFlowStatus(org,page, limit);
+		Page<AssessFlowUnitCollectVO> collectAndFlowStatus = this.assessmentFlowCollectService.getCollectAndFlowStatus(org,year,page, limit);
 //        Page<AssessmentFlowCollect> pages = this.assessmentFlowCollectService.findByCriteria(detachedCriteria, page, limit);
 		return collectAndFlowStatus;
 	}
@@ -470,6 +459,8 @@ public class AssessmentFlowController extends GenericController {
 		model.addAttribute("seasonAlertStr",assessmentFlowCollect.getAssessmentType()==2?"季度考核完成将不能修改,":"");
 		model.addAttribute("orgId",orgId);
 		model.addAttribute("assessmentFlowCollect",assessmentFlowCollect);
+		List<AssessmentDetail> currentUnitDetails = assessmentDetailService.getCurrentUnitDetails(org,assessCollectId);
+		model.addAttribute("allSize", currentUnitDetails.size());
 		return ASSESS_UNITCHECK_INDEX_PAGE;
 	}
 	

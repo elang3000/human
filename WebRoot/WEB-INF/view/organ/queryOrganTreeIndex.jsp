@@ -50,7 +50,7 @@
 							<tr>
 								<smart:tableItem field="code" width=".2" sort="true">组织树编码</smart:tableItem>
 								<smart:tableItem field="name" width=".2" sort="true">组织树名称</smart:tableItem>
-								<smart:tableItem field="treeTypaName" width=".15">组织树类型</smart:tableItem>
+								<smart:tableItem field="treeTypeName" width=".15">组织树类型</smart:tableItem>
 								<smart:tableItem field="rootNodeName" width=".15">根节点名称</smart:tableItem>
 								<smart:tableItem field="description" width=".2">描述信息</smart:tableItem>
 								<smart:tableItem align="center" width=".1" toolbar="navListToolBar">操作</smart:tableItem>

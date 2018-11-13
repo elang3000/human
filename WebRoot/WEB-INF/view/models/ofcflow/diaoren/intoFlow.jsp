@@ -118,6 +118,9 @@
 						<smart:gridColumn colPart="4">
 							<smart:infoShowerLabel infoname="进入本单位时基层工作经历时间（月）" infovalue="${d.intoBasicWorkTime}"></smart:infoShowerLabel>
 						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="职级名称" infovalue="${d.jobLevelName}"></smart:infoShowerLabel>
+						</smart:gridColumn>
 					</smart:gridRow>
 					<c:if test="${isFlow}">
 						<c:if test="${d.status==6 }">

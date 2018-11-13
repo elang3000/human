@@ -87,8 +87,8 @@
 								<smart:tableItem field="departName" width=".1" sort="false">单位部门</smart:tableItem>
 								<smart:tableItem field="postName" width=".12" sort="false">职务名称</smart:tableItem>
 								<smart:tableItem field="postAttributeName" width=".12" sort="false">职务属性</smart:tableItem>
-								<smart:tableItem field="jobLevel" width=".1" sort="false">职级名称</smart:tableItem>
-								<smart:tableItem align="center" width="120" fixed="right" unresize="true"
+								<smart:tableItem field="jobLevel" width=".11" sort="false">职级名称</smart:tableItem>
+								<smart:tableItem align="center" width=".1" fixed="right" unresize="true"
 									toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar">

@@ -63,5 +63,5 @@ public interface AssessmentFlowCollectService extends GenericService<AssessmentF
 	 * @return
 	 * @return: List<Map<String,Object>>
 	 */
-	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org, Integer page, Integer limit);
+	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org,Integer year, Integer page, Integer limit);
 }

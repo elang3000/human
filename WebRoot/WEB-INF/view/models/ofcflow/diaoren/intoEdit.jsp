@@ -21,7 +21,7 @@
 			</smart:cardHead>
 			<smart:cardBody>
 				<smart:form id="editForm">
-					<smart:fromTokenTag/>
+					<smart:fromTokenTag />
 					<smart:textInput type="hidden" name="id" value="${d.id}"></smart:textInput>
 					<smart:textInput type="hidden" name="result" id="result"></smart:textInput>
 					<smart:gridRow>
@@ -29,13 +29,11 @@
 							<smart:gridRow>
 								<smart:gridColumn colPart="6">
 									<smart:textInput isNotNull="true" verify="required"
-										labelName="姓名：" name="name" id="name"
-										value="${d.name}"></smart:textInput>
+										labelName="姓名：" name="name" id="name" value="${d.name}"></smart:textInput>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
 									<smart:textInput isNotNull="true" verify="required"
-										labelName="身份证：" name="cardNo" 
-										id="cardNo" value="${d.cardNo}"></smart:textInput>
+										labelName="身份证：" name="cardNo" id="cardNo" value="${d.cardNo}"></smart:textInput>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
@@ -43,7 +41,8 @@
 									<smart:singleSelect isNotNull="true" verify="required"
 										name="sex.id" labelName="性别：" display="block"
 										initSelectedKey="${d.sex.id}"
-										url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true"></smart:singleSelect>
+										url="dictquery/sub/code/GBT_2261_1_2003"
+										isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
 									<smart:date style="aa" isNotNull="true" verify="required"
@@ -56,12 +55,14 @@
 									<smart:singleSelect isNotNull="true" verify="required"
 										name="nation.id" labelName="民族：" display="block"
 										initSelectedKey="${d.nation.id}" isSearch="true"
-										url="dictquery/sub/code/GBT_3304_1991" isAddDefaltOption="true"></smart:singleSelect>
+										url="dictquery/sub/code/GBT_3304_1991"
+										isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
 									<smart:singleSelect labelName="政治面貌：" name="politics.id"
-										initSelectedKey="${d.politics.id}" display="block" isSearch="true"
-										url="dictquery/sub/code/GBT_4762_1984" isAddDefaltOption="true"></smart:singleSelect>
+										initSelectedKey="${d.politics.id}" display="block"
+										isSearch="true" url="dictquery/sub/code/GBT_4762_1984"
+										isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
@@ -74,17 +75,26 @@
 								<smart:gridColumn colPart="6">
 									<smart:singleSelect labelName="健康状况：" name="health.id"
 										initSelectedKey="${d.health.id}" display="block"
-										url="dictquery/sub/code/GBT_2261_3_2003" isAddDefaltOption="true"></smart:singleSelect>
+										url="dictquery/sub/code/GBT_2261_3_2003"
+										isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<smart:continuousSelect verify="required" id="birthPlace" labelName="出生地：" inputName="birthPlace.id" codeTypeCode="GBT_2260_2007" inputVal="${d.birthPlace.id}" valType="ID" widthPercent="0.4" isSaveShowName="true" inputShowName="birthPlaceName"/>
+									<smart:continuousSelect verify="required" id="birthPlace"
+										labelName="出生地：" inputName="birthPlace.id"
+										codeTypeCode="GBT_2260_2007" inputVal="${d.birthPlace.id}"
+										valType="ID" widthPercent="0.4" isSaveShowName="true"
+										inputShowName="birthPlaceName" />
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<smart:continuousSelect verify="required" id="nativePlace" labelName="籍贯：" inputName="nativePlace.id" codeTypeCode="GBT_2260_2007" inputVal="${d.nativePlace.id}" valType="ID" widthPercent="0.4" isSaveShowName="true" inputShowName="nativePlaceName"/>
+									<smart:continuousSelect verify="required" id="nativePlace"
+										labelName="籍贯：" inputName="nativePlace.id"
+										codeTypeCode="GBT_2260_2007" inputVal="${d.nativePlace.id}"
+										valType="ID" widthPercent="0.4" isSaveShowName="true"
+										inputShowName="nativePlaceName" />
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:gridColumn>
@@ -103,7 +113,9 @@
 						value="${d.postName}"></smart:textInput>
 					<smart:gridRow>
 						<smart:gridColumn colPart="4">
-							<smart:textInput labelName="原工作单位:" name="formerUnitName" value="${d.formerUnitName}" isNotNull="true" verify="required" placeholder="原工作单位"></smart:textInput>
+							<smart:textInput labelName="原工作单位:" name="formerUnitName"
+								value="${d.formerUnitName}" isNotNull="true" verify="required"
+								placeholder="原工作单位"></smart:textInput>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
 							<smart:singleSelect id="postCode" isNotNull="true"
@@ -145,13 +157,22 @@
 								name="intoBasicWorkTime" value="${d.intoBasicWorkTime}"
 								display="block" type="text"></smart:numberInput>
 						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:singleSelect labelName="职级名称：" name="jobLevelCode.id"
+								display="block" url="dictquery/sub/code/GBT_12407_2008/1"
+								isAddDefaltOption="true" initSelectedKey="${d.jobLevelCode.id }"
+								verify="required" isNotNull="true" isSaveShowName="true"
+								inputShowName="jobLevelName" initCludeKey="[141,142,150,160]"></smart:singleSelect>
+						</smart:gridColumn>
 					</smart:gridRow>
 					<smart:gridRow>
 						<smart:title title="附件信息" style="margin-top: 5px;" color="blue" />
 					</smart:gridRow>
 					<smart:gridRow>
 						<smart:gridColumn colPart="1">
-							<smart:fileUpload accept="file" buttonName="附件" dataName="filePath" auto="false" name="filePathName" size="20000" multiple="true" number="7" data="${d.filePath}"/>
+							<smart:fileUpload accept="file" buttonName="附件"
+								dataName="filePath" auto="false" name="filePathName"
+								size="20000" multiple="true" number="7" data="${d.filePath}" />
 						</smart:gridColumn>
 					</smart:gridRow>
 					<smart:gridRow>
@@ -177,14 +198,14 @@
 	</smart:grid>
 	<smart:scriptHead models="table,form,layer,element,laydate,upload">
 		<smart:utils />
-		<smart:continuousSelectAction/>
+		<smart:continuousSelectAction />
 		<smart:buttonScriptAction>
 			goBack : function() {
 				var index=parent.layer.getFrameIndex(window.name);
 				parent.layer.close(index);
 			}
 		</smart:buttonScriptAction>
-		<smart:fileUploadUtils/>
+		<smart:fileUploadUtils />
 		<smart:dateRender id="birthDate" />
 		<smart:dateRender id="enterTheUnitDate" />
 		form.on('submit(save)', function (data) {//表单保存

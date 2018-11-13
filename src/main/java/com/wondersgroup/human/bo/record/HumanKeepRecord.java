@@ -26,8 +26,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.human.bo.ofc.Servant;
 
 /**
  * @ClassName: HumanKeepRecord
@@ -40,132 +43,68 @@ import com.wondersgroup.framework.dict.bo.CodeInfo;
  */
 @Entity(name = "HUMAN_KEEP_RECORD")
 public class HumanKeepRecord extends GenericEntity {
-	
-	//人事管理类型：公务员晋升
+	//备案类型：公务员调任调出
 	@Transient
-	public static final String SERVANT_PROMOTE  = "recordType01";
+	public static final String KEEP_DRDC  = "KEEP_DRDC";
+	
+	//备案类型：同类别转任转出
+	@Transient
+	public static final String KEEP_TLZC  = "KEEP_TLZC";
+	
+	//备案类型：跨类别转任转出
+	@Transient
+	public static final String KEEP_KLZC  = "KEEP_KLZC";
+	
+	//备案类型：参公交流调出
+	@Transient
+	public static final String KEEP_CGDC  = "KEEP_CGDC";
+	
+	//备案类型：借调
+	@Transient
+	public static final String KEEP_JD  = "KEEP_JD";
+	
+	//备案类型：挂职锻炼
+	@Transient
+	public static final String KEEP_GZDL  = "KEEP_GZDL";
 		
-	//人事管理类型：公务员免职
+	//备案类型：公务员辞职
 	@Transient
-	public static final String SERVANT_DEPOSE = "recordType02";
+	public static final String KEEP_CZ  = "KEEP_CZ";
 	
-	//人事管理类型：公务员降职
-	@Transient 
-	public static final String SERVANT_DEMOTE = "recordType03";
-	
-	//人事管理类型：公务员轮岗
+	//备案类型：公务员死亡
 	@Transient
-	public static final String SERVANT_WORK_SHIFT = "recordType04";
-		
-	//人事管理类型：公务员辞职
-	@Transient
-	public static final String SERVANT_RESIGN = "recordType05";
+	public static final String KEEP_SW  = "KEEP_SW";
 	
-	//人事管理类型：公务员处分
-	@Transient 
-	public static final String SERVANT_PUNISH = "recordType06";
-	
-	//人事管理类型：公务员辞退
+	//备案类型：公务员处分
 	@Transient
-	public static final String SERVANT_DISMISS = "recordType07";
-		
-	//人事管理类型：公务员退休
-	@Transient
-	public static final String SERVANT_RETIRE = "recordType08";
-	
-	//人事管理类型：公务员死亡
-	@Transient 
-	public static final String SERVANT_DEATH = "recordType09";
-	
-	//人事管理类型：事业人员晋升
-	@Transient
-	public static final String INSTITUTION_PROMOTE  = "recordType10";
-		
-	//人事管理类型：事业人员免职
-	@Transient
-	public static final String INSTITUTION_DEPOSE = "recordType11";
-	
-	//人事管理类型：事业人员降职
-	@Transient 
-	public static final String INSTITUTION_DEMOTE = "recordType12";
-	
-	//人事管理类型：事业人员轮岗
-	@Transient
-	public static final String INSTITUTION_WORK_SHIFT = "recordType13";
-		
-	//人事管理类型：事业人员辞职
-	@Transient
-	public static final String INSTITUTION_RESIGN = "recordType14";
-	
-	//人事管理类型：事业人员处分
-	@Transient 
-	public static final String INSTITUTION_PUNISH = "recordType15";
-	
-	//人事管理类型：事业人员辞退
-	@Transient
-	public static final String INSTITUTION_DISMISS = "recordType16";
-		
-	//人事管理类型：事业人员退休
-	@Transient
-	public static final String INSTITUTION_RETIRE = "recordType17";
-	
-	//人事管理类型：事业人员死亡
-	@Transient 
-	public static final String INSTITUTION_DEATH = "recordType18";
-	
-	//人事管理类型：参公人员晋升
-	@Transient
-	public static final String REFERENCE_SERVANT_PROMOTE  = "recordType19";
-		
-	//人事管理类型：参公人员免职
-	@Transient
-	public static final String REFERENCE_SERVANT_DEPOSE = "recordType20";
-	
-	//人事管理类型：参公人员降职
-	@Transient 
-	public static final String REFERENCE_SERVANT_DEMOTE = "recordType21";
-	
-	//人事管理类型：参公人员轮岗
-	@Transient
-	public static final String REFERENCE_SERVANT_WORK_SHIFT = "recordType22";
-		
-	//人事管理类型：参公人员辞职
-	@Transient
-	public static final String REFERENCE_SERVANT_RESIGN = "recordType23";
-	
-	//人事管理类型：参公人员处分
-	@Transient 
-	public static final String REFERENCE_SERVANT_PUNISH = "recordType24";
-	
-	//人事管理类型：参公人员辞退
-	@Transient
-	public static final String REFERENCE_SERVANT_DISMISS = "recordType25";
-		
-	//人事管理类型：参公人员退休
-	@Transient
-	public static final String REFERENCE_SERVANT_RETIRE = "recordType26";
-	
-	//人事管理类型：参公人员死亡
-	@Transient 
-	public static final String REFERENCE_SERVANT_DEATH = "recordType27";
+	public static final String KEEP_CF  = "KEEP_CF";
 
 	private static final long serialVersionUID = -6690866633213380395L;
 
 	/**
-	 * @fieldName: humanId
+	 * @fieldName: humanID
 	 * @fieldType: java.lang.String
-	 * @Description: 人事信息ID
+	 * @Description: 人事信息ID。
 	 */
-	@Column(name = "HUMAN_ID", length = 40, nullable = false, insertable = true, updatable = false)
-	private String humanId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "SERVANT_ID")
+	private Servant servant;
 
 	/**
-	 * @fieldName: unitType
+	 * @fieldName: humanID
 	 * @fieldType: java.lang.String
-	 * @Description: 人事单位类型
+	 * @Description: 当时单位ID。
 	 */
-	@Column(name = "UNIT_TYPE", length = 40, insertable = true, updatable = false)
-	private String unitType;
+	@Column(name = "ORGAN_ID", length = 120)
+	private String organId;
+	
+	/**
+	 * @fieldName: humanID
+	 * @fieldType: java.lang.String
+	 * @Description: 当时单位名。
+	 */
+	@Column(name = "ORGAN_NAME", length = 120)
+	private String organName;
 
 	/**
 	 * @fieldName: recordType
@@ -175,6 +114,30 @@ public class HumanKeepRecord extends GenericEntity {
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	@JoinColumn(name = "RECORD_TYPE")
 	private CodeInfo recordType;
+
+	/**
+	 * @fieldName: recordTime
+	 * @fieldType: java.util.DATE
+	 * @Description: 记录时间。
+	 */
+	@Column(name = "RECORD_TIME")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	private Date recordTime;
+	
+	/**
+	 * @return the recordTime
+	 */
+	public Date getRecordTime() {
+		return recordTime;
+	}
+
+	/**
+	 * @param recordTime the recordTime to set
+	 */
+	public void setRecordTime(Date recordTime) {
+		this.recordTime = recordTime;
+	}
 
 	/**
 	 * @fieldName: businessEntityId
@@ -191,15 +154,6 @@ public class HumanKeepRecord extends GenericEntity {
 	 */
 	@Column(name = "BUSINESS_ENTITY_TABLE", length = 40, insertable = true, updatable = false)
 	private String businessEntityTable;
-
-	/**
-	 * @fieldName: returned
-	 * @fieldType: java.lang.String
-	 * @Description: 是否退回备案操作
-	 */
-	@ManyToOne(fetch = FetchType.LAZY, optional = true)
-	@JoinColumn(name = "RETURNED")
-	private CodeInfo returned;
 
 	/**
 	 * @fieldName: description
@@ -258,34 +212,46 @@ public class HumanKeepRecord extends GenericEntity {
 	 */
 	@Column(name = "EXT6")
 	private Integer ext6;
-
 	/**
-	 * @return the humanId
+	 * @return the servant
 	 */
-	public String getHumanId() {
-		return humanId;
+	public Servant getServant() {
+		return servant;
 	}
 
 	/**
-	 * @param humanId
-	 *            the humanId to set
+	 * @param servant the servant to set
 	 */
-	public void setHumanId(String humanId) {
-		this.humanId = humanId;
+	public void setServant(Servant servant) {
+		this.servant = servant;
 	}
 
 	/**
-	 * @return the unitType
+	 * @return the organId
 	 */
-	public String getUnitType() {
-		return unitType;
+	public String getOrganId() {
+		return organId;
 	}
 
 	/**
-	 * @param unitType the unitType to set
+	 * @param organId the organId to set
 	 */
-	public void setUnitType(String unitType) {
-		this.unitType = unitType;
+	public void setOrganId(String organId) {
+		this.organId = organId;
+	}
+
+	/**
+	 * @return the organName
+	 */
+	public String getOrganName() {
+		return organName;
+	}
+
+	/**
+	 * @param organName the organName to set
+	 */
+	public void setOrganName(String organName) {
+		this.organName = organName;
 	}
 
 	/**
@@ -331,21 +297,6 @@ public class HumanKeepRecord extends GenericEntity {
 	 */
 	public void setBusinessEntityTable(String businessEntityTable) {
 		this.businessEntityTable = businessEntityTable;
-	}
-
-	/**
-	 * @return the returned
-	 */
-	public CodeInfo getReturned() {
-		return returned;
-	}
-
-	/**
-	 * @param returned
-	 *            the returned to set
-	 */
-	public void setReturned(CodeInfo returned) {
-		this.returned = returned;
 	}
 
 	/**

@@ -92,31 +92,21 @@
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
 									<smart:singleSelect id="postCode" isAddDefaltOption="true"
-										name="newPostCode.id" labelName="职务名称：" display="block"
+										name="newPostCode.id" labelName="职务名称：" display="block"  initCludeKey="[220A,220B,221A,221S,221T,224A]"
 										url="dictquery/sub/code/GBT_12403_1990" verify="required" initSelectedKey="${jobShift.newPostCode.id}"
 										isNotNull="true" isSaveShowName="true"
 										inputShowName="newPostName"></smart:singleSelect>
 								</smart:gridColumn>
-								<smart:gridColumn colPart="8">
-<%-- 									<smart:singleSelect id="postCode" isAddDefaltOption="true"
-										name="newJobLevel.id" labelName="职务级别：" display="block" initSelectedKey="${jobShift.newJobLevel.id}"
-										url="dictquery/sub/code/GBT_12407_2008" verify="required"
-										isNotNull="true"></smart:singleSelect> --%>
-									<smart:continuousSelect labelName="职级名称：" inputName="newJobLevel.id" codeTypeCode="GBT_12407_2008" inputVal="${jobShift.newJobLevel.id}" valType="ID" 
-									verify="required" isNotNull="true" widthPercent="0.33" isSaveShowName="true" inputShowName="name" allOrLast="last"/>
+								<smart:gridColumn colPart="4">
+									<smart:singleSelect labelName="职级名称：" name="newJobLevel.id" display="block" url="dictquery/sub/code/GBT_12407_2008/1" isAddDefaltOption="true" initSelectedKey="${jobShift.newJobLevel.id}"  initCludeKey="[141,142,150,160]"
+														verify="required" isNotNull="true" isSaveShowName="true" inputShowName="name"></smart:singleSelect>
+								</smart:gridColumn>
+								<smart:gridColumn colPart="4">
+									<smart:singleSelect id="attribute" isAddDefaltOption="true" name="newPostAttribute.id" labelName="职务属性："
+														display="block" url="dictquery/sub/code/DM049" initSelectedKey="${jobShift.newPostAttribute.id }" verify="required" isNotNull="true"></smart:singleSelect>
 								</smart:gridColumn>
 							</smart:gridRow>
 
-							<smart:gridRow>
-								<smart:gridColumn colPart="4">
-									<%-- <smart:continuousSelect id="attribute" labelName="职务属性："
-										inputName="newPostAttribute.id" codeTypeCode="DM049"
-										inputVal="${jobShift.newPostAttribute.id }" valType="ID" widthPercent="0.33333"
-										verify="required" isNotNull="true" /> --%>
-									<smart:singleSelect id="attribute" isAddDefaltOption="true" name="newPostAttribute.id" labelName="职务属性："  
-									display="block" url="dictquery/sub/code/DM049" initSelectedKey="${jobShift.newPostAttribute.id }" verify="required" isNotNull="true"></smart:singleSelect>
-								</smart:gridColumn>
-							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="10" colOffset="2">
 									<smart:fileUpload accept="file" buttonName="人员信息任免表"

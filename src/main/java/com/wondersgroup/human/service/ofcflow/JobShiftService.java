@@ -5,6 +5,7 @@ import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.ofcflow.JobShift;
 
 import java.util.List;
+import java.util.Map;
 
 public interface JobShiftService extends GenericService<JobShift>{
 
@@ -36,7 +37,7 @@ public interface JobShiftService extends GenericService<JobShift>{
 	 * 获取当前单位职务变动表单提交记录数据
 	 * @return
 	 */
-	public Page<JobShift> getFormRecordData(String orgId,String jobChangeType,String name,Integer page,Integer limit);
+	public Page<Map> getFormRecordData(String orgId, String jobChangeType, String name, Integer page, Integer limit);
 
 
 	

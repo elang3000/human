@@ -40,9 +40,12 @@ import com.wondersgroup.framework.workflow.service.WorkflowService;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.RewardAndPunish;
 import com.wondersgroup.human.bo.ofcflow.PunishServant;
+import com.wondersgroup.human.bo.record.HumanKeepRecord;
 import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.dto.ofcflow.PunishServantQueryParam;
+import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
 import com.wondersgroup.human.event.ofc.ManagerManageRecordEvent;
+import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
 import com.wondersgroup.human.service.ofc.RewardAndPunishService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.PunishServantService;
@@ -177,6 +180,10 @@ public class PunishServantServiceImpl extends GenericServiceImpl<PunishServant> 
 		ManagerRecordDTO dto = new ManagerRecordDTO(temp.getServant().getId(),ManagerRecord.HUMAN_CF);
 		ManagerManageRecordEvent event = new ManagerManageRecordEvent(dto);
 		EventManager.send(event);
+		
+		HumankeepRecordDTO dto2 = new HumankeepRecordDTO(temp.getServant().getId(),HumanKeepRecord.KEEP_CF);
+		ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(dto2);	
+		EventManager.send(event2);
 	}
 
 }

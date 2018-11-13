@@ -3,6 +3,7 @@
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html >
 <html>
 <head>
@@ -23,50 +24,59 @@
 				<smart:gridRow>
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form id="jobChange_searchForm"
-							action="ofcflow/assess/batchAssess">
+									action="ofcflow/assess/batchAssess">
 							<smart:gridColumn colPart="3">
 								<smart:textInput labelName="姓名：" display="block"
-									placeholder="请输入姓名" name="name"></smart:textInput>
+												 placeholder="请输入姓名" name="name"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="2" colOffset="1">
 								<smart:buttonGroup container="true" align="left">
 									<smart:button size="sm" method="search" title="查询"
-										theme="primary">
+												  theme="primary">
 										<smart:icon icon="search"></smart:icon>&nbsp;查询
-		  				 			</smart:button>
+									</smart:button>
 									<smart:button size="sm" method="history" title="重置"
-										theme="primary" type="reset">
+												  theme="primary" type="reset">
 										<smart:icon icon="history"></smart:icon>&nbsp;重置
-		   						</smart:button>
+									</smart:button>
 								</smart:buttonGroup>
 							</smart:gridColumn>
 
 							<smart:gridColumn colPart="3">
 								<smart:singleSelect isAddDefaltOption="true" id="result"
-									isNotNull="true" verify="required" display="block"
-									labelName="考核结论:" initSelectedKey="" name="id"
-									url="dictquery/sub/code/DM018"></smart:singleSelect>
+													isNotNull="true" verify="required" display="block"
+													labelName="考核结论:" initSelectedKey="" name="id"
+													url="dictquery/sub/code/DM018"></smart:singleSelect>
 							</smart:gridColumn>
 							<c:if test="${isUnitAssess }">
 								<c:if test="${!isAllowAssess }">
+									<c:if test="${allSize!=0}">
 									<smart:gridColumn colPart="3">
 										<smart:buttonGroup container="true">
 											<smart:button size="sm" method="batchAssess"
-												title="请先选择考核结论,再批量考核!" id="save" other="lay-submit"
-												theme="default">
+														  title="请先选择考核结论,再批量考核!" id="save" other="lay-submit"
+														  theme="default">
 												<smart:icon icon="rocket"></smart:icon>&nbsp;批量考核
-				   							</smart:button>
+											</smart:button>
 											<smart:button size="sm" method="complete"
-												title="确认考核完成,并且不再修改" id="complete" theme="normal">
+														  title="确认考核完成,并且不再修改" id="complete" theme="normal">
 												<smart:icon icon="flag"></smart:icon>&nbsp;考核完成
-				   							</smart:button>
+											</smart:button>
 										</smart:buttonGroup>
+									</smart:gridColumn>
+									</c:if>
+								</c:if>
+							</c:if>
+							<c:if test="${allSize!=0}">
+								<c:if test="${isAllowAssess }">
+									<smart:gridColumn colPart="3">
+										<label style="color: crimson;" class="layui-form-label">已经考核完成</label>
 									</smart:gridColumn>
 								</c:if>
 							</c:if>
-							<c:if test="${isAllowAssess }">
+							<c:if test="${allSize==0}">
 								<smart:gridColumn colPart="3">
-									<label style="color: crimson;" class="layui-form-label">已经考核完成</label>
+									<label style="color: crimson;" class="layui-form-label">未找到有效数据！</label>
 								</smart:gridColumn>
 							</c:if>
 						</smart:form>

@@ -1,19 +1,6 @@
 
 package com.wondersgroup.human.service.ofcflow.impl;
 
-import java.util.Locale;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Service;
-
 import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.common.contant.FlowBusTypeConstant;
 import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
@@ -21,22 +8,41 @@ import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.CodeInfoService;
+import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
 import com.wondersgroup.framework.util.BeanUtils;
+import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
 import com.wondersgroup.human.bo.ofc.JobChange;
+import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.Post;
+import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.JobShift;
+import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
+import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
+import com.wondersgroup.human.repository.ofcflow.JobShiftRepository;
 import com.wondersgroup.human.service.ofc.JobChangeService;
 import com.wondersgroup.human.service.ofc.PostService;
+import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.JobShiftService;
 import com.wondersgroup.human.service.organization.FormationControlService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
@@ -65,6 +71,15 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 	
 	@Autowired
 	private FormationControlService formationControlService;
+
+	@Autowired
+	private DictableService dictableService;
+
+	@Autowired
+	private ServantService servantService;
+
+	@Autowired
+	private JobShiftRepository jobShiftRepository;
 	
 	@Override
 	public void updateDemoteFlow(JobShift jobShift, String opinion, String result,boolean isShift) {
@@ -103,6 +118,35 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 			flow = workflowService.completeWorkItem(flow);// 提交下个节点
 		}
 		if (null == flow) {
+
+			//FIXME 升职后将原职务设置为非现任职务,将新职务设置为现任职务 ???是否需要让出老职务的编制
+
+			//1 编控操作 让出老职务的编制 新职务入编控
+			//新职位
+			CodeInfo newPostName = codeInfoService.load(jobShift.getNewPostCode().getId());
+			//旧职位
+			CodeInfo formerPostName = codeInfoService.load(jobShift.getFormerPostCode().getId());
+
+			//解锁职位调入编控
+			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), newPostName.getCode(), jobShift.getLowToHigh());
+			//解锁职位调出编控
+			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), formerPostName.getCode(), jobShift.getLowToHigh());
+			//出编控
+			formationControlService.executeOutPost(jobShift.getServant().getDepartId(), formerPostName.getCode(), jobShift.getLowToHigh());
+
+
+
+			// 2 发送消息 =====================================================
+			String title = messageSource.getMessage(JobShift.PROMOTE_TITLE, new Object[] {
+					jobShift.getServant().getName()
+			}, Locale.CHINESE);
+			String content = messageSource.getMessage(JobShift.PROMOTE_CONTENT, new Object[] {
+					jobShift.getServant().getName()
+			}, Locale.CHINESE);
+			applicationContext.publishEvent(new AnnouncementEventData(true, jobShift.getCreater(), title, content, ""));
+
+
+			//3 流程结束,插入职务变动子集信息   ===================================================
 			//流程结束,插入子集信息
 			JobChange change = new JobChange();
 			BeanUtils.copyProperties(jobShift, change);
@@ -112,22 +156,42 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 			change.setNewUnitName(jobShift.getSourceOrganNode().getAllName());
 			change.setNewPostName(jobShift.getNewPostCode().getName());
 			jobChangeService.save(change);
-			//FIXME 升职后将原职务设置为非现任职务,将新职务设置为现任职务 ???是否需要让出老职务的编制
-			//新职位
-			CodeInfo newPost = codeInfoService.load(jobShift.getNewPostCode().getId());
-			//旧职位
-			CodeInfo formerPost = codeInfoService.load(jobShift.getFormerPostCode().getId());
-			//解锁职位调入编控
-			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), newPost.getCode(), jobShift.isLowToHigh());
-			//进入编控
-			formationControlService.executeIntoPost(jobShift.getServant().getDepartId(), newPost.getCode(), jobShift.isLowToHigh());
-			//解锁职位调出编控
-			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), formerPost.getCode(), jobShift.isLowToHigh());
-			//出编控
-			formationControlService.executeOutPost(jobShift.getServant().getDepartId(), formerPost.getCode(), jobShift.isLowToHigh());
 
-			
-			
+
+			//4 流程结束,升职后将原职务设置为非现任职务,插入新post子集,将新职务设置为现任职务     ==================================================
+
+			//考核结论代码DM018  1优秀
+			CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", "DM215");
+			CodeInfo noCodeInfo = dictableService.getCodeInfoByCode("1", "DM215");
+			Post prePost = jobShift.getPrePost();
+			//升职后将原职务设置为非现任职务
+			prePost.setNowPostSign(noCodeInfo);
+			postService.update(prePost);
+
+
+			//插入新post子集,将新职务设置为现任职务
+			Post newPost=new Post();
+			Servant servant = servantService.load(jobShift.getServant().getId());
+			newPost.setServant(servant);
+			newPost.setTenureName(servant.getDepartName());
+			newPost.setAttribute(jobShift.getNewPostAttribute());
+			newPost.setPostName(jobShift.getNewPostName());
+			newPost.setPostCode(newPostName);
+//			newPost.setIsLowToHigh(jobShift.getLowToHigh());
+			newPost.setApprovalDate(new Date());
+			//任职变动类别
+			newPost.setTenureChange(jobShift.getPostTenureChange());
+			//任职状态
+			newPost.setTenureStatus(yesCodeInfo);
+
+			//5 暂时不加,流程结束,新职务插入简历子集.!!!!旧简历加上结束时间,但是就简历没法找,所以暂时没有此操作===========================================
+
+
+			//6 增加进出管操作
+			ManagerRecordDTO dto = new ManagerRecordDTO(jobShift.getServant().getId(), ManagerRecord.HUMAN_ZWBD);
+			ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
+			EventManager.send(event);
+
 			System.out.println("流程结束");
 		}
 		jobShift.setFlowRecord(flow);
@@ -142,18 +206,22 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 	 * @return
 	 */
 	@Override
-	public Page<JobShift> getFormRecordData(String orgId,String jobChangeType,String name,Integer page,Integer limit) {
-		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(JobShift.class);
-		detachedCriteria.add(Restrictions.eq("sourceOrganNode.id", orgId));
-		if(StringUtils.isNotBlank(jobChangeType)){
-			detachedCriteria.add(Restrictions.eq("sourceOrganNode.id", jobChangeType));
-		}
-		if(StringUtils.isNotBlank(name)){
-			detachedCriteria.add(Restrictions.eq("servant.name", name));
-		}
-		detachedCriteria.addOrder(Order.desc("createTime"));
-		Page<JobShift> jobShiftPage = this.findByCriteria(detachedCriteria, page, limit);
-		return jobShiftPage;
+	public Page<Map> getFormRecordData(String orgId, String jobChangeType, String name, Integer page, Integer limit) {
+//		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(JobShift.class);
+//		detachedCriteria.add(Restrictions.eq("sourceOrganNode.id", orgId));
+//		if(StringUtils.isNotBlank(jobChangeType)){
+//			detachedCriteria.add(Restrictions.eq("sourceOrganNode.id", jobChangeType));
+//		}
+//		if(StringUtils.isNotBlank(name)){
+//			detachedCriteria.add(Restrictions.eq("servant.name", name));
+//		}
+//		detachedCriteria.addOrder(Order.desc("createTime"));
+//		Page<JobShift> jobShiftPage = this.findByCriteria(detachedCriteria, page, limit);
+//
+//		this.jobShiftRepository.getIndexData(orgId,jobChangeType,name,page,limit);
+
+
+		return this.jobShiftRepository.getIndexData(orgId,jobChangeType,name,page,limit);
 	}
 
 	@Override
@@ -191,6 +259,23 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 			}
 		}
 		if (null == flow) {
+
+			//1 编控操作 让出老职务的编制 新职务入编控
+			//新职位
+			CodeInfo newPostName = codeInfoService.load(jobShift.getNewPostCode().getId());
+			//旧职位
+			CodeInfo formerPostName = codeInfoService.load(jobShift.getFormerPostCode().getId());
+
+			//解锁职位调入编控
+			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), newPostName.getCode(), jobShift.getLowToHigh());
+			//解锁职位调出编控
+			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), formerPostName.getCode(), jobShift.getLowToHigh());
+			//出编控
+			formationControlService.executeOutPost(jobShift.getServant().getDepartId(), formerPostName.getCode(), jobShift.getLowToHigh());
+
+
+
+			// 2 发送消息 =====================================================
 			String title = messageSource.getMessage(JobShift.PROMOTE_TITLE, new Object[] {
 			        jobShift.getServant().getName()
 			}, Locale.CHINESE);
@@ -198,7 +283,9 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 			        jobShift.getServant().getName()
 			}, Locale.CHINESE);
 			applicationContext.publishEvent(new AnnouncementEventData(true, jobShift.getCreater(), title, content, ""));
-			//流程结束,插入子集信息
+
+
+			//3 流程结束,插入职务变动子集信息   ===================================================
 			JobChange change = new JobChange();
 			BeanUtils.copyProperties(jobShift, change);
 			change.setFormerUnitCode(jobShift.getSourceOrganNode().getId());
@@ -207,24 +294,42 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 			change.setNewUnitName(jobShift.getSourceOrganNode().getAllName());
 			change.setNewPostName(jobShift.getNewPostCode().getName());
 			jobChangeService.save(change);
-			
-			//FIXME 升职后将原职务设置为非现任职务,将新职务设置为现任职务  ???是否需要让出老职务的编制
-			//新职位
-			CodeInfo newPost = codeInfoService.load(jobShift.getNewPostCode().getId());
-			//旧职位
-			CodeInfo formerPost = codeInfoService.load(jobShift.getFormerPostCode().getId());
-			
-			//解锁职位调入编控
-			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), newPost.getCode(), jobShift.isLowToHigh());
-			//进入编控
-			formationControlService.executeIntoPost(jobShift.getServant().getDepartId(), newPost.getCode(), jobShift.isLowToHigh());
-			//解锁职位调出编控
-			formationControlService.executeUnlockPostOutNum(jobShift.getServant().getDepartId(), formerPost.getCode(), jobShift.isLowToHigh());
-			//出编控
-			formationControlService.executeOutPost(jobShift.getServant().getDepartId(), formerPost.getCode(), jobShift.isLowToHigh());
-			
-			
-			System.out.println("流程结束");
+
+
+			//4 流程结束,升职后将原职务设置为非现任职务,插入新post子集,将新职务设置为现任职务     ==================================================
+
+			//考核结论代码DM018  1优秀
+			CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", "DM215");
+			CodeInfo noCodeInfo = dictableService.getCodeInfoByCode("1", "DM215");
+			Post prePost = jobShift.getPrePost();
+			//升职后将原职务设置为非现任职务
+			prePost.setNowPostSign(noCodeInfo);
+			postService.update(prePost);
+
+
+			//插入新post子集,将新职务设置为现任职务
+			Post newPost=new Post();
+			Servant servant = servantService.load(jobShift.getServant().getId());
+			newPost.setServant(servant);
+			newPost.setTenureName(servant.getDepartName());
+			newPost.setAttribute(jobShift.getNewPostAttribute());
+			newPost.setPostName(jobShift.getNewPostName());
+			newPost.setPostCode(newPostName);
+//			newPost.setIsLowToHigh(jobShift.getLowToHigh());
+			newPost.setApprovalDate(new Date());
+			//任职变动类别
+			newPost.setTenureChange(jobShift.getPostTenureChange());
+			//任职状态
+			newPost.setTenureStatus(yesCodeInfo);
+
+			//5 暂时不加,流程结束,新职务插入简历子集.!!!!旧简历加上结束时间,但是就简历没法找,所以暂时没有此操作===========================================
+
+
+			//6 增加进出管操作
+			ManagerRecordDTO dto = new ManagerRecordDTO(jobShift.getServant().getId(), ManagerRecord.HUMAN_ZWBD);
+			ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
+			EventManager.send(event);
+
 		}
 		jobShift.setFlowRecord(flow);
 		this.update(jobShift);

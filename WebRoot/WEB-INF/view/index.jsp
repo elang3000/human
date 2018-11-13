@@ -67,7 +67,7 @@
 		    padding-left: 40px;
 		}
 		.layui-nav * {
-		    font-size: 18px;
+		    font-size: 16px;
 		}
 	</style>
 </head>
