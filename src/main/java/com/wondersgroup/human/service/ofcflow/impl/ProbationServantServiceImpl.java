@@ -274,25 +274,27 @@ public class ProbationServantServiceImpl extends GenericServiceImpl<ProbationSer
 			    }else{
 			    	temp.setDelayDateDone(temp.getDelayDate());
 			    }
-			    temp.setDelayReasonDone(temp.getDelayReason());//设置延期理由，作为流程结束显示
-			    temp.setIsDelay(ProbationServant.SEND_ED);//设置是延期流程结束
-			    
-			    temp.setStatus(ProbationServant.STATUS_EMPLOY_STATE);//延长试用期审批通过，试用期结束时 可再次发起试用期流程
-			    //清除延长试用期信息
-			    temp.setProbationStatus(null);
-			    temp.setDelayDate(null);
-			    temp.setProbationStatus(null);
-			    temp.setDelayReason(null);
-			    
 			    ProbationServant probation = new ProbationServant();
 			    BeanUtils.copyPropertiesIgnoreNull(temp,probation);
 			    probation.setId(null);
+			    probation.setDelayReasonDone(temp.getDelayReason());//设置延期理由，作为流程结束显示
+			    probation.setIsDelay(ProbationServant.SEND_ED);//设置是延期流程结束
+			    
+			    probation.setStatus(ProbationServant.STATUS_EMPLOY_STATE);//延长试用期审批通过，试用期结束时 可再次发起试用期流程
+			    probation.setFlowRecord(null);
+			    //清除延长试用期信息
+			    probation.setProbationStatus(null);
+			    probation.setDelayDate(null);
+			    probation.setProbationStatus(null);
+			    probation.setDelayReason(null);
+			    
 			    save(probation);//新增一条相同数据，使其是新流程，删除原数据
 			    delete(temp);
 			}else{
 				//流程结束，改变编制
-				formationControlService.executeUnlockIntoFormationNum(temp.getDraftServant().getDraftUnit().getOrgan().getId());//1.解锁调入单位未调入编制
-				formationControlService.executeIntoFormation(temp.getDraftServant().getDraftUnit().getOrgan().getId());//2.增加调入单位实际编制数
+				DraftServant ds = draftServantService.get(temp.getDraftServant().getId());
+				formationControlService.executeUnlockIntoFormationNum(ds.getDraftUnit().getOrgan().getId());//1.解锁调入单位未调入编制
+				formationControlService.executeIntoFormation(ds.getDraftUnit().getOrgan().getId());//2.增加调入单位实际编制数
 				
 				temp.setStatus(ProbationServant.STATUS_EMPLOY_TRIAL_PASS);//试用期审批通过
 				getServantNotMemory(temp.getId());//人员信息进入正式库
@@ -340,7 +342,8 @@ public class ProbationServantServiceImpl extends GenericServiceImpl<ProbationSer
 			temp.setFlowRecord(null);//该业务没有待办流程节点 
 			
 			//流程结束，改变编制
-			formationControlService.executeUnlockIntoFormationNum(temp.getDraftServant().getDraftUnit().getOrgan().getId());//1.解锁调入单位未调入编制
+			DraftServant ds = draftServantService.get(temp.getDraftServant().getId());
+			formationControlService.executeUnlockIntoFormationNum(ds.getDraftUnit().getOrgan().getId());//1.解锁调入单位未调入编制
 		}else{
 			temp.setStatus(ProbationServant.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点

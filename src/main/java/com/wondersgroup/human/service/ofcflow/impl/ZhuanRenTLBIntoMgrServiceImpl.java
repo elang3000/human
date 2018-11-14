@@ -345,6 +345,7 @@ public class ZhuanRenTLBIntoMgrServiceImpl extends GenericServiceImpl<ZhuanRenTL
 		if(StringUtils.isBlank(temp.getId())){
 			saveOrUpdate(temp);//保存业务数据
 		}
+		JobLevel tempJ = jobLevelService.getJobLevelByServantId(temp.getServant().getId());//查询当前人员的现行职级
 		
 		FlowRecord flow;
 		if(ZhuanRenTLBIntoMgr.STATUS_ZHUANREN_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
@@ -364,7 +365,7 @@ public class ZhuanRenTLBIntoMgrServiceImpl extends GenericServiceImpl<ZhuanRenTL
 			//锁职级调入数
 			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
 			//锁职级调出数
-			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
+			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
 			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
@@ -406,9 +407,9 @@ public class ZhuanRenTLBIntoMgrServiceImpl extends GenericServiceImpl<ZhuanRenTL
 			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//4.减少调出单位实际编制数
 			//职级
 			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
-			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//2.解锁职级调出数
+			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.解锁职级调出数
 //			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//3.增加调入单位实际职级数
-			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//4.减少调出单位实际职级数
+			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//4.减少调出单位实际职级数
 			
 			temp.setStatus(ZhuanRenTLBIntoMgr.STATUS_ZHUANREN_FINISH);
 			temp.setFlowRecord(null);//修改当前业务的流程节点

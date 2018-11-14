@@ -35,6 +35,10 @@
 								<smart:textInput type="hidden" name="yearPlan.id"  value="${recruityearplan.id}" ></smart:textInput>
 								<smart:textInput type="hidden" name="employOrgan.id"  value="${recruitemployplan.employOrgan.id}" ></smart:textInput>
 								<smart:textInput type="hidden" name="recruitOrgan.id"  value="${recruitemployplan.recruitOrgan.id}" ></smart:textInput>
+								<smart:textInput type="hidden" name="allowWeaveNum"  value="${recruitemployplan.allowWeaveNum}" ></smart:textInput>
+								<smart:textInput type="hidden" name="realNum"  value="${recruitemployplan.realNum}" ></smart:textInput>
+								<smart:textInput type="hidden" name="thisYearLackWeaveNum"  value="${recruitemployplan.thisYearLackWeaveNum}" ></smart:textInput>
+								<smart:textInput type="hidden" name="chiefLackWeaveNum"  value="${recruitemployplan.chiefLackWeaveNum}" ></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="起止时间" infovalue="${recruityearplan.startDate}至${recruityearplan.endDate}"></smart:infoShowerLabel>
@@ -48,18 +52,18 @@
 								<smart:infoShowerLabel infoname="用人机构" infovalue="${recruitemployplan.employOrgan.name}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构编制数" infovalue=""></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="机构编制数" infovalue="${recruitemployplan.allowWeaveNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构实有人数" infovalue=""></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="机构实有人数" infovalue="${recruitemployplan.realNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构缺编数" infovalue=""></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="机构缺编数" infovalue="${recruitemployplan.thisYearLackWeaveNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="处级实职缺编人数" infovalue=""></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="处级实职缺编人数" infovalue="${recruitemployplan.chiefLackWeaveNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -76,7 +80,7 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect display="block" initSelectedKey="${recruitemployplan.personType.id}" labelName="人员类别:" name="personType.id" url="dictquery/sub/code/PSERSON_TYPE"></smart:singleSelect>
+								<smart:singleSelect display="block" initSelectedKey="${recruitemployplan.personType.id}" labelName="人员类别:" name="personType.id" url="dictquery/sub/code/DM199/1"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:textInput labelName="联系人:" value="${recruitemployplan.contacter}" name="contacter" placeholder=" 联系人"></smart:textInput>

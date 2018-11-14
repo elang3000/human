@@ -97,7 +97,7 @@
 					smart.show({
 						title : '职务变动详情',
 						size : 'full',
-						url : 'ofcflow/jobchange/detailView?id='+data.data.id+'&postTenureChangeCode='+data.data.POSTTENURECHANGE,
+						url : 'ofcflow/jobchange/detailView?id='+data.data.ID+'&postTenureChangeCode='+data.data.POSTTENURECHANGE,
 						scrollbar : false
 					});
 				}

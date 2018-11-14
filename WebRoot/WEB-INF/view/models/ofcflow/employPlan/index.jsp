@@ -34,11 +34,15 @@
 						<smart:form>
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
-									<smart:singleSelect display="block" isAddDefaltOption="true" labelName="年度招录计划："
-										name="yearPlan.id" url="ofcflow/recruit/year/find"></smart:singleSelect>
+									<smart:singleSelect display="block" isAddDefaltOption="true"
+										labelName="年度招录计划：" name="yearPlan.id"
+										url="ofcflow/recruit/year/find"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
-									<smart:textInput labelName="用人机关：" placeholder="请输入用人机关"></smart:textInput>
+									<smart:singleSelect labelName="编制类型：" isSearch="true"
+										display="block" name="recuritType.id"
+										url="dictquery/sub/id/EMPLOY_TYPE/null"
+										isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="2">
 									<smart:buttonGroup container="true">
@@ -46,8 +50,8 @@
 											theme="primary">
 											<smart:icon icon="search"></smart:icon>&nbsp;查询
 			  				 			</smart:button>
-										<smart:button size="sm" title="重置"
-											theme="primary" type="reset">
+										<smart:button size="sm" title="重置" theme="primary"
+											type="reset">
 											<smart:icon icon="history"></smart:icon>&nbsp;重置
 			   							</smart:button>
 									</smart:buttonGroup>
@@ -82,10 +86,12 @@
 								<smart:tableItem field="recuritType" width=".1" sort="false">编制类型</smart:tableItem>
 								<smart:tableItem field="allowWeaveNum" width=".1" sort="false">机构编制数</smart:tableItem>
 								<smart:tableItem field="realNum" width=".1" sort="false">机构实有人数</smart:tableItem>
-								<smart:tableItem field="thisYearLackWeaveNum" width=".1" sort="false">机构缺编数</smart:tableItem>
+								<smart:tableItem field="thisYearLackWeaveNum" width=".1"
+									sort="false">机构缺编数</smart:tableItem>
 								<smart:tableItem field="planEmployNum" width=".1" sort="false">计划招录人数</smart:tableItem>
 								<smart:tableItem field="planState" width=".1" sort="false">状态</smart:tableItem>
-								<smart:tableItem align="center" width=".1" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
+								<smart:tableItem align="center" width=".1" unresize="true"
+									toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<script type="text/html" id="navListToolBar">
 										{{#  if(d.planStateSign=="8"){ }}

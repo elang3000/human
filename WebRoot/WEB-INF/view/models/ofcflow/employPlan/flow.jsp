@@ -69,7 +69,10 @@
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="来文单位：" name="sourceOrganNode" placeholder="请输入来文单位"></smart:textInput>
+								<smart:singleSelect labelName="来文单位：" name="sourceOrganNodeId"
+								isSearch="true" display="block"
+								url="system/organ/node/query?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517"
+								isAddDefaltOption="true"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="2" >
 								<smart:buttonGroup container="true">

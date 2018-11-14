@@ -60,7 +60,7 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="终审招录人数" infovalue="${post.workYear.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="最低工作年限" infovalue="${post.workYear.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="职位简介" infovalue="${post.description }"></smart:infoShowerLabel>

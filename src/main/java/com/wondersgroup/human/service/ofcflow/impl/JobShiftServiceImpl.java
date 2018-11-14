@@ -41,6 +41,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -224,6 +225,16 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 		return this.jobShiftRepository.getIndexData(orgId,jobChangeType,name,page,limit);
 	}
 
+	/**
+	 * @param servantId
+	 * @return
+	 */
+	@Override
+	public List<String> getHandledPostIds(String servantId) {
+		List<String> postIds=this.jobShiftRepository.getHandledPostIds(servantId);
+		return postIds;
+	}
+
 	@Override
 	public void updatePromoteFlow(JobShift jobShift, String opinion, String result){
 		SecurityUser user = userService.load(SecurityUtils.getUserId());// 当前登录人
@@ -315,12 +326,12 @@ public class JobShiftServiceImpl extends GenericServiceImpl<JobShift>
 			newPost.setAttribute(jobShift.getNewPostAttribute());
 			newPost.setPostName(jobShift.getNewPostName());
 			newPost.setPostCode(newPostName);
-//			newPost.setIsLowToHigh(jobShift.getLowToHigh());
 			newPost.setApprovalDate(new Date());
+			//设置任职状态为不在任
+			CodeInfo tenureCode = dictableService.getCodeInfoByCode("2", "DM007");
+			newPost.setTenureStatus(tenureCode);
 			//任职变动类别
 			newPost.setTenureChange(jobShift.getPostTenureChange());
-			//任职状态
-			newPost.setTenureStatus(yesCodeInfo);
 
 			//5 暂时不加,流程结束,新职务插入简历子集.!!!!旧简历加上结束时间,但是就简历没法找,所以暂时没有此操作===========================================
 

@@ -51,7 +51,6 @@
 						<smart:table id="navigationList1" url="ofcflow/draftServant/draftServantBeforePage?id=${importId}"
 							height="full-215" text="未获取到数据！">
 							<tr>
-								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
 								<smart:tableItem field="yearTip" width="100" sort="true">年度</smart:tableItem>
 								<smart:tableItem field="draftUnitName" width="200" sort="true">录用单位</smart:tableItem>
 								<smart:tableItem field="draftDeptName" width="200" sort="true">录用部门</smart:tableItem>

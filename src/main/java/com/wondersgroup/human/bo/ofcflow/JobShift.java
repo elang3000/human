@@ -1,26 +1,16 @@
 
 package com.wondersgroup.human.bo.ofcflow;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.bo.ofc.Servant;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @ClassName: JobShift
@@ -335,11 +325,11 @@ public class JobShift extends GenericEntity {
 	/**
 	 * @fieldName: status
 	 * @fieldType: java.lang.Integer
-	 * @Description: 流程状态从1开始依次加1,总共操作次数
+	 * @Description: 流程状态从1开始依次加1,总共操作次数,假如取消流程的话,status设置为0
 	 */
 	@Column(name = "STATUS")
 	private Integer status;
-	
+
 	/**
 	 * @fieldName: flowRecord
 	 * @fieldType: String
@@ -361,7 +351,58 @@ public class JobShift extends GenericEntity {
 	@org.hibernate.annotations.Type(type = "yes_no")
 	private Boolean lowToHigh;
 
-	public Boolean getLowToHigh() {
+	/**
+	 * @fieldName: highestPostSign
+	 * @fieldType: java.lang.String
+	 * @Description:最高职务标记，DM215。
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "HIGHESTPOSTSIGN")
+	private CodeInfo highestPostSign;
+
+	/**
+	 * @fieldName: highestPostSign
+	 * @fieldType: java.lang.String
+	 * @Description:现任职务标记，DM215。
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "NOWPOSTSIGN")
+	private CodeInfo nowPostSign;
+
+	/**
+	 * @fieldName: isLowerLeader
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 是否兼任下级领导职务,在任职务需填。
+	 */
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "ISLOWERLEADER")
+	private CodeInfo isLowerLeader;
+
+	public CodeInfo getIsLowerLeader() {
+		return isLowerLeader;
+	}
+
+	public void setIsLowerLeader(CodeInfo isLowerLeader) {
+		this.isLowerLeader = isLowerLeader;
+	}
+
+	public CodeInfo getHighestPostSign() {
+        return highestPostSign;
+    }
+
+    public void setHighestPostSign(CodeInfo highestPostSign) {
+        this.highestPostSign = highestPostSign;
+    }
+
+    public CodeInfo getNowPostSign() {
+        return nowPostSign;
+    }
+
+    public void setNowPostSign(CodeInfo nowPostSign) {
+        this.nowPostSign = nowPostSign;
+    }
+
+    public Boolean getLowToHigh() {
 		return lowToHigh;
 	}
 

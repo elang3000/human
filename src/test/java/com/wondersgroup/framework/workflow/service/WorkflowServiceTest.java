@@ -52,8 +52,7 @@ public class WorkflowServiceTest extends AbstractTest {
 	
 	@Autowired
 	FlowRecordService flowRecordService;
-	
-	// @Test
+
 	public void queryNextAllocation() {
 		
 		OrganNode organNode = organNodeService.get("34B06A51E5D3400BA6FB6AB7CD4D509C");
@@ -63,19 +62,21 @@ public class WorkflowServiceTest extends AbstractTest {
 		System.out.println(allocation);
 	}
 	
+	 @Test
 	public void createFlowRecord() {
 		
-		OrganNode targetOrganNode = organNodeService.get("FC1F0C52E3C74D04C794F8434F7CBE99");
-		SecurityUser targetSecurityUser = userService.get("237DCA6DFA094EC08C2FF42F0AF76CA7");
+		OrganNode targetOrganNode = organNodeService.get("6957B3D5ACFC48B0FA5EF7A9DCC3A7B7");
+		SecurityUser targetSecurityUser = userService.get("081DC964AFD94AC688EA0072E0C9BD84");
 		FlowRecord flowRecord = new FlowRecord();
 		flowRecord.setAppNodeId("eddbbace-cd45-47f5-b43b-fa4129c8984a");
 		flowRecord.setTargetOrganNode(targetOrganNode);
 		flowRecord.setTargetSecurityUser(targetSecurityUser);
-		flowRecord.setOperationCode("REPORT_EMPLOY_PLAN");
+		flowRecord.setOperationCode("STATUS_ZHUANREN_STATE");
 		flowRecord.setBusId(UUID.randomUUID().toString().replace("-", "").toLowerCase());
-		flowRecord.setBusName("公务员录用计划");
-		flowRecord.setBusType("RecruitEmployPlan");
-		flowRecord = workflowService.createFlowRecord(flowRecord, "REPORT_EMPLOY_PLAN");
+		flowRecord.setBusName("本区人员同类别转入人大办d");
+		flowRecord.setBusType("ZhuanRenTLBIntoMgr_THIS");
+		flowRecord.setBusId("98EE366B2898414A4302A66A2F273A9A");
+		flowRecord = workflowService.createFlowRecord(flowRecord, "STATUS_ZHUANREN_STATE");
 		System.out.print(flowRecord);
 	}
 	
@@ -84,14 +85,13 @@ public class WorkflowServiceTest extends AbstractTest {
 		
 		FlowRecord flowRecord = flowRecordService.loadWithLazy("479558E19FE94C3C2185AD28844035B5", "targetSecurityUser",
 		        "targetOrganNode", "sourceSecurityUser", "sourceOrganNode");
-		
-		//flowRecord = flowRecordService.get("7D3BE56E410F413D4373497A2871A8BE");
+
 		flowRecord.setOpinion("不通过");
 		flowRecord.setResult(FlowRecord.NOPASS);
 		workflowService.completeWorkItem(flowRecord);
 	}
 	
-	@Test
+	//@Test
 	public void countWorkFLowBusinessNum() {
 		Map<String,Integer> count = workflowService.countWorkFLowBusinessNum(null,null,Calendar.getInstance().getTime());
 	

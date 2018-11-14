@@ -45,18 +45,18 @@
 								<smart:infoShowerLabel infoname="用人机构" infovalue="${recruitemployplan.employOrgan.name}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构编制数" infovalue=""></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="机构编制数" infovalue="${recruitemployplan.allowWeaveNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构实有人数" infovalue=""></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="机构实有人数" infovalue="${recruitemployplan.realNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构缺编数" infovalue=""></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="机构缺编数" infovalue="${recruitemployplan.thisYearLackWeaveNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="处级实职缺编人数" infovalue=""></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="处级实职缺编人数" infovalue="${recruitemployplan.chiefLackWeaveNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -127,7 +127,7 @@
 						<smart:gridColumn colPart="4" deviceType="md" colOffset="4">
 							<smart:buttonGroup container="true">
 								<c:if test="${recruitemployplan.planState<=6}">
-									<smart:button method="pass" size="sm" title="审批通过"
+									<smart:button id="pass" other="lay-submit" size="sm" title="审批通过"
 										theme="normal">
 										<smart:icon icon="check">&nbsp;审批通过</smart:icon>
 									</smart:button>
@@ -137,7 +137,7 @@
 									</smart:button>
 								</c:if>
 								<c:if test="${recruitemployplan.planState==7}">
-									<smart:button method="pass" size="sm" title="确认"
+									<smart:button id="confirm" other="lay-submit" size="sm" title="确认"
 										theme="normal">
 										<smart:icon icon="check">&nbsp;确认</smart:icon>
 									</smart:button>
@@ -155,20 +155,6 @@
 	<smart:scriptHead models="table,form,layer,element">
 		<smart:utils/>
 		<smart:buttonScriptAction>
-			pass : function() {
-				$("#result").val("1");//审批通过
-				smart.confirm({
-					title:'确认审批通过',
-					message:'确认审批通过吗？',
-					url:'ofcflow/recruit/operationPlan',
-					params : smart.json("#editForm"),
-					callback : function(){
-						parent.layui.table.reload('navigationList');
-						var index=parent.layer.getFrameIndex(window.name);
-						parent.layer.close(index);
-					}
-				});
-			},
 			noPass : function() {
 				$("#result").val("0");//审批不通过
 				if(!$("#opinion").val()){
@@ -191,6 +177,34 @@
 				parent.layer.close(index);
 			}
 		 </smart:buttonScriptAction>
+		 	form.on('submit(pass)', function (data) {//表单保存
+				$("#result").val("1");//审批通过
+				smart.confirm({
+					title:'确认审批通过',
+					message:'确认审批通过吗？',
+					url:'ofcflow/recruit/operationPlan',
+					params : smart.json("#editForm"),
+					callback : function(){
+						parent.layui.table.reload('navigationList');
+						var index=parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+					}
+				});
+			});
+			form.on('submit(confirm)', function (data) {//表单保存
+				$("#result").val("1");//审批通过
+				smart.confirm({
+					title:'确认审批通过',
+					message:'确认审批通过吗？',
+					url:'ofcflow/recruit/operationPlan',
+					params : smart.json("#editForm"),
+					callback : function(){
+						parent.layui.table.reload('navigationList');
+						var index=parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+					}
+				});
+			});
 	</smart:scriptHead>
 </smart:body>
 </html>

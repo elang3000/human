@@ -54,4 +54,8 @@ public class ReadProperties {
 	
 	@Value("#{mvc['ftp.password']}")
 	public String FTP_PASSWORD;
+	
+	@Value("#{mvc['ftp.dirName.photo']}")
+	public String FTP_DIR_NAME_PHOTO;
+	
 }

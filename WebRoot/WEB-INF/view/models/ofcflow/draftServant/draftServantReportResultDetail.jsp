@@ -284,7 +284,9 @@
 					type:'POST',
 					url:'ofcflow/draftServantReportResult/agreeSummary?id=${dsr.id}',
 					callback : function() {
-						parent.refreshMenu('');
+						parent.layui.table.reload('navigationList');
+						var index=parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
 					}
 				});
 			},

@@ -70,9 +70,9 @@
 									toolbar="employNavListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="employNavListToolBar">
-								<%-- <smart:tableToolBtn theme="warm" event="edit" title="编辑">
+								<smart:tableToolBtn theme="warm" event="edit" title="编辑">
 									<smart:icon icon="edit"></smart:icon>
-								</smart:tableToolBtn> --%>
+								</smart:tableToolBtn>
 								<smart:tableToolBtn theme="danger" event="delete" title="删除">
 									<smart:icon icon="trash"></smart:icon>
 								</smart:tableToolBtn>
@@ -128,9 +128,9 @@
 									toolbar="jobLevelNavListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="jobLevelNavListToolBar">
-								<smart:tableToolBtn theme="warm" event="edit" title="编辑">
+								<%-- <smart:tableToolBtn theme="warm" event="edit" title="编辑">
 									<smart:icon icon="edit"></smart:icon>
-								</smart:tableToolBtn>
+								</smart:tableToolBtn> --%>
 								<smart:tableToolBtn theme="danger" event="delete" title="删除">
 									<smart:icon icon="trash"></smart:icon>
 								</smart:tableToolBtn>

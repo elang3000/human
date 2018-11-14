@@ -40,5 +40,10 @@ public interface JobShiftService extends GenericService<JobShift>{
 	public Page<Map> getFormRecordData(String orgId, String jobChangeType, String name, Integer page, Integer limit);
 
 
-	
+	/**
+	 * 
+	 * @param servantId
+	 * @return
+	 */
+    public List<String> getHandledPostIds(String servantId);
 }

@@ -106,6 +106,14 @@
 														display="block" url="dictquery/sub/code/DM049" initSelectedKey="${jobShift.newPostAttribute.id }" verify="required" isNotNull="true"></smart:singleSelect>
 								</smart:gridColumn>
 							</smart:gridRow>
+							<smart:gridRow>
+								<smart:gridColumn colPart="4">
+									<smart:singleSelect id="highestPostSign" labelName="最高职务标识：" name="highestPostSign.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${jobShift.highestPostSign.id }" verify="required" isNotNull="true" changeCallBack="topChangeEvent"></smart:singleSelect>
+								</smart:gridColumn>
+								<smart:gridColumn colPart="4">
+									<smart:singleSelect labelName="是否兼任下级领导职务：" id="isLowerLeader" name="isLowerLeader.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${jobShift.isLowerLeader.id }" verify="required" isNotNull="true"></smart:singleSelect>
+								</smart:gridColumn>
+							</smart:gridRow>
 
 							<smart:gridRow>
 								<smart:gridColumn colPart="10" colOffset="2">

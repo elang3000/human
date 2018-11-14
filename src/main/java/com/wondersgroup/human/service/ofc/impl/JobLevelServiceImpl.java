@@ -32,7 +32,6 @@ import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.CodeInfoService;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.human.bo.ofc.JobLevel;
-import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.repository.ofc.JobLevelRepository;
 import com.wondersgroup.human.service.ofc.JobLevelService;
@@ -105,7 +104,8 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 			servantService.update(servant);
 		} else if (entity.getCurrentIdentification().getId().equals(noCodeInfo.getId())) {
 			// 如果该职级和公务员职级CODE一致，选择否后，公务员信息表中现行职级设置为null
-			if (servant.getNowJobLevel()!=null && (servant.getNowJobLevel().getId()).equals(entity.getCode().getId())) {
+			if (servant.getNowJobLevel() != null
+					&& (servant.getNowJobLevel().getId()).equals(entity.getCode().getId())) {
 				servant.setNowJobLevel(null);
 				servantService.update(servant);
 			}
@@ -125,22 +125,21 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 		jobLevelRepository.updateServantAllCurrentLevelBySid(servantId, codeInfo);
 	}
 	
-	
-	
-	
 	@Override
 	public void update(JobLevel entity) {
+		
 		updateServantByPostLvl(entity);
 		super.update(entity);
 	}
-
+	
 	@Override
 	public Serializable save(JobLevel entity) {
+		
 		Servant servant = servantService.get(entity.getServant().getId());
 		CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
 		if (entity.getCurrentIdentification().getId().equals(yesCodeInfo.getId())) {
 			// 如果是现行职级，那么就入职级编制数
-			CodeInfo postLvlCode = codeInfoService.get(entity.getCurrentIdentification().getId());
+			CodeInfo postLvlCode = codeInfoService.get(entity.getCode().getId());
 			formationControlService.executeIntoPost(servant.getDepartId(), postLvlCode.getCode(),
 					entity.getIsLowToHigh());
 		}
@@ -180,6 +179,7 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");
 		s.add(Restrictions.eq("s.id", id));
 		detachedcriteria.add(Restrictions.eq("removed", false));
+		detachedcriteria.add(Restrictions.eq("currentIdentification", dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO)));
 		
 		List<JobLevel> list = this.findByCriteria(detachedcriteria);
 		

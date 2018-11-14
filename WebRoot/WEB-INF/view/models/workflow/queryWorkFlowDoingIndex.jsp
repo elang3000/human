@@ -29,7 +29,10 @@
 									<smart:textInput labelName="事项类型：" autocomplete="off" placeholder="组织节点类型编码" name="busType"></smart:textInput>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
-									<smart:textInput labelName="发文单位：" autocomplete="off" placeholder="组织节点类型名称" name="sourceOrganNodeId"></smart:textInput>
+									<smart:singleSelect labelName="来文单位：" name="sourceOrganNodeId"
+									isSearch="true" display="block"
+									url="system/organ/node/query?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517"
+									isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
 									<smart:buttonGroup container="true">
@@ -72,6 +75,7 @@
 		</smart:card>
 	</smart:grid>
 	<smart:scriptHead models="form,layer,element,table">
+		<smart:utils/>
 		<smart:tableScriptAction tableId="navigationList">
 			viewFlowRecord : function(record) {
 				smart.show({

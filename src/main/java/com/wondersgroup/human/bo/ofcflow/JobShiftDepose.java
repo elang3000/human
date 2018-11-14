@@ -15,26 +15,16 @@
 
 package com.wondersgroup.human.bo.ofcflow;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.bo.ofc.Servant;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @ClassName: JobShiftDepose
@@ -203,11 +193,23 @@ public class JobShiftDepose extends GenericEntity {
 	@org.hibernate.annotations.Type(type = "yes_no")
 	private Boolean lowToHigh;
 
-	
-	
 
+	/**
+	 * @fieldName: status
+	 * @fieldType: java.lang.Integer
+	 * @Description: 流程状态从1开始依次加1,总共操作次数,假如取消流程的话,status设置为0
+	 */
+	@Column(name = "STATUS")
+	private Integer status;
 
-	
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	public Boolean getLowToHigh() {
 		
 		return lowToHigh;

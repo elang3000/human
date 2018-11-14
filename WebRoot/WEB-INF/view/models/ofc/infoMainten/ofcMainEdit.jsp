@@ -85,9 +85,15 @@
 									</smart:gridColumn>
 									<smart:gridColumn colPart="3" colOffset="1">
 										<smart:gridRow>
-											<smart:gridColumn colPart="12">
-												<img alt="照片" src="static/image/20170705135600.jpg">
-											</smart:gridColumn>
+										    <div class="layui-upload">
+											  <div class="layui-upload-list">
+											    <img class="layui-upload-img" id="headImg" style="width:150px;min-width:150px;height:200px;min-height:200px;" src="ftp/getImg?imgName=${servant.photoPath}">
+											  </div>
+											  <div style="width:150px;text-align:center;">
+											  	<button type="button" class="layui-btn layui-btn-xs" id="headBtn">上传头像</button>
+											  </div>
+											  <input type="hidden" id="photostr" name="photostr" value="${servant.photoPath}">
+											</div> 
 										</smart:gridRow>
 									</smart:gridColumn>
 								</smart:gridRow>
@@ -266,7 +272,7 @@
 			</smart:cardBody>
 		</smart:card>
 	</smart:grid>
-	<smart:scriptHead models="table,form,layer,element,laydate">
+	<smart:scriptHead models="table,form,layer,element,laydate,upload">
 		<smart:utils/>
 		<smart:continuousSelectAction/>
 		<smart:buttonScriptAction>
@@ -300,6 +306,20 @@
 			});
 			return false;
 		});
+		
+		 //普通图片上传
+		  var uploadInst = upload.render({
+		    elem: '#headBtn',
+		    auto: false,
+		    size:50,
+		    choose: function(obj){
+		      //预读本地文件示例，不支持ie8
+		      obj.preview(function(index, file, result){
+		      	$('#photostr').val(result);
+		        $('#headImg').attr('src', result); //图片链接（base64）
+		      });
+		    }
+		  });
 	</smart:scriptHead>
 </smart:body>
 </html>

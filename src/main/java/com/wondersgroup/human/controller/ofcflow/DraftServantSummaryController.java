@@ -216,8 +216,8 @@ public class DraftServantSummaryController extends GenericController {
 			model.addAttribute("yearTip", yearTip);
 		}
 		if(name!=null&&!name.equals("")){
-			hql.append( " and name=:name");
-			queryParameteritem=new QueryParameter("name", name);
+			hql.append( " and name like :name");
+			queryParameteritem=new QueryParameter("name", "%"+name+"%");
 			listqueryparameter.add(queryParameteritem);
 			model.addAttribute("name", name);
 		}

@@ -133,10 +133,13 @@
 				<smart:gridRow>
 					<smart:gridColumn>
 						<smart:buttonGroup container="true">
-							<smart:button id="save" other="lay-submit" size="sm" method="add"
-								title="提交当前表单">
-								<smart:icon icon="check">提交</smart:icon>
-							</smart:button>
+
+							<c:if test="${!view}">
+								<smart:button id="save" other="lay-submit" size="sm" method="add"
+											  title="提交当前表单">
+									<smart:icon icon="check">提交</smart:icon>
+								</smart:button>
+							</c:if>
 							<smart:button theme="warm" size="sm" title="返回" method="goBack">
 								<smart:icon icon="reply"></smart:icon>&nbsp;返回
 							</smart:button>

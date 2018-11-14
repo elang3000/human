@@ -39,18 +39,21 @@
 				<smart:gridRow>
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form>
-							<smart:gridColumn colPart="3">
-								<smart:date  labelName="年份" display="block" id="yearTip" placeholder="年份" name="yearTip" value="${yearTip}"></smart:date>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="3">
-								<smart:singleSelect   name="servantType" display="block" labelName="人员类型"
-										data="[{'key':'-1','value':'请选择人员类型'},{'key':'1','value':'公务员'},{'key':'2','value':'参公人员'}]"></smart:singleSelect>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="2">
+							<smart:gridRow>
+								<smart:gridColumn colPart="4">
+									<smart:date  labelName="年份" display="block" id="yearTip" placeholder="年份" name="yearTip" value="${yearTip}"></smart:date>
+								</smart:gridColumn>
+								<smart:gridColumn colPart="4" colOffset="1">
+									<smart:singleSelect   name="servantType" display="block" labelName="人员类型"
+											data="[{'key':'-1','value':'请选择人员类型'},{'key':'1','value':'公务员'},{'key':'2','value':'参公人员'}]"></smart:singleSelect>
+								</smart:gridColumn>
+							</smart:gridRow>
+							<smart:gridRow>
+								<smart:gridColumn colPart="4">
 								<smart:textInput labelName="姓名" display="block" name="name"
 									placeholder="姓名"></smart:textInput>
 							</smart:gridColumn>
-							<smart:gridColumn colPart="2">
+							<smart:gridColumn colPart="4" colOffset="1">
 								<smart:textInput labelName="身份证" display="block" name="cardNo"
 									placeholder="身份证"></smart:textInput>
 							</smart:gridColumn>
@@ -71,6 +74,7 @@
 									</smart:button> --%>
 								</smart:buttonGroup>
 							</smart:gridColumn>
+							</smart:gridRow>
 						</smart:form>
 					</smart:fieldSet>
 				</smart:gridRow>

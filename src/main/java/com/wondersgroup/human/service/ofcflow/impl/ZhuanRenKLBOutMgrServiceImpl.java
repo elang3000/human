@@ -33,6 +33,7 @@ import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.util.EventManager;
+import com.wondersgroup.human.bo.ofc.JobLevel;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.OutMgr;
 import com.wondersgroup.human.bo.ofc.Servant;
@@ -42,6 +43,7 @@ import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
 import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
 import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
+import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.ZhuanRenKLBOutMgrService;
@@ -69,6 +71,9 @@ public class ZhuanRenKLBOutMgrServiceImpl extends GenericServiceImpl<ZhuanRenKLB
 
 	@Autowired
 	private FormationControlService formationControlService;
+
+	@Autowired
+	private JobLevelService jobLevelService;
 
 	/**
 	 * 读取message.properties配置文件数据
@@ -102,9 +107,12 @@ public class ZhuanRenKLBOutMgrServiceImpl extends GenericServiceImpl<ZhuanRenKLB
 	 * @return: void
 	 */
 	public void saveFlow(ZhuanRenKLBOutMgr temp){
+		JobLevel tempJ = jobLevelService.getJobLevelByServantId(temp.getServant().getId());//查询当前人员的现行职级
 		//锁未调出编制
 		if(ZhuanRenKLBOutMgr.STATUS_ZHUANCHU_STATE==temp.getStatus()){
 			formationControlService.executeLockOutFormationNum(temp.getSourceOrgan().getId());
+			//锁职级调出数
+			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
 		}
 		
 		if(temp.getStatus()==ZhuanRenKLBOutMgr.STATUS_ZHUANCHU_CONFIRM){
@@ -112,6 +120,9 @@ public class ZhuanRenKLBOutMgrServiceImpl extends GenericServiceImpl<ZhuanRenKLB
 			formationControlService.executeUnlockOutFormationNum(temp.getSourceOrgan().getId());//1.解锁调出单位未调出编制
 			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//2.减少调出单位实际编制数
 			
+			//职级
+			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//1.解锁职级调出数
+			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.减少调出单位实际职级数
 			//修改原数据状态为调出
 			Servant oldServant = servantService.get(temp.getServant().getId());
 			CodeInfo outer = dictableService.getCodeInfoByCode("3", DictTypeCodeContant.CODE_HUMAN_STATUS);// 调出CODE

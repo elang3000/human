@@ -57,10 +57,13 @@ import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.human.bo.ofcflow.RecruitEmployPlan;
 import com.wondersgroup.human.bo.ofcflow.RecruitPost;
 import com.wondersgroup.human.bo.ofcflow.RecruitYearPlan;
+import com.wondersgroup.human.bo.organization.OrgFormation;
+import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.RecruitEmployPlanService;
 import com.wondersgroup.human.service.ofcflow.RecruitPostService;
 import com.wondersgroup.human.service.ofcflow.RecruitYearPlanService;
+import com.wondersgroup.human.service.organization.OrgFormationService;
 import com.wondersgroup.human.service.organization.OrgInfoService;
 import com.wondersgroup.human.util.ExcelUtilsPOI;
 import com.wondersgroup.human.vo.ofcflow.RecruitEmployPlanVO;
@@ -136,6 +139,10 @@ public class RecruitController extends GenericController {
 	OrgInfoService unitbasciinfoservice;
 	@Autowired
 	private FlowRecordService flowRecordService;
+	@Autowired
+	private OrgFormationService orgFormationService;
+	@Autowired
+	private OrgInfoService orgInfoService;
 	//@Autowired
 	//private FormationControlService formationControlService;
 	/**
@@ -475,6 +482,18 @@ public class RecruitController extends GenericController {
 			plan.setYearPlan(yearPlan);
 			OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
 			model.addAttribute("OrganNode", x);
+			//查询当前单位编制情况
+			OrgInfo org = orgInfoService.findUniqueBy("organ.id", x.getId());
+			if(org!=null){
+				OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", org.getId());
+				if(orgFormation!=null){
+					plan.setAllowWeaveNum(orgFormation.getUnitPlanningTotal());//核定编制数
+					plan.setRealNum(orgFormation.getActualNumber());//实有人数
+					plan.setThisYearLackWeaveNum(orgFormation.getVacancyExcessNumber());//机构缺编数
+					plan.setChiefLackWeaveNum(orgFormation.getVacancyDivisionChiefLevelNumber());//处级实职缺编人数
+				}
+			}
+			
 			OrganNode root = organizationService.getCurrentUnitOrganForOrganNodeCode(CommonConst.ROOT_ORGAN_CODE);//长宁区
 			plan.setEmployOrgan(x);
 			plan.setRecruitOrgan(root);
@@ -629,6 +648,10 @@ public class RecruitController extends GenericController {
 		
 		if (recruitemployplan.getYearPlan() != null&&StringUtils.isNotBlank(recruitemployplan.getYearPlan().getId())) {// 年度计划
 			Predicate p = new Predicate("yearPlan", Operator.EQ, recruitemployplan.getYearPlan(), "");
+			filter.add(p);
+		}
+		if (recruitemployplan.getRecuritType() != null&&StringUtils.isNotBlank(recruitemployplan.getRecuritType().getId())) {// 编制类型
+			Predicate p = new Predicate("recuritType", Operator.EQ, recruitemployplan.getRecuritType(), "");
 			filter.add(p);
 		}
 

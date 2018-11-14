@@ -167,7 +167,7 @@
 			<smart:gridRow>
 				<smart:title title="职务信息" style="margin-top: 5px;" color="blue" />
 				<smart:table id="postNavigationList"
-					url="ofc/post/pageList?servantId=${servantId}" height="full"
+					url="ofcflow/jobchange/activeAndNoChangeJob/${servantId}" height="full"
 					page="false" limit="10000" text="未找到职务数据！">
 					<tr>
 						<smart:tableItem field="postName" width=".2" sort="false">职务名称</smart:tableItem>

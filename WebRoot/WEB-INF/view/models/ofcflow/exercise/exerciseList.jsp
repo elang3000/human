@@ -30,15 +30,21 @@
 									<smart:textInput labelName="去向单位" display="block" name="targetOrgan" placeholder="去向单位"></smart:textInput>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="3" colOffset="1">
-									<smart:button theme="normal" size="sm" method="search"
-										title="查询">
-										<smart:icon icon="search"></smart:icon>
-									</smart:button>
-									<shiro:hasPermission name="ADD_EXERCISE_BTN">
-										<smart:button size="sm" method="add" title="新增">
-											<smart:icon icon="plus">&nbsp;新增</smart:icon>
-										</smart:button>
-									</shiro:hasPermission>
+									<smart:buttonGroup container="true">
+										<smart:button size="sm" method="search" title="查询"
+											theme="primary">
+											<smart:icon icon="search"></smart:icon>&nbsp;查询
+			  				 			</smart:button>
+										<smart:button size="sm" title="重置" theme="primary"
+											type="reset">
+											<smart:icon icon="history"></smart:icon>&nbsp;重置
+			   							</smart:button>
+										<shiro:hasPermission name="ADD_EXERCISE_BTN">
+											<smart:button size="sm" method="add" title="新增">
+												<smart:icon icon="plus">&nbsp;新增</smart:icon>
+											</smart:button>
+										</shiro:hasPermission>
+									</smart:buttonGroup>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:form>

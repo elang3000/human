@@ -24,6 +24,8 @@ import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.JobShiftDeposeService;
 import com.wondersgroup.human.service.ofcflow.JobShiftService;
 import com.wondersgroup.human.service.organization.FormationControlService;
+import com.wondersgroup.human.vo.ofc.PostVO;
+import com.wondersgroup.human.vo.ofc.ServantVO;
 import com.wondersgroup.human.vo.organization.JudgePostResult;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,25 +142,17 @@ public class JobShiftController extends GenericController {
         return  formRecordData;
     }
 
+	/**
+	 * 到个人详情页面
+	 * @param model
+	 * @param id
+	 * @param postTenureChangeCode
+	 * @return
+	 */
     @RequestMapping("/detailView")
     public String jobChangeView(Model model,String id,String postTenureChangeCode){
+		model.addAttribute("view", true);
 
-		//职务变动代码DM006 职务晋升
-        List<CodeInfo> promoteCodes = dictableService.findCodeInfoByCodeType("DM006", "2");
-		List<String> codeStrs = new ArrayList<>();
-        promoteCodes.forEach(
-			codeInfo->{
-				codeStrs.add(codeInfo.getId());
-			}
-		);
-		if(codeStrs.contains(postTenureChangeCode)){
-			return JOBCHANGE_PROMOTE_PAGE;
-		}
-        //职务变动代码 降职
-		CodeInfo demoteCode = dictableService.getCodeInfoByCode("5", "DM006");
-		if(demoteCode.getId().equals(postTenureChangeCode)){
-			return "2";
-		}
 		//职务变动代码 免职
 		List<CodeInfo> deposeCodes = dictableService.findCodeInfoByCodeType("DM006", "4");
 		List<String> deposeCodeStrs = new ArrayList<>();
@@ -166,14 +160,60 @@ public class JobShiftController extends GenericController {
 			deposeCodeStrs.add(codeInfo.getId());
 		});
 		if (deposeCodeStrs.contains(postTenureChangeCode)){
-			return "3";
-		}
-		//职务变动代码 轮岗
-		CodeInfo shiftCode = dictableService.getCodeInfoByCode("6", "DM006");
-		if(shiftCode.getId().equals(postTenureChangeCode)){
-			return "4";
+			JobShiftDepose jobShiftDepose = this.jobShiftDeposeService.load(id);
+			model.addAttribute("jobShiftDepose", jobShiftDepose);
+			model.addAttribute("servant", jobShiftDepose.getServant());
+			model.addAttribute("post", jobShiftDepose.getPost());
+			return JOBCHANGE_DEPOSE_PAGE;
+		}else{
+			JobShift jobShift = this.jobShiftService.load(id);
+			model.addAttribute("jobShift", jobShift);
+			model.addAttribute("servant", jobShift.getServant());
+			model.addAttribute("post", jobShift.getPrePost());
+			//职务变动代码DM006 职务晋升
+			List<CodeInfo> promoteCodes = dictableService.findCodeInfoByCodeType("DM006", "2");
+			List<String> codeStrs = new ArrayList<>();
+			promoteCodes.forEach(
+					codeInfo->{
+						codeStrs.add(codeInfo.getId());
+					}
+			);
+			if(codeStrs.contains(postTenureChangeCode)){
+				return JOBCHANGE_PROMOTE_PAGE;
+			}
+			//职务变动代码 降职
+			CodeInfo demoteCode = dictableService.getCodeInfoByCode("5", "DM006");
+			if(demoteCode.getId().equals(postTenureChangeCode)){
+				return JOBCHANGE_DEMOTE_PAGE;
+			}
+			//职务变动代码 轮岗
+			CodeInfo shiftCode = dictableService.getCodeInfoByCode("6", "DM006");
+			if(shiftCode.getId().equals(postTenureChangeCode)){
+				model.addAttribute("isShift", true);
+				return JOBCHANGE_DEMOTE_PAGE;
+			}
 		}
 		throw new BusinessException("没有对应的职务变动类型");
+	}
+
+
+	@RequestMapping("/activeAndNoChangeJob/{servantId}")
+	@ResponseBody
+	public Page<PostVO> getAllActiveAndNoChangeJob(@PathVariable(name = "servantId",required = true) String servantId){
+    	//所有在职职位
+		List<Post> allPost = this.postService.getAllPost(servantId);
+		//获取所有正在处理的职位的id,
+		List<String> jobShiftIds=this.jobShiftService.getHandledPostIds(servantId);
+		List<PostVO> postVOS = new ArrayList<>();
+		allPost.forEach(post -> {
+			//假如流程中没有包含此post
+			if(jobShiftIds==null||!jobShiftIds.contains(post.getId())){
+				postVOS.add(new PostVO(post));
+			}
+		});
+		Page<PostVO> page = new Page<>(0, 1,
+				1,10000, postVOS);
+		return page;
 	}
 
 	/**

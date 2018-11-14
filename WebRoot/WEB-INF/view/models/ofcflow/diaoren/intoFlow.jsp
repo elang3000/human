@@ -155,36 +155,36 @@
 								</smart:gridColumn>
 							</smart:gridRow>
 						</c:if>
-						<c:if test="${d.status>6 && d.areaType eq '1'}">
-							<smart:gridRow>
-								<smart:title title="调出信息" style="margin-top: 5px;" color="blue" />
-							</smart:gridRow>
-							<smart:gridRow>
-								<smart:gridColumn colPart="4">
-									<smart:textInput type="hidden" name="diaoRenOutMgr.id" value="${o.id}"></smart:textInput>
-									<smart:infoShowerLabel infoname="调往单位名称" infovalue="${o.gotoUnitName}"></smart:infoShowerLabel>
-								</smart:gridColumn>
-								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="调出本单位类别" infovalue="${o.category.name}"></smart:infoShowerLabel>
-								</smart:gridColumn>
-								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="调出本单位日期" infovalue="${o.outDate}"></smart:infoShowerLabel>
-								</smart:gridColumn>
-							</smart:gridRow>
-							<smart:gridRow>
-								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="提出调动类型" infovalue="${o.proposeType.name}"></smart:infoShowerLabel>
-								</smart:gridColumn>
-								<smart:gridColumn colPart="8">
-									<smart:infoShowerLabel infoname="调动原因" infovalue="${o.reasonType.name}"></smart:infoShowerLabel>
-								</smart:gridColumn>
-							</smart:gridRow>
-							<smart:gridRow>
-								<smart:gridColumn colPart="8">
-									<smart:infoShowerLabel infoname="调出备注" infovalue="${o.remark}"></smart:infoShowerLabel>
-								</smart:gridColumn>
-							</smart:gridRow>
-						</c:if>
+					</c:if>
+					<c:if test="${d.status>6 && d.areaType eq '1'}">
+						<smart:gridRow>
+							<smart:title title="调出信息" style="margin-top: 5px;" color="blue" />
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="4">
+								<smart:textInput type="hidden" name="diaoRenOutMgr.id" value="${o.id}"></smart:textInput>
+								<smart:infoShowerLabel infoname="调往单位名称" infovalue="${o.gotoUnitName}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="调出本单位类别" infovalue="${o.category.name}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="调出本单位日期" infovalue="${o.outDate}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="提出调动类型" infovalue="${o.proposeType.name}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="8">
+								<smart:infoShowerLabel infoname="调动原因" infovalue="${o.reasonType.name}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="8">
+								<smart:infoShowerLabel infoname="调出备注" infovalue="${o.remark}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
 					</c:if>
 					<smart:gridRow>
 						<smart:title title="附件信息" style="margin-top: 5px;" color="blue" />

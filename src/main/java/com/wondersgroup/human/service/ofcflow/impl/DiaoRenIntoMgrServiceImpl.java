@@ -310,12 +310,10 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 		FlowRecord flow;
 		if(DiaoRenIntoMgr.STATUS_DIAOREN_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
 			//编控
-			//校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+			//校验编制数是否足够，判断数据能否保存，如果超编，抛出异常  事业单位人员没有编控，不锁调出单位编制信息
 			formationControlService.queryJudgeFormationNum(temp.getTargetOrgan().getId());
 			//启动流程，锁未调入编制
 			formationControlService.executeLockIntoFormationNum(temp.getTargetOrgan().getId());
-			//锁未调出编制
-			formationControlService.executeLockOutFormationNum(temp.getSourceOrgan().getId());
 			
 			//职级
 			//校验职级
@@ -325,8 +323,6 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 			temp.setIsLowToHigh(j.isLowToHigh);//放入高职低配
 			//锁职级调入数
 			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
-			//锁职级调出数
-			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
 			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
@@ -371,14 +367,9 @@ public class DiaoRenIntoMgrServiceImpl extends GenericServiceImpl<DiaoRenIntoMgr
 		if(flow==null&&FlowRecord.PASS.equals(r)){//流程最后环节
 			//流程结束，改变编制
 			formationControlService.executeUnlockIntoFormationNum(temp.getTargetOrgan().getId());//1.解锁调入单位未调入编制
-			formationControlService.executeUnlockOutFormationNum(temp.getSourceOrgan().getId());//2.解锁调出单位未调出编制
-			formationControlService.executeIntoFormation(temp.getTargetOrgan().getId());//3.增加调入单位实际编制数
-			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//4.减少调出单位实际编制数
+			formationControlService.executeIntoFormation(temp.getTargetOrgan().getId());//2.增加调入单位实际编制数
 			//职级
 			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
-			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//2.解锁职级调出数
-//			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//3.增加调入单位实际职级数
-			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//4.减少调出单位实际职级数
 			
 			temp.setStatus(DiaoRenIntoMgr.STATUS_DIAOREN_FINISH);
 			temp.setFlowRecord(null);//修改当前业务的流程节点

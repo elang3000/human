@@ -107,13 +107,22 @@
 									display="block" url="dictquery/sub/code/DM049" initSelectedKey="${jobShift.newPostAttribute.id }" verify="required" isNotNull="true"></smart:singleSelect>
 								</smart:gridColumn>
 								
-																<smart:gridColumn colPart="4">
+								<smart:gridColumn colPart="4">
 									<smart:singleSelect labelName="职级名称：" name="newJobLevel.id" display="block" url="dictquery/sub/code/GBT_12407_2008/1" isAddDefaltOption="true" initSelectedKey="${jobShift.newJobLevel.id}"  initCludeKey="[141,142,150,160]"
 									verify="required" isNotNull="true" isSaveShowName="true" inputShowName="name"></smart:singleSelect>
 								</smart:gridColumn>
-								
+								<smart:gridColumn colPart="4">
+									<smart:singleSelect id="highestPostSign" labelName="最高职务标识：" name="highestPostSign.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${jobShift.highestPostSign.id }" verify="required" isNotNull="true" changeCallBack="topChangeEvent"></smart:singleSelect>
+								</smart:gridColumn>
+
 							</smart:gridRow>
-							
+
+							<smart:gridRow>
+								<smart:gridColumn colPart="4">
+									<smart:singleSelect labelName="是否兼任下级领导职务：" id="isLowerLeader" name="isLowerLeader.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${jobShift.isLowerLeader.id }" verify="required" isNotNull="true"></smart:singleSelect>
+								</smart:gridColumn>
+							</smart:gridRow>
+
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
 									<smart:textarea isNotNull="true" verify="required"
@@ -128,10 +137,12 @@
 				<smart:gridRow>
 					<smart:gridColumn>
 						<smart:buttonGroup container="true">
-							<smart:button id="save" other="lay-submit" size="sm" method="add"
-								title="提交当前表单">
-								<smart:icon icon="check">提交</smart:icon>
-							</smart:button>
+							<c:if test="${!view}">
+								<smart:button id="save" other="lay-submit" size="sm" method="add"
+									title="提交当前表单">
+									<smart:icon icon="check">提交</smart:icon>
+								</smart:button>
+							</c:if>
 							<smart:button theme="warm" size="sm" title="返回" method="goBack">
 								<smart:icon icon="reply"></smart:icon>&nbsp;返回
 							</smart:button>

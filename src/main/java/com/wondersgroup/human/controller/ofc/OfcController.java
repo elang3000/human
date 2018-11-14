@@ -1,9 +1,14 @@
 package com.wondersgroup.human.controller.ofc;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.apache.http.HttpRequest;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -15,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wondersgroup.common.contant.DictTypeCodeContant;
+import com.wondersgroup.common.utils.FtpTool;
+import com.wondersgroup.config.ReadProperties;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
@@ -34,6 +41,8 @@ import com.wondersgroup.human.service.ofc.RewardAndPunishService;
 import com.wondersgroup.human.service.ofc.ServantBasicInfoService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.ServantVO;
+
+import sun.misc.BASE64Decoder;
 
 /**
  * @ClassName: OfcController
@@ -68,20 +77,22 @@ public class OfcController extends GenericController {
 	 * 公务员登记表
 	 */
 	private static final String VIEW_OFC_MAIN = "models/ofc/infoMainten/ofcMain";
+	
 	private static final String VIEW_OFC_MAIN_VIEW = "models/ofc/infoMainten/ofcMainView";
 	
 	/**
 	 * 公务员基本信息集
 	 */
 	private static final String VIEW_OFC_MAIN_EIDT = "models/ofc/infoMainten/ofcMainEdit";
+	
 	private static final String VIEW_OFC_MAIN_EIDT_VIEW = "models/ofc/infoMainten/ofcMainEditView";
 	
 	/**
 	 * 其他子集
 	 */
 	private static final String VIEW_OFC_EXTEND_LIST = "models/ofc/infoMainten/ofcExtendList";
-	private static final String VIEW_OFC_EXTEND_LIST_VIEW = "models/ofc/infoMainten/ofcExtendListView";
 	
+	private static final String VIEW_OFC_EXTEND_LIST_VIEW = "models/ofc/infoMainten/ofcExtendListView";
 	
 	private static final String VIEW_OFC_VALIDATE = "models/ofc/validateServatBasicInfo";
 	
@@ -102,6 +113,7 @@ public class OfcController extends GenericController {
 	
 	@Autowired
 	ServantBasicInfoService servantBasicInfoService;
+	
 	/**
 	 * @Title: ofclist
 	 * @Description: 在职人员信息列表
@@ -226,7 +238,27 @@ public class OfcController extends GenericController {
 	 */
 	@ResponseBody
 	@RequestMapping("/saveServant")
-	public AjaxResult saveServant(Servant temp) {
+	public AjaxResult saveServant(Servant temp, String photostr) {
+		
+		// 保存头像
+		if (StringUtils.isNotBlank(photostr)) {
+			String[] base64photostrarr = photostr.split(",");
+			if (base64photostrarr.length > 1) {
+				BASE64Decoder decoder = new BASE64Decoder();
+				try {
+					byte[] b = decoder.decodeBuffer(base64photostrarr[1]);
+					String newName = UUID.randomUUID().toString() + ".jpg";
+					FtpTool.ftpUpload(ReadProperties.getInstance().FTP_DIR_NAME_PHOTO, b, newName);
+					temp.setPhotoPath(newName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				if (StringUtils.isNotBlank(temp.getId())) {
+					temp.setPhotoPath(photostr);
+				}
+			}
+		}
 		
 		AjaxResult result = new AjaxResult(true);
 		try {
@@ -333,8 +365,7 @@ public class OfcController extends GenericController {
 	}
 	
 	/**
-	 * 
-	 * @Title: installInfoList 
+	 * @Title: installInfoList
 	 * @Description: 组装登记表显示字段
 	 * @param servantId
 	 * @param model
@@ -365,7 +396,7 @@ public class OfcController extends GenericController {
 				info.append("&nbsp;&nbsp;");
 				info.append(e.getFormerUnit());
 				info.append("&nbsp;&nbsp;");
-				info.append(StringUtils.isNotBlank(e.getFormerJob())?e.getFormerJob():"");
+				info.append(StringUtils.isNotBlank(e.getFormerJob()) ? e.getFormerJob() : "");
 				experienceInfos.add(info.toString());
 			}
 		} else {
@@ -397,12 +428,13 @@ public class OfcController extends GenericController {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for (RewardAndPunish r : rewardList) {
 				StringBuilder info = new StringBuilder();
-				if(r.getRewardApprovalDate() !=null ){
-					info.append("在&nbsp;&nbsp;" + sdf.format(r.getRewardApprovalDate())+"&nbsp;&nbsp;");
+				if (r.getRewardApprovalDate() != null) {
+					info.append("在&nbsp;&nbsp;" + sdf.format(r.getRewardApprovalDate()) + "&nbsp;&nbsp;");
 				}
 				info.append("获得");
 				info.append("&nbsp;&nbsp;&nbsp;");
-				info.append(StringUtils.isNotBlank(r.getHonoraryName())?r.getHonoraryName()+"&nbsp;&nbsp;&nbsp;":"");
+				info.append(
+						StringUtils.isNotBlank(r.getHonoraryName()) ? r.getHonoraryName() + "&nbsp;&nbsp;&nbsp;" : "");
 				info.append(r.getRewardName());
 				rewardAndPunishInfos.add(info.toString());
 			}
@@ -425,13 +457,14 @@ public class OfcController extends GenericController {
 	
 	@RequestMapping("/validate")
 	public String validateServantBasicInfo(Model model) {
+		
 		model.addAttribute("organTreeId", organizationService.getDefaultOrganTree().getId());
 		return VIEW_OFC_VALIDATE;
 	}
 	
 	@RequestMapping("/query/basic/info")
 	@ResponseBody
-	public Page<ServantBasicInfo> queryServantBasicInfo(String organNodeId,Integer limit,Integer page) {
+	public Page<ServantBasicInfo> queryServantBasicInfo(String organNodeId, Integer limit, Integer page) {
 		
 		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ServantBasicInfo.class);
 		if (StringUtils.isNotBlank(organNodeId)) {

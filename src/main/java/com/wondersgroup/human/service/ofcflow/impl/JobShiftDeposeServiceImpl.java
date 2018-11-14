@@ -111,19 +111,29 @@ public class JobShiftDeposeServiceImpl extends GenericServiceImpl<JobShiftDepose
 
             //数据库中的post
             Post oldPost = jobShiftDepose.getPost();
-            System.out.println(jobShiftDepose.getPost().getId());
+            //提名免职的单位名称
             oldPost.setNominationDismissalName(jobShiftDepose.getNominationDismissalName());
+            //提名免职的单位代码
             oldPost.setNominationDismissalCode(jobShiftDepose.getNominationDismissalCode());
+            //提出免职日期
             oldPost.setNominationDismissalDate(jobShiftDepose.getNominationDismissalDate());
+            //提出免职文号,决定该人免职的文件的编号全称
             oldPost.setNominationDismissalNumber(jobShiftDepose.getNominationDismissalNumber());
-//			jobShiftDepose.getApprovalDismissalName();
-//			jobShiftDepose.getApprovalDismissalCode();
+            //决定或批准免职的日期
             oldPost.setApprovalDismissalDate(jobShiftDepose.getApprovalDismissalDate());
+            //决定或批准免职的文号
             oldPost.setApprovalDismissalNumber(jobShiftDepose.getApprovalDismissalNumber());
+            //免职方式
             oldPost.setDismissalType(jobShiftDepose.getDismissalType());
+            //免职原因
             oldPost.setDismissalReason(jobShiftDepose.getDismissalReason());
+            //免职变动类别
             oldPost.setDismissalChange(jobShiftDepose.getDismissalChange());
+            //免职方式
             oldPost.setDismissalMode(jobShiftDepose.getDismissalMode());
+            //设置任职状态为不在任
+            CodeInfo tenureCode = dictableService.getCodeInfoByCode("1", "DM007");
+            oldPost.setTenureStatus(tenureCode);
             postService.update(oldPost);
 
             //FIXME 免职之后 是否需要让出编制?
