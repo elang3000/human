@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wondersgroup.framework.core.bo.Page;
+import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.ofcflow.JobShiftB;
 import com.wondersgroup.human.vo.ofcflow.JobShiftBVO;
@@ -60,4 +61,6 @@ public interface JobShiftBService extends GenericService<JobShiftB>{
 
 
 	List<JobShiftB> getShiftByCollectId(String id);
+
+    Page<JobShiftBVO> findbyHQLforVO(String toString, List<QueryParameter> listqueryparameter, Integer page, Integer limit);
 }

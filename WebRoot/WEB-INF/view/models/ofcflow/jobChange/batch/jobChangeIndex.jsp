@@ -31,8 +31,8 @@
 						style="margin-left:10px;margin-right:10px;">
 						<smart:tabPanel>
 							<smart:tabPanelItem show="true" eId="" itemName="职务变动列表"></smart:tabPanelItem>
-							<smart:tabPanelItem show="false" turnurl="ofcflow/jobchangeB/indexHuman" eId=""  itemName="职务变动人员列表"></smart:tabPanelItem>
-							<smart:tabPanelItem turnurl="ofcflow/jobchange/flow" show="false" eId="" itemName="流程审批"></smart:tabPanelItem>
+							<smart:tabPanelItem show="false" turnurl="ofcflow/jobchangeB/indexHuman" eId=""  itemName="变动人员列表"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="ofcflow/jobchangeB/flow" show="false" eId="" itemName="流程审批"></smart:tabPanelItem>
 						</smart:tabPanel>
 					</smart:tabPanelParent>
 				</smart:gridRow>

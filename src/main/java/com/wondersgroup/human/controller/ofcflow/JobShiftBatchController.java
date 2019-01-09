@@ -100,6 +100,8 @@ public class JobShiftBatchController extends GenericController {
 	// 职务变动列表页面
 	private final static String JOBCHANGE_HUMAN_INDEX_PAGE = "models/ofcflow/jobChange/batch/jobChangeHumanIndex";
 
+
+
 	// 新增批量职务变动 晋升 页面
 	private final static String JOBCHANGE_BATCH_PROMOTE_ADD_PAGE = "models/ofcflow/jobChange/batch/jobChangeBatchPromoteAdd";
 
@@ -121,6 +123,8 @@ public class JobShiftBatchController extends GenericController {
 
 
 	// 职务变动-降职页面
+	private final static String JOBCHANGE_BATCH_DEMOTE_ADD_PAGE = "models/ofcflow/jobChange/batch/jobChangeBatchDemoteAdd";
+	// 职务变动-降职页面
 	private final static String JOBCHANGE_BATCH_DEMOTE_PAGE = "models/ofcflow/jobChange/batch/jobChangeBatchDemote";
 	// 降职流程审批页面
 	private final static String JOBCHANGE_BATCH_DEMOTE_FLOW_PAGE = "models/ofcflow/jobChange/batch/flow/jobChangeDemoteFlow";
@@ -133,7 +137,9 @@ public class JobShiftBatchController extends GenericController {
 	// 职务变动管理流程代办列表
 	private final static String RECRUIT_EMPLOYPLAN_FLOW = "models/ofcflow/employPlan/flow";
 
-	
+
+
+
 	/**
 	 * @Title: jobChangeIndex
 	 * @Description: 职务变动主页面
@@ -190,7 +196,7 @@ public class JobShiftBatchController extends GenericController {
 	 */
 	@RequestMapping("/humanIndexData")
     @ResponseBody
-	public Page<JobShiftCollectVO> jobChangeHumanIndexData(Integer page, Integer limit){
+	public Page<JobShiftBVO> jobChangeHumanIndexData(Integer page, Integer limit,String name,String cardNo){
         if (page == null || page == 0)
 			page = 1;
 		List<QueryParameter> listqueryparameter=new ArrayList<>();
@@ -200,7 +206,7 @@ public class JobShiftBatchController extends GenericController {
 		listqueryparameter.add(queryParameteritem);
 		listqueryparameter.add(new QueryParameter("creater", SecurityUtils.getUserId()));//只能操作自己的数据
 		hql.append( " order by createTime desc");
-		Page<JobShiftCollectVO> pageInfo = jobShiftCollectService.findbyHQLforVO(hql.toString(), listqueryparameter, page, limit);
+		Page<JobShiftBVO> pageInfo = jobShiftBService.findbyHQLforVO(hql.toString(), listqueryparameter, page, limit);
 		return  pageInfo;
     }
 
@@ -238,7 +244,7 @@ public class JobShiftBatchController extends GenericController {
     	collect.setCollectType(jobChangeType);
     	//假如是免职
     	 if(jobChangeType.equals(FlowBusTypeConstant.FLOW_JOBSHIFT_DEPOSE)){
-    		return JOBCHANGE_BATCH_DEPOSE_PAGE;
+    		return JOBCHANGE_BATCH_DEMOTE_ADD_PAGE;
     	//假如是轮岗
     	}else if(jobChangeType.equals(FlowBusTypeConstant.FLOW_JOBSHIFT_SHIFT)){
     		return JOBCHANGE_BATCH_SHIFT_PAGE;
@@ -552,7 +558,7 @@ public class JobShiftBatchController extends GenericController {
 	 */
 	@RequestMapping("/flow")
 	public String flow(Model model) {
-		model.addAttribute("busType", FlowBusTypeConstant.FLOW_JOBSHIFT_ALL);
+		model.addAttribute("busType", FlowBusTypeConstant.FLOW_JOBSHIFTB_ALL);
 		return RECRUIT_EMPLOYPLAN_FLOW;
 	}
 	

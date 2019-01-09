@@ -36,12 +36,19 @@ public class FlowBusTypeConstant {
 	
 	// 职务变动所有流程,拼接字符串
 	public static String FLOW_JOBSHIFT_ALL;
-	
+
+	// 职务变动多人所有流程,拼接字符串
+	public static String FLOW_JOBSHIFTB_ALL;
+
 	static {
 		String[] jobShiftFlowArrays = {
 		        FLOW_JOBSHIFT_PROMOTE, FLOW_JOBSHIFT_DEMOTE, FLOW_JOBSHIFT_DEPOSE, FLOW_JOBSHIFT_SHIFT
 		};
 		FLOW_JOBSHIFT_ALL = StringUtils.join(jobShiftFlowArrays, ",");
+		String[] jobShiftFlowBArrays = {
+		        FLOW_JOBSHIFT_PROMOTEB, FLOW_JOBSHIFT_DEMOTE, FLOW_JOBSHIFT_DEPOSE, FLOW_JOBSHIFT_SHIFT
+		};
+		FLOW_JOBSHIFTB_ALL = StringUtils.join(jobShiftFlowBArrays, ",");
 	}
 	
 }

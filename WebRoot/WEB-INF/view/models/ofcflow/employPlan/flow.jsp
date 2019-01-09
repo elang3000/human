@@ -50,6 +50,10 @@
 							<c:if test="${busType eq 'JOBSHIFT_PROMOTE,JOBSHIFT_DEMOTE,JOBSHIFT_DEPOSE,JOBSHIFT_SHIFT'}">
 								<smart:tabPanelItem turnurl="ofcflow/jobchange/index" eId="" show="false" itemName="职务变动名单列表"></smart:tabPanelItem>
 							</c:if>
+							<c:if test="${busType eq 'JOBSHIFT_PROMOTEB,JOBSHIFT_DEMOTE,JOBSHIFT_DEPOSE,JOBSHIFT_SHIFT'}">
+								<smart:tabPanelItem turnurl="ofcflow/jobchangeB/index" eId="" show="false" itemName="职务变动列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/jobchangeB/indexHuman" eId="" show="false" itemName="变动人员列表"></smart:tabPanelItem>
+							</c:if>
 							<c:if test="${busType eq 'Train'}">
 								<smart:tabPanelItem turnurl="ofcflow/trainServant/index" eId="" show="false" itemName="培训学时考核列表"></smart:tabPanelItem>
 							</c:if>
@@ -151,6 +155,9 @@
 				</c:if>
 				<c:if test="${busType eq 'JOBSHIFT_PROMOTE,JOBSHIFT_DEMOTE,JOBSHIFT_DEPOSE,JOBSHIFT_SHIFT'}">
 					var url = "ofcflow/jobchange/jobChangeFlow";
+				</c:if>
+				<c:if test="${busType eq 'JOBSHIFT_PROMOTEB,JOBSHIFT_DEMOTE,JOBSHIFT_DEPOSE,JOBSHIFT_SHIFT'}">
+					var url = "ofcflow/jobchangeB/jobChangeFlow";
 				</c:if>
 				<c:if test="${busType eq 'Train'}">
 					var url = "ofcflow/trainServant/trainFlow";

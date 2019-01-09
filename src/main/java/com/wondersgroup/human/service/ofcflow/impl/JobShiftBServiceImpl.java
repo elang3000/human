@@ -25,6 +25,7 @@ import com.wondersgroup.framework.workflow.service.WorkflowService;
 import com.wondersgroup.human.bo.ofc.*;
 import com.wondersgroup.human.bo.ofcflow.JobShift;
 import com.wondersgroup.human.bo.ofcflow.JobShiftB;
+import com.wondersgroup.human.bo.ofcflow.JobShiftCollect;
 import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.event.ofc.ManagerManageRecordEvent;
 import com.wondersgroup.human.repository.ofcflow.JobShiftBRepository;
@@ -35,6 +36,7 @@ import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.JobShiftBService;
 import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofcflow.JobShiftBVO;
+import com.wondersgroup.human.vo.ofcflow.JobShiftCollectVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Service
@@ -436,5 +439,20 @@ public class JobShiftBServiceImpl extends GenericServiceImpl<JobShiftB>
 			return  temppage;
 	}
 
-	
+	@Override
+	public Page<JobShiftBVO> findbyHQLforVO(String hql, List<QueryParameter> listqueryparameter, Integer pageNo, Integer pagesize) {
+		Page<JobShiftB> temppage=this.findByHQL(hql, listqueryparameter, pageNo, pagesize);
+		List<JobShiftBVO> voList = new ArrayList<>();
+		for (JobShiftB jobShiftB : temppage.getResult()) {
+			//旧职级
+			JobLevel formerJobLevel = jobLevelService.getJobLevelByServantId(jobShiftB.getServant().getId());//查询当前人员的现行职级
+			JobShiftBVO jobShiftBVO = new JobShiftBVO(jobShiftB,formerJobLevel);
+			voList.add(jobShiftBVO);
+		}
+		Page<JobShiftBVO> page = new Page<>(temppage.getStart(), temppage.getCurrentPageSize(), temppage.getTotalSize(), temppage.getPageSize(), voList);
+		return page;
+
+	}
+
+
 }
