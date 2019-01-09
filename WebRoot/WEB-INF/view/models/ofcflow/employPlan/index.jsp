@@ -36,7 +36,7 @@
 								<smart:gridColumn colPart="4">
 									<smart:singleSelect display="block" isAddDefaltOption="true"
 										labelName="年度招录计划：" name="yearPlan.id"
-										url="ofcflow/recruit/year/find"></smart:singleSelect>
+										url="ofcflow/recruit/year/find" isSearch="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
 									<smart:singleSelect labelName="编制类型：" isSearch="true"
@@ -82,7 +82,7 @@
 							text="未找到有效数据！">
 							<tr>
 								<smart:tableItem field="employOrgan" width=".1" sort="true">用人机关</smart:tableItem>
-								<smart:tableItem field="yearPlan" width=".2" sort="true">年度招录计划</smart:tableItem>
+								<smart:tableItem field="yearPlan" width=".15" sort="true">年度招录计划</smart:tableItem>
 								<smart:tableItem field="recuritType" width=".1" sort="false">编制类型</smart:tableItem>
 								<smart:tableItem field="allowWeaveNum" width=".1" sort="false">机构编制数</smart:tableItem>
 								<smart:tableItem field="realNum" width=".1" sort="false">机构实有人数</smart:tableItem>
@@ -90,7 +90,7 @@
 									sort="false">机构缺编数</smart:tableItem>
 								<smart:tableItem field="planEmployNum" width=".1" sort="false">计划招录人数</smart:tableItem>
 								<smart:tableItem field="planState" width=".1" sort="false">状态</smart:tableItem>
-								<smart:tableItem align="center" width=".1" unresize="true"
+								<smart:tableItem align="center" width=".15" unresize="true"
 									toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<script type="text/html" id="navListToolBar">

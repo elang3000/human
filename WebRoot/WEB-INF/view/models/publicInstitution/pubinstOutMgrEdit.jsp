@@ -21,13 +21,13 @@
 										<smart:textInput type="hidden" name="publicInstitution.id" value="${pubinst.id}"></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="提出调动类型：" name="proposeType.id" display="block" url="dictquery/sub/code/DM039" isAddDefaltOption="true" initSelectedKey="${outMgr.proposeType.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="提出调动类型："  isNotNull="true" verify="required" name="proposeType.id" display="block" url="dictquery/sub/code/DM039" isAddDefaltOption="true" initSelectedKey="${outMgr.proposeType.id }"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="category" labelName="调出类别：" inputName="category.id" codeTypeCode="GBT_12405_2008" inputVal="${outMgr.category.id}" valType="ID" widthPercent="0.3333"/>
+										<smart:continuousSelect id="category" labelName="调出类别："  inputName="category.id" codeTypeCode="GBT_12405_2008" inputVal="${outMgr.category.id}" valType="ID" widthPercent="0.3333"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
@@ -39,10 +39,10 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:date labelName="调出日期：" display="block" name="outDate" id="outDate" value="${outMgr.outDate}"></smart:date>
+										<smart:date labelName="调出日期：" isNotNull="true" verify="required"  display="block" name="outDate" id="outDate" value="${outMgr.outDate}"></smart:date>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="调往单位：" name="gotoUnitName" value="${outMgr.gotoUnitName}" ></smart:textInput>
+										<smart:textInput labelName="调往单位：" isNotNull="true" verify="required" name="gotoUnitName" value="${outMgr.gotoUnitName}" ></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 								

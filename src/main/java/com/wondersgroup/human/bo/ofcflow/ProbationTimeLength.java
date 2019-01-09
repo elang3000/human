@@ -15,9 +15,13 @@
 
 package com.wondersgroup.human.bo.ofcflow;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
 
@@ -32,6 +36,8 @@ import com.wondersgroup.framework.core.bo.GenericEntity;
  */
 @Entity
 @Table(name = "HUMAN_PROBATION_TIME_LENGTH")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ProbationTimeLength extends GenericEntity {
 	
 	private static final long serialVersionUID = -1197466507530402349L;

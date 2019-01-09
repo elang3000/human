@@ -17,12 +17,16 @@ package com.wondersgroup.human.bo.ofcflow;
 
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
@@ -36,7 +40,10 @@ import com.wondersgroup.framework.core.bo.GenericEntity;
  * @see       [相关类/方法]
  * @since     [产品/模块版本] 
  */
-@Entity(name = "HUMAN_RECRUIT_YEAR_PLAN")
+@Entity
+@Table(name = "HUMAN_RECRUIT_YEAR_PLAN")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class RecruitYearPlan extends GenericEntity{
 	
 	private static final long serialVersionUID = 3318219165267089160L;

@@ -24,13 +24,13 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="code" labelName="任职资格名称 ：" inputName="code.id" codeTypeCode="GBT_8561_2001" inputVal="${competence.code.id}" valType="ID" widthPercent="0.5" isSaveShowName="true" inputShowName="name" allOrLast="last"/>
+										<smart:continuousSelect id="code" labelName="任职资格名称 ："  isNotNull="true" verify="required" inputName="code.id" codeTypeCode="GBT_8561_2001" inputVal="${competence.code.id}" valType="ID" widthPercent="0.5" isSaveShowName="true" inputShowName="name" allOrLast="last"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="lvl" labelName="任职资格级别 ：" inputName="lvl.id" codeTypeCode="GBT_12407_2008" inputVal="${competence.lvl.id}" valType="ID" widthPercent="0.5"/>
+										<smart:continuousSelect id="lvl" labelName="任职资格级别 ：" isNotNull="true" verify="required" inputName="lvl.id" codeTypeCode="GBT_12407_2008" inputVal="${competence.lvl.id}" valType="ID" widthPercent="0.5"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 								

@@ -15,6 +15,14 @@
  */
 package com.wondersgroup.human.repository.ofcflow.impl;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.persistence.ParameterMode;
+
+import org.hibernate.procedure.ProcedureCall;
+import org.hibernate.procedure.ProcedureOutputs;
 import org.springframework.stereotype.Repository;
 
 import com.wondersgroup.framework.core.dao.impl.GenericRepositoryImpl;
@@ -36,6 +44,31 @@ public class ReferenceExchangeRepositoryImpl extends GenericRepositoryImpl<Refer
 	@Override
 	public Class<ReferenceExchange> getEntityClass() {
 		return ReferenceExchange.class;
+	}
+
+	/** (non Javadoc) 
+	 * @Title: executeStoreProcedure
+	 * @Description: TODO
+	 * @param storeProcedureName
+	 * @param params
+	 * @param backList
+	 * @return 
+	 * @see com.wondersgroup.human.repository.ofcflow.ReferenceExchangeRepository#executeStoreProcedure(java.lang.String, java.util.Map, java.util.List) 
+	 */
+	@Override
+	public ProcedureOutputs executeStoreProcedure(String storeProcedureName, Map<String, String> params,
+	        List<String> backList) {
+		ProcedureCall procedureCall = currentSession().createStoredProcedureCall(storeProcedureName);
+		//设置输入参数
+		for(Entry<String, String> entry:params.entrySet()){
+			procedureCall.registerParameter(entry.getKey(), String.class,  ParameterMode.IN).bindValue(entry.getValue());
+		}
+		
+		//设置输出参数
+		for(String back : backList){
+			procedureCall.registerParameter(back, String.class,  ParameterMode.OUT);
+		}
+		return procedureCall.getOutputs();
 	}
 	
 }

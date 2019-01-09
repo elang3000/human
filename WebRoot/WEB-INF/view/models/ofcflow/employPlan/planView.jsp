@@ -23,79 +23,75 @@
 				<smart:form id="editForm">
 					<smart:gridRow>
 						<smart:gridRow>
+							<smart:title title="用人机构编制信息" style="margin-top: 5px;" color="blue" />
+						</smart:gridRow>
+						<%@include file="../zhuanRenB/formation.jsp" %>
+						<smart:gridRow>
+							<smart:title title="招录计划" style="margin-top: 5px;"
+								color="blue" />
+						</smart:gridRow>
+						<smart:gridRow>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="年度计划" infovalue="${recruityearplan.name}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="起止时间" infovalue="${recruityearplan.startDate}至${recruityearplan.endDate}"></smart:infoShowerLabel>
 							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="招录机构" infovalue="${recruitemployplan.recruitOrgan.name}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="招录机构" infovalue="${d.recruitOrgan.name}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="用人机构" infovalue="${d.employOrgan.name}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="用人机构" infovalue="${recruitemployplan.employOrgan.name}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="编制类型" infovalue="${d.recuritType.name}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构编制数" infovalue="${recruitemployplan.allowWeaveNum}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="计划招录人数" infovalue="${d.planEmployNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构实有人数" infovalue="${recruitemployplan.realNum}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="计划减员人数" infoname="机构计划减员人数" infovalue="${d.planCutNum}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构缺编数" infovalue="${recruitemployplan.thisYearLackWeaveNum}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="人员类别" infovalue="${d.personType.name}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="处级实职缺编人数" infovalue="${recruitemployplan.chiefLackWeaveNum}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="联系人" infovalue="${d.contacter}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="联系电话" infovalue="${d.contactPhone}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="编制类型" infovalue="${recruitemployplan.recuritType.name}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="通讯地址" infovalue="${d.contactAddress}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="计划招录人数" infovalue="${recruitemployplan.planEmployNum}"></smart:infoShowerLabel>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构计划减员人数" infovalue="${recruitemployplan.planCutNum}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="咨询电话" infovalue="${d.consultPhone}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="人员类别" infovalue="${recruitemployplan.personType.name}"></smart:infoShowerLabel>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="联系人" infovalue="${recruitemployplan.contacter}"></smart:infoShowerLabel>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="联系电话" infovalue="${recruitemployplan.contactPhone}"></smart:infoShowerLabel>
+							<smart:gridColumn colPart="8">
+								<smart:infoShowerLabel infoname="备注" infovalue="${d.remark}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
-						<smart:gridRow>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="通讯地址" infovalue="${recruitemployplan.contactAddress}"></smart:infoShowerLabel>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="咨询电话" infovalue="${recruitemployplan.consultPhone}"></smart:infoShowerLabel>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="备注" infovalue="${recruitemployplan.remark}"></smart:infoShowerLabel>
-							</smart:gridColumn>
-						</smart:gridRow>
-						<c:if test="${recruitemployplan.planState>=2&&recruitemployplan.planState<=5}">
+						<c:if test="${d.planState>=2&&d.planState<=5}">
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="初审招录人数" infovalue="${recruitemployplan.firstEmployNum }"></smart:infoShowerLabel>
+									<smart:infoShowerLabel infoname="初审招录人数" infovalue="${d.firstEmployNum }"></smart:infoShowerLabel>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</c:if>
-						<c:if test="${recruitemployplan.planState>6 }">
+						<c:if test="${d.planState>6 }">
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="终审招录人数" infovalue="${recruitemployplan.endEmployNum }"></smart:infoShowerLabel>
+									<smart:infoShowerLabel infoname="终审招录人数" infovalue="${d.endEmployNum }"></smart:infoShowerLabel>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</c:if>
@@ -104,7 +100,7 @@
 						<smart:line color="blue" />
 						<smart:gridColumn colPart="2" deviceType="md" colOffset="5">
 							<smart:buttonGroup container="true">
-								<smart:button theme="warm" size="sm" method="goBack" title="返回">
+								<smart:button theme="primary" size="sm" method="goBack" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>

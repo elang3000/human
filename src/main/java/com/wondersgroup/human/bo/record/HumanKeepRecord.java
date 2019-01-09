@@ -17,15 +17,19 @@ package com.wondersgroup.human.bo.record;
 
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
@@ -41,7 +45,10 @@ import com.wondersgroup.human.bo.ofc.Servant;
  * @see       [相关类/方法] 
  * @since     [产品/模块版本]
  */
-@Entity(name = "HUMAN_KEEP_RECORD")
+@Entity
+@Table(name = "HUMAN_KEEP_RECORD")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class HumanKeepRecord extends GenericEntity {
 	//备案类型：公务员调任调出
 	@Transient

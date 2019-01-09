@@ -103,6 +103,11 @@ public class SwPostServiceImpl extends GenericServiceImpl<SrPost> implements SwP
 	@Override
 	public void delete(SrPost entity) {
 		
+		// 在任
+		CodeInfo inOfficeCode = dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
+		// 不在任
+		CodeInfo noInOfficeCode = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
+		
 		// 如果删除的是最高职位的标识，更新公务员信息表中最高职位字段
 		CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
 		if (entity.getHighestPostSign().getId().equals(yesCodeInfo.getId())) {
@@ -111,7 +116,8 @@ public class SwPostServiceImpl extends GenericServiceImpl<SrPost> implements SwP
 			socialWorkerService.update(pubinst);
 		}
 		// 如果删除的是现任职位的标识，更新公务员信息表中现任职位字段getNowPostSign
-		if (entity.getNowPostSign().getId().equals(yesCodeInfo.getId())) {
+		//if (entity.getNowPostSign().getId().equals(yesCodeInfo.getId())) {
+		if (entity.getTenureStatus() !=null && entity.getTenureStatus().getId().equals(inOfficeCode.getId())){
 			SocialWorker pubinst = socialWorkerService.get(entity.getSocialWorker().getId());
 			pubinst.setNowPostName(null);
 			pubinst.setNowPostCode(null);
@@ -122,13 +128,18 @@ public class SwPostServiceImpl extends GenericServiceImpl<SrPost> implements SwP
 	}
 	@Override
 	public void saveOrUpdate(SrPost entity) {
+		// 在任
+		CodeInfo inOfficeCode = dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
+		// 不在任
+		CodeInfo noInOfficeCode = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
 
 		// 若最高职务标识为1，则需要更新属性显示
 		CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
 		CodeInfo noCodeInfo = dictableService.getCodeInfoByCode("0", DictTypeCodeContant.CODE_TYPE_YESNO);
 		SocialWorker pubinst = socialWorkerService.get(entity.getSocialWorker().getId());
 		//现任职务标记为1，是
-		if (entity.getNowPostSign().getId().equals(yesCodeInfo.getId())) {
+		//if (entity.getNowPostSign().getId().equals(yesCodeInfo.getId())) {
+		if (entity.getTenureStatus() != null && entity.getTenureStatus().getId().equals(inOfficeCode.getId())){
 			// 先重置其他所有职务现任标识设为0
 			this.executeRestAllNowPostFlag(entity.getSocialWorker().getId());
 			// 修改C01表中最高学职务的输出显示

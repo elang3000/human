@@ -1,17 +1,6 @@
 
 package com.wondersgroup.human.service.ofcflow.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
@@ -20,8 +9,6 @@ import com.wondersgroup.framework.core.util.DateUtils;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
-import com.wondersgroup.framework.organization.service.OrganNodeService;
-import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.human.bo.ofc.Assessment;
 import com.wondersgroup.human.bo.ofcflow.AssessmentDetail;
 import com.wondersgroup.human.bo.ofcflow.AssessmentFlowCollect;
@@ -30,6 +17,14 @@ import com.wondersgroup.human.service.ofc.AssessmentService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.AssessmentDetailService;
 import com.wondersgroup.human.service.ofcflow.AssessmentFlowUnitPercentService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class AssessmentDetailServiceImpl extends GenericServiceImpl<AssessmentDetail>
@@ -118,7 +113,7 @@ public class AssessmentDetailServiceImpl extends GenericServiceImpl<AssessmentDe
 				assessment.setConclusionCategory(assessmentDetail.getResult());
 				assessment.setAssessmentYear(dateYear);
 				assessmentService.save(assessment);
-				System.out.println(assessment);
+				//System.out.println(assessment);
 			}
 		}
 		for (AssessmentDetail assessmentDetail : currentUnitDetails) {

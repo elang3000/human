@@ -26,7 +26,8 @@
 						<smart:form id="searchForm">
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
-									<smart:textInput labelName="事项类型：" autocomplete="off" placeholder="组织节点类型编码" name="busType"></smart:textInput>
+									<smart:singleSelect labelName="业务类型" isAddDefaltOption="true" name="busType" 
+									display="block" data="${busTypeList}" isSearch="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
 									<smart:singleSelect labelName="来文单位：" name="sourceOrganNodeId"
@@ -48,7 +49,7 @@
 						</smart:form>
 					</smart:fieldSet>
 					<smart:gridColumn>
-						<smart:table id="navigationList" url="workflow/doing/page?busId=${busId}&category=${category}" height="full-150" sortField="createTime" sortType="desc" text="未找到已办事项数据！" page="true">
+						<smart:table id="navigationList" url="workflow/doing/page?busId=${busId}&category=${category}" height="full-150" text="未找到待办事项数据！" page="true">
 							<tr>
 								<smart:tableItem field="sourceOrganNode" width=".1" sort="true">来文单位</smart:tableItem>
 								<smart:tableItem field="createTime" width=".1" sort="true">来文时间</smart:tableItem>

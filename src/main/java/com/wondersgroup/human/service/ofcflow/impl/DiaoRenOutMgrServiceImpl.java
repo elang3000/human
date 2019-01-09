@@ -46,12 +46,13 @@ import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofc.Experience;
 import com.wondersgroup.human.bo.ofc.JobLevel;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.OutMgr;
 import com.wondersgroup.human.bo.ofc.Servant;
-import com.wondersgroup.human.bo.ofcflow.DiaoRenIntoMgr;
 import com.wondersgroup.human.bo.ofcflow.DiaoRenOutMgr;
+import com.wondersgroup.human.bo.pubinst.PtExperience;
 import com.wondersgroup.human.bo.pubinst.PtJobLevel;
 import com.wondersgroup.human.bo.pubinst.PtOutMgr;
 import com.wondersgroup.human.bo.pubinst.PtPost;
@@ -61,12 +62,14 @@ import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
 import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
 import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
-import com.wondersgroup.human.repository.ofcflow.ZhuanRenTLBIntoMgrRepository;
+import com.wondersgroup.human.repository.ofcflow.ZhuanRenTLBIntoRepository;
+import com.wondersgroup.human.service.ofc.ExperienceService;
 import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.DiaoRenOutMgrService;
 import com.wondersgroup.human.service.organization.FormationControlService;
+import com.wondersgroup.human.service.pubinst.PtExperienceService;
 import com.wondersgroup.human.service.pubinst.PtJobLevelService;
 import com.wondersgroup.human.service.pubinst.PtOutMgrService;
 import com.wondersgroup.human.service.pubinst.PtPostService;
@@ -98,7 +101,7 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private ZhuanRenTLBIntoMgrRepository repository;
+	private ZhuanRenTLBIntoRepository repository;
 	@Autowired
 	private PublicInstitutionService publicInstitutionService;
 	@Autowired
@@ -109,6 +112,10 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 	private JobLevelService jobLevelService;
 	@Autowired
 	private FormationControlService formationControlService;
+	@Autowired
+	private ExperienceService experienceService;
+	@Autowired
+	private PtExperienceService ptExperienceService;
 	/**
 	 * 读取message.properties配置文件数据
 	 */
@@ -141,6 +148,11 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 	 * @return: void
 	 */
 	public void createPersonPt(DiaoRenOutMgr z){
+		//更新简历
+		Experience e = experienceService.getLatestExperienceByServantId(z.getServant().getId());
+		e.setEndDate(new Date());
+		experienceService.update(e);
+		
 		Map<String,String> params = new HashMap<>();//存储过程入参
 		List<String> backList = new ArrayList<>();//返回参数名
 		backList.add("SERVANTNEWID");
@@ -172,7 +184,10 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 		PtPost post = new PtPost();
 		post.setPublicInstitution(servant);//人员信息
 		CodeInfo YES = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);// 是 CODE
-		post.setNowPostSign(YES);//现任职务
+		
+		CodeInfo inOfficeCode = dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_TYPE_POST_STATUS);// 在任
+		post.setTenureStatus(inOfficeCode);//在任职务
+		
 		CodeInfo NO = dictableService.getCodeInfoByCode("0", DictTypeCodeContant.CODE_TYPE_YESNO);//否 CODE
 		post.setHighestPostSign(NO);//最高职务
 		post.setTenureName(z.getTargetOrgan().getName());//任职机构名称
@@ -181,14 +196,21 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 		post.setAttribute(z.getAttribute());//职务属性
 		post.setPostName(z.getPostName());//职务名称
 		post.setPostCode(z.getPostCode());//职务代码
-		ptPostService.save(post);
+		ptPostService.saveOrUpdate(post);
+		//增加简历子集信息
+		PtExperience experience = new PtExperience();
+		experience.setPublicInstitution(servant);//人员信息
+		experience.setFormerUnit(z.getTargetOrgan().getName());//所在单位
+		experience.setFormerJob(z.getPostName());//担任职务
+		experience.setStartDate(new Date());//开始时间
+		ptExperienceService.save(experience);
 		//职级子集
 		PtJobLevel jobLevel = new PtJobLevel();
 		jobLevel.setPublicInstitution(servant);;//人员信息
 		jobLevel.setCurrentIdentification(YES);//现行职级
 		jobLevel.setName(z.getJobLevelName());//职级名称
 		jobLevel.setCode(z.getJobLevelCode());//职级代码
-		ptjobLevelService.save(jobLevel);
+		ptjobLevelService.saveOrUpdate(jobLevel);
 		
 		PtOutMgr out = new PtOutMgr();//调出子集信息
 		out.setPublicInstitution(servant);//人员基本信息
@@ -215,26 +237,23 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 		}
 		JobLevel tempJ = jobLevelService.getJobLevelByServantId(temp.getServant().getId());//查询当前人员的现行职级
 		
-		FlowRecord flow;
-		if(DiaoRenOutMgr.STATUS_DIAOCHU_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
+		if(DiaoRenOutMgr.STATUS_DIAOCHU_STATE==temp.getStatus()){//提交环节，检验编制，锁编
 			//编控，事业单位人员没有编控，不锁调入单位编制信息
 			//锁未调出编制
 			formationControlService.executeLockOutFormationNum(temp.getSourceOrgan().getId());
 
 			//职级
 			//锁职级调出数
-			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
+//			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
+		}
+		
+		FlowRecord flow;
+		if(DiaoRenOutMgr.STATUS_DIAOCHU_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
 			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
-			String busName = "";
-			if(DiaoRenIntoMgr.SOURCE_TYPE_1.equals(temp.getTargetType())){
-				busName+="到事业单位";
-			}else if(DiaoRenIntoMgr.SOURCE_TYPE_2.equals(temp.getTargetType())){
-				busName+="到国企单位";
-			}
-			flow.setBusName(temp.getSourceOrgan().getName()+"人员调出"+busName);//流程业务名称
+			flow.setBusName("公务员调任调出");//流程业务名称
 			flow.setBusType("DiaoRenOutMgr_THIS");//流程业务类型
 			flow.setTargetOrganNode(userOrg);//流程业务目标组织
 			flow.setTargetSecurityUser(user);;//流程业务目标人员
@@ -259,8 +278,8 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 			formationControlService.executeUnlockOutFormationNum(temp.getSourceOrgan().getId());//1.解锁调出单位未调出编制
 			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//2.减少调出单位实际编制数
 			//职级
-			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//1.解锁职级调出数
-			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.减少调出单位实际职级数
+//			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//1.解锁职级调出数
+//			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.减少调出单位实际职级数
 			
 			temp.setStatus(DiaoRenOutMgr.STATUS_DIAOCHU_FINISH);
 			temp.setFlowRecord(null);//修改当前业务的流程节点
@@ -277,6 +296,11 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 		}else{
 			temp.setStatus(DiaoRenOutMgr.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
+			
+			if(DiaoRenOutMgr.STATUS_DIAOCHU_STATE==temp.getStatus()&&FlowRecord.NOPASS.equals(r)){//如果流程退回到最初节点，解锁编制，每次提交重新锁编
+				formationControlService.executeUnlockOutFormationNum(temp.getSourceOrgan().getId());//1.解锁调出单位未调出编制
+//				formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//1.解锁职级调出数
+			}
 		}
 		update(temp);
 	}
@@ -292,7 +316,7 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 		if(DiaoRenOutMgr.STATUS_DIAOCHU_STATE_OUTER==temp.getStatus()){
 			formationControlService.executeLockOutFormationNum(temp.getSourceOrgan().getId());
 			//锁职级调出数
-			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
+//			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
 		}
 		
 		if(temp.getStatus()==DiaoRenOutMgr.STATUS_DIAOCHU_CONFIRM_OUTER){
@@ -300,8 +324,8 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 			formationControlService.executeUnlockOutFormationNum(temp.getSourceOrgan().getId());//1.解锁调出单位未调出编制
 			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//2.减少调出单位实际编制数
 			//职级
-			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//1.解锁职级调出数
-			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.减少调出单位实际职级数
+//			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//1.解锁职级调出数
+//			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.减少调出单位实际职级数
 			//修改原数据状态为调出
 			Servant oldServant = servantService.get(temp.getServant().getId());
 			CodeInfo outer = dictableService.getCodeInfoByCode("3", DictTypeCodeContant.CODE_HUMAN_STATUS);// 调出CODE
@@ -318,6 +342,10 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 			out.setRemark(temp.getRemark());//调出备注
 			outMgrService.save(out);
 			
+			//更新简历
+			Experience e = experienceService.getLatestExperienceByServantId(oldServant.getId());
+			e.setEndDate(new Date());
+			experienceService.update(e);
 			//进出管理
 			ManagerRecordDTO dto = new ManagerRecordDTO(temp.getServant().getId(),ManagerRecord.HUMAN_DRDC);
 			ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
@@ -326,11 +354,6 @@ public class DiaoRenOutMgrServiceImpl extends GenericServiceImpl<DiaoRenOutMgr> 
 			HumankeepRecordDTO dto2 = new HumankeepRecordDTO(temp.getServant().getId(),HumanKeepRecord.KEEP_DRDC);
 			ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(dto2);	
 			EventManager.send(event2);
-			
-			//发送通知
-			String title = messageSource.getMessage("diaoRenTitle", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
-			String content = messageSource.getMessage("diaoRenContent", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
-			AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "")));
 		}
 		temp.setStatus(temp.getStatus()+1);//流程状态加1，到下一个节点
 		saveOrUpdate(temp);

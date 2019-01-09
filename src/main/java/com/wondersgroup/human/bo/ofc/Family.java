@@ -15,11 +15,15 @@
 
 package com.wondersgroup.human.bo.ofc;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.ofc.base.BaseFamily;
 
@@ -34,6 +38,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseFamily;
  */
 @Entity
 @Table(name = "A36")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Family extends BaseFamily<Family> {
 	
 	private static final long serialVersionUID = 2921653857869968956L;

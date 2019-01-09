@@ -16,23 +16,20 @@
 package com.wondersgroup.human.service.ofcflow.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.wondersgroup.common.contant.DictTypeCodeContant;
-import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
-import com.wondersgroup.framework.announcement.event.SystemAnnouncementEvent;
-import com.wondersgroup.framework.announcement.util.AnnouncementManger;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.util.EventManager;
+import com.wondersgroup.human.bo.ofc.Experience;
 import com.wondersgroup.human.bo.ofc.JobLevel;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.OutMgr;
@@ -43,6 +40,7 @@ import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
 import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
 import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
 import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
+import com.wondersgroup.human.service.ofc.ExperienceService;
 import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.ServantService;
@@ -75,12 +73,9 @@ public class ReferenceExchangeOutServiceImpl extends GenericServiceImpl<Referenc
 	
 	@Autowired
 	private JobLevelService jobLevelService;
-
-	/**
-	 * 读取message.properties配置文件数据
-	 */
+	
 	@Autowired
-	private MessageSource messageSource;
+	private ExperienceService experienceService;
 	/**
 	 * @Title: findbyHQLforVO 
 	 * @Description: 转换为VO的分页列表
@@ -113,7 +108,7 @@ public class ReferenceExchangeOutServiceImpl extends GenericServiceImpl<Referenc
 		if(ReferenceExchangeOut.STATUS_DIAOCHU_STATE==temp.getStatus()){
 			formationControlService.executeLockOutFormationNum(temp.getSourceOrgan().getId());
 			//锁职级调出数
-			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
+//			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
 		}
 				
 		if(temp.getStatus()==ReferenceExchangeOut.STATUS_DIAOCHU_CONFIRM){
@@ -122,8 +117,8 @@ public class ReferenceExchangeOutServiceImpl extends GenericServiceImpl<Referenc
 			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//2.减少调出单位实际编制数
 			
 			//职级
-			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//1.解锁职级调出数
-			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.减少调出单位实际职级数
+//			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//1.解锁职级调出数
+//			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.减少调出单位实际职级数
 			
 			//修改原数据状态为调出
 			Servant oldServant = servantService.get(temp.getServant().getId());
@@ -140,6 +135,10 @@ public class ReferenceExchangeOutServiceImpl extends GenericServiceImpl<Referenc
 			out.setProposeType(temp.getProposeType());//提出调动类型
 			out.setRemark(temp.getRemark());//调出备注
 			outMgrService.save(out);
+			//更新简历
+			Experience e = experienceService.getLatestExperienceByServantId(oldServant.getId());
+			e.setEndDate(new Date());
+			experienceService.update(e);
 			//进出管理
 			ManagerRecordDTO dto = new ManagerRecordDTO(temp.getServant().getId(),ManagerRecord.HUMAN_CGDC);
 			ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
@@ -148,10 +147,6 @@ public class ReferenceExchangeOutServiceImpl extends GenericServiceImpl<Referenc
 			HumankeepRecordDTO dto2 = new HumankeepRecordDTO(temp.getServant().getId(),HumanKeepRecord.KEEP_CGDC);
 			ServantHumamKeepRecordEvent event2 = new ServantHumamKeepRecordEvent(dto2);	
 			EventManager.send(event2);
-			//发送通知
-			String title = messageSource.getMessage("exchangeTitle", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
-			String content = messageSource.getMessage("exchangeContent", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
-			AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "")));
 		}
 		temp.setStatus(temp.getStatus()+1);//流程状态加1，到下一个节点
 		saveOrUpdate(temp);

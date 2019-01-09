@@ -17,13 +17,19 @@ package com.wondersgroup.human.bo.ofc;
 
 import java.io.Serializable;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wondersgroup.framework.util.StringUtils;
 
 /**
  * @ClassName: ServatBasicInfo
@@ -36,207 +42,334 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "V_SERVANT_BASIC_INFO")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ServantBasicInfo implements Serializable {
 	
 	private static final long serialVersionUID = 1352441589595934768L;
 	
-	@Embedded
 	@Id
-	@JsonIgnore
-	ServantBasicInfoContent content;
-	
-	@Transient
+	@Column(name = "ID")
 	private String id;
 	
-	@Transient
+	@Column(name = "NAME")
 	private String name;
 	
-	@Transient
+	@Column(name = "ID_NUMBER")
 	private String idNumber;
 	
 	@Transient
+	private String idNumberStr;
+	
+	@Column(name = "DEPART_ID")
 	private String departId;
 	
-	@Transient
+	@Column(name = "DEPART_NAME")
 	private String departName;
 	
-	@Transient
+	@Column(name = "SEX_CODE")
 	private String sexCode;
 	
-	@Transient
+	@Column(name = "SEX_NAME")
 	private String sexName;
 	
-	@Transient
+	@Column(name = "NATION_CODE")
 	private String nationCode;
 	
-	@Transient
+	@Column(name = "NATION_NAME")
 	private String nationName;
 	
-	@Transient
+	@Column(name = "YEARS")
 	private String years;
 	
-	@Transient
+	@Column(name = "JL_CODE")
 	private String postLevelCode;
 	
-	@Transient
+	@Column(name = "JL_NAME")
 	private String postLevelName;
 	
-	@Transient
+	@Column(name = "POST_CODE")
 	private String postCode;
 	
-	@Transient
+	@Column(name = "POST_NAME")
 	private String postName;
 	
-	@Transient
+	@Column(name = "IS_LEADER_POST_CODE")
 	private String isLeaderPostCode;
 	
-	@Transient
+	@Column(name = "IS_LEADER_POST_NAME")
 	private String isLeaderPostName;
 	
-	@Transient
+	@Column(name = "POST_YEARS")
 	private String postYears;
 	
-	@Transient
+	@Column(name = "EDUCATION_CODE")
 	private String educationCode;
 	
-	@Transient
+	@Column(name = "EDUCATION_NAME")
 	private String educationName;
 	
-	@Transient
+	@Column(name = "DEGREE_CODE")
 	private String degreeCode;
 	
-	@Transient
+	@Column(name = "DEGREE_NAME")
 	private String degreeName;
 	
-	@Transient
+	@Column(name = "IS_HOLD_CODE")
 	private String isHoldCode;
 	
-	@Transient
+	@Column(name = "IS_HOLD_NAME")
 	private String isHoldName;
-	
-	public ServantBasicInfoContent getContent() {
-		
-		return content;
-	}
-	
-	public void setContent(ServantBasicInfoContent content) {
-		
-		this.content = content;
-	}
 	
 	public String getId() {
 		
-		return getContent().getId();
+		return id;
+	}
+	
+	public void setId(String id) {
+		
+		this.id = id;
 	}
 	
 	public String getName() {
 		
-		return getContent().getName();
+		return name;
+	}
+	
+	public void setName(String name) {
+		
+		this.name = name;
 	}
 	
 	public String getIdNumber() {
 		
-		return getContent().getIdNumber();
+		return idNumber;
+	}
+	
+	public void setIdNumber(String idNumber) {
+		
+		this.idNumber = idNumber;
 	}
 	
 	public String getDepartId() {
 		
-		return getContent().getDepartId();
+		return departId;
+	}
+	
+	public void setDepartId(String departId) {
+		
+		this.departId = departId;
 	}
 	
 	public String getDepartName() {
 		
-		return getContent().getDepartName();
+		return departName;
+	}
+	
+	public void setDepartName(String departName) {
+		
+		this.departName = departName;
 	}
 	
 	public String getSexCode() {
 		
-		return getContent().getSexCode();
+		return sexCode;
+	}
+	
+	public void setSexCode(String sexCode) {
+		
+		this.sexCode = sexCode;
 	}
 	
 	public String getSexName() {
 		
-		return getContent().getSexName();
+		return sexName;
+	}
+	
+	public void setSexName(String sexName) {
+		
+		this.sexName = sexName;
 	}
 	
 	public String getNationCode() {
 		
-		return getContent().getNationCode();
+		return nationCode;
+	}
+	
+	public void setNationCode(String nationCode) {
+		
+		this.nationCode = nationCode;
 	}
 	
 	public String getNationName() {
 		
-		return getContent().getNationName();
+		return nationName;
+	}
+	
+	public void setNationName(String nationName) {
+		
+		this.nationName = nationName;
 	}
 	
 	public String getYears() {
 		
-		return getContent().getYears();
+		return years;
+	}
+	
+	public void setYears(String years) {
+		
+		this.years = years;
 	}
 	
 	public String getPostLevelCode() {
 		
-		return getContent().getPostLevelCode();
+		return postLevelCode;
+	}
+	
+	public void setPostLevelCode(String postLevelCode) {
+		
+		this.postLevelCode = postLevelCode;
 	}
 	
 	public String getPostLevelName() {
 		
-		return getContent().getPostLevelName();
+		return postLevelName;
+	}
+	
+	public void setPostLevelName(String postLevelName) {
+		
+		this.postLevelName = postLevelName;
 	}
 	
 	public String getPostCode() {
 		
-		return getContent().getPostCode();
+		return postCode;
+	}
+	
+	public void setPostCode(String postCode) {
+		
+		this.postCode = postCode;
 	}
 	
 	public String getPostName() {
 		
-		return getContent().getPostName();
+		return postName;
+	}
+	
+	public void setPostName(String postName) {
+		
+		this.postName = postName;
 	}
 	
 	public String getIsLeaderPostCode() {
 		
-		return getContent().getIsLeaderPostCode();
+		return isLeaderPostCode;
+	}
+	
+	public void setIsLeaderPostCode(String isLeaderPostCode) {
+		
+		this.isLeaderPostCode = isLeaderPostCode;
 	}
 	
 	public String getIsLeaderPostName() {
 		
-		return getContent().getIsLeaderPostName();
+		return isLeaderPostName;
+	}
+	
+	public void setIsLeaderPostName(String isLeaderPostName) {
+		
+		this.isLeaderPostName = isLeaderPostName;
 	}
 	
 	public String getPostYears() {
 		
-		return getContent().getPostYears();
+		return postYears;
+	}
+	
+	public void setPostYears(String postYears) {
+		
+		this.postYears = postYears;
 	}
 	
 	public String getEducationCode() {
 		
-		return getContent().getEducationCode();
+		return educationCode;
+	}
+	
+	public void setEducationCode(String educationCode) {
+		
+		this.educationCode = educationCode;
 	}
 	
 	public String getEducationName() {
 		
-		return getContent().getEducationName();
+		return educationName;
+	}
+	
+	public void setEducationName(String educationName) {
+		
+		this.educationName = educationName;
 	}
 	
 	public String getDegreeCode() {
 		
-		return getContent().getDegreeCode();
+		return degreeCode;
+	}
+	
+	public void setDegreeCode(String degreeCode) {
+		
+		this.degreeCode = degreeCode;
 	}
 	
 	public String getDegreeName() {
 		
-		return getContent().getDegreeName();
+		return degreeName;
+	}
+	
+	public void setDegreeName(String degreeName) {
+		
+		this.degreeName = degreeName;
 	}
 	
 	public String getIsHoldCode() {
 		
-		return getContent().getIsHoldCode();
+		return isHoldCode;
+	}
+	
+	public void setIsHoldCode(String isHoldCode) {
+		
+		this.isHoldCode = isHoldCode;
 	}
 	
 	public String getIsHoldName() {
 		
-		return getContent().getIsHoldName();
+		return isHoldName;
+	}
+	
+	public void setIsHoldName(String isHoldName) {
+		
+		this.isHoldName = isHoldName;
+	}
+
+	
+	public String getIdNumberStr() {
+		
+		if (StringUtils.isBlank(this.getIdNumber())) {
+			return "";
+		} else {
+			if (this.getIdNumber().length() <= 4) {
+				return "XXXX";
+			} else {
+				this.idNumberStr = StringUtils.substring(this.getIdNumber(), 0, (this.getIdNumber().length() - 4)) + "XXXX";
+				return idNumberStr;
+			}
+		}
+	}
+
+	
+	public void setIdNumberStr(String idNumberStr) {
+		
+		this.idNumberStr = idNumberStr;
 	}
 	
 }

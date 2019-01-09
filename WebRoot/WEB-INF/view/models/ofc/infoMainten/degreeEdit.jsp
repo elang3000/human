@@ -39,7 +39,6 @@
 										<smart:textInput labelName="学位证书号：" name="degreeNo" value="${degree.degreeNo}" ></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect labelName="最高学历标识：" name="topFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${degree.topFlag.id }" verify="required" isNotNull="true"></smart:singleSelect>

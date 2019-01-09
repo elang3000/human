@@ -37,6 +37,9 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.service.pubinst.PtEmployService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PtEmployVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: EmployController
@@ -84,6 +87,8 @@ public class PtEmployController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<PostVO>
 	 */
+	@Log(title = "查询在职人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PtEmployVO> pageList(String Id, Integer limit, Integer page) {
@@ -101,6 +106,8 @@ public class PtEmployController extends GenericController {
 	 * @param temp 录用信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑录用信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PtEmploy temp) {
@@ -132,6 +139,8 @@ public class PtEmployController extends GenericController {
 	 * @param temp 录用信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除录用信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

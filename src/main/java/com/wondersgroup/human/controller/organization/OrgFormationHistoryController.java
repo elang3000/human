@@ -35,10 +35,13 @@ import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.organization.OrgFormationHistory;
 import com.wondersgroup.human.service.organization.OrgFormationHistoryService;
 import com.wondersgroup.human.vo.organization.OrgFormationHistoryVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: OrgFormationHistoryController
- * @Description: 单位基础信息调整历史 控制器
+ * @Description: 单位编制调整历史 控制器
  * @author: jiang
  * @date: 2018年9月21日15:18:19
  * @version [版本号, YYYY-MM-DD]
@@ -64,7 +67,7 @@ public class OrgFormationHistoryController extends GenericController {
 	
 	/**
 	 * @Title: list
-	 * @Description: 单位基础信息调整历史列表
+	 * @Description: 单位编制信息调整历史列表
 	 * @return: String
 	 */
 	@RequestMapping("/list")
@@ -81,6 +84,8 @@ public class OrgFormationHistoryController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<ServantVO>
 	 */
+	@Log(title = "查询行政单位机构编控历史信息列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<OrgFormationHistoryVO> pageList(OrgFormationHistory orgFormationHistory, Integer limit, Integer page, String organId) {
@@ -119,6 +124,8 @@ public class OrgFormationHistoryController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "查询行政单位机构编控历史信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/view")
 	public String view(Model model, String id) {
 		

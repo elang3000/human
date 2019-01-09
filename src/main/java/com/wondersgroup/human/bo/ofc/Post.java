@@ -15,12 +15,16 @@
 
 package com.wondersgroup.human.bo.ofc;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.human.bo.ofc.base.BasePost;
@@ -36,6 +40,8 @@ import com.wondersgroup.human.bo.ofc.base.BasePost;
  */
 @Entity
 @Table(name = "A02")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Post extends BasePost<Post> {
 	
 	private static final long serialVersionUID = -7571159177161817773L;
@@ -145,15 +151,6 @@ public class Post extends BasePost<Post> {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "SH_S0163_1")
 	private CodeInfo highestPostSign;
-	
-	/**
-	 * @fieldName: highestPostSign
-	 * @fieldType: java.lang.String
-	 * @Description:现任职务标记，DM215。
-	 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "SH_S0163")
-	private CodeInfo nowPostSign;
 	
 	public CodeInfo getTenureForm() {
 		
@@ -273,16 +270,6 @@ public class Post extends BasePost<Post> {
 	public void setServant(Servant servant) {
 		
 		this.servant = servant;
-	}
-	
-	public CodeInfo getNowPostSign() {
-		
-		return nowPostSign;
-	}
-	
-	public void setNowPostSign(CodeInfo nowPostSign) {
-		
-		this.nowPostSign = nowPostSign;
 	}
 	
 }

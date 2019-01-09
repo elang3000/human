@@ -57,6 +57,22 @@ public class Number2CN {
     		"伍", "陆", "柒", "捌", "玖" };  
   
     /** 
+     * 数值一一对应转换为大写，不是转换为金额方式，例：1001转换为壹零零壹，001转换为零零壹
+     *  
+     * @param num 
+     *            需要转换的数值 
+     * @return 
+     */  
+    public static String convert(String num) {
+    	StringBuffer strs = new StringBuffer(num.length()); 
+    	char[] chars = String.valueOf(num).toCharArray();
+    	for(char c:chars){
+    		String cnChar = CN_CHARS[c - '0'];// ascii2int 汉字  
+    		strs.append(cnChar);
+    	}
+    	return strs.toString();  
+    }  
+    /** 
      * 数值转换为中文字符串 
      *  
      * @param num 

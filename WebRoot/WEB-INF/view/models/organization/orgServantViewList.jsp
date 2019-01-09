@@ -7,7 +7,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <smart:initHead title="长宁区人事管理信息系统--机构人员查看" />
-<script type="text/javascript" src="layadmin/lib/layer.js"></script>
 </head>
 <smart:body>
 	<smart:grid>
@@ -78,7 +77,7 @@
 						</smart:gridRow>
 						<smart:gridRow colSpace="5">
 							<smart:gridColumn>
-								<smart:table id="navigationList_ofcList" url="ofc/pageList" text="未找到用户数据！" page="true" height="full-250">
+								<smart:table id="navigationList_ofcList" url="ofc/pageListByNodeTree" text="未找到用户数据！" page="true" height="full-250">
 									<tr>
 										<smart:tableItem field="name" width="120" sort="false">姓名</smart:tableItem>
 										<smart:tableItem field="sex" width="120" sort="false">性别</smart:tableItem>
@@ -107,8 +106,7 @@
 
 	<smart:scriptHead models="table,form,layer,element">
 		<smart:utils />
-		<smart:tableScriptAction tableId="navigationList_ofcList" checkbox="true"
-			sort="true" rowEdit="true">    
+		<smart:tableScriptAction tableId="navigationList_ofcList">    
 			view : function(data) {
 				smart.show({
 					title : '公务员信息',

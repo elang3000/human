@@ -15,6 +15,7 @@
 
 package com.wondersgroup.human.bo.ofc;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,6 +23,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.human.bo.ofc.base.BaseEducation;
 
 /**
@@ -35,6 +40,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseEducation;
  */
 @Entity
 @Table(name = "A08")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Education extends BaseEducation<Education> {
 	
 	private static final long serialVersionUID = -7170691304808657446L;
@@ -56,6 +63,33 @@ public class Education extends BaseEducation<Education> {
 	@Column(name = "R_A08024", length = 80)
 	private String bigProfessionName;
 	
+	/**
+	 * @fieldName: nineEightFiveFlag
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 985标识。DM215
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "NINE_EIGHT_FIVE_FLAG")
+	private CodeInfo nineEightFiveFlag;
+	
+	/**
+	 * @fieldName: twoOneOneFlag
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 211标识。DM215
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "TWO_ONE_ONE_FLAG")
+	private CodeInfo twoOneOneFlag;
+	
+	/**
+	 * @fieldName: isDoubleFirstRate
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 双一流标识。DM215
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DOUBLE_FIRST_RATE_FlAG")
+	private CodeInfo doubleFirstRateFlag;
+	
 	public Servant getServant() {
 		
 		return servant;
@@ -76,6 +110,42 @@ public class Education extends BaseEducation<Education> {
 	public void setBigProfessionName(String bigProfessionName) {
 		
 		this.bigProfessionName = bigProfessionName;
+	}
+
+	
+	public CodeInfo getNineEightFiveFlag() {
+		
+		return nineEightFiveFlag;
+	}
+
+	
+	public void setNineEightFiveFlag(CodeInfo nineEightFiveFlag) {
+		
+		this.nineEightFiveFlag = nineEightFiveFlag;
+	}
+
+	
+	public CodeInfo getTwoOneOneFlag() {
+		
+		return twoOneOneFlag;
+	}
+
+	
+	public void setTwoOneOneFlag(CodeInfo twoOneOneFlag) {
+		
+		this.twoOneOneFlag = twoOneOneFlag;
+	}
+
+	
+	public CodeInfo getDoubleFirstRateFlag() {
+		
+		return doubleFirstRateFlag;
+	}
+
+	
+	public void setDoubleFirstRateFlag(CodeInfo doubleFirstRateFlag) {
+		
+		this.doubleFirstRateFlag = doubleFirstRateFlag;
 	}
 	
 }

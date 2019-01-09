@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,6 +29,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
@@ -48,6 +51,8 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
  */
 @Entity
 @Table(name = "HUMAN_INST_ALTERNATINGROTATION")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AlternatingRotation extends GenericEntity {
 	
 	private static final long serialVersionUID = 8469109965003073736L;
@@ -91,6 +96,15 @@ public class AlternatingRotation extends GenericEntity {
 	 */
 	@OneToOne
 	private OrganNode alterRotaOrgan;
+	
+	
+	/**
+	 * @fieldName: oldDepartmentName
+	 * @fieldType: String
+	 * @Description: 之前的单位名称
+	 */
+	@Column(name = "OLDDEPARTMENTNAME", length = 255)
+	private String oldDepartmentName;
 
 	
 
@@ -103,6 +117,16 @@ public class AlternatingRotation extends GenericEntity {
 	@OneToOne
 	private OrganNode oldOrgan;
 	
+	public String getOldDepartmentName() {
+		return oldDepartmentName;
+	}
+
+
+	public void setOldDepartmentName(String oldDepartmentName) {
+		this.oldDepartmentName = oldDepartmentName;
+	}
+
+
 	/**
 	 * @fieldName: planState
 	 * @fieldType: Integer

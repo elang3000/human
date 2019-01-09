@@ -16,13 +16,18 @@ package com.wondersgroup.human.service.ofcflow.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.wondersgroup.common.contant.CommonConst;
+import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
+import com.wondersgroup.framework.announcement.event.SystemAnnouncementEvent;
+import com.wondersgroup.framework.announcement.util.AnnouncementManger;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.exception.BusinessException;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
@@ -38,6 +43,7 @@ import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofcflow.InstitutionOrgFormationMgrFlow;
 import com.wondersgroup.human.bo.ofcflow.OrgInfoMgrFlow;
 import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.bo.organization.OrgInfoHistory;
@@ -83,6 +89,8 @@ public class OrgInfoMgrFlowServiceImpl extends GenericServiceImpl<OrgInfoMgrFlow
 	@Autowired
 	private OrgInfoHistoryService orgInfoHistoryService;
 	
+	@Autowired
+	private MessageSource messageSource;
 	
 	@Override
 	public Page<OrgInfoMgrFlowVO> getPage(DetachedCriteria detachedCriteria, Integer pageNo, Integer limit) {
@@ -157,9 +165,25 @@ public class OrgInfoMgrFlowServiceImpl extends GenericServiceImpl<OrgInfoMgrFlow
 		flow.setResult(result);
 		flow = workflowService.completeWorkItem(flow);// 提交下个节点
 		if (flow == null) {
-			// 流程结束，做创建机构单位申请通过操作
-			executeAppLyFlowPassSaveBusiness(orgInfoMgrFlow);
-			orgInfoMgrFlow.setStatus(OrgInfoMgrFlow.STATUS_ORG_INFO_MGR_FLOW_TRIAL2);
+			if (FlowRecord.PASS.equals(result)) {
+				// 流程正常结束，做创建机构通过操作
+				executeAppLyFlowPassSaveBusiness(orgInfoMgrFlow);
+				orgInfoMgrFlow.setStatus(OrgInfoMgrFlow.STATUS_ORG_INFO_MGR_FLOW_TRIAL2);
+			} else if (FlowRecord.STOP.equals(result)) {
+				orgInfoMgrFlow.setStatus(FlowRecord.BUS_STOP);
+				
+				// 流程非正常结束，发送通知
+				String title = messageSource.getMessage("stopFlowTitle", new Object[] {
+						"创建组织机构单位申请"
+				}, Locale.CHINESE);
+				String content = messageSource.getMessage("stopFlowContent", new Object[] {
+						"创建组织机构单位申请"
+				}, Locale.CHINESE);
+				AnnouncementManger.send(new SystemAnnouncementEvent(
+						new AnnouncementEventData(true, orgInfoMgrFlow.getCreater(), title, content, "","创建组织机构单位")));
+				
+			}
+			
 		} else {
 			// 流程未结束
 			orgInfoMgrFlow.setStatus(OrgInfoMgrFlow.power.get(flow.getOperationCode()));
@@ -176,9 +200,24 @@ public class OrgInfoMgrFlowServiceImpl extends GenericServiceImpl<OrgInfoMgrFlow
 		flow.setResult(result);
 		flow = workflowService.completeWorkItem(flow);// 提交下个节点
 		if (flow == null) {
-			// 流程结束，做创建机构单位申请通过操作
-			executeAdjustFlowPassSaveBusiness(orgInfoMgrFlow);
-			orgInfoMgrFlow.setStatus(OrgInfoMgrFlow.STATUS_ORG_INFO_MGR_FLOW_TRIAL2);
+			if (FlowRecord.PASS.equals(result)) {
+				// 流程正常结束，做创建机构通过操作
+				executeAdjustFlowPassSaveBusiness(orgInfoMgrFlow);
+				orgInfoMgrFlow.setStatus(OrgInfoMgrFlow.STATUS_ORG_INFO_MGR_FLOW_TRIAL2);
+			} else if (FlowRecord.STOP.equals(result)) {
+				orgInfoMgrFlow.setStatus(FlowRecord.BUS_STOP);
+				
+				// 流程非正常结束，发送通知
+				String title = messageSource.getMessage("stopFlowTitle", new Object[] {
+						"调整组织机构单位申请"
+				}, Locale.CHINESE);
+				String content = messageSource.getMessage("stopFlowContent", new Object[] {
+						"调整组织机构单位申请"
+				}, Locale.CHINESE);
+				AnnouncementManger.send(new SystemAnnouncementEvent(
+						new AnnouncementEventData(true, orgInfoMgrFlow.getCreater(), title, content, "","调整组织机构单位")));
+				
+			}
 		} else {
 			// 流程未结束
 			orgInfoMgrFlow.setStatus(OrgInfoMgrFlow.power.get(flow.getOperationCode()));
@@ -200,26 +239,39 @@ public class OrgInfoMgrFlowServiceImpl extends GenericServiceImpl<OrgInfoMgrFlow
 			// 获得即将修改的机构信息
 			OrgInfo orgInfo = orgInfoService.findUniqueBy("organ.id", orgInfoMgrFlow.getOrgan().getId());
 			
-			//将修改前的值赋值给历史表
+			// 将修改前的值赋值给历史表
 			OrgInfoHistory orgInfoHistory = new OrgInfoHistory();
 			BeanUtils.copyProperties(orgInfo, orgInfoHistory, new String[] {
 					"id"
 			});
-			//将修改后的值赋值给当前单位信息表
+			// 将修改后的值赋值给当前单位信息表
 			BeanUtils.copyProperties(orgInfoMgrFlow, orgInfo, new String[] {
 					"id"
 			});
 			
-			//修改organNode属性
+			// 修改organNode属性
 			OrganNode organNode = organNodeService.get(orgInfo.getOrgan().getId());
 			organNode.setCode(orgInfo.getXydm());
 			organNode.setName(orgInfo.getUnitBasicSimpleName());
 			organNode.setAllName(orgInfo.getUnitBasicName());
 			
+			// 不同机构性质级别，使用不同的code码
+			String unitPropertyLevelCode = orgInfoMgrFlow.getUnitPropertyLevel().getCode();
+			if (unitPropertyLevelCode.equals(CommonConst.UNIT_NATURE_D_CLASS)) {
+				organNode.setOrganNodeType(
+						organNodeTypeService.getOrganNodeTypeByCode(CommonConst.ORGAN_TYPE_D_CLASS_CODE));
+			} else if (unitPropertyLevelCode.equals(CommonConst.UNIT_NATURE_SY)) {
+				organNode.setOrganNodeType(
+						organNodeTypeService.getOrganNodeTypeByCode(CommonConst.ORGAN_TYPE_UNIT_CODE));
+			} else if (unitPropertyLevelCode.equals(CommonConst.UNIT_NATURE_ENTERPRISE)) {
+				organNode.setOrganNodeType(
+						organNodeTypeService.getOrganNodeTypeByCode(CommonConst.ORGAN_TYPE_ENTERPRISE_CODE));
+			}
+			
 			orgInfoService.update(orgInfo);
 			organNodeService.update(organNode);
 			
-			//调整历史信息表
+			// 调整历史信息表
 			orgInfoHistory.setOrgInfo(orgInfo);
 			orgInfoHistory.setOrgInfoMgrFlow(orgInfoMgrFlow);
 			orgInfoHistoryService.save(orgInfoHistory);
@@ -245,8 +297,19 @@ public class OrgInfoMgrFlowServiceImpl extends GenericServiceImpl<OrgInfoMgrFlow
 			organNode.setName(orgInfoMgrFlow.getUnitBasicSimpleName());
 			organNode.setAllName(orgInfoMgrFlow.getUnitBasicName());
 			organNode.setCreater(SecurityUtils.getUserId());
-			organNode
-					.setOrganNodeType(organNodeTypeService.getOrganNodeTypeByCode(CommonConst.ORGAN_TYPE_D_CLASS_CODE));
+			// 不同机构性质级别，使用不同的code码
+			String unitPropertyLevelCode = orgInfoMgrFlow.getUnitPropertyLevel().getCode();
+			if (unitPropertyLevelCode.equals(CommonConst.UNIT_NATURE_D_CLASS)) {
+				organNode.setOrganNodeType(
+						organNodeTypeService.getOrganNodeTypeByCode(CommonConst.ORGAN_TYPE_D_CLASS_CODE));
+			} else if (unitPropertyLevelCode.equals(CommonConst.UNIT_NATURE_SY)) {
+				organNode.setOrganNodeType(
+						organNodeTypeService.getOrganNodeTypeByCode(CommonConst.ORGAN_TYPE_UNIT_CODE));
+			} else if (unitPropertyLevelCode.equals(CommonConst.UNIT_NATURE_ENTERPRISE)) {
+				organNode.setOrganNodeType(
+						organNodeTypeService.getOrganNodeTypeByCode(CommonConst.ORGAN_TYPE_ENTERPRISE_CODE));
+			}
+			
 			// 插入orgModel
 			organNodeService.addOrganNodeToTree(organNode, orgInfoMgrFlow.getParentOrgan(),
 					organizationService.getDefaultOrganTree());
@@ -254,7 +317,7 @@ public class OrgInfoMgrFlowServiceImpl extends GenericServiceImpl<OrgInfoMgrFlow
 			// 插入B02
 			OrgInfo orgInfo = new OrgInfo();
 			
-			BeanUtils.copyProperties(orgInfoMgrFlow,orgInfo);
+			BeanUtils.copyProperties(orgInfoMgrFlow, orgInfo);
 			orgInfo.setId(null);
 			orgInfo.setOrgan(organNode);
 			orgInfoService.save(orgInfo);
@@ -263,7 +326,7 @@ public class OrgInfoMgrFlowServiceImpl extends GenericServiceImpl<OrgInfoMgrFlow
 			orgInfoMgrFlow.setOrgan(organNode);
 			orgInfoMgrFlowRepository.update(orgInfoMgrFlow);
 			
-			//调整历史信息表
+			// 调整历史信息表
 			OrgInfoHistory orgInfoHistory = new OrgInfoHistory();
 			orgInfoHistory.setOrgInfo(orgInfo);
 			orgInfoHistory.setOrgInfoMgrFlow(orgInfoMgrFlow);

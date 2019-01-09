@@ -4,7 +4,7 @@
  * 文件名: OrgFormationMgrFlowRepository.java 
  * 工程名: human
  * 包名: com.wondersgroup.human.repository 
- * 描述: 单位机构信息维护流程表单 知识库接口
+ * 描述: 单位编制信息维护流程表单 知识库接口
  * 创建人: jiang  
  * 创建时间: 2018年9月19日14:02:42
  * 版本号: V1.0
@@ -20,7 +20,7 @@ import com.wondersgroup.human.bo.ofcflow.OrgFormationMgrFlow;
 
 /** 
  * @ClassName: OrgFormationMgrFlowRepository 
- * @Description: 单位机构信息维护流程表单 知识库接口
+ * @Description: 单位编制信息维护流程表单 知识库接口
  * @author: jiang
  * @date: 2018年9月19日14:02:49
  * @version [版本号, YYYY-MM-DD]

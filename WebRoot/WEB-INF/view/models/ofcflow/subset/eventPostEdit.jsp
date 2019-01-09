@@ -124,7 +124,7 @@
 										<smart:singleSelect isAddDefaltOption="true" name="memberType.id" labelName="成员类别：" display="block" url="dictquery/sub/code/0132" initSelectedKey="${post.memberType.id}"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true" name="isLowerLeader.id" labelName="是否兼任下级领导职务：" display="block" url="dictquery/sub/code/DM215" initSelectedKey="${post.isLowerLeader.id}"></smart:singleSelect>
+										<smart:singleSelect isAddDefaltOption="true" name="isLowerLeader.id" labelName="是否兼任下级领导职务：" shortName="兼下级领导职务" display="block" url="dictquery/sub/code/DM215" initSelectedKey="${post.isLowerLeader.id}"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect isAddDefaltOption="true" verify="required" isNotNull="true" name="isSkipLevel.id" labelName="是否越级提拔：" display="block" url="dictquery/sub/code/DM215" initSelectedKey="${post.isSkipLevel.id}"></smart:singleSelect>

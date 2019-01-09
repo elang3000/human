@@ -1,10 +1,14 @@
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.ofc.base.BaseStudy;
 
@@ -21,6 +25,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseStudy;
  */
 @Entity
 @Table(name = "C11")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtStudy extends BaseStudy<PtStudy> {
 
 	private static final long serialVersionUID = -3671011421108706859L;

@@ -15,11 +15,15 @@
 
 package com.wondersgroup.human.bo.company;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.ofc.base.BaseEducation;
 
@@ -36,6 +40,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseEducation;
  */
 @Entity
 @Table(name = "D08")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CyEducation extends BaseEducation<CyEducation> {
 	
 	private static final long serialVersionUID = -7170691304808657446L;

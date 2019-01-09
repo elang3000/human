@@ -35,6 +35,7 @@ import com.wondersgroup.framework.console.bo.FrameWorkResource;
 import com.wondersgroup.framework.console.service.FrameWorkService;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
+import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.exception.BusinessException;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
@@ -46,10 +47,17 @@ import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.framework.workflow.vo.FlowRecordVO;
 import com.wondersgroup.human.bo.instflow.MemberInfoRegister;
+import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.controller.workflow.WorkFlowController.FlowRecordSeq;
+import com.wondersgroup.human.dto.instflow.InfoRegisterQueryParam;
+import com.wondersgroup.human.dto.ofcflow.ResignServantQueryParam;
 import com.wondersgroup.human.service.instflow.MemberInfoRegisterService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
+import com.wondersgroup.human.vo.instflow.MemberInfoRegisterVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * 
@@ -66,7 +74,7 @@ import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 public class InfoRegisterController extends GenericController {
 	
 	//登记人员审核列表
-	private static final String VIEW_INFOREGISTER_LIST="models/instflow/inforegister/index";
+	private static final String VIEW_INFOREGISTER_LIST="models/instflow/inforegister/flow";
 	
 	//跳转到提交审核信息列表
 	private final static String RETURN_REGISTER_PAGE = "models/instflow/inforegister/register";
@@ -74,13 +82,17 @@ public class InfoRegisterController extends GenericController {
 	/**
 	 * 流程待办列表
 	 */
-	private final static String INST_REGISTER_FLOW = "models/instflow/inforegister/flow";
+	private final static String INST_REGISTER_FLOW = "models/instflow/inforegister/index";
 	
 	
 	/**
 	 * 登记流程审批页面
 	 */
 	private final static String MEMBER_INST_REGISTER_FLOW = "models/instflow/inforegister/registerFlow";
+	
+	
+	// 页面路径--人员登记信息详情
+	private final String REGISTER_DETAIL = "models/instflow/inforegister/registerDetail";
 	
 	@Autowired
 	private PublicInstitutionService publicInstitutionService;
@@ -98,7 +110,46 @@ public class InfoRegisterController extends GenericController {
 	@Autowired
 	private FrameWorkService frameWorkService;
 	
+	private static String busType = "MemberInfoRegister";
 	
+	/**
+	 * @Title: ResignDetail
+	 * @Description: 辞职人员列表
+	 * @return
+	 * @return: String
+	 */
+	@Log(title = "详情信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
+	@RequestMapping("/registerDetail")
+	public String resignDetail(String id, Model model) {
+		
+		MemberInfoRegister memberInfoRegister = memberInfoRegisterService.get(id);
+		List<FlowRecordVO> records = flowRecordService.findFlowRecordByBusinessId(id, busType, null, false);
+		
+		model.addAttribute("memberInfoRegister", memberInfoRegister);
+		model.addAttribute("records", records);
+		
+		return REGISTER_DETAIL;
+
+	}
+	
+	
+	/**
+	 * @Title: pageList
+	 * @Description: 登记列表
+	 * @param params查询条件
+	 * @param limit页大小
+	 * @param page页码
+	 * @return: Page<ResignVO>
+	 */
+	@Log(title = "查询信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
+	@ResponseBody
+	@RequestMapping("/pageList")
+	public Page<MemberInfoRegisterVO> pageList(InfoRegisterQueryParam param, Integer limit, Integer page) {
+		Page<MemberInfoRegisterVO> pageInfo = memberInfoRegisterService.pageList(param, page, limit);
+		return pageInfo;
+	}
 	
 	/**
 	 * @Title: index 
@@ -109,7 +160,21 @@ public class InfoRegisterController extends GenericController {
 	@RequestMapping("/index")
 	public String list(Model model){
 		model.addAttribute("busType","MemberInfoRegister");
+		model.addAttribute("category", FlowRecord.FLOW_RECORD_CATEGORY_INS); //事业单位
 		return INST_REGISTER_FLOW;
+	}
+	
+	
+	/**
+	 * @Title: index 
+	 * @Description: 人员信息登记列表
+	 * @return
+	 * @return: String
+	 */
+	@RequestMapping("/index_flow")
+	public String list_flow(Model model){
+		model.addAttribute("busType","MemberInfoRegister");
+		return VIEW_INFOREGISTER_LIST;
 	}
 	
 	/**
@@ -119,6 +184,8 @@ public class InfoRegisterController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "新增招录计划", operatorType = OperatorType.MANAGE, businessType = BusinessType.INSERT,
+		     isSaveRequestData = true)
 	@RequestMapping("/register")
 	public String plan(Model model) {
 		//得到用户当前所在的单位
@@ -140,6 +207,8 @@ public class InfoRegisterController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "新增人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.INSERT,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/operationRegister")
 	public AjaxResult operationPlan(PublicInstitution temp,  HttpServletRequest request) {
@@ -197,6 +266,8 @@ public class InfoRegisterController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "更新详情信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@RequestMapping("/queryRegisterInfo")
 	public String planFlow(Model model,String id) {
 		FlowRecord flow = flowRecordService.load(id);
@@ -216,9 +287,10 @@ public class InfoRegisterController extends GenericController {
 	 */
 	public List<FlowRecordVO> queryFlowRecordDetail(String id) {
 		FlowRecord flowRecord = flowRecordService.get(id);
-		flowRecord = flowRecordService.queryLastFlowRecord(flowRecord.getBusId(), flowRecord.getBusType());
+		flowRecord = flowRecordService.queryLastFlowRecord(flowRecord.getBusId(), flowRecord.getBusType(), flowRecord.getProcessInstanceId());
 		
-		List<FlowRecordVO> records = flowRecordService.findFlowRecordByBusinessId(flowRecord.getBusId(), flowRecord.getBusType(), false);
+		List<FlowRecordVO> records = flowRecordService.findFlowRecordByBusinessId(flowRecord.getBusId(), 
+				flowRecord.getBusType(), flowRecord.getProcessInstanceId(), false);
 
          return records;
 	}

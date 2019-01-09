@@ -78,10 +78,12 @@
 									url="dictquery/sub/code/EMPLOY_WORK_YEARS"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="职位简介" isNotNull="true" verify="required" name="description" value="${post.description }" placeholder="职位简介"></smart:textInput>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
 								<smart:textInput labelName="其他条件" value="${post.other }" name="other" placeholder="其他要求"></smart:textInput>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="12">
+								<smart:textarea name="description" labelName="职位简介" isNotNull="true" verify="required" display="block">${post.description}</smart:textarea>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -107,7 +109,7 @@
 									theme="normal">
 									<smart:icon icon="plus">&nbsp;提交</smart:icon>
 								</smart:button>
-								<smart:button theme="warm" size="sm" method="back" title="返回">
+								<smart:button theme="primary" size="sm" method="back" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>

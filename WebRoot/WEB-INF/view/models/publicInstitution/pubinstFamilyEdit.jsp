@@ -24,10 +24,10 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true"  name="relationCode.id" labelName="关系名称 ：" display="block" url="dictquery/sub/code/GBT_4761_2008" initSelectedKey="${family.relationCode.id}" isSaveShowName="true" inputShowName="relationName"></smart:singleSelect>
+										<smart:singleSelect isAddDefaltOption="true"  name="relationCode.id" isNotNull="true" verify="required" labelName="关系名称 ：" display="block" url="dictquery/sub/code/GBT_4761_2008" initSelectedKey="${family.relationCode.id}" isSaveShowName="true" inputShowName="relationName"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="关系人姓名：" name="name" value="${family.name}" ></smart:textInput>
+										<smart:textInput labelName="关系人姓名：" isNotNull="true" verify="required" name="name" value="${family.name}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect isAddDefaltOption="true"  name="sex.id" labelName="性别：" display="block" url="dictquery/sub/code/GBT_2261_1_2003" initSelectedKey="${family.sex.id}"></smart:singleSelect>

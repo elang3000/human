@@ -109,7 +109,7 @@ public class PunishServantVO {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		this.id = p.getId();
 		this.name = p.getServant().getName();
-		this.cardNo = p.getServant().getCardNo();
+		this.cardNo = p.getServant().getCardNoView();
 		
 		this.punishCode = p.getPunishCode().getName();
 		this.punishReason = p.getPunishReason().getName();
@@ -139,9 +139,9 @@ public class PunishServantVO {
 	}
 	
 	public String convertSign(int state) {
-		if (state == 1) {
+		if (state == 0) {
 			return "处分中";
-		} else if (state == 0) {
+		} else if (state == 1) {
 			return "处分结束";
 		}{
 			return "";

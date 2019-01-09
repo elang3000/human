@@ -22,7 +22,7 @@
 
 					<smart:form id="editForm" action="ofcflow/assess/saveUnitCheckDetail">
 						<smart:fromTokenTag />
-						
+
 						<smart:gridRow colSpace="5">
 						<smart:gridColumn>
 							<smart:title title="人员基本信息" style="margin-top: 5px;" color="blue" />
@@ -81,7 +81,7 @@
 									<smart:gridColumn colPart="3" colOffset="1">
 										<smart:gridRow>
 											<smart:gridColumn colPart="12">
-												<img alt="照片" src="static/image/20170705135600.jpg">
+												<img style="width:150px;height:200px;min-width:150px;min-height:200px;" alt="照片" src="ftp/getImg?imgName=${servant.photoPath}">
 											</smart:gridColumn>
 										</smart:gridRow>
 									</smart:gridColumn>
@@ -99,14 +99,14 @@
 								</smart:gridRow>
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="个人身份有效证件名称" infovalue="${servant.cardType.name}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="有效证件类型" infovalue="${servant.cardType.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="个人身份有效证件号码" infovalue="${servant.cardTypeNo}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="有效证件号码" infovalue="${servant.cardTypeNo}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										
-										<smart:infoShowerLabel infoname="公民身份证号" infovalue="${servant.cardNo}"></smart:infoShowerLabel>
+
+										<smart:infoShowerLabel infoname="公民身份证号" infovalue="${servant.cardNoView}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 								</smart:gridRow>
 								<smart:gridRow>
@@ -120,12 +120,12 @@
 										<smart:infoShowerLabel infoname="第三党派" infovalue="${servant.thirdParty.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
-								
+
+
 							</smart:grid>
 						</smart:gridColumn>
 					</smart:gridRow>
-						
+
 						<smart:title title="人员考核" style="margin-top: 5px;" color="blue" />
 
 
@@ -144,7 +144,7 @@
 													$("#iscommend").parent().parent().parent().parent().hide();
 													$("#iscredit").parent().parent().parent().parent().hide();
 												}
-												
+
 												console.log(data);
 											});
 										}
@@ -152,36 +152,42 @@
 									</c:if>
 										<smart:continuousSelect id="conclusion" labelName="考核结论：" isNotNull="true" verify="required"   inputName="result.id" codeTypeCode="DM018" inputVal="${detail.result.id }" valType="ID"  changeCallBack="conclusionChange" widthPercent="0.3333"/>
 									</smart:gridColumn>
-									
+
 								</smart:gridRow>
-								
+
 <%-- 								<smart:gridRow>
 									<div <c:if test="${!result }"> style="display:none" </c:if>  >
 										<smart:gridColumn colPart="4"  >
-												<smart:singleSelect 
+												<smart:singleSelect
 														display="block" id="iscommend" initSelectedKey="${detail.iscommend }"
-														labelName="是否嘉奖"  name="iscommend"  isAddDefaltOption="true"  
-														url="dictquery/sub/code/DM215"></smart:singleSelect>	
+														labelName="是否嘉奖"  name="iscommend"  isAddDefaltOption="true"
+														url="dictquery/sub/code/DM215"></smart:singleSelect>
 										</smart:gridColumn>
 									</div>
 								</smart:gridRow> --%>
-								
+
 								<smart:gridRow>
 									<div <c:if test="${(!result) || assessmentType=='2'  }">style="display:none"</c:if> >
 										<smart:gridColumn colPart="4">
-											<smart:singleSelect 
+											<smart:singleSelect
 											    display="block" id="iscredit" initSelectedKey="${detail.iscredit }"
-												labelName="是否记三等功"  name="iscredit" isAddDefaltOption="true" 
-												url="dictquery/sub/code/DM215"></smart:singleSelect>	
+												labelName="是否记三等功"  name="iscredit" isAddDefaltOption="true"
+												url="dictquery/sub/code/DM215"></smart:singleSelect>
 										</smart:gridColumn>
 									</div>
 								</smart:gridRow>
-								
-
+							<c:if test="${!isSeasonDown}">
+									<smart:gridRow>
+										<smart:gridColumn colPart="4">
+											<smart:numberInput labelName="投票数：" display="block"  isNotNull="true" verify="required"
+															 placeholder="请输入投票数量" name="voteNumb" value="${detail.voteNumb}"></smart:numberInput>
+										</smart:gridColumn>
+									</smart:gridRow>
+							</c:if>
 							<smart:gridRow>
 								<smart:gridColumn colPart="8">
-									<smart:textarea labelName="备注:" display="block" name="remarks" 
-										placeholder="审批意见">${detail.remarks }</smart:textarea>
+									<smart:textarea labelName="备注:" display="block" name="remarks"
+										>${detail.remarks }</smart:textarea>
 								</smart:gridColumn>
 							</smart:gridRow>
 						<smart:gridRow>
@@ -190,7 +196,7 @@
 									<c:if test="${!view }">
 										<smart:button size="sm" id="save" title="确定考核" other="lay-submit"
 											theme="default">
-											<smart:icon icon="plus"></smart:icon>&nbsp;确定
+											<smart:icon icon="check"></smart:icon>&nbsp;确定
 			  				 			</smart:button>
 		  				 			</c:if>
 							     <smart:button size="sm" method="goBack" title="返回" theme="warm">
@@ -217,13 +223,13 @@
 			}
 		</smart:buttonScriptAction>
 		form.on('submit(save)', function (data) {//表单保存
-			
+
 			var params=smart.json("#editForm");
 			var url="ofcflow/assess/saveUnitCheckDetail";
 			$.post(url,params,function(result){
 				if(result.success){//保存成功
 					layer.alert(
-		                result.message, 
+		                result.message,
 		                {icon: 1,closeBtn: 1 },
 		                function () {
 		                	parent.layui.table.reload('navigationList');
@@ -238,9 +244,9 @@
 				}
 			});
 			return false;
-			
+
 		});
-		
+
 	</smart:scriptHead>
 </smart:body>
 </html>

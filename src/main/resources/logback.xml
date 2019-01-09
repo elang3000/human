@@ -8,7 +8,7 @@
 	</appender>
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${LOG_HOME}/market.log.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<FileNamePattern>${LOG_HOME}/human.log.%d{yyyy-MM-dd}.log</FileNamePattern>
 			<MaxHistory>30</MaxHistory>
 		</rollingPolicy>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -18,70 +18,82 @@
 			<MaxFileSize>10MB</MaxFileSize>
 		</triggeringPolicy>
 	</appender>
+	
+<!-- 	<appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+    	<connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+      		<dataSource class="com.alibaba.druid.pool.DruidDataSource">
+        		<driverClass>dm.jdbc.driver.DmDriver</driverClass>
+        		<jdbcUrl>jdbc:dm://182.150.20.153:5236?comOra=true</jdbcUrl>
+        		<user>HUMAN</user>
+        		<password>wonders2018</password>
+      		</dataSource>
+    	</connectionSource>
+  </appender> -->
 
-	<logger name="java.sql" level="ERROR" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="java.sql" level="INFO" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="org.springframework" level="INFO" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="org.springframework" level="INFO" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="org.springframework.aop" level="ERROR" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="org.springframework.aop" level="ERROR" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="org.springframework.bean" level="INFO" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="org.springframework.bean" level="INFO" >
+
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="org.springframework.context" level="ERROR" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="org.springframework.context" level="INFO" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="org.springframework.orm" level="INFO" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="org.springframework.orm" level="INFO" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="org.hibernate" level="INFO" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="org.hibernate" level="ERROR" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="net.sf.ehcache" level="INFO" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="net.sf.ehcache" level="INFO" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.alibaba.druid" level="ERROR" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="com.alibaba.druid" level="ERROR" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="org.apache.shiro" level="ERROR" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="org.apache.shiro" level="ERROR" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.wondersgroup" level="INFO" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="com.wondersgroup" level="INFO" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.wondersgroup.framework.shiro" level="INFO" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="com.wondersgroup.framework.shiro" level="INFO" >
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</logger>
 
 	<root level="INFO">
-		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</root>
 
 </configuration>

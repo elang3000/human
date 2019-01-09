@@ -15,6 +15,11 @@
  */
 package com.wondersgroup.human.repository.ofcflow;
 
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.procedure.ProcedureOutputs;
+
 import com.wondersgroup.framework.core.dao.GenericRepository;
 import com.wondersgroup.human.bo.ofcflow.ReferenceExchange;
 
@@ -28,5 +33,14 @@ import com.wondersgroup.human.bo.ofcflow.ReferenceExchange;
  * @since     [产品/模块版本] 
  */
 public interface ReferenceExchangeRepository extends GenericRepository<ReferenceExchange>{
-	
+	/**
+	 * @Title: executeStoreProcedure 
+	 * @Description: 调用存储过程
+	 * @param storeProcedureName 存储过程名称
+	 * @param params	入参：key为参数名，value为参数值
+	 * @param backList	返回值：返回参数名list
+	 * @return
+	 * @return: ProcedureOutputs
+	 */
+	public ProcedureOutputs executeStoreProcedure(String storeProcedureName,Map<String,String> params,List<String> backList);
 }

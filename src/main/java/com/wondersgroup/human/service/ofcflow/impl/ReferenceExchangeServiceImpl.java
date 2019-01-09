@@ -47,6 +47,7 @@ import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofc.Experience;
 import com.wondersgroup.human.bo.ofc.JobLevel;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.OutMgr;
@@ -54,8 +55,9 @@ import com.wondersgroup.human.bo.ofc.Post;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.ReferenceExchange;
 import com.wondersgroup.human.dto.ofc.ManagerRecordDTO;
-import com.wondersgroup.human.event.ofc.ManagerOutRecordEvent;
-import com.wondersgroup.human.repository.ofcflow.ZhuanRenTLBIntoMgrRepository;
+import com.wondersgroup.human.event.ofc.ManagerInRecordEvent;
+import com.wondersgroup.human.repository.ofcflow.ZhuanRenTLBIntoRepository;
+import com.wondersgroup.human.service.ofc.ExperienceService;
 import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.OutMgrService;
 import com.wondersgroup.human.service.ofc.PostService;
@@ -87,7 +89,7 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 	@Autowired
 	private ServantService servantService;
 	@Autowired
-	private ZhuanRenTLBIntoMgrRepository repository;
+	private ZhuanRenTLBIntoRepository repository;
 	@Autowired
 	private PostService postService;
 	@Autowired
@@ -96,6 +98,8 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 	private JobLevelService jobLevelService;
 	@Autowired
 	private FormationControlService formationControlService;
+	@Autowired
+	private ExperienceService experienceService;
 
 	/**
 	 * 读取message.properties配置文件数据
@@ -152,8 +156,14 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 			servant.setIsOnHold(isOnHold);//在职状态
 			servant.setNowPostName(z.getPostCode()!=null?z.getPostCode().getName():"");//职务名称
 			servant.setNowPostCode(z.getPostCode());//职务代码
+			servant.setPhotoPath(z.getPhotoPath());//头像
 			servantService.save(servant);
 		}else{//如果是本区转任，更新该人员原数据的在职状态为调出，并生成新数据和转入转出、职务子集信息
+			//更新简历
+			Experience e = experienceService.getLatestExperienceByServantId(servant.getId());
+			e.setEndDate(new Date());
+			experienceService.update(e);
+			
 			Map<String,String> params = new HashMap<>();//存储过程入参
 			params.put("SERVANTID", servant.getId());
 			List<String> backList = new ArrayList<>();//返回参数名
@@ -183,7 +193,8 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 		Post post = new Post();
 		post.setServant(servant);//人员信息
 		CodeInfo YES = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);// 是 CODE
-		post.setNowPostSign(YES);//现任职务
+		CodeInfo inOfficeCode = dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_TYPE_POST_STATUS);// 在任
+		post.setTenureStatus(inOfficeCode);//在任职务
 		CodeInfo NO = dictableService.getCodeInfoByCode("0", DictTypeCodeContant.CODE_TYPE_YESNO);//否 CODE
 		post.setHighestPostSign(NO);//最高职务
 		post.setTenureName(z.getTargetOrgan().getName());//任职机构名称
@@ -191,14 +202,21 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 		post.setTakeDate(new Date());
 		post.setPostName(z.getPostCode()!=null?z.getPostCode().getName():"");//职务名称
 		post.setPostCode(z.getPostCode());//职务代码
-		postService.save(post);
+		postService.saveOrUpdate(post);
+		//增加简历子集信息
+		Experience experience = new Experience();
+		experience.setServant(servant);//人员信息
+		experience.setFormerUnit(z.getTargetOrgan().getName());//所在单位
+		experience.setFormerJob(post.getPostName());//担任职务
+		experience.setStartDate(new Date());//开始时间
+		experienceService.save(experience);
 		//职级子集
 		JobLevel jobLevel = new JobLevel();
 		jobLevel.setServant(servant);//人员信息
 		jobLevel.setCurrentIdentification(YES);//现行职级
 		jobLevel.setName(z.getJobLevelName());//职级名称
 		jobLevel.setCode(z.getJobLevelCode());//职级代码
-		jobLevel.setIsLowToHigh(z.getIsLowToHigh());//高职低配
+//		jobLevel.setIsLowToHigh(z.getIsLowToHigh());//高职低配
 		jobLevelService.save(jobLevel);
 		if(ReferenceExchange.AREA_THIS.equals(z.getAreaType())){//本区转任才新增一条转出子集
 			OutMgr out = new OutMgr();//转出子集信息
@@ -213,7 +231,7 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 		}
 		//进出管理
 		ManagerRecordDTO dto = new ManagerRecordDTO(servant.getId(),ManagerRecord.HUMAN_CGDR);
-		ManagerOutRecordEvent event = new ManagerOutRecordEvent(dto);
+		ManagerInRecordEvent event = new ManagerInRecordEvent(dto);
 		EventManager.send(event);
 	}
 	/**
@@ -231,8 +249,7 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 		}
 		JobLevel tempJ = jobLevelService.getJobLevelByServantId(temp.getServant().getId());//查询当前人员的现行职级
 		
-		FlowRecord flow;
-		if(ReferenceExchange.STATUS_EXCHANGE_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
+		if(ReferenceExchange.STATUS_EXCHANGE_STATE==temp.getStatus()){//提交环节，检验编制，锁编
 			//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
 			formationControlService.queryJudgeFormationNum(temp.getTargetOrgan().getId());
 			//启动流程，锁未调入编制
@@ -244,17 +261,20 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 			//校验职级
 			CodeInfo tempPost = codeInfoService.get(temp.getJobLevelCode().getId());
 			temp.setJobLevelCode(tempPost);
-			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode());
-			temp.setIsLowToHigh(j.isLowToHigh);//放入高职低配
-			//锁职级调入数
-			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
+//			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode());
+//			temp.setIsLowToHigh(j.isLowToHigh);//放入高职低配
+//			//锁职级调入数
+//			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
 			//锁职级调出数
-			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
-			
+//			formationControlService.executeLockPostOutNum(temp.getSourceOrgan().getId(), tempJ.getCode().getCode(), tempJ.getIsLowToHigh());
+		}
+		
+		FlowRecord flow;
+		if(ReferenceExchange.STATUS_EXCHANGE_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
-			flow.setBusName("本区人员参公交流到"+userOrg.getName());//流程业务名称
+			flow.setBusName("参公交流");//流程业务名称
 			flow.setBusType("ReferenceExchange_THIS");//流程业务类型
 			flow.setTargetOrganNode(userOrg);//流程业务目标组织
 			flow.setTargetSecurityUser(user);;//流程业务目标人员
@@ -279,21 +299,29 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 			formationControlService.executeIntoFormation(temp.getTargetOrgan().getId());//3.增加调入单位实际编制数
 			formationControlService.executeOutFormation(temp.getSourceOrgan().getId());//4.减少调出单位实际编制数
 			//职级
-			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
-			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.解锁职级调出数
-//			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//3.增加调入单位实际职级数
-			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//4.减少调出单位实际职级数
+//			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
+//			formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.解锁职级调出数
+////			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//3.增加调入单位实际职级数
+//			formationControlService.executeOutPost(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//4.减少调出单位实际职级数
 			
 			temp.setStatus(ReferenceExchange.STATUS_EXCHANGE_FINISH);
 			temp.setFlowRecord(null);//修改当前业务的流程节点
 
 			//发送通知
-			String title = messageSource.getMessage("exchangeTitle", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
-			String content = messageSource.getMessage("exchangeContent", new Object[]{temp.getServant().getName()}, Locale.CHINESE);
+			Servant tempS = servantService.get(temp.getServant().getId());
+			String title = messageSource.getMessage("exchangeTitle", new Object[]{tempS.getName()}, Locale.CHINESE);
+			String content = messageSource.getMessage("exchangeContent", new Object[]{tempS.getName()}, Locale.CHINESE);
 			AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "")));
 		}else{
 			temp.setStatus(ReferenceExchange.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
+			
+			if(ReferenceExchange.STATUS_EXCHANGE_STATE==temp.getStatus()&&FlowRecord.NOPASS.equals(r)){//如果流程退回到最初节点，解锁编制，每次提交重新锁编
+				formationControlService.executeUnlockIntoFormationNum(temp.getTargetOrgan().getId());//1.解锁调入单位未调入编制
+				formationControlService.executeUnlockOutFormationNum(temp.getSourceOrgan().getId());//2.解锁调出单位未调出编制
+//				formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
+//				formationControlService.executeUnlockPostOutNum(temp.getSourceOrgan().getId(),tempJ.getCode().getCode(), tempJ.getIsLowToHigh());//2.解锁职级调出数
+			}
 		}
 		update(temp);
 	}
@@ -312,7 +340,7 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 		}
 		
 		FlowRecord flow;
-		if(ReferenceExchange.STATUS_EXCHANGE_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
+		if(ReferenceExchange.STATUS_EXCHANGE_STATE==temp.getStatus()){//提交环节，检验编制，锁编
 			//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
 			formationControlService.queryJudgeFormationNum(temp.getTargetOrgan().getId());
 			//启动流程，锁未调入编制
@@ -322,15 +350,16 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 			//校验职级
 			CodeInfo tempPost = codeInfoService.get(temp.getJobLevelCode().getId());
 			temp.setJobLevelCode(tempPost);
-			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode());
-			temp.setIsLowToHigh(j.isLowToHigh);//放入高职低配
+//			JudgePostResult j = formationControlService.queryJudgePostNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode());
+//			temp.setIsLowToHigh(j.isLowToHigh);//放入高职低配
 			//锁职级调入数
-			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
-			
+//			formationControlService.executeLockPostIntoNum(temp.getTargetOrgan().getId(), temp.getJobLevelCode().getCode(), temp.getIsLowToHigh());
+		}
+		if(ReferenceExchange.STATUS_EXCHANGE_STATE==temp.getStatus()&&temp.getFlowRecord()==null){//提交环节，先生成流程数据
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
-			flow.setBusName("外区人员参公交流到"+userOrg.getName());//流程业务名称
+			flow.setBusName("参公交流");//流程业务名称
 			flow.setBusType("ReferenceExchange_OUTER");//流程业务类型
 			flow.setTargetOrganNode(userOrg);//流程业务目标组织
 			flow.setTargetSecurityUser(user);;//流程业务目标人员
@@ -350,7 +379,7 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 			formationControlService.executeIntoFormation(temp.getTargetOrgan().getId());//2.增加调入单位实际编制数
 
 			//职级
-			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
+//			formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
 //			formationControlService.executeIntoPost(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//2.增加调入单位实际职级数
 			
 			temp.setStatus(ReferenceExchange.STATUS_EXCHANGE_FINISH);
@@ -362,6 +391,11 @@ public class ReferenceExchangeServiceImpl extends GenericServiceImpl<ReferenceEx
 		}else{
 			temp.setStatus(ReferenceExchange.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
+			
+			if(ReferenceExchange.STATUS_EXCHANGE_STATE==temp.getStatus()&&FlowRecord.NOPASS.equals(r)){//如果流程退回到最初节点，解锁编制，每次提交重新锁编
+				formationControlService.executeUnlockIntoFormationNum(temp.getTargetOrgan().getId());//1.解锁调入单位未调入编制
+//				formationControlService.executeUnlockPostIntoNum(temp.getTargetOrgan().getId(),temp.getJobLevelCode().getCode(),temp.getIsLowToHigh());//1.解锁职级调入数
+			}
 		}
 		update(temp);
 	}

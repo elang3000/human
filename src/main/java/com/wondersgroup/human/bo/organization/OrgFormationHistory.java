@@ -15,12 +15,16 @@
 
 package com.wondersgroup.human.bo.organization;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.ofcflow.OrgFormationMgrFlow;
 import com.wondersgroup.human.bo.organization.base.BaseUnitFormation;
@@ -37,6 +41,8 @@ import com.wondersgroup.human.bo.organization.base.BaseUnitFormation;
  */
 @Entity
 @Table(name = "B02_HIS")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OrgFormationHistory extends BaseUnitFormation<OrgFormationHistory> {
 	
 	private static final long serialVersionUID = -5719647342006375651L;
@@ -51,154 +57,110 @@ public class OrgFormationHistory extends BaseUnitFormation<OrgFormationHistory> 
 	
 	/**
 	 * *
-	 * 关联单位基本信息申请表
+	 * 关联单位编制调整申请表
 	 **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ORG_FORMATION_FLOW_ID")
 	private OrgFormationMgrFlow orgFormationMgrFlow;
 	
 	/**
-	 * @fieldName: 定编 处级及相当者人数
+	 * @fieldName: approveChuNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 定编  单位内处级以及与处级相当职级的人员总数。
+	 * @Description: 定编 处级人数
 	 */
-	@Column(name = "B02325_A", length = 2)
-	private Integer approveDivisionChiefLevelNumber;
+	@Column(name = "CHU_A")
+	private Integer approveChuNum = 0;
 	
 	/**
-	 * @fieldName: 缺（超）编  处级及相当者人数
+	 * @fieldName: realChuNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 缺（超）编  单位内处级以及与处级相当职级的人员总数。
+	 * @Description: 实有 处级人数
 	 */
-	@Column(name = "B02325_B", length = 2)
-	private Integer vacancyDivisionChiefLevelNumber;
+	@Column(name = "CHU_B")
+	private Integer realChuNum = 0;
 	
 	/**
-	 * @fieldName: 定编 副处级及相当者人数
+	 * @fieldName: approvePlusKeLeaderNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 定编 单位内副处级以及与副处级相当职级的人员总数。
+	 * @Description: 定编 正科级领导人数
 	 */
-	@Column(name = "B02330_A", length = 2)
-	private Integer approveDeputyDivisionChiefLevelNumber;
+	@Column(name = "PLUS_KE_LEADER_A")
+	private Integer approvePlusKeLeaderNum = 0;
 	
 	/**
-	 * @fieldName: 缺（超）编 副处级及相当者人数
+	 * @fieldName: realPlusKeLeaderNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 缺（超）编 单位内副处级以及与副处级相当职级的人员总数。
+	 * @Description: 实有 正科级领导人数
 	 */
-	@Column(name = "B02330_B", length = 2)
-	private Integer vacancyDeputyDivisionChiefLevelNumber;
+	@Column(name = "PLUS_KE_LEADER_B")
+	private Integer realPlusKeLeaderNum = 0;
 	
 	/**
-	 * @fieldName: 定编 科级及相当者人数
+	 * @fieldName: approvePlusKeNoLeaderNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 定编 单位内科级以及与科级相当职级的人员总数。
+	 * @Description: 定编 正科级非领导人数
 	 */
-	@Column(name = "B02335_A", length = 2)
-	private Integer approveSectionChiefLevelNumber;
+	@Column(name = "PLUS_KE_NOLEADER_A")
+	private Integer approvePlusKeNoLeaderNum = 0;
 	
 	/**
-	 * @fieldName: 缺（超）编 科级及相当者人数
+	 * @fieldName: realPlusKeNoLeaderNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 缺（超）编 单位内科级以及与科级相当职级的人员总数。
+	 * @Description: 实有 正科级非领导人数
 	 */
-	@Column(name = "B02335_B", length = 2)
-	private Integer vacancySectionChiefLevelNumber;
+	@Column(name = "PLUS_KE_NOLEADER_B")
+	private Integer realPlusKeNoLeaderNum = 0;
 	
 	/**
-	 * @fieldName: 定编 副科级及相当者人数
+	 * @fieldName: approveMinusKeLeaderNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 定编 单位内副科级以及与副科级相当职级的人员总数。
+	 * @Description: 定编 副科级领导人数
 	 */
-	@Column(name = "B02340_A", length = 2)
-	private Integer approveDeputySectionChiefLevelNumber;
+	@Column(name = "MINUS_KE_LEADER_A")
+	private Integer approveMinusKeLeaderNum = 0;
 	
 	/**
-	 * @fieldName: 缺（超）编 副科级及相当者人数
+	 * @fieldName: realMinusKeLeaderNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 缺（超）编 单位内副科级以及与副科级相当职级的人员总数。
+	 * @Description: 实有 副科级领导人数
 	 */
-	@Column(name = "B02340_B", length = 2)
-	private Integer vacancyDeputySectionChiefLevelNumber;
+	@Column(name = "MINUS_KE_LEADER_B")
+	private Integer realMinusKeLeaderNum = 0;
 	
 	/**
-	 * @fieldName: 定编 科员、办事员及其他人员数
+	 * @fieldName: approveMinusKeNoLeaderNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 定编 单位内科员、办事员及其他人员总数。
+	 * @Description: 定编 副科级非领导人数
 	 */
-	@Column(name = "B02345_A", length = 2)
-	private Integer approveStaffMembersNumber;
+	@Column(name = "MINUS_KE_NOLEADER_A")
+	private Integer approveMinusKeNoLeaderNum = 0;
 	
 	/**
-	 * @fieldName: 缺（超）编 科员、办事员及其他人员数
+	 * @fieldName: realMinusKeNoLeaderNum
 	 * @fieldType: java.lang.Integer
-	 * @Description: 定编 单位内科员、办事员及其他人员总数。
+	 * @Description: 定编 副科级非领导人数
 	 */
-	@Column(name = "B02345_B", length = 2)
-	private Integer vacancyStaffMembersNumber;
-	
-	/**
-	 * @fieldName: 定编 科级及相当者人数（非领导）
-	 * @fieldType: java.lang.Integer
-	 * @Description: 定编 单位内科级以及与科级相当职级的人员总数（非领导）。
-	 */
-	@Column(name = "B02335_NL_A", length = 2)
-	private Integer approveNonLeaderSectionChiefLevelNumber;
-	
-	/**
-	 * @fieldName: 实有 科级及相当者人数（非领导）
-	 * @fieldType: java.lang.Integer
-	 * @Description: 实有 单位内科级以及与科级相当职级的人员总数（非领导）。
-	 */
-	@Column(name = "B02335_NL", length = 2)
-	private Integer nonLeaderSectionChiefLevelNumber;
-	
-	/**
-	 * @fieldName: 缺（超）编 科级及相当者人数（非领导）
-	 * @fieldType: java.lang.Integer
-	 * @Description: 缺（超）编 单位内科级以及与科级相当职级的人员总数（非领导）。
-	 */
-	@Column(name = "B02335_NL_B", length = 2)
-	private Integer vacancyNonLeaderSectionChiefLevelNumber;
-	
-	/**
-	 * @fieldName: 定编 副科级及相当者人数（非领导）
-	 * @fieldType: java.lang.Integer
-	 * @Description: 定编 单位内副科级以及与副科级相当职级的人员总数（非领导）。
-	 */
-	@Column(name = "B02340_NL_A", length = 2)
-	private Integer approveNonLeaderDeputySectionChiefLevelNumber;
-	
-	/**
-	 * @fieldName: 实有 副科级及相当者人数（非领导）
-	 * @fieldType: java.lang.Integer
-	 * @Description: 实有 单位内副科级以及与副科级相当职级的人员总数（非领导）。
-	 */
-	@Column(name = "B02340_NL", length = 2)
-	private Integer nonLeaderDeputySectionChiefLevelNumber;
-	
-	/**
-	 * @fieldName: 缺（超）编 副科级及相当者人数（非领导）
-	 * @fieldType: java.lang.Integer
-	 * @Description: 缺（超）编 单位内副科级以及与副科级相当职级的人员总数（非领导）。
-	 */
-	@Column(name = "B02340_NL_B", length = 2)
-	private Integer vacancyNonLeaderDeputySectionChiefLevelNumber;
+	@Column(name = "MINUS_KE_NOLEADER_B")
+	private Integer realMinusKeNoLeaderNum = 0;
+
 	
 	public OrgInfo getOrgInfo() {
 		
 		return orgInfo;
 	}
+
 	
 	public void setOrgInfo(OrgInfo orgInfo) {
 		
 		this.orgInfo = orgInfo;
 	}
+
 	
 	public OrgFormationMgrFlow getOrgFormationMgrFlow() {
 		
 		return orgFormationMgrFlow;
 	}
+
 	
 	public void setOrgFormationMgrFlow(OrgFormationMgrFlow orgFormationMgrFlow) {
 		
@@ -206,195 +168,123 @@ public class OrgFormationHistory extends BaseUnitFormation<OrgFormationHistory> 
 	}
 
 	
-	public Integer getApproveDivisionChiefLevelNumber() {
+	public Integer getApproveChuNum() {
 		
-		return approveDivisionChiefLevelNumber;
+		return approveChuNum;
 	}
 
 	
-	public void setApproveDivisionChiefLevelNumber(Integer approveDivisionChiefLevelNumber) {
+	public void setApproveChuNum(Integer approveChuNum) {
 		
-		this.approveDivisionChiefLevelNumber = approveDivisionChiefLevelNumber;
+		this.approveChuNum = approveChuNum;
 	}
 
 	
-	public Integer getVacancyDivisionChiefLevelNumber() {
+	public Integer getRealChuNum() {
 		
-		return vacancyDivisionChiefLevelNumber;
+		return realChuNum;
 	}
 
 	
-	public void setVacancyDivisionChiefLevelNumber(Integer vacancyDivisionChiefLevelNumber) {
+	public void setRealChuNum(Integer realChuNum) {
 		
-		this.vacancyDivisionChiefLevelNumber = vacancyDivisionChiefLevelNumber;
+		this.realChuNum = realChuNum;
 	}
 
 	
-	public Integer getApproveDeputyDivisionChiefLevelNumber() {
+	public Integer getApprovePlusKeLeaderNum() {
 		
-		return approveDeputyDivisionChiefLevelNumber;
+		return approvePlusKeLeaderNum;
 	}
 
 	
-	public void setApproveDeputyDivisionChiefLevelNumber(Integer approveDeputyDivisionChiefLevelNumber) {
+	public void setApprovePlusKeLeaderNum(Integer approvePlusKeLeaderNum) {
 		
-		this.approveDeputyDivisionChiefLevelNumber = approveDeputyDivisionChiefLevelNumber;
+		this.approvePlusKeLeaderNum = approvePlusKeLeaderNum;
 	}
 
 	
-	public Integer getVacancyDeputyDivisionChiefLevelNumber() {
+	public Integer getRealPlusKeLeaderNum() {
 		
-		return vacancyDeputyDivisionChiefLevelNumber;
+		return realPlusKeLeaderNum;
 	}
 
 	
-	public void setVacancyDeputyDivisionChiefLevelNumber(Integer vacancyDeputyDivisionChiefLevelNumber) {
+	public void setRealPlusKeLeaderNum(Integer realPlusKeLeaderNum) {
 		
-		this.vacancyDeputyDivisionChiefLevelNumber = vacancyDeputyDivisionChiefLevelNumber;
+		this.realPlusKeLeaderNum = realPlusKeLeaderNum;
 	}
 
 	
-	public Integer getApproveSectionChiefLevelNumber() {
+	public Integer getApprovePlusKeNoLeaderNum() {
 		
-		return approveSectionChiefLevelNumber;
+		return approvePlusKeNoLeaderNum;
 	}
 
 	
-	public void setApproveSectionChiefLevelNumber(Integer approveSectionChiefLevelNumber) {
+	public void setApprovePlusKeNoLeaderNum(Integer approvePlusKeNoLeaderNum) {
 		
-		this.approveSectionChiefLevelNumber = approveSectionChiefLevelNumber;
+		this.approvePlusKeNoLeaderNum = approvePlusKeNoLeaderNum;
 	}
 
 	
-	public Integer getVacancySectionChiefLevelNumber() {
+	public Integer getRealPlusKeNoLeaderNum() {
 		
-		return vacancySectionChiefLevelNumber;
+		return realPlusKeNoLeaderNum;
 	}
 
 	
-	public void setVacancySectionChiefLevelNumber(Integer vacancySectionChiefLevelNumber) {
+	public void setRealPlusKeNoLeaderNum(Integer realPlusKeNoLeaderNum) {
 		
-		this.vacancySectionChiefLevelNumber = vacancySectionChiefLevelNumber;
+		this.realPlusKeNoLeaderNum = realPlusKeNoLeaderNum;
 	}
 
 	
-	public Integer getApproveDeputySectionChiefLevelNumber() {
+	public Integer getApproveMinusKeLeaderNum() {
 		
-		return approveDeputySectionChiefLevelNumber;
+		return approveMinusKeLeaderNum;
 	}
 
 	
-	public void setApproveDeputySectionChiefLevelNumber(Integer approveDeputySectionChiefLevelNumber) {
+	public void setApproveMinusKeLeaderNum(Integer approveMinusKeLeaderNum) {
 		
-		this.approveDeputySectionChiefLevelNumber = approveDeputySectionChiefLevelNumber;
+		this.approveMinusKeLeaderNum = approveMinusKeLeaderNum;
 	}
 
 	
-	public Integer getVacancyDeputySectionChiefLevelNumber() {
+	public Integer getRealMinusKeLeaderNum() {
 		
-		return vacancyDeputySectionChiefLevelNumber;
+		return realMinusKeLeaderNum;
 	}
 
 	
-	public void setVacancyDeputySectionChiefLevelNumber(Integer vacancyDeputySectionChiefLevelNumber) {
+	public void setRealMinusKeLeaderNum(Integer realMinusKeLeaderNum) {
 		
-		this.vacancyDeputySectionChiefLevelNumber = vacancyDeputySectionChiefLevelNumber;
+		this.realMinusKeLeaderNum = realMinusKeLeaderNum;
 	}
 
 	
-	public Integer getApproveStaffMembersNumber() {
+	public Integer getApproveMinusKeNoLeaderNum() {
 		
-		return approveStaffMembersNumber;
+		return approveMinusKeNoLeaderNum;
 	}
 
 	
-	public void setApproveStaffMembersNumber(Integer approveStaffMembersNumber) {
+	public void setApproveMinusKeNoLeaderNum(Integer approveMinusKeNoLeaderNum) {
 		
-		this.approveStaffMembersNumber = approveStaffMembersNumber;
+		this.approveMinusKeNoLeaderNum = approveMinusKeNoLeaderNum;
 	}
 
 	
-	public Integer getVacancyStaffMembersNumber() {
+	public Integer getRealMinusKeNoLeaderNum() {
 		
-		return vacancyStaffMembersNumber;
+		return realMinusKeNoLeaderNum;
 	}
 
 	
-	public void setVacancyStaffMembersNumber(Integer vacancyStaffMembersNumber) {
+	public void setRealMinusKeNoLeaderNum(Integer realMinusKeNoLeaderNum) {
 		
-		this.vacancyStaffMembersNumber = vacancyStaffMembersNumber;
-	}
-
-	
-	public Integer getApproveNonLeaderSectionChiefLevelNumber() {
-		
-		return approveNonLeaderSectionChiefLevelNumber;
-	}
-
-	
-	public void setApproveNonLeaderSectionChiefLevelNumber(Integer approveNonLeaderSectionChiefLevelNumber) {
-		
-		this.approveNonLeaderSectionChiefLevelNumber = approveNonLeaderSectionChiefLevelNumber;
-	}
-
-	
-	public Integer getNonLeaderSectionChiefLevelNumber() {
-		
-		return nonLeaderSectionChiefLevelNumber;
-	}
-
-	
-	public void setNonLeaderSectionChiefLevelNumber(Integer nonLeaderSectionChiefLevelNumber) {
-		
-		this.nonLeaderSectionChiefLevelNumber = nonLeaderSectionChiefLevelNumber;
-	}
-
-	
-	public Integer getVacancyNonLeaderSectionChiefLevelNumber() {
-		
-		return vacancyNonLeaderSectionChiefLevelNumber;
-	}
-
-	
-	public void setVacancyNonLeaderSectionChiefLevelNumber(Integer vacancyNonLeaderSectionChiefLevelNumber) {
-		
-		this.vacancyNonLeaderSectionChiefLevelNumber = vacancyNonLeaderSectionChiefLevelNumber;
-	}
-
-	
-	public Integer getApproveNonLeaderDeputySectionChiefLevelNumber() {
-		
-		return approveNonLeaderDeputySectionChiefLevelNumber;
-	}
-
-	
-	public void setApproveNonLeaderDeputySectionChiefLevelNumber(Integer approveNonLeaderDeputySectionChiefLevelNumber) {
-		
-		this.approveNonLeaderDeputySectionChiefLevelNumber = approveNonLeaderDeputySectionChiefLevelNumber;
-	}
-
-	
-	public Integer getNonLeaderDeputySectionChiefLevelNumber() {
-		
-		return nonLeaderDeputySectionChiefLevelNumber;
-	}
-
-	
-	public void setNonLeaderDeputySectionChiefLevelNumber(Integer nonLeaderDeputySectionChiefLevelNumber) {
-		
-		this.nonLeaderDeputySectionChiefLevelNumber = nonLeaderDeputySectionChiefLevelNumber;
-	}
-
-	
-	public Integer getVacancyNonLeaderDeputySectionChiefLevelNumber() {
-		
-		return vacancyNonLeaderDeputySectionChiefLevelNumber;
-	}
-
-	
-	public void setVacancyNonLeaderDeputySectionChiefLevelNumber(Integer vacancyNonLeaderDeputySectionChiefLevelNumber) {
-		
-		this.vacancyNonLeaderDeputySectionChiefLevelNumber = vacancyNonLeaderDeputySectionChiefLevelNumber;
+		this.realMinusKeNoLeaderNum = realMinusKeNoLeaderNum;
 	}
 	
 }

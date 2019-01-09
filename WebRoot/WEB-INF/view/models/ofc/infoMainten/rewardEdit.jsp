@@ -29,19 +29,19 @@
 								</smart:gridRow> --%>
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="rewardCode" labelName="奖励名称：" inputName="rewardCode.id" codeTypeCode="GBT_8563_1_2005" inputVal="${reward.rewardCode.id}" valType="ID" widthPercent="0.5" verify="required" isNotNull="true"   isSaveShowName="true" inputShowName="rewardName" allOrLast="last"/>
+										<smart:continuousSelect id="rewardCode" labelName="奖励名称：" inputName="rewardCode.id" codeTypeCode="GBT_8563_1_2005" inputVal="${reward.rewardCode.id}" valType="ID" widthPercent="0.333" verify="required" isNotNull="true"   isSaveShowName="true" inputShowName="rewardName" allOrLast="last"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="奖励决定原始文件：" name="rewardNo" value="${reward.rewardNo}" ></smart:textInput>
+										<smart:textInput labelName="奖励决定原始文件：" shortName="奖励决定文件" name="rewardNo" value="${reward.rewardNo}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="奖励批准单位名称：" name="rewardApprovalUnitName" value="${reward.rewardApprovalUnitName}" ></smart:textInput>
+										<smart:textInput labelName="批准单位名称：" shortName="批准单位名称" name="rewardApprovalUnitName" value="${reward.rewardApprovalUnitName}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true" name="rewardApprovalUnitLevel.id" labelName="奖励批准单位级别：" display="block" url="dictquery/sub/code/DM141" initSelectedKey="${reward.rewardApprovalUnitLevel.id}"></smart:singleSelect>
+										<smart:singleSelect isAddDefaltOption="true" name="rewardApprovalUnitLevel.id" shortName="批准单位级别" labelName="批准单位级别：" display="block" url="dictquery/sub/code/DM141" initSelectedKey="${reward.rewardApprovalUnitLevel.id}"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
@@ -65,7 +65,7 @@
 										<smart:textInput labelName="荣誉称号名称：" name="honoraryName" value="${reward.honoraryName}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="荣誉称号授予单位：" name="honoraryGrantingUnit" value="${reward.honoraryGrantingUnit}" ></smart:textInput>
+										<smart:textInput labelName="荣誉称号授予单位：" shortName="称号授予单位" name="honoraryGrantingUnit" value="${reward.honoraryGrantingUnit}" ></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 								

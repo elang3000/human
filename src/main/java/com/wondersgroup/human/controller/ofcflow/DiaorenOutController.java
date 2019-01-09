@@ -31,6 +31,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
@@ -53,6 +54,8 @@ import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.DiaoRenOutMgrService;
 import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofcflow.DiaoRenOutMgrVO;
+
+import net.sf.json.JSONArray;
 
 /** 
  * @ClassName: DiaorenOutController 
@@ -181,7 +184,21 @@ public class DiaorenOutController extends GenericController{
 	 * @return: String
 	 */
 	@RequestMapping("/check")
-	public String check() {
+	public String check(Model model) {
+		OrganNode org = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		List<Map<String,String>> areaTypeList = new ArrayList<>();
+		Map<String,String> map1 = new HashMap<>();
+		map1.put("key", "1");
+		map1.put("value", "本区");
+		areaTypeList.add(map1);
+		//是否人社局
+		if (org.getCode().equals(CommonConst.HR_ROOT_ORGAN_CODE)) {
+			Map<String,String> map2 = new HashMap<>();
+			map2.put("key", "2");
+			map2.put("value", "外区");
+			areaTypeList.add(map2);
+		}
+		model.addAttribute("areaTypeList", JSONArray.fromObject(areaTypeList).toString());
 		return CHECK_SERVANT;
 	}
 	/**
@@ -195,7 +212,7 @@ public class DiaorenOutController extends GenericController{
 	@RequestMapping("/checkServant")
 	public AjaxResult checkServant(String name,String cardNo){
 		AjaxResult result = new AjaxResult(false);
-		result.setMessage("本单位中不存在该公务员，无法发起调任申请！");
+		result.setMessage("系统中不存在该公务员，无法发起调任申请！");
 		try {
 			DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
 			detachedCriteria.add(Restrictions.eq("name", name));
@@ -203,8 +220,8 @@ public class DiaorenOutController extends GenericController{
 			CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
 			detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
 			detachedCriteria.add(Restrictions.eq("removed", false));
-			OrganNode organ = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-			detachedCriteria.add(Restrictions.eq("departId", organ.getId()));//只查询自己单位的人员
+//			OrganNode organ = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+//			detachedCriteria.add(Restrictions.eq("departId", organ.getId()));//只查询自己单位的人员
 			List<CodeInfo> typeList = DictCacheProvider.getCodeInfoByCodeTypeAndParentCode(DictTypeCodeContant.CODE_TYPE_MEMBER_TYPE, "1");//人员类别为公务员的CODE
 			List<String> personType = new ArrayList<>();
 			for(CodeInfo t:typeList){
@@ -240,7 +257,7 @@ public class DiaorenOutController extends GenericController{
 					map.put("code", "1");
 					result.setData(map);
 					result.setSuccess(true);
-					result.setMessage("本单位中存在该人员，请点击提交后录入信息发起调出流程！");
+					result.setMessage("系统中存在该人员，请点击提交后录入信息发起调出流程！");
 				}
 			}
 		} catch (Exception e) {
@@ -278,8 +295,8 @@ public class DiaorenOutController extends GenericController{
 			model.addAttribute("name", name);
 		}
 		if(StringUtils.isNotBlank(cardNo)){
-			hql.append( " and servant.cardNo like :cardNo");
-			queryParameteritem=new QueryParameter("cardNo", "%"+cardNo+"%");
+			hql.append( " and servant.cardNo = :cardNo");
+			queryParameteritem=new QueryParameter("cardNo", cardNo);
 			listqueryparameter.add(queryParameteritem);
 			model.addAttribute("cardNo", cardNo);
 		}
@@ -369,13 +386,11 @@ public class DiaorenOutController extends GenericController{
 			}
 			if (StringUtils.isBlank(temp.getId())) {
 				DictUtils.operationCodeInfo(temp);//将CodeInfo中id为空的属性 设置为null
-				OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-				if(x==null||StringUtils.isBlank(x.getId())){
-					throw new BusinessException("单位信息不能为空！");
-				}
 				temp.setId(null);
 				temp.setStatus(DiaoRenOutMgr.STATUS_DIAOCHU_STATE);//流程状态，待提交
-				temp.setSourceOrgan(x);//原单位为当前单位
+				Servant servant = servantService.load(temp.getServant().getId());
+				OrganNode organ = organNodeService.load(servant.getDepartId());
+				temp.setSourceOrgan(organ);//调出单位
 				temp.setAreaType(DiaoRenOutMgr.AREA_THIS);//本区调任
 				if(temp.getTargetOrgan()!=null&&StringUtils.isNotBlank(temp.getTargetOrgan().getId())){
 					OrganNode target = organNodeService.load(temp.getTargetOrgan().getId());

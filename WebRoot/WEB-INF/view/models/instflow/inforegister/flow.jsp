@@ -3,7 +3,7 @@
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%> 
+<%@page import="com.wondersgroup.framework.util.SecurityUtils" %>
 <!DOCTYPE html >
 <html>
 <head>
@@ -24,15 +24,54 @@
 					<smart:tabPanelParent filter="tab"
 						style="margin-left:10px;margin-right:10px;">
 						<smart:tabPanel>
-							<%-- 
+							<c:if test="${busType eq 'RecruitEmployPlan,RecruitPost'}">
+								<smart:tabPanelItem show="false" turnurl="ofcflow/recruit/index"
+									eId="" itemName="招录计划"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'ZhuanRenTLBIntoMgr_THIS,ZhuanRenTLBIntoMgr_OUTER,ZhuanRenTLBOutMgr'}">
+								<smart:tabPanelItem turnurl="ofcflow/zrtlbIntoB/index" show="false" eId="" itemName="转入情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/zrtlbOutB/index" show="false" eId="" itemName="转出情况列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'ZhuanRenKLBIntoMgr_THIS,ZhuanRenKLBIntoMgr_OUTER,ZhuanRenKLBOutMgr'}">
+								<smart:tabPanelItem turnurl="ofcflow/zrklbInto/index" show="false" eId="" itemName="转入情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/zrklbOut/index" show="false" eId="" itemName="转出情况列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'DiaoRenIntoMgr_THIS,DiaoRenIntoMgr_OUTER,DiaoRenOutMgr_THIS'}">
+								<smart:tabPanelItem turnurl="ofcflow/diaoren/index" show="false" eId="" itemName="调入情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/diaorenOut/index" show="false" eId="" itemName="调出情况列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'ReferenceExchange_THIS,ReferenceExchange_OUTER'}">
+								<smart:tabPanelItem turnurl="ofcflow/exchangeB/index" show="false" eId="" itemName="调入情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/exchangeOutB/outindex" show="false" eId="" itemName="调出情况列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'ProbationServant,CancelProbationServant'}">
+								<smart:tabPanelItem turnurl="ofcflow/probation/index" eId="" show="false" itemName="试用期名单列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'JOBSHIFT_PROMOTE,JOBSHIFT_DEMOTE,JOBSHIFT_DEPOSE,JOBSHIFT_SHIFT'}">
+								<smart:tabPanelItem turnurl="ofcflow/jobchange/index" eId="" show="false" itemName="职务变动名单列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'Train'}">
+								<smart:tabPanelItem turnurl="ofcflow/trainServant/index" eId="" show="false" itemName="培训学时考核列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'PunishServant'}">
+								<smart:tabPanelItem turnurl="ofcflow/punish/index" eId="" show="false" itemName="处分备案列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'Abroad'}">
+								<smart:tabPanelItem turnurl="ofcflow/abroad1/index" eId="" show="false" itemName="因公出国政审列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'ASSESS_REWARD'}">
+								<smart:tabPanelItem turnurl="ofcflow/assess/assessIndex" eId="" show="false" itemName="考核记录"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'ResignServant'}">
+								<smart:tabPanelItem turnurl="ofcflow/resign/index" eId="" show="false" itemName="辞职列表"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'DeathServant'}">
+								<smart:tabPanelItem turnurl="ofcflow/death/index" eId="" show="false" itemName="死亡列表"></smart:tabPanelItem>
+							</c:if>
 							<c:if test="${busType eq 'MemberInfoRegister'}">
-								<smart:tabPanelItem show="false" turnurl="instflow/inforegister/index"
-									eId="" itemName="登记人员"></smart:tabPanelItem>
-							</c:if> 
-							--%>
-							<%-- 
+								<smart:tabPanelItem turnurl="instflow/inforegister/index" eId="" show="false" itemName="登记列表"></smart:tabPanelItem>
+							</c:if>
 							<smart:tabPanelItem show="true" eId="" itemName="流程审批"></smart:tabPanelItem>
-							 --%>
 						</smart:tabPanel>
 					</smart:tabPanelParent>
 				</smart:gridRow>
@@ -40,9 +79,12 @@
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="来文单位：" name="sourceOrganNode" placeholder="请输入来文单位"></smart:textInput>
+								<smart:singleSelect labelName="来文单位：" name="sourceOrganNodeId"
+								isSearch="true" display="block"
+								url="system/organ/node/query?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517"
+								isAddDefaltOption="true"></smart:singleSelect>
 							</smart:gridColumn>
-							<smart:gridColumn colPart="5" >
+							<smart:gridColumn colPart="2" >
 								<smart:buttonGroup container="true">
 									<smart:button size="sm" method="search" title="查询"
 										theme="primary">
@@ -51,28 +93,16 @@
 									<smart:button size="sm" title="重置"
 										theme="primary" type="reset">
 										<smart:icon icon="history"></smart:icon>&nbsp;重置
-		   						    </smart:button>
-		   						   <shiro:hasPermission name="H002005001"> 
-				   						    <smart:button size="sm" method="add" title="新增">
-											    <smart:icon icon="plus">&nbsp;新增人员登记</smart:icon>
-										    </smart:button>
-								    </shiro:hasPermission> 
+		   						</smart:button>
 								</smart:buttonGroup>
 							</smart:gridColumn>
 						</smart:form>
-						
-						<smart:gridColumn colPart="6" deviceType="md" colOffset="4">
-							<smart:buttonGroup container="true">
-								
-							</smart:buttonGroup>
-						</smart:gridColumn>
 					</smart:fieldSet>
-					
 				</smart:gridRow>
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn colPart="12" deviceType="md">
-						<smart:table id="navigationList" url="workflow/doing/page?busType=${busType}"
-							height="full-315" text="未找到有效数据！">
+						<smart:table id="navigationList" url="workflow/doing/page?busType=${busType}&category=${category}"
+							height="full-200" text="未找到有效数据！">
 							<tr>
 								<smart:tableItem field="sourceOrganNode" width=".1" sort="true">来文单位</smart:tableItem>
 								<smart:tableItem field="createTime" width=".1" sort="true">来文时间</smart:tableItem>
@@ -83,9 +113,11 @@
 								<smart:tableItem align="center" width=".2" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar" >
+								{{# if (d.targetSecurityUserId == '<%=SecurityUtils.getUserId()%>') { }}
 								<smart:tableToolBtn theme="danger" event="shenpi" title="办理">
 									<smart:icon icon="edit"></smart:icon>
 								</smart:tableToolBtn>
+								{{# } }}
 								<smart:tableToolBtn theme="normal" event="viewFlowRecord" title="查看流程记录">
 									<smart:icon icon="eye"></smart:icon>
 								</smart:tableToolBtn>
@@ -101,11 +133,50 @@
 		<smart:tableScriptAction tableId="navigationList" checkbox="true"
 			sort="true" rowEdit="true">
 			shenpi : function(data) {
+				<c:if test="${busType eq 'RecruitEmployPlan,RecruitPost'}">
+					var url = "ofcflow/recruit/planFlow";
+				</c:if>
+				<c:if test="${busType eq 'ZhuanRenTLBIntoMgr_THIS,ZhuanRenTLBIntoMgr_OUTER,ZhuanRenTLBOutMgr'}">
+					var url = "ofcflow/zrtlbIntoB/workFlow";
+				</c:if>
+				<c:if test="${busType eq 'ZhuanRenKLBIntoMgr_THIS,ZhuanRenKLBIntoMgr_OUTER,ZhuanRenKLBOutMgr'}">
+					var url = "ofcflow/zrklbInto/workFlow";
+				</c:if>
+				<c:if test="${busType eq 'DiaoRenIntoMgr_THIS,DiaoRenIntoMgr_OUTER,DiaoRenOutMgr_THIS'}">
+					var url = "ofcflow/diaoren/workFlow";
+				</c:if>
+				<c:if test="${busType eq 'ReferenceExchange_THIS,ReferenceExchange_OUTER'}">
+					var url = "ofcflow/exchangeB/workFlow";
+				</c:if>
+				<c:if test="${busType eq 'ProbationServant,CancelProbationServant'}">
+					var url = "ofcflow/probation/workFlow";
+				</c:if>
+				<c:if test="${busType eq 'JOBSHIFT_PROMOTE,JOBSHIFT_DEMOTE,JOBSHIFT_DEPOSE,JOBSHIFT_SHIFT'}">
+					var url = "ofcflow/jobchange/jobChangeFlow";
+				</c:if>
+				<c:if test="${busType eq 'Train'}">
+					var url = "ofcflow/trainServant/trainFlow";
+				</c:if>
+				<c:if test="${busType eq 'PunishServant'}">
+					var url = "ofcflow/punish/punishFlow";
+				</c:if>
+				<c:if test="${busType eq 'Abroad'}">
+					var url = "ofcflow/abroad1/abroadFlow";
+				</c:if>
+				<c:if test="${busType eq 'ASSESS_REWARD'}">
+					var url = "ofcflow/assess/assessFlow";
+				</c:if>
+				<c:if test="${busType eq 'ResignServant'}">
+					var url = "ofcflow/resign/resignFlow";
+				</c:if>
+				<c:if test="${busType eq 'DeathServant'}">
+					var url = "ofcflow/death/deathFlow";
+				</c:if>
 				<c:if test="${busType eq 'MemberInfoRegister'}">
 					var url = "instflow/inforegister/queryRegisterInfo";
 				</c:if>
 				smart.show({
-					title : '人员登记信息详情',
+					title : '流程审批',
 					size : 'full',
 					url : url,
 					params:{id:data.data.id},
@@ -114,7 +185,7 @@
 			}
 			,viewFlowRecord : function(record) {
 				smart.show({
-					title : '查看流程记录详情',
+					title : '查看流程记录',
 					url : 'workflow/detail/index',
 					params : {
 						id : record.data.id
@@ -132,14 +203,6 @@
 					page : {
 						curr : 1
 					}
-				});
-			},
-			add : function() {
-			    smart.show({
-					title : '人员招录登记',
-					size : 'full',
-					url : "instflow/inforegister/register",
-					scrollbar : false
 				});
 			}
 		 </smart:buttonScriptAction>

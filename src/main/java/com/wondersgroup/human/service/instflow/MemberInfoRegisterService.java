@@ -22,6 +22,8 @@ import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.instflow.MemberInfoRegister;
+import com.wondersgroup.human.dto.instflow.InfoRegisterQueryParam;
+import com.wondersgroup.human.dto.ofcflow.ResignServantQueryParam;
 import com.wondersgroup.human.vo.instflow.MemberInfoRegisterVO;
 
 /** 
@@ -55,4 +57,15 @@ public interface MemberInfoRegisterService extends GenericService<MemberInfoRegi
 	 */
 	Page<MemberInfoRegisterVO> findByFilterVO(List<Predicate> arg0, Sorts arg1, Integer arg2, Integer arg3);
 	
+	
+	/** 
+	 * @Title: pageList 
+	 * @Description: 辞职信息页面内bo转成vo
+	 * @param resignVO
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<ResignVO>
+	 */
+	Page<MemberInfoRegisterVO> pageList(InfoRegisterQueryParam param, Integer page, Integer limit);
 }

@@ -28,7 +28,7 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4" colOffset="3">
-								<smart:textInput name="name" labelName="年度招录计划名称"
+								<smart:textInput name="name" labelName="年度招录计划名称" shortName="计划名称"
 									value="${recruityearplan.name}" placeholder="年度招录计划名称"></smart:textInput>
 									<smart:textInput type="hidden" id="id" name="id" value="${recruityearplan.id }"></smart:textInput>
 							</smart:gridColumn>
@@ -67,7 +67,7 @@
 									theme="normal">
 									<smart:icon icon="plus">&nbsp;提交</smart:icon>
 								</smart:button>
-								<smart:button theme="warm" size="sm" method="goBack" title="返回">
+								<smart:button theme="primary" size="sm" method="goBack" title="返回">
 									<smart:icon icon="pencil">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>
@@ -86,7 +86,6 @@
 		</smart:buttonScriptAction>
 		<smart:dateRender id="startDate" />
 		<smart:dateRender id="endDate" />
-		 $("#state").val("0");
 		 
 		  form.on('switch(checkstate)', function(data){
 		        if("ON"==data.othis[0].textContent){

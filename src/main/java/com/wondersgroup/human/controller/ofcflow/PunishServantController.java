@@ -39,6 +39,9 @@ import com.wondersgroup.human.dto.ofcflow.PunishServantQueryParam;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.PunishServantService;
 import com.wondersgroup.human.vo.ofcflow.PunishServantVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: PunishServantController 
@@ -128,6 +131,8 @@ public class PunishServantController extends GenericController {
 	 * @param page页码
 	 * @return: Page<ResignVO>
 	 */
+	@Log(title = "查询处分列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PunishServantVO> pageList(PunishServantQueryParam param, Integer limit, Integer page) {
@@ -142,6 +147,8 @@ public class PunishServantController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑处分信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PunishServant temp) {
@@ -178,6 +185,8 @@ public class PunishServantController extends GenericController {
 	 * @param id		
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除处分信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/remove")
 	public AjaxResult remove(String id){
@@ -235,6 +244,8 @@ public class PunishServantController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "审批处分流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/operationFlow")
 	public AjaxResult operationFlow(PunishServant temp, HttpServletRequest request) {
@@ -275,11 +286,13 @@ public class PunishServantController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "查询处分详情", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/view")
 	public String planView(Model model,String id) {
 		PunishServant punishServant = punishServantService.get(id);
 		model.addAttribute("punishServant",punishServant);
 		model.addAttribute("servant", punishServant.getServant());
-		return PUNISH_VIEW;//
+		return PUNISH_VIEW;
 	}
 }

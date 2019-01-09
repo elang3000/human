@@ -42,7 +42,11 @@ public class JobShiftVO {
     }
 
 
-    public String getName() {
+    public JobShiftVO() {
+	}
+
+
+	public String getName() {
         return name;
     }
 

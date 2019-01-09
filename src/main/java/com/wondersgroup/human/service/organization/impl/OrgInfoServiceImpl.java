@@ -74,9 +74,6 @@ public class OrgInfoServiceImpl extends GenericServiceImpl<OrgInfo> implements O
 		if (list.size()==1) {
 			return list.get(0);
 		}else if(list.size()>1){
-			System.out.println("=========================================================================================================");
-			System.out.println("=========================================================================================================");
-			System.out.println("=========================================================================================================");
 			return null;
 		}else
 			return null;

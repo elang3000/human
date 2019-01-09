@@ -59,7 +59,7 @@ public class WorkflowServiceTest extends AbstractTest {
 		
 		Allocation allocation = workflowService.queryNextAllocation("eddbbace-cd45-47f5-b43b-fa4129c8984a", organNode,
 		        "REPORT_EMPLOY_PLAN");
-		System.out.println(allocation);
+		//System.out.println(allocation);
 	}
 	
 	 @Test
@@ -77,7 +77,7 @@ public class WorkflowServiceTest extends AbstractTest {
 		flowRecord.setBusType("ZhuanRenTLBIntoMgr_THIS");
 		flowRecord.setBusId("98EE366B2898414A4302A66A2F273A9A");
 		flowRecord = workflowService.createFlowRecord(flowRecord, "STATUS_ZHUANREN_STATE");
-		System.out.print(flowRecord);
+		//System.out.print(flowRecord);
 	}
 	
 	//@Test
@@ -93,8 +93,8 @@ public class WorkflowServiceTest extends AbstractTest {
 	
 	//@Test
 	public void countWorkFLowBusinessNum() {
-		Map<String,Integer> count = workflowService.countWorkFLowBusinessNum(null,null,Calendar.getInstance().getTime());
+	/*	Map<String,Integer> count = workflowService.countWorkFLowBusinessNum(null,null,Calendar.getInstance().getTime());
 	
-		System.out.println("数量：" + count);
+		//System.out.println("数量：" + count);*/
 	}
 }

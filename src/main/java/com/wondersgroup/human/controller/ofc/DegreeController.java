@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.DegreeService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.DegreeVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: DegreeController
@@ -100,6 +103,8 @@ public class DegreeController extends GenericController {
 	 * @param temp 学位信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑学位信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Degree temp) {
@@ -131,6 +136,8 @@ public class DegreeController extends GenericController {
 	 * @param temp 学位信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除学位信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

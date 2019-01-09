@@ -25,7 +25,7 @@
 		createTpl = function(optionData) {
 			var html = '<div class="layui-progress" lay-showpercent="true" lay-filter="' + optionData.code + '">'
 				html += '<h3>' + optionData.name + '</h3>'
-				var p = (optionData.doingNum / optionData.allNum * 1000) / 100;
+				var p =  Math.round(optionData.doingNum / optionData.allNum * 1000) / 100;
 				if (p >= 80) {
 					html += '<div class="layui-progress-bar" lay-percent="' + p + '%" style="width:' + p + '%;">';
 					html += '<span class="layui-progress-text">' + p +'%</span>'
@@ -85,50 +85,64 @@
 		options = [{
 			title:{
 				text:"单位年龄段分布统计",
-				textStyle:{
-					fontSize:14
-				}
+				x:'left'
 			},
-			color: ['#006699', '#4cabce'],
 			url:'statist/years',
-		    tooltip: {
-		        trigger: 'axis',
-		        formatter: '{b0}<br/>{a0}:{c0}人<br/>{a1}:{c1}%',
-		        axisPointer: {
-		            type: 'shadow'
-		        }
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
 		    },
 		    legend: {
-		        data: ['人数', '占比']
+		        type: 'scroll',
+		        orient: 'horizontal',
+		        x:"center",
+		        y: 'bottom',
+		        data: []
 		    },
-		    calculable: true,
-		    xAxis: [
-		        {
-		            type: 'category',
-		            axisTick: {show: false},
-		            data: []
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            dataView : {
+		            	show: true, 
+		            	readOnly: false
+		            },
+		            restore : {
+		            	show: true
+		            },
+		            saveAsImage : {
+		            	show: true
+		            }
 		        }
-		    ],
-		    yAxis: [
-		        {
-		            type: 'value'
-		        }
-		    ],
+		    },
 		    series: [
-		        {
-		            name: '人数',
-		            type: 'bar',
-		            barGap: 0,
-		            data: []
-		        },
-		        {
-		            name: '占比',
-		            type: 'bar',
-		            data: []
+		    	{
+		            name: '年龄统计',
+		            type: 'pie',
+		            radius: ['20%', '70%'],
+		            center: ['50%','45%'],
+		            selectedMode: 'single',
+		            selectedOffset : 15,
+		            voidLabelOverlap: true,
+		            hoverAnimation: true,
+		            data: [],
+		            itemStyle: {
+		            	normal :{
+		            		label:{
+		            			show:true,
+		            			position:'outer',
+		            			formatter: '{b}：人数[{c}],百分比[{d}%]',
+		            		}
+		            	},
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            }
 		        }
 		    ]
 		},{
-		  title : {
+			title : {
 		        text: '单位学历统计',
 		        x:'left'
 		    },
@@ -139,39 +153,222 @@
 		    },
 		    legend: {
 		        type: 'scroll',
-		        orient: 'vertical',
-		        x:"right",
-		        right: 10,
-		        top: 20,
-		        bottom: 20,
+		        orient: 'horizontal',
+		        x:"center",
+		        y: 'bottom',
 		        data: []
 		    },
-		    series : [
-		        {
-		            name: '学历',
-		            type: 'pie',
-		            radius : '55%',
-		            center: ['50%', '50%'],
-		            data: [],
-		            itemStyle: {
-		                emphasis: {
-		                    shadowBlur: 10,
-		                    shadowOffsetX: 0,
-		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-		                }
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            dataView : {
+		            	show: true, 
+		            	readOnly: false
+		            },
+		            restore : {
+		            	show: true
+		            },
+		            saveAsImage : {
+		            	show: true
 		            }
 		        }
-		    ]
-		}],
+		    },
+		    series : [{
+	            name: '学历',
+	            type: 'pie',
+	            radius: ['20%', '70%'],
+	            center: ['50%','45%'],
+	            selectedMode: 'single',
+	            selectedOffset : 15,
+	            voidLabelOverlap: true,
+	            hoverAnimation: true,
+	            data: [],
+	            itemStyle: {
+	            	normal :{
+	            		label:{
+	            			show:true,
+	            			position:'outer',
+	            			formatter: '{b}：人数[{c}],百分比[{d}%]',
+	            		}
+	            	},
+	                emphasis: {
+	                    shadowBlur: 10,
+	                    shadowOffsetX: 0,
+	                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+	                }
+	            }
+	        }]
+		},{
+			  title : {
+			        text: '毕业学校性质统计',
+			        x:'left'
+			    },
+			    url:'statist/schoolnature',
+			    tooltip : {
+			        trigger: 'item',
+			        formatter: "{a} <br/>{b} : {c} ({d}%)"
+			    },
+			    legend: {
+			        type: 'scroll',
+			        orient: 'horizontal',
+			        x:"center",
+			        y: 'bottom',
+			        data: []
+			    },
+			    toolbox: {
+			        show : true,
+			        feature : {
+			            dataView : {
+			            	show: true, 
+			            	readOnly: false
+			            },
+			            restore : {
+			            	show: true
+			            },
+			            saveAsImage : {
+			            	show: true
+			            }
+			        }
+			    },
+			    series : [
+			        {
+			            name: '学校性质',
+			            type: 'pie',
+			            radius: ['20%', '70%'],
+			            center: ['50%','45%'],
+			            selectedMode: 'single',
+			            selectedOffset : 15,
+			            voidLabelOverlap: true,
+			            hoverAnimation: true,
+			            data: [],
+			            itemStyle: {
+			            	normal :{
+			            		label:{
+			            			show:true,
+			            			position:'outer',
+			            			formatter: '{b}：人数[{c}],百分比[{d}%]',
+			            		}
+			            	},
+			                emphasis: {
+			                    shadowBlur: 10,
+			                    shadowOffsetX: 0,
+			                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+			                }
+			            }
+			        }
+			    ]
+			},{
+				  title : {
+				        text: '310统计',
+				        x:'left'
+				    },
+				    url:'statist/isshlocal',
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b} : {c} ({d}%)"
+				    },
+				    legend: {
+				    	type: 'scroll',
+				        orient: 'horizontal',
+				        x:"center",
+				        y: 'bottom',
+				        data: []
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            dataView : {
+				            	show: true, 
+				            	readOnly: false
+				            },
+				            restore : {
+				            	show: true
+				            },
+				            saveAsImage : {
+				            	show: true
+				            }
+				        }
+				    },
+				    series : [
+				        {
+				            name: '是否310',
+				            type: 'pie',
+				            radius: ['20%', '70%'],
+				            center: ['50%','45%'],
+				            selectedMode: 'single',
+				            selectedOffset : 15,
+				            voidLabelOverlap: true,
+				            hoverAnimation: true,
+				            data: [],
+				            itemStyle: {
+				            	normal :{
+				            		label:{
+				            			show:true,
+				            			position:'outer',
+				            			formatter: '{b}：人数[{c}],百分比[{d}%]',
+				            		}
+				            	},
+				                emphasis: {
+				                    shadowBlur: 10,
+				                    shadowOffsetX: 0,
+				                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+				                }
+				            }
+				        }
+				    ]
+				}],
 		renderYears = function(el, index) {
 			jquery.get(el.url,function(result){
-				el.xAxis[0].data = result.xAxis;
-				el.series[0].data = result.series0;
-				el.series[1].data = result.series1;
+				var legendData = [];
+			    var seriesData = [];
+				for (var i = 0; i < result.length; i++) {
+					var data = result[i];
+					legendData.push(data.name);
+					seriesData.push({
+			            name: data.name,
+			            value: data.counter
+			        });
+				}
+				el.legend.data = legendData;
+				el.series[0].data = seriesData;
 				echartOptions[index].setOption(el);
 			});
 		},
 		renderTopEducation = function(el, index) {
+			jquery.get(el.url,function(result) {
+				var legendData = [];
+			    var seriesData = [];
+				for (var i = 0; i < result.length; i++) {
+					var data = result[i];
+					legendData.push(data.name);
+					seriesData.push({
+			            name: data.name,
+			            value: data.counter
+			        });
+				}
+				el.legend.data = legendData;
+				el.series[0].data = seriesData;
+				echartOptions[index].setOption(el);
+			});
+		},
+		renderSchoolNature = function(el, index) {
+			jquery.get(el.url,function(result) {
+				var legendData = [];
+			    var seriesData = [];
+				for (var i = 0; i < result.length; i++) {
+					var data = result[i];
+					legendData.push(data.name);
+					seriesData.push({
+			            name: data.name,
+			            value: data.counter
+			        });
+				}
+				el.legend.data = legendData;
+				el.series[0].data = seriesData;
+				echartOptions[index].setOption(el);
+			});
+		},
+		renderIsshLocal = function(el, index) {
 			jquery.get(el.url,function(result) {
 				var legendData = [];
 			    var seriesData = [];
@@ -201,8 +398,17 @@
 					renderTopEducation(options[index], index);
 				}
 			} else if (index == 2) {
-				
-			} else {
+				if (!echartOptions[index] ) {
+					echartOptions[index] = echarts.init(node[index], layui.echartsTheme);
+					renderSchoolNature(options[index], index);
+				}
+			} 
+			else if (index == 3) {
+				if (!echartOptions[index] ) {
+					echartOptions[index] = echarts.init(node[index], layui.echartsTheme);
+					renderIsshLocal(options[index], index);
+				}
+			}else {
 				if (!echartOptions[index] ) {
 					echartOptions[index] = echarts.init(node[index], layui.echartsTheme);
 				}

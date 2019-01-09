@@ -13,6 +13,9 @@ import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.service.OrganizationService;
 import com.wondersgroup.framework.util.StringUtils;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: OfcController
@@ -36,7 +39,8 @@ public class PtOrganController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
-	
+	@Log(title = "新增组织 节点", operatorType = OperatorType.MANAGE, businessType = BusinessType.INSERT,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/orgRelations")
 	public List<HashMap<String, Object>> orgRelations(String id) {

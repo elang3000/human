@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<smart:initHead title="长宁区人事管理信息系统--机构编制信息维护事项列表" />
+<smart:initHead title="长宁区人事管理信息系统--行政编制信息维护事项列表" />
 </head>
 <smart:body>
 	<smart:grid>
@@ -15,7 +15,7 @@
 				<smart:breadcrumbNavMenu separator=">">
 					<smart:breadcrumbNavMenuItem iname="您现在的所在位置"></smart:breadcrumbNavMenuItem>
 					<smart:breadcrumbNavMenuItem iname="事项办理"></smart:breadcrumbNavMenuItem>
-					<smart:breadcrumbNavMenuItem iname="机构编制信息维护事项列表" cite="true"></smart:breadcrumbNavMenuItem>
+					<smart:breadcrumbNavMenuItem iname="行政编制信息维护事项列表" cite="true"></smart:breadcrumbNavMenuItem>
 				</smart:breadcrumbNavMenu>
 			</smart:cardHead>
 			<smart:cardBody>
@@ -73,7 +73,7 @@
 						</smart:gridRow>
 						<smart:gridRow colSpace="5">
 							<smart:gridColumn>
-								<smart:table id="orgForamtionMgrFlowList" url="orgFormationFlow/pageList" text="未找到机构编制调整事项数据！" page="true" height="full-245">
+								<smart:table id="orgForamtionMgrFlowList" url="orgFormationFlow/pageList" text="未找到行政编制调整事项数据！" page="true" height="full-245">
 									<tr>
 										<smart:tableItem field="optionType" width=".2">事项名称</smart:tableItem>
 										<smart:tableItem field="unitBasicName" width=".2">单位名称</smart:tableItem>
@@ -166,15 +166,35 @@
 					});
 					return;
 				}
-				smart.show({
-					title:'机构编制调整申请',
-					size:'full',
-					url:'orgFormationFlow/adjustPage',
-					params:{
-						organId:organId
-					},
-					scrollbar:false
-				});
+				
+				//判断单位类型，如果是事业单位或行政机关，那么可操作申请编制调整按钮
+				var requestConfig = {};
+				requestConfig.url = "org/queryOrganType";
+				requestConfig.data = {organId:organId};
+				requestConfig.success = function(data){
+					if (data.success) {
+						if(data.data =='d_class'){
+							smart.show({
+								title:'机构编制调整申请',
+								size:'full',
+								url:'orgFormationFlow/adjustPage',
+								params:{
+									organId:organId
+								},
+								scrollbar:false
+							});
+						}else{
+							smart.message({
+								message : "请选择机关单位",
+								type : 'W'
+							});
+							return;
+						}
+					}else{
+						layer.alert(data.message);
+					}
+				}
+				smart.request(requestConfig);
 			}
 		</smart:buttonScriptAction>	
 	</smart:scriptHead>

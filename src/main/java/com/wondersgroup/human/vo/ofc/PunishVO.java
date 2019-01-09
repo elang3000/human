@@ -152,7 +152,7 @@ public class PunishVO {
 			if(r.getServant().getSex()!=null){
 				this.sex=r.getServant().getSex().getName();
 			}
-			this.cardNo=r.getServant().getCardNo();
+			this.cardNo=r.getServant().getCardNoView();
 		}
 		if (r.getCategory() != null) {
 			this.category = r.getCategory().getName();

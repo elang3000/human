@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,12 +27,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
+import com.wondersgroup.human.bo.ofc.Servant;
 
 /**
  * @ClassName: ProbationServant
@@ -44,6 +50,8 @@ import com.wondersgroup.framework.workflow.bo.FlowRecord;
  */
 @Entity
 @Table(name = "HUMAN_PROBATION_SERVANT")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ProbationServant extends GenericEntity {
 	
 	/**
@@ -111,6 +119,23 @@ public class ProbationServant extends GenericEntity {
 	public static final int STATUS_EMPLOY_TRIAL_CONFIRM_DONE = 8;
 	
 	/**
+	 * @fieldName: isLeader
+	 * @fieldType: java.lang.Integer
+	 * @Description: 职级属性 是否领导，用于区分正科级和副科级。CommonConst.YES/CommonConst.NO
+	 */
+	@Column(name = "IS_LEADER", length = 1)
+	private Integer isLeader;
+	
+	/**
+	 * @fieldName: servant
+	 * @fieldType: com.wondersgroup.human.bo.ofc.Servant
+	 * @Description: 公务员基本信息表，人员录用进来在信息维护中显示，在职状态为试用期
+	 */
+	@OneToOne
+	@JoinColumn(name = "SERVANT_ID")
+	private Servant servant;
+	
+	/**
 	 * @fieldName: draftServant
 	 * @fieldType: com.wondersgroup.human.bo.ofcflow.DraftServant
 	 * @Description: 公务员录用表
@@ -126,6 +151,7 @@ public class ProbationServant extends GenericEntity {
 	 */
 	@Column(name = "PROBATION_STARTDATE")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date probationStartDate;
 	
 	/**
@@ -135,6 +161,7 @@ public class ProbationServant extends GenericEntity {
 	 */
 	@Column(name = "PROBATION_ENDDATE")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date probationEndDate;
 	
 	/**
@@ -226,12 +253,13 @@ public class ProbationServant extends GenericEntity {
 	 */
 	@Column(name = "A04025")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date formalDate;
 	
 	/**
 	 * @fieldName: formalNumber
 	 * @fieldType: java.lang.String
-	 * @Description: 入职转正批准文号
+	 * @Description: 公务员登记号
 	 */
 	@Column(name = "A04027")
 	private String formalNumber;
@@ -530,6 +558,26 @@ public class ProbationServant extends GenericEntity {
 	public void setIsDelay(String isDelay) {
 		
 		this.isDelay = isDelay;
+	}
+	
+	public Servant getServant() {
+		
+		return servant;
+	}
+	
+	public void setServant(Servant servant) {
+		
+		this.servant = servant;
+	}
+	
+	public Integer getIsLeader() {
+		
+		return isLeader;
+	}
+	
+	public void setIsLeader(Integer isLeader) {
+		
+		this.isLeader = isLeader;
 	}
 	
 }

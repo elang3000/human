@@ -37,7 +37,7 @@
 										labelName="身份证：" name="cardNo" id="cardNo"></smart:textInput>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
-									<smart:singleSelect isNotNull="true" labelName="调出区域：" display="block" id="areaType" data="[{'key':'1','value':'本区'},{'key':'2','value':'外区'}]"></smart:singleSelect>
+									<smart:singleSelect isNotNull="true" labelName="调出区域：" display="block" id="areaType" data="${areaTypeList}"></smart:singleSelect>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
@@ -115,7 +115,7 @@
 					});
 				}else if($("#status").val()=="2"){
 					smart.message({
-						message : "本单位中不存在该公务员，无法发起调出申请！"
+						message : "系统中不存在该公务员，无法发起调出申请！"
 						,type : 'W' //S保存  I问号  W感叹号 E错误
 					});
 				}else if($("#status").val()=="4"){

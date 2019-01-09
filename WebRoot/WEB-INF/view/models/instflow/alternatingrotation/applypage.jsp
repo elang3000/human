@@ -71,12 +71,10 @@
 							<smart:gridColumn colPart="4">
  							     <smart:infoShowerLabel infoname="籍贯" infovalue="${publicInstitution.nativePlaceName}"></smart:infoShowerLabel>
  					         </smart:gridColumn>
-							<smart:gridColumn colPart="4">
-							    <smart:singleSelect labelName="人员进入方式:" name="intoWay.id" initSelectedKey="${publicInstitution.intoWay.id}" display="block" url="dictquery/sub/code/SY100" isAddDefaltOption="true"></smart:singleSelect>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="当前单位" infovalue="${currentUnit.name}"></smart:infoShowerLabel>
-							</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+							<smart:title title="轮岗信息" style="margin-top: 5px;"
+								color="blue" />
 					</smart:gridRow>
 					<smart:gridRow>
 					       <smart:gridColumn colPart="4">
@@ -85,8 +83,18 @@
 							<%-- <smart:gridColumn colPart="4">
 									<smart:linkSelect labelName="去向区域：" id="organTreeIdTag" display="block" />
 							</smart:gridColumn> --%>
-							<smart:gridColumn colPart="4">
+							<%-- <smart:gridColumn colPart="4">
 									<smart:linkSelect labelName="交流单位：" id="organNodeIdTag" display="block" />
+							</smart:gridColumn> --%>
+							<%--  <smart:gridColumn colPart="4">
+								<smart:singleSelect labelName="交流单位：" name="alterRotaOrgan.id"
+										isSearch="true" display="block"
+										url="system/organ/node/queryAll?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517"
+										isAddDefaltOption="true" initSelectedKey="${d.sourceOrgan.id }"
+										isNotNull="true" verify="required" initDidableKey="${organCode}"></smart:singleSelect>
+							</smart:gridColumn> --%>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="交流单位" infovalue="${currentUnit.name}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:singleSelect isAddDefaltOption="true" name="communicationSign.id" labelName="交流标识：" display="block" url="dictquery/sub/code/DM215" initSelectedKey="${post.communicationSign.id}"></smart:singleSelect>
@@ -97,12 +105,15 @@
 								<smart:textInput labelName="变动原因:" value="" name="alterrotaReason" placeholder="变动原因"></smart:textInput>
 							 </smart:gridColumn>
 							 
-							 <smart:gridColumn colPart="4">
+							 <%-- <smart:gridColumn colPart="4">
 								<smart:textInput labelName="任职机构：" placeholder="任职机构名称" name="tenureName" value="${post.tenureName}" ></smart:textInput>
-							</smart:gridColumn>
+							</smart:gridColumn> --%>
 							<smart:gridColumn colPart="4">
 							    <smart:singleSelect id="postCode" isAddDefaltOption="true" name="postCode.id" labelName="职务名称：" display="block" url="dictquery/sub/code/GBT_12403_1990" initSelectedKey="${post.postCode.id}" verify="required" isNotNull="true" inputShowName="postName"></smart:singleSelect>
 						    </smart:gridColumn>
+						    <smart:gridColumn colPart="4">
+							    <smart:singleSelect labelName="人员进入方式:" name="intoWay.id" initSelectedKey="${publicInstitution.intoWay.id}" display="block" url="dictquery/sub/code/SY100" isAddDefaltOption="true"></smart:singleSelect>
+							</smart:gridColumn>
 					</smart:gridRow>
 					
 					
@@ -120,13 +131,9 @@
 						<smart:line color="blue" />
 						<smart:gridColumn colPart="4" deviceType="md" colOffset="4">
 							<smart:buttonGroup container="true">
-								<smart:button method="pass" size="sm" title="审批通过"
-									theme="normal">
-									<smart:icon icon="check">&nbsp;审批通过</smart:icon>
-								</smart:button>
-								<smart:button method="noPass" size="sm" title="审批不通过"
-									theme="danger">
-									<smart:icon icon="refresh">&nbsp;审批不通过</smart:icon>
+								<smart:button id="submit" other="lay-submit" size="sm" title="提交"
+										theme="normal">
+										<smart:icon icon="check">&nbsp;提交</smart:icon>
 								</smart:button>
 								<smart:button theme="warm" size="sm" method="goBack" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
@@ -153,39 +160,34 @@
 		<smart:initLinkSelect id="organNodeIdTag" name="organNodeId" tips="请选择所属单位" selected="${organNodeId}" url="system/organ/node/query" params="{organTreeId:'394e21fa-1eb6-42ee-ba32-50655fa16517'}" />
 		
 		<smart:buttonScriptAction>
-			pass : function() {
-				$("#result").val("1");//审批通过
-				smart.confirm({
-					title:'确认审批通过',
-					message:'确认审批通过吗？',
-					url:'instflow/alternatingrotation/registerAlternatingRotation',
-					params : smart.json("#editForm"),
-					callback : function(){
-						parent.layui.table.reload('navigationList');
-						var index=parent.layer.getFrameIndex(window.name);
-						parent.layer.close(index);
-					}
-				});
-			},
-			noPass : function() {
-				$("#result").val("0");//审批不通过
-				smart.confirm({
-					title:'确认审批不通过',
-					message:'确认审批不通过吗？',
-					url:'instflow/inforegister/operationRegister',
-					params : smart.json("#editForm"),
-					callback : function(){
-						parent.layui.table.reload('navigationList');
-						var index=parent.layer.getFrameIndex(window.name);
-						parent.layer.close(index);
-					}
-				});
-			},
+			
 			goBack : function(data) {
 				var index=parent.layer.getFrameIndex(window.name);
 				parent.layer.close(index);
 			}
 		 </smart:buttonScriptAction>
+		     form.on('submit(submit)', function (data) {//表单提交
+				var params=data.field;
+				params.result="1";
+				var url="instflow/alternatingrotation/registerAlternatingRotation";
+				$.post(url,params,function(result){
+					if(result.success){//保存成功
+						layer.alert(
+		                result.message, 
+		                {icon: 1,closeBtn: 1 },
+		                function () {
+		                	parent.layui.table.reload('navigationList');
+		                	var index=parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+		                });
+					}else{
+						layer.alert(
+		                result.message, 
+		                {icon: 0,closeBtn:0 });
+					}
+				});
+				return false;
+			}); 
 	</smart:scriptHead>
 </smart:body>
 </html>

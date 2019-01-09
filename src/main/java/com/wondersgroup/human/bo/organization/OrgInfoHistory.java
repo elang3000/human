@@ -15,11 +15,15 @@
 
 package com.wondersgroup.human.bo.organization;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.human.bo.ofcflow.OrgInfoMgrFlow;
@@ -36,6 +40,8 @@ import com.wondersgroup.human.bo.organization.base.BaseUnitInfo;
  */
 @Entity
 @Table(name = "B01_HIS")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OrgInfoHistory extends BaseUnitInfo<OrgInfoHistory> {
 	
 	private static final long serialVersionUID = -5719683642006337151L;

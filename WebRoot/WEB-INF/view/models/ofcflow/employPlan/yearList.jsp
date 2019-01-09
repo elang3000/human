@@ -54,7 +54,7 @@
 										<smart:icon icon="plus">&nbsp;新增年度招录计划</smart:icon>
 									</smart:button>
 								</shiro:hasPermission>
-								<smart:button theme="warm" size="sm" method="back" title="返回职位简章列表">
+								<smart:button theme="primary" size="sm" method="back" title="返回职位简章列表">
 									<smart:icon icon="pencil">&nbsp;返回职位简章列表</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>

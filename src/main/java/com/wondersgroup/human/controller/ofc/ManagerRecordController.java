@@ -32,6 +32,9 @@ import com.wondersgroup.human.service.ofc.ManagerRecordService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.ItemRecordVO;
 import com.wondersgroup.human.vo.ofc.ManagerRecordVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: ManagerRecordController
@@ -71,7 +74,10 @@ public class ManagerRecordController extends GenericController {
 	 * @return: String
 	 */
 	@RequestMapping("/managerRecordList")
-	public String keepRecordList() {
+	public String keepRecordList(Model model,String departId,Integer year) {
+		//进出管理
+		model.addAttribute("departId", departId);
+		model.addAttribute("year", year);
 		return MANAGER_RECORD_LIST;
 	}
 
@@ -81,6 +87,8 @@ public class ManagerRecordController extends GenericController {
 	 * @param id
 	 * @return: String
 	 */
+	@Log(title = "进出管理详情", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/detail")
 	public String keepRecordDetail(String id, Model model) {
 		ManagerRecord managerRecord = managerRecordService.get(id);
@@ -130,6 +138,8 @@ public class ManagerRecordController extends GenericController {
 	 * @param page页码
 	 * @return: Page<Servant>
 	 */
+	@Log(title = "进出管理列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/getPage")
 	public Page<ItemRecordVO> getPage(ManagerRecordParam param, Integer limit, Integer page) {

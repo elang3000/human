@@ -69,7 +69,7 @@
 							    	<td>${orgInfoMgrFlow.unitSubsidiary.name}</td>
 							    </tr>
 							    <tr>
-							    	<td>性质级别：</td>
+							    	<td>性质类别：</td>
 							    	<td><label>${empty orgInfo.unitPropertyLevel ? '—':orgInfo.unitPropertyLevel.name}</label></td>
 							    	<td>${orgInfoMgrFlow.unitPropertyLevel.name}</td>
 							    </tr>
@@ -153,11 +153,6 @@
 							    	<td><label>${empty orgInfo.appropriation ? '—':orgInfo.appropriation.name}</label></td>
 							    	<td>${orgInfoMgrFlow.appropriation.name }</td>
 							    </tr>
-							    <tr>
-							    	<td>机构类别：</td>
-							    	<td><label>${empty orgInfo.orgCategory ? '—':orgInfo.orgCategory.name}</label></td>
-							    	<td>${orgInfoMgrFlow.orgCategory.name}</td>
-							    </tr>
 							</tbody>
 						</table>
 					</smart:gridRow>
@@ -168,7 +163,7 @@
 					
 					<smart:gridRow>
 						<smart:gridColumn colPart="12">
-							<smart:textarea labelName="审批意见:" name="opinion" display="block"></smart:textarea>
+							<smart:textarea labelName="审批意见:" id="opinion" name="opinion" display="block"></smart:textarea>
 						</smart:gridColumn>
 					</smart:gridRow>
 					
@@ -176,13 +171,17 @@
 					   <smart:gridColumn>
 					     <smart:buttonGroup container="true">
 					     	<smart:button method="pass" size="sm" title="审批通过" theme="normal">
-								<smart:icon icon="check">&nbsp;审批通过</smart:icon>
+									<smart:icon icon="check">&nbsp;审批通过</smart:icon>
 							</smart:button>
-							<smart:button method="noPass" size="sm" title="审批不通过"
+							<smart:button method="noPass" size="sm" title="审批驳回"
+								theme="warm">
+								<smart:icon icon="refresh">&nbsp;审批驳回</smart:icon>
+							</smart:button>
+							<smart:button method="stopPass" size="sm" title="审批不通过"
 								theme="danger">
-								<smart:icon icon="refresh">&nbsp;审批不通过</smart:icon>
+								<smart:icon icon="minus-circle">&nbsp;审批不通过</smart:icon>
 							</smart:button>
-							<smart:button theme="warm" size="sm" method="goBack" title="返回">
+							<smart:button theme="primary" size="sm" method="goBack" title="返回">
 								<smart:icon icon="reply">&nbsp;返回</smart:icon>
 							</smart:button>
 						  </smart:buttonGroup>
@@ -211,10 +210,38 @@
 				});
 			},
 			noPass : function() {
-				$("#result").val("0");//审批不通过
+				$("#result").val("0");//审批驳回
+				if(!$("#opinion").val()){
+					smart.message({
+						message : "请输入审批驳回意见！",
+						type : 'W' //S保存  I问号  W感叹号 E错误
+					});
+					return;
+				}
 				smart.confirm({
 					title:'提示',
-					message:'确认审批不通过吗？',
+					message:'确认审批驳回至上一办理人员？',
+					url:'orgInfoflow/auditAdjustFlow',
+					params : smart.json("#editForm"),
+					callback : function(){
+						parent.layui.table.reload('navigationList');
+						var index=parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+					}
+				});
+			},
+			stopPass : function() {
+				$("#result").val("-1");//审批不通过
+				if(!$("#opinion").val()){
+					smart.message({
+						message : "请输入审批不通过意见！",
+						type : 'W' //S保存  I问号  W感叹号 E错误
+					});
+					return;
+				}
+				smart.confirm({
+					title:'提示',
+					message:'确认审批不通过，结束业务办理？',
 					url:'orgInfoflow/auditAdjustFlow',
 					params : smart.json("#editForm"),
 					callback : function(){

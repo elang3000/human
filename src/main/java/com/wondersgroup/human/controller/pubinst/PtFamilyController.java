@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.service.pubinst.PtFamilyService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PtFamilyVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: FamilyController
@@ -83,6 +86,8 @@ public class PtFamilyController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<FamilyVO>
 	 */
+	@Log(title = "查询家庭信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PtFamilyVO> pageList(String Id, Integer limit, Integer page) {
@@ -100,6 +105,8 @@ public class PtFamilyController extends GenericController {
 	 * @param temp 学位信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑家庭信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PtFamily temp) {
@@ -131,6 +138,8 @@ public class PtFamilyController extends GenericController {
 	 * @param temp 家庭信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除家庭信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

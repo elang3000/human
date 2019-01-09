@@ -71,5 +71,5 @@ public interface DraftServantService extends GenericService<DraftServant>{
 	 * @param draft
 	 * @return
 	 */
-	public void confirmLetter(DraftServant draft);
+	public void updateConfirmLetter(DraftServant draft);
 }

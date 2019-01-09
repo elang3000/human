@@ -16,15 +16,16 @@ package com.wondersgroup.human.service.ofc.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
+import com.wondersgroup.framework.core.exception.BusinessException;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
-import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.human.bo.ofc.Experience;
 import com.wondersgroup.human.repository.ofc.ExperienceRepository;
 import com.wondersgroup.human.service.ofc.ExperienceService;
@@ -69,6 +70,27 @@ public class ExperienceServiceImpl extends GenericServiceImpl<Experience> implem
 		}
 		return new Page<>(experiencePage.getStart(), experiencePage.getCurrentPageSize(), experiencePage.getTotalSize(),
 				experiencePage.getPageSize(), voList);
+	}
+
+
+	/** 
+	 * @see com.wondersgroup.human.service.ofc.ExperienceService#getLatestExperienceByServantId(java.lang.String) 
+	 */
+	@Override
+	public Experience getLatestExperienceByServantId(String id) {
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(Experience.class);
+		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");
+		s.add(Restrictions.eq("s.id", id));
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		detachedcriteria.addOrder(Order.desc("startDate"));
+		
+		List<Experience> list = this.findByCriteria(detachedcriteria);
+		
+		if(list.size()>0){
+			return list.get(0);
+		}else{
+			throw new BusinessException("当前人员没有最新简历!");
+		}
 	}
 	
 }

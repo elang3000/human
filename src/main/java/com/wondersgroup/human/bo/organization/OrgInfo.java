@@ -15,12 +15,16 @@
 
 package com.wondersgroup.human.bo.organization;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.organization.bo.OrganNode;
@@ -38,6 +42,8 @@ import com.wondersgroup.human.bo.organization.base.BaseUnitInfo;
  */
 @Entity
 @Table(name = "B01")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OrgInfo extends BaseUnitInfo<OrgInfo> {
 	
 	private static final long serialVersionUID = -5719647342006337151L;
@@ -54,7 +60,7 @@ public class OrgInfo extends BaseUnitInfo<OrgInfo> {
 	 * *
 	 * 关联组织机构
 	 **/
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "ORGANID")
 	private OrganNode organ;
 	

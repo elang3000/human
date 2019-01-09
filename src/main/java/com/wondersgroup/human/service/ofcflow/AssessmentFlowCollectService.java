@@ -22,6 +22,8 @@ import com.wondersgroup.human.bo.ofcflow.AssessmentFlowCollect;
 import com.wondersgroup.human.vo.ofcflow.AssessFlowUnitCollectVO;
 import com.wondersgroup.human.vo.ofcflow.AssessmentFlowUnitPercentVO;
 
+import java.util.List;
+
 /**
  * @ClassName: DeathServantService
  * @Description: 考核计划表service
@@ -64,4 +66,11 @@ public interface AssessmentFlowCollectService extends GenericService<AssessmentF
 	 * @return: List<Map<String,Object>>
 	 */
 	public Page<AssessFlowUnitCollectVO> getCollectAndFlowStatus(OrganNode org,Integer year, Integer page, Integer limit);
+
+	/**
+	 * 获取当前年份中的季度考核
+	 * @param year
+	 * @return
+	 */
+	public List<AssessmentFlowCollect> getCurrentYearSeasonCollect(Integer year);
 }

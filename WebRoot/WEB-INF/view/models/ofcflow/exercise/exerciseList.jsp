@@ -63,7 +63,7 @@
 								<smart:tableItem field="targetOrgan" width=".2" sort="false">去向单位</smart:tableItem>
 								<smart:tableItem field="startDate" width=".1" sort="false">开始时间</smart:tableItem>
 								<smart:tableItem field="endDate" width=".1" sort="false">结束时间</smart:tableItem>
-								<smart:tableItem align="center" fixed="right" width=".1" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
+								<smart:tableItem align="center" fixed="right" width=".2" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<script type="text/html" id="navListToolBar">
 										{{#  if(d.status=="1"){ }}

@@ -3,10 +3,16 @@
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <!DOCTYPE html >
 <html>
 <head>
 <smart:initHead title="长宁区公务员信息管理系统--职务变动" />
+	<style type="text/css">
+		.layui-form-label {
+			width: 90px;
+		}
+	</style>
 </head>
 <smart:body>
 	<smart:grid>
@@ -34,13 +40,13 @@
 				<smart:gridRow>
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form id="jobChange_searchForm">
-								<smart:gridColumn colPart="3">
+								<smart:gridColumn colPart="4">
 									<smart:textInput labelName="姓名："  display="inline"
 										placeholder="请输入姓名" name="name"></smart:textInput>
 								</smart:gridColumn>
-								<smart:gridColumn colPart="3">
-									<smart:singleSelect name="jobChangeType" id="servantType" display="inline" labelName="职务变动类型"
-														data="[{'key':'-1','value':'请选择职务变动类型'},{'key':'JOBSHIFT_PROMOTE','value':'晋升'},{'key':'JOBSHIFT_DEPOSE','value':'免职'},{'key':'JOBSHIFT_DEMOTE','value':'降职'},{'key':'JOBSHIFT_SHIFT','value':'轮岗'}]"></smart:singleSelect>
+								<smart:gridColumn colPart="5">
+									<smart:singleSelect name="jobChangeType" id="servantType" display="inline" labelName="职务变动类型" shortName="变动类型"
+														data="[{'key':'-1','value':'请选择..'},{'key':'JOBSHIFT_PROMOTE','value':'晋升'},{'key':'JOBSHIFT_DEPOSE','value':'免职'},{'key':'JOBSHIFT_DEMOTE','value':'降职'},{'key':'JOBSHIFT_SHIFT','value':'轮岗'}]"></smart:singleSelect>
 								</smart:gridColumn>
 							<smart:gridColumn colPart="3" >
 								<smart:buttonGroup container="true">
@@ -52,10 +58,12 @@
 										theme="primary" type="reset">
 										<smart:icon icon="history"></smart:icon>&nbsp;重置
 		   							</smart:button>
-									<smart:button size="sm" method="addJobShift" title="新增职务变动"
-										theme="normal" >
-										<smart:icon icon="plus"></smart:icon>&nbsp;新增
-		   							</smart:button>
+									<shiro:hasPermission name="ADD_JOBSHIFT_BTN">
+										<smart:button size="sm" method="addJobShift" title="新增职务变动"
+											theme="normal" >
+											<smart:icon icon="plus"></smart:icon>&nbsp;新增
+										</smart:button>
+									</shiro:hasPermission>
 								</smart:buttonGroup>
 							</smart:gridColumn>
 						</smart:form>
@@ -64,7 +72,7 @@
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn colPart="12" deviceType="md">
 						<smart:table  id="navigationList" url="ofcflow/jobchange/indexData"
-							height="full-215" 
+							height="full-205"
 							text="未找到有效数据！">
 							<tr>
 								<smart:tableItem field="NAME" width=".1" sort="true">姓名</smart:tableItem>

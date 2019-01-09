@@ -59,18 +59,18 @@
 								<smart:infoShowerLabel infoname="政治面貌" infovalue="${d.politics.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否退役士兵" infovalue="${d.isRetiredSoldier.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="退役士兵" infoname="是否退役士兵" infovalue="${d.isRetiredSoldier.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否退役大学生士兵" infovalue="${d.isRetiredCollegeStudentSoldier.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="退役大学生士兵 " infoname="是否退役大学生士兵" infovalue="${d.isRetiredCollegeStudentSoldier.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否残疾人" infovalue="${d.isdisabled.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="残疾人 " infoname="是否残疾人" infovalue="${d.isdisabled.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否有海外留学经历" infovalue="${d.isStudyAbroad.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="海外留学经历" infoname="是否有海外留学经历" infovalue="${d.isStudyAbroad.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -78,7 +78,7 @@
 								<smart:infoShowerLabel infoname="留学年限" infovalue="${d.studyAbroadTime }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否有海外工作经历" infovalue="${d.isWorkAbroad.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="海外工作经历" infoname="是否有海外工作经历" infovalue="${d.isWorkAbroad.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="海外工作年限" infovalue="${d.workAbroadTime }"></smart:infoShowerLabel>
@@ -105,24 +105,24 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="录用考试准考证号" infovalue="${d.ticketId }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="录用准考证" infoname="录用考试准考证号" infovalue="${d.ticketId }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="专业能力测试成绩" infovalue="${d.aptitudeTestScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="专业能力成绩" infoname="专业能力测试成绩" infovalue="${d.aptitudeTestScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="公共科目笔试成绩" infovalue="${d.publicSubjectTestScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="公科笔试成绩" infoname="公共科目笔试成绩" infovalue="${d.publicSubjectTestScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="笔试（行政职业能力测试）成绩" infovalue="${d.writtenExamTestScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="笔试（行政职业能力测试）成绩" shortName="行政职能成绩" infovalue="${d.writtenExamTestScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="笔试（申论）成绩" infovalue="${d.explainingScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="申论成绩" infoname="笔试（申论）成绩" infovalue="${d.explainingScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="笔试（专业科目）成绩" infovalue="${d.professionalSubjectScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="专业科目成绩" infoname="笔试（专业科目）成绩" infovalue="${d.professionalSubjectScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -163,12 +163,12 @@
 								<smart:infoShowerLabel infoname="免基层实习" infovalue="${d.isBasePractice.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="所在单位意见时间" infovalue="${d.deptOpinionDate }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="所在单位意见时间" shortName="单位意见时间" infovalue="${d.deptOpinionDate }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="上级主管单位意见时间" infovalue="${d.unitOpinionDate }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="上级主管单位意见时间" shortName="上级意见时间" infovalue="${d.unitOpinionDate }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="录用标识" infovalue="${d.employResult.name }"></smart:infoShowerLabel>
@@ -184,7 +184,7 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="录用鉴定（评语）" infovalue="${d.employComment }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="录用鉴定（评语）" shortName="录用评语" infovalue="${d.employComment }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<c:if test="${'1' eq p.isDelay}">
@@ -224,14 +224,14 @@
 										var qualifiedDiv = data.othis.closest("div.layui-row").nextAll("div.layui-row").slice(0,1);//合格显示的div
 										var delayDiv = data.othis.closest("div.layui-row").nextAll("div.layui-row").slice(1,2);//延长试用期显示的div
 										var UNQualifiedDiv = data.othis.closest("div.layui-row").nextAll("div.layui-row").slice(2);//不合格和取消显示的div
-										if(data.elem[data.elem.selectedIndex].text=="考核合格"){//隐藏延长试用期和取消录用的div，并去掉必填验证，显示合格div，并加上必填验证
+										if(data.elem[data.elem.selectedIndex].text=="合格，予以录用"){//隐藏延长试用期和取消录用的div，并去掉必填验证，显示合格div，并加上必填验证
 											delayDiv.hide();
 											delayDiv.find("[lay-verify]").attr("lay-verify","");
 											UNQualifiedDiv.hide();
 											UNQualifiedDiv.find("[lay-verify]").attr("lay-verify","");
 											qualifiedDiv.show();
 											qualifiedDiv.find("[lay-verify]").attr("lay-verify","required");
-										}else if(data.elem[data.elem.selectedIndex].text=="延长试用期"){
+										}else if(data.elem[data.elem.selectedIndex].text=="不合格，延期录用"){
 											qualifiedDiv.hide();
 											qualifiedDiv.find("[lay-verify]").attr("lay-verify","");
 											UNQualifiedDiv.hide();
@@ -254,12 +254,6 @@
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
 								<smart:date isNotNull="true" display="block" verify="required" labelName="入职转正日期:" value="${p.formalDate}" name="formalDate" id="formalDate" placeholder="入职转正日期"></smart:date>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="入职转正批准文号:" isNotNull="true" verify="required" value="${p.formalNumber}" name="formalNumber"></smart:textInput>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:singleSelect id="checkResult" isNotNull="true" verify="required" display="block" labelName="试用期满考核结论:" initSelectedKey="${p.checkResult.id}" name="checkResult.id" url="dictquery/sub/code/DM018"></smart:singleSelect>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -302,7 +296,7 @@
 									theme="default">
 									<smart:icon icon="plus">&nbsp;暂存</smart:icon>
 								</smart:button>
-								<smart:button theme="warm" size="sm" method="back" title="返回">
+								<smart:button theme="primary" size="sm" method="back" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>

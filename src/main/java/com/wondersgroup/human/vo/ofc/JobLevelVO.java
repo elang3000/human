@@ -17,6 +17,8 @@ package com.wondersgroup.human.vo.ofc;
 
 import java.text.SimpleDateFormat;
 
+import javax.persistence.Column;
+
 import com.wondersgroup.human.bo.ofc.JobLevel;
 
 /**
@@ -72,6 +74,19 @@ public class JobLevelVO {
 	 */
 	private String endDate;
 	
+	/**
+	 * @fieldName: 现行职级状态
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 该人担任职务或享受职级的状态。*ZB14—2016/RZZT《任职状态代码》
+	 */
+	private String status;
+	
+	/**
+	 * @fieldName: isLeaderName
+	 * @fieldType: java.lang.Integer
+	 * @Description: 是否是领导属性
+	 */
+	private String isLeaderName;
 	
 	public JobLevelVO() {
 		
@@ -92,6 +107,14 @@ public class JobLevelVO {
 		}
 		if (s.getEndDate() != null) {
 			this.endDate = new SimpleDateFormat("yyyy-MM-dd").format(s.getEndDate());
+		}
+		if (s.getCurrentIdentification() != null) {
+			this.status = s.getCurrentIdentification().getName();
+		}
+		if (s.getIsLeader() == 1){
+			this.isLeaderName = "领导";
+		}else if(s.getIsLeader() == 0){
+			this.isLeaderName = "非领导";
 		}
 	}
 	
@@ -149,11 +172,32 @@ public class JobLevelVO {
 		
 		return approvalNo;
 	}
-
 	
 	public void setApprovalNo(String approvalNo) {
 		
 		this.approvalNo = approvalNo;
+	}
+	
+	public String getStatus() {
+		
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		
+		this.status = status;
+	}
+
+	
+	public String getIsLeaderName() {
+		
+		return isLeaderName;
+	}
+
+	
+	public void setIsLeaderName(String isLeaderName) {
+		
+		this.isLeaderName = isLeaderName;
 	}
 	
 }

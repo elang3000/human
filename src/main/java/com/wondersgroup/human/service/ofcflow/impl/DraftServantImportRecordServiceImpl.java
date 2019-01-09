@@ -15,21 +15,7 @@
  */
 package com.wondersgroup.human.service.ofcflow.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
+import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.common.utils.ImportExcelUtil;
 import com.wondersgroup.framework.core.bo.Page;
@@ -42,16 +28,28 @@ import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.util.DateUtils;
 import com.wondersgroup.framework.util.SecurityUtils;
+import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.DraftServant;
 import com.wondersgroup.human.bo.ofcflow.DraftServantEduInfo;
 import com.wondersgroup.human.bo.ofcflow.DraftServantImportRecord;
 import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.repository.ofcflow.DraftServantImportRecordDAO;
+import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.DraftServantEduInfoService;
 import com.wondersgroup.human.service.ofcflow.DraftServantImportRecordService;
 import com.wondersgroup.human.service.ofcflow.DraftServantService;
 import com.wondersgroup.human.service.organization.OrgInfoService;
 import com.wondersgroup.human.vo.ofcflow.DraftServantImportRecordVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /** 
  * @ClassName: DraftServantImportRecordServiceImpl 
@@ -64,6 +62,8 @@ import com.wondersgroup.human.vo.ofcflow.DraftServantImportRecordVO;
  */
 @Service
 public class DraftServantImportRecordServiceImpl extends GenericServiceImpl<DraftServantImportRecord> implements DraftServantImportRecordService{
+
+    protected final static Logger logger = LoggerFactory.getLogger(DraftServantImportRecordServiceImpl.class);
 
 	@Autowired
 	private DictableService dictableService;
@@ -79,15 +79,15 @@ public class DraftServantImportRecordServiceImpl extends GenericServiceImpl<Draf
 	
 	@Resource
 	private DraftServantImportRecordDAO draftServantImportRecordDAO;
+
+	@Autowired
+	private ServantService servantService;
 	/** (non Javadoc) 
 	 * @Title: saveImportRecord
 	 * @Description: 
 	 * @param file
-	 * @param user
-	 * @param recordYear
 	 * @return
 	 * @throws BusinessException 
-	 * @see com.wondersgroup.human.service.ofcflow.DraftServantImportRecordService#saveImportRecord(org.springframework.web.multipart.MultipartFile, com.wondersgroup.framework.security.bo.SecurityUser, java.lang.Integer) 
 	 */
 	@Override
 	public DraftServantImportRecord saveImportRecord(MultipartFile file,int year,int servantType) throws BusinessException {
@@ -112,7 +112,6 @@ public class DraftServantImportRecordServiceImpl extends GenericServiceImpl<Draf
 		List<List<Object>> edulistObj = null;
 		try {
 			in = file.getInputStream();
-//			listObj = new ImportExcelUtil().getListByExcel(in, file.getOriginalFilename(), 0);
 			listObj = new ImportExcelUtil().getListByExcel(in, file.getOriginalFilename(), 3);
 			if (listObj.size() <= 1)
 				throw new BusinessException("文件中人员信息基本集数据不存在！");
@@ -128,9 +127,8 @@ public class DraftServantImportRecordServiceImpl extends GenericServiceImpl<Draf
 				//设置状态为汇总状态
 				ds.setStatus(DraftServant.STATUS_EMPLOY_COLLECT);
 				String noEntry = installDraftServant(listObj, i, ds);
-				if(noEntry==null){
-					dsList.add(ds);
-				}else{
+				dsList.add(ds);
+				if(noEntry!=null){
 					noEntryMap.put(i,noEntry);
 				}
 				
@@ -196,29 +194,102 @@ public class DraftServantImportRecordServiceImpl extends GenericServiceImpl<Draf
 	private String installDraftServant(List<List<Object>> listObj, int i, DraftServant ds) {
 		String noEntryRecord=null;
 		ds.setRegisterId((String) listObj.get(i).get(0));
-		ds.setName((String) listObj.get(i).get(1));
-		ds.setCardNo(((String) listObj.get(i).get(2)).replaceAll("'", ""));
+
+		//姓名
+		String name=(String) listObj.get(i).get(1);
+		ds.setName(name);
+
+		//身份证
+		String cardNo=((String) listObj.get(i).get(2)).replaceAll("'", "");
+		ds.setCardNo(cardNo);
 		
 		//性别
 		CodeInfo tempcodeinfo=dictableService.findCodeInfoByName(DictTypeCodeContant.CODE_TYPE_SEX, (String) listObj.get(i).get(19)).get(0);
 		ds.setSex(tempcodeinfo);
-		//YYDTODO ignore学历与系统的不匹配 
-//		tempcodeinfo=dictableService.findCodeInfoByName(DictTypeCodeContant.CODE_TYPE_DEGREE, (String) listObj.get(i).get(29)).get(0);
-//		ds.setDegree(tempcodeinfo);
-		
+
 		//出生日期
-//		ds.setBirthDate(DateUtils.parse((String)listObj.get(i).get(20), "yyyy/mm/dd"));
-		
+        try{
+            ds.setBirthDate(DateUtils.parse((String)listObj.get(i).get(20), "yyyy-mm-dd"));
+        }catch (Exception e){
+            logger.info("导入模板出生日期数据类型错误:"+"第"+i+"行"+name);
+        }
+
+
+		String examineeStatus=(String)listObj.get(i).get(27);
 		//考生身份
-		ds.setExamineeStatus((String)listObj.get(i).get(27));
-		
+		ds.setExamineeStatus(examineeStatus);
+
+		//是否应届毕业生
+		if(examineeStatus.equals("应届生")){
+            CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
+			ds.setIsGraduating(yesCodeInfo);
+		}else{
+            CodeInfo noCodeInfo = dictableService.getCodeInfoByCode("0", DictTypeCodeContant.CODE_TYPE_YESNO);
+            ds.setIsGraduating(noCodeInfo);
+        }
+
+        //学历
+        String[] degreeArray={"专科","本科","硕士","博士"};
+        String[] systemDegreeArray = {"大学专科毕业", "大学本科毕业","硕士研究生毕业","博士研究生毕业"};
+        List<String> degreeList= Arrays.asList(degreeArray);
+        String degree = (String) listObj.get(i).get(28);
+        int index = degreeList.indexOf(degree);
+        //假如包含以上职位则设置对应职位
+        if(index!=-1){
+            CodeInfo degreeCodeInfo=dictableService.findCodeInfoByName(DictTypeCodeContant.CODE_TYPE_EDUCATION, systemDegreeArray[index]).get(0);
+            ds.setDegree(degreeCodeInfo);
+        }
+
+
+
+		//申论成绩
+		ds.setExplainingScore(Float.parseFloat((String) listObj.get(i).get(10)));
+
+		//行政职业能力测试
+		ds.setWrittenExamTestScore(Float.parseFloat((String) listObj.get(i).get(11)));
+
+		//民族
+		List<CodeInfo> nationCodeinfos=dictableService.findCodeInfoByName(DictTypeCodeContant.CODE_TYPE_NATION, (String) listObj.get(i).get(24));
+		if(nationCodeinfos.size()>0){
+            ds.setNation(nationCodeinfos.get(0));
+        }
+
+
+		//本科毕业院校
+		ds.setUndergraduateName((String)listObj.get(i).get(31));
+
+		//硕士毕业院校
+		ds.setMastergraduateName((String)listObj.get(i).get(34));
+
+		//博士毕业院校
+		ds.setDoctorgraduateName((String)listObj.get(i).get(37));
+
+		//通讯地址
+		ds.setHomeAddress((String)listObj.get(i).get(48));
+
+		//手机号码
+		ds.setPhoneNumber((String)listObj.get(i).get(50));
+
+		//户籍所在地
+		ds.setResidencePlace((String)listObj.get(i).get(55));
 
 		
 		//招录单位采用模糊匹配,未匹配到的记录放到map中
 		OrgInfo unitBasicInfo = unitBasciInfoService.findLikeSimpleName("%"+(String) listObj.get(i).get(5)+"%");
 
+		//查询servant表中是否有身份证相同的人员,如果有则放入到map中
+		List<Servant> servants=servantService.getServantByCardNo(cardNo);
+		ds.setImportStatus(CommonConst.YES);
+        ds.setImportStatusStr("导入成功");
+		if((servants!=null&&servants.size()>0)){
+			noEntryRecord="(已经存在)"+(String) listObj.get(i).get(1);
+			ds.setImportStatusStr("已经存在");
+			ds.setImportStatus(CommonConst.NO);
+		}
 		if(unitBasicInfo==null){
-			noEntryRecord=(String) listObj.get(i).get(1);
+			noEntryRecord="(单位匹配失败)"+(String) listObj.get(i).get(1);
+			ds.setImportStatusStr("单位匹配失败");
+			ds.setImportStatus(CommonConst.NO);
 		}else{
 			ds.setDraftUnit(unitBasicInfo);
 			ds.setDraftUnitName(unitBasicInfo.getUnitBasicName());
@@ -348,7 +419,6 @@ public class DraftServantImportRecordServiceImpl extends GenericServiceImpl<Draf
 	 * @param pageNo
 	 * @param pagesize
 	 * @return 
-	 * @see com.wondersgroup.human.service.ofcflow.DraftServantImportRecordService#getdraftServantImportRecordVOPage(java.lang.String, java.util.List, int, int) 
 	 */
 	@Override
 	public Page<DraftServantImportRecordVO> getdraftServantImportRecordVOPage(String hql,
@@ -368,7 +438,6 @@ public class DraftServantImportRecordServiceImpl extends GenericServiceImpl<Draf
 	 * @Title: updaterecordandServantInfo
 	 * @Description: TODO
 	 * @param importId 
-	 * @see com.wondersgroup.human.service.ofcflow.DraftServantImportRecordService#updaterecordandServantInfo(java.lang.String) 
 	 */
 	@Override
 	public void updaterecordandServantInfo(String importId,Integer recordYear) {
@@ -421,7 +490,6 @@ public class DraftServantImportRecordServiceImpl extends GenericServiceImpl<Draf
 	 * @Title: savePublish 
 	 * @Description: 发布
 	 * @param id
-	 * @param user
 	 * @return: void
 	 */
 	public void savePublish(String id){

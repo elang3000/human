@@ -15,12 +15,16 @@
  */
 package com.wondersgroup.human.bo.socialworker;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofc.base.BaseRewardAndPunish;
@@ -38,6 +42,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseRewardAndPunish;
  */
 @Entity
 @Table(name = "E14")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SrRewardAndPunish extends BaseRewardAndPunish<SrRewardAndPunish> {
 
 	private static final long serialVersionUID = -861904002381493320L;

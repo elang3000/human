@@ -16,7 +16,11 @@
 package com.wondersgroup.human.controller.analysis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -77,8 +81,8 @@ public class GeneralQueryController {
 	 * @return: List<GeneralQuery>
 	 */
 	@ResponseBody
-	@RequestMapping("/queryList")
-	public List<GeneralQuery> queryList() {
+	@RequestMapping("/queryList/{category}")
+	public List<GeneralQuery> queryList(@PathVariable(name = "category", required = true) String category) {
 		
 		List<GeneralQuery> list = null;
 		try {
@@ -88,6 +92,19 @@ public class GeneralQueryController {
 			List<Predicate> filter = new ArrayList<>();// 查询条件
 			Predicate p = new Predicate("removed", Operator.EQ, false, "");
 			filter.add(p);
+			if(category.equals(GeneralQuery.CATEGORY_GOV)){// 公务员
+				Predicate p1 = new Predicate("category", Operator.EQ, GeneralQuery.CATEGORY_GOV, "");
+				filter.add(p1);
+			}else if(category.equals(GeneralQuery.CATEGORY_INS)){// 事业
+				Predicate p1 = new Predicate("category", Operator.EQ, GeneralQuery.CATEGORY_INS, "");
+				filter.add(p1);
+			}else if(category.equals(GeneralQuery.CATEGORY_PUB)){// 国企
+				Predicate p1 = new Predicate("category", Operator.EQ, GeneralQuery.CATEGORY_PUB, "");
+				filter.add(p1);
+			}else{// 社工
+				Predicate p1 = new Predicate("category", Operator.EQ, GeneralQuery.CATEGORY_SOC, "");
+				filter.add(p1);
+			}
 			list = generalQueryService.findByFilter(filter, sort);
 
 		} catch (Exception e) {
@@ -152,8 +169,8 @@ public class GeneralQueryController {
 		if(StringUtils.isNotBlank(param.getCardNo())){//身份证号
 			ServantParam sp = new ServantParam();
 			sp.setCode1("a1.A01085");
-			sp.setCode2("%"+param.getCardNo()+"%");
-			sp.setCode3("like");
+			sp.setCode2(param.getCardNo());
+			sp.setCode3("=");
 			spList.add(sp);
 		}
 		if(param.getSex()!=null&&StringUtils.isNotBlank(param.getSex().getId())){//性别
@@ -178,6 +195,8 @@ public class GeneralQueryController {
 			spList.add(sp);
 		}
 		
+		List<String> l = new ArrayList<String>();
+		Map<String,String> m = new HashMap<String,String>();
 		if(StringUtils.isNoneBlank(code1)&&StringUtils.isNoneBlank(code2)&&StringUtils.isNoneBlank(code3)){//code1 2不为空
 			String[] code11  = code1.split(",");//项的id组装成数组
 			String[] code22  = code2.split(",");//值组装成数组
@@ -194,11 +213,33 @@ public class GeneralQueryController {
 						sp.setCode2(code22[i]);
 					}
 					spList.add(sp);
+					
+					int index=gq.getCode().indexOf(".");
+					String tableName = gq.getCode().substring(0,index);
+					if(!tableName.equals("a1")){//除开a1表
+						l.add(tableName);
+					}
 				}
 			}
 		}
 		
-		Page<ServantVO> pageInfo = servantService.queryServantInfoBySeniorCondation(spList, page, limit);
+		//去重
+		HashSet<String> h = new HashSet<String>(l);
+        l.clear();
+        l.addAll(h);
+        
+        //将表名按照如（a02，a2）的形式放进map内
+        for(String s : h){
+        	String tableNickName = "";
+        	if(s.length()<3){//a1,a2这种中间加个0
+        		tableNickName = s.substring(0,1)+"0"+s.substring(1,s.length());
+        	}else{//a30这种不加值
+        		tableNickName = s;
+        	}
+        	m.put(tableNickName,s);
+        }
+		
+		Page<ServantVO> pageInfo = servantService.queryServantInfoBySeniorCondation(spList,m,page, limit);
 		return pageInfo;
 	}
 	

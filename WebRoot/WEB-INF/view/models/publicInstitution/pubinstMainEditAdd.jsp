@@ -76,8 +76,13 @@
 									</smart:gridColumn>
 									<smart:gridColumn colPart="3" colOffset="1">
 										<smart:gridRow>
-											<smart:gridColumn colPart="12">
-												<img alt="照片" src="static/image/20170705135600.jpg">
+											<smart:gridColumn colPart="3" colOffset="1">
+												<smart:gridRow>
+													<smart:headPic imgId="headImg"
+														photostrInputId="photostrInput" headBtnId="headBtn"
+														initPhotoPath="${pubinst.photoPath}"
+														photostrInputName="photoPath" />
+												</smart:gridRow>
 											</smart:gridColumn>
 										</smart:gridRow>
 									</smart:gridColumn>
@@ -247,11 +252,14 @@
 				</smart:form>
 		</smart:card>
 	</smart:grid>
-	<smart:scriptHead models="table,form,layer,element,laydate">
+	<smart:scriptHead models="table,form,layer,element,laydate,upload">
 		<smart:utils/>
 		<smart:continuousSelectAction/>
+		<smart:headPicAction imgId="headImg" headBtnId="headBtn" photostrInputId="photostrInput"/>
 		<smart:buttonScriptAction>
 			goBack : function(data) {
+			    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+			    parent.layer.close(index);
 				window.location.href='publicInstitution/list';
 			}
 		</smart:buttonScriptAction>
@@ -272,7 +280,9 @@
 	                result.message, 
 	                {icon: 1,closeBtn: 1 },
 	                function () {
-						window.location.href='publicInstitution/edit?id=${id}';
+			            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+			            parent.layer.close(index);
+			            window.location.href='publicInstitution/edit?id=${id}';
 	                });
 				}else{
 					layer.alert(

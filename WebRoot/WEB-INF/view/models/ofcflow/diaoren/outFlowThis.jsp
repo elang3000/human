@@ -79,7 +79,7 @@
 						<smart:gridColumn colPart="3" colOffset="1">
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<img alt="照片" src="static/image/20170705135600.jpg">
+									<img style="width:150px;height:200px;min-width:150px;min-height:200px;" alt="照片" src="ftp/getImg?imgName=${s.photoPath}">
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:gridColumn>
@@ -136,8 +136,8 @@
 					<c:if test="${isFlow}">
 						<c:if test="${d.status<6 }">
 							<smart:gridRow>
-								<smart:gridColumn colPart="4">
-									<smart:textInput labelName="审批意见:" name="opinion" id="opinion" placeholder="审批意见"></smart:textInput>
+								<smart:gridColumn colPart="12">
+									<smart:textarea name="opinion" id="opinion" labelName="审批意见" display="block"></smart:textarea>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</c:if>
@@ -193,7 +193,11 @@
 			noPass : function() {
 				$("#result").val("0");//审批不通过
 				if(!$("#opinion").val()){
-					$("#opinion").val("不同意");
+					smart.message({
+						message : "请输入审批不通过意见！",
+						type : 'W' //S保存  I问号  W感叹号 E错误
+					});
+					return;
 				}
 				smart.confirm({
 					title:'确认审批不通过',

@@ -32,7 +32,7 @@
 									<smart:infoShowerLabel infoname="姓名" infovalue="${s.name}"></smart:infoShowerLabel>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
-									<smart:infoShowerLabel infoname="身份证" infovalue="${s.cardNo}"></smart:infoShowerLabel>
+									<smart:infoShowerLabel infoname="身份证" infovalue="${s.cardNoView}"></smart:infoShowerLabel>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
@@ -71,7 +71,7 @@
 						<smart:gridColumn colPart="3" colOffset="1">
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<img alt="照片" src="static/image/20170705135600.jpg">
+									<img style="width:150px;height:200px;min-width:150px;min-height:200px;" alt="照片" src="ftp/getImg?imgName=${s.photoPath}">
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:gridColumn>
@@ -84,10 +84,15 @@
 							<smart:infoShowerLabel infoname="去向单位名称" infovalue="${d.targetOrgan}"></smart:infoShowerLabel>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
-							<smart:infoShowerLabel infoname="挂职锻炼开始时间" infovalue="${d.startDate}"></smart:infoShowerLabel>
+							<smart:infoShowerLabel shortName="开始时间" infoname="挂职锻炼开始时间" infovalue="${d.startDate}"></smart:infoShowerLabel>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
-							<smart:infoShowerLabel infoname="挂职锻炼结束时间" infovalue="${d.endDate}"></smart:infoShowerLabel>
+							<smart:infoShowerLabel shortName="结束时间" infoname="挂职锻炼结束时间" infovalue="${d.endDate}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="挂职职务" infovalue="${d.exercisePost.name}"></smart:infoShowerLabel>
 						</smart:gridColumn>
 					</smart:gridRow>
 					<smart:gridRow>
@@ -98,7 +103,7 @@
 					<smart:gridRow>
 						<smart:gridColumn>
 							<smart:buttonGroup container="true">
-								<smart:button theme="warm" size="sm" method="goBack" title="返回">
+								<smart:button theme="primary" size="sm" method="goBack" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>

@@ -83,7 +83,7 @@ public class PunishServantServiceImpl extends GenericServiceImpl<PunishServant> 
 			s.add(Restrictions.like("s.name", param.getName(), MatchMode.ANYWHERE));
 		}
 		if (StringUtils.isNotBlank(param.getCardNo())) {// 身份证
-			s.add(Restrictions.like("s.cardNo",param.getCardNo(), MatchMode.ANYWHERE));
+			s.add(Restrictions.eq("s.cardNo",param.getCardNo()));
 		}
 		if (StringUtils.isNotBlank(param.getPunishFileName())) {// 处分文件号
 			detachedcriteria.add(Restrictions.like("punishFileName", param.getPunishFileName(), MatchMode.ANYWHERE));
@@ -124,7 +124,7 @@ public class PunishServantServiceImpl extends GenericServiceImpl<PunishServant> 
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
-			flow.setBusName(userOrg.getAllName()+"处分");//流程业务名称
+			flow.setBusName("处分备案");//流程业务名称
 			flow.setBusType("PunishServant");//流程业务类型
 			flow.setTargetOrganNode(userOrg);//流程业务目标组织
 			flow.setTargetSecurityUser(user);//流程业务目标人员
@@ -139,12 +139,12 @@ public class PunishServantServiceImpl extends GenericServiceImpl<PunishServant> 
 			temp.setStatus(PunishServant.PUNISH_SERVANT_PASS);//通过
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(temp.getPunishApprovalDate());//设置起时间
-			cal.add(Calendar.YEAR, temp.getPunishYear());//增加
+			cal.add(Calendar.MONTH, temp.getPunishYear());//增加
 			
 			Calendar cal1 = Calendar.getInstance();
 			cal1.setTime(temp.getPunishApprovalDate());//设置起时间
-			cal1.add(Calendar.YEAR, temp.getPunishYear());//增加
-			cal1.add(Calendar.DATE, -30);//增加
+			cal1.add(Calendar.MONTH, temp.getPunishYear());//增加
+			cal1.add(Calendar.MONTH, -1);//增加
 			
 			temp.setPunishApprovalEndDate(cal.getTime());//处分结束时间
 			temp.setWarnDate(cal1.getTime());//处分结束时前一个月预警时间

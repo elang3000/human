@@ -30,19 +30,19 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="学位授予单位：" name="grantUnit" value="${degree.grantUnit}" ></smart:textInput>
+										<smart:textInput labelName="学位授予单位：" name="grantUnit" value="${degree.grantUnit}" verify="required" isNotNull="true"></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:date labelName="学位授予日期：" display="block" name="grantDate" id="grantDate" value="${degree.grantDate}"></smart:date>
+										<smart:date labelName="学位授予日期：" display="block" name="grantDate" id="grantDate" value="${degree.grantDate}" verify="required" isNotNull="true"></smart:date>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="学位证书号：" name="degreeNo" value="${degree.degreeNo}" ></smart:textInput>
+										<smart:textInput labelName="学位证书号：" name="degreeNo" value="${degree.degreeNo}" verify="required" isNotNull="true"></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="最高学历标识：" name="topFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${degree.topFlag.id }" ></smart:singleSelect>
+										<smart:singleSelect labelName="最高学历标识：" name="topFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${degree.topFlag.id }" verify="required" isNotNull="true"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 							</smart:grid>

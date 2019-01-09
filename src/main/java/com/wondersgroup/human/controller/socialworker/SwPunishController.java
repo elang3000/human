@@ -39,6 +39,9 @@ import com.wondersgroup.human.service.socialworker.SocialWorkerService;
 import com.wondersgroup.human.service.socialworker.SwRewardAndPunishService;
 import com.wondersgroup.human.vo.ofc.PunishVO;
 import com.wondersgroup.human.vo.socialworker.SwPunishVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: RewardAndPunishController 
@@ -141,6 +144,8 @@ public class SwPunishController  extends GenericController{
 	 * @param page			页码
 	 * @return: Page<PunishVO>
 	 */
+	@Log(title = "查询惩戒人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/getPage")
 	public Page<SwPunishVO> getPage(PunishVO punishVO,Integer limit,Integer page){
@@ -200,6 +205,8 @@ public class SwPunishController  extends GenericController{
 	 * @param temp		职务信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑惩戒", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(SrRewardAndPunish temp){
@@ -232,6 +239,8 @@ public class SwPunishController  extends GenericController{
 	 * @param temp		培训人员
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除惩戒信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delPunish(String id){

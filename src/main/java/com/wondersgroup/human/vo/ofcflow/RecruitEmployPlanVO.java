@@ -17,6 +17,7 @@ package com.wondersgroup.human.vo.ofcflow;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.human.bo.ofcflow.RecruitEmployPlan;
 
 /**
@@ -87,15 +88,19 @@ public class RecruitEmployPlanVO {
 		if(plan.getEmployOrgan()!=null){
 			this.employOrgan = plan.getEmployOrgan().getName();
 		}
-		this.allowWeaveNum = String.valueOf(plan.getAllowWeaveNum() == null ? "" : plan.getAllowWeaveNum());
-		this.realNum = String.valueOf(plan.getRealNum() == null ? "" : plan.getRealNum());
+		this.allowWeaveNum = String.valueOf(plan.getUnitPlanningTotal() == null ? "" : plan.getUnitPlanningTotal());
+		this.realNum = String.valueOf(plan.getActualNumber() == null ? "" : plan.getActualNumber());
 		this.thisYearLackWeaveNum = String
-		        .valueOf(plan.getThisYearLackWeaveNum() == null ? "" : plan.getThisYearLackWeaveNum());
-		this.chiefLackWeaveNum = plan.getChiefLackWeaveNum() == null ? "" : String.valueOf(plan.getChiefLackWeaveNum());
+		        .valueOf(plan.getVacancyExcessNumber() == null ? "" : plan.getVacancyExcessNumber());
 		this.planEmployNum = plan.getPlanEmployNum() == null ? "" : String.valueOf(plan.getPlanEmployNum());
 		this.firstEmployNum = plan.getFirstEmployNum() == null ? "" : String.valueOf(plan.getFirstEmployNum());
 		this.endEmployNum = plan.getEndEmployNum() == null ? "" : String.valueOf(plan.getEndEmployNum());
-		this.planStateSign = String.valueOf(plan.getPlanState());
+		//如果已经提交流程，并且是起始节点，设置流程状态为99，不能编辑和删除
+		if(plan.getFlowRecord()!=null&&plan.getPlanState()==RecruitEmployPlan.RECRUIT_EMPLOY_PLAN_STATE_POST){
+			this.planStateSign = "99";
+		}else{
+			this.planStateSign = String.valueOf(plan.getPlanState());
+		}
 		this.planState = convertState(plan.getPlanState());
 	}
 	
@@ -131,6 +136,8 @@ public class RecruitEmployPlanVO {
 			return "职位上报，待区人事主管部门四级审核";
 		} else if (state == 14) {
 			return "职位上报，区人事主管部门审核通过";
+		} else if (state == FlowRecord.BUS_STOP) {
+			return "业务被中止";
 		} else {
 			return "";
 		}

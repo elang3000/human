@@ -14,8 +14,14 @@
  */
 package com.wondersgroup.human.service.ofc;
 
+import java.util.List;
+
+import com.wondersgroup.framework.core.bo.Page;
+import com.wondersgroup.framework.core.bo.Sorts;
+import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.ofc.JobChange;
+import com.wondersgroup.human.vo.ofc.JobChangeVO;
 
 /**
  * @ClassName: JobChange
@@ -28,4 +34,5 @@ import com.wondersgroup.human.bo.ofc.JobChange;
  */
 public interface JobChangeService extends GenericService<JobChange> {
 	
+	Page<JobChangeVO> getPage(List<Predicate> filter, Sorts sort, Integer page, Integer limit);
 }

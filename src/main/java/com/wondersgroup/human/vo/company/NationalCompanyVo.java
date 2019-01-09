@@ -99,7 +99,7 @@ public class NationalCompanyVo {
 		if(n.getSex()!=null){
 			this.sex=n.getSex().getName();
 		}
-		this.cardNo=n.getCardNo();
+		this.cardNo=n.getCardNoView();
 		this.departName=n.getDepartName();
         this.nowPostName=n.getNowPostName();
         this.topEducation = n.getTopEducation();

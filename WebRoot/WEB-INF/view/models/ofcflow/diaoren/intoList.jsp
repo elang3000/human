@@ -15,7 +15,7 @@
 				<smart:breadcrumbNavMenu separator=">">
 					<smart:breadcrumbNavMenuItem iname="您现在的所在位置"></smart:breadcrumbNavMenuItem>
 					<smart:breadcrumbNavMenuItem iname="事项申请"></smart:breadcrumbNavMenuItem>
-					<smart:breadcrumbNavMenuItem iname="调任管理" cite="true"></smart:breadcrumbNavMenuItem>
+					<smart:breadcrumbNavMenuItem iname="公务员调任管理" cite="true"></smart:breadcrumbNavMenuItem>
 				</smart:breadcrumbNavMenu>
 			</smart:cardHead>
 			<smart:cardBody>
@@ -64,7 +64,7 @@
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn colPart="12" deviceType="md">
 						<smart:table id="navigationList" url="ofcflow/diaoren/intoList"
-							height="full-210" text="未获取到数据！" doneCallBack="fixedCol">
+							height="full-210" text="未获取到数据！">
 							<tr>
 								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
 								<smart:tableItem field="cardNo" width=".1" sort="false">身份证号</smart:tableItem>
@@ -72,7 +72,7 @@
 								<smart:tableItem field="birthDate" width=".1" sort="true">出生日期</smart:tableItem>
 								<smart:tableItem field="nation" width=".1" sort="true">民族</smart:tableItem>
 								<smart:tableItem field="nativePlaceName" width=".1" sort="false">籍贯</smart:tableItem>
-								<smart:tableItem field="sourceorgan" width=".2" sort="false">原工作单位</smart:tableItem>
+								<smart:tableItem field="sourceorgan" width=".15" sort="false">原工作单位</smart:tableItem>
 								<smart:tableItem field="statusName" width=".1" sort="false">状态</smart:tableItem>
 								<smart:tableItem align="center" fixed="right" width=".15" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>

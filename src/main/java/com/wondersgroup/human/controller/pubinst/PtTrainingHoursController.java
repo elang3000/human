@@ -36,6 +36,9 @@ import com.wondersgroup.human.service.pubinst.PtTrainingHoursService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PtTrainingHoursVO;
 import com.wondersgroup.human.vo.pubinst.PublicInstitutionVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: TrainingHoursController 
@@ -81,6 +84,7 @@ public class PtTrainingHoursController extends GenericController {
 	 * @Description: 培训学时列表页面
 	 * @return: String
 	 */
+	
 	@RequestMapping("/trainingHours")
 	public String trainingHoursList() {
 		return TRAINING_HOURS_LIST;
@@ -116,6 +120,8 @@ public class PtTrainingHoursController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<TrainingHoursVO>
 	 */
+	@Log(title = "查询培训信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PtTrainingHoursVO> pageList(PtTrainingHoursVO trainingHoursVO, Integer limit, Integer page) {
@@ -139,6 +145,8 @@ public class PtTrainingHoursController extends GenericController {
 	 * @param temp		培训内容
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑培训内容信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PtTrainingHours temp){
@@ -168,6 +176,8 @@ public class PtTrainingHoursController extends GenericController {
 	 * @param temp		培训人员
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑学习培训人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/saveServant")
 	public AjaxResult saveServant(String id,String[] ids){
@@ -198,6 +208,8 @@ public class PtTrainingHoursController extends GenericController {
 	 * @param page			页码
 	 * @return: Page<TrainingHoursVO>
 	 */
+	@Log(title = "查询培训人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/servantTrainList")
 	public Page<PtTrainingHoursVO> servantTrainList(String trainId){
@@ -213,6 +225,8 @@ public class PtTrainingHoursController extends GenericController {
 	 * @param page			页码
 	 * @return: Page<PublicInstitutionVO>
 	 */
+	@Log(title = "新增在职人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.INSERT,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/addServantTrainList")
 	public Page<PublicInstitutionVO> pageList3(PublicInstitution pubinst,String trainId,Integer limit,Integer page){
@@ -239,7 +253,9 @@ public class PtTrainingHoursController extends GenericController {
 	 * @Description: 	培训人员删除功能
 	 * @param temp		培训人员
 	 * @return: AjaxResult
-	 */
+	 */@Log(title = "删除培训人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
+	
 	@ResponseBody
 	@RequestMapping("/delServant")
 	public AjaxResult delServant(String trainId,String Id){
@@ -266,6 +282,8 @@ public class PtTrainingHoursController extends GenericController {
 	 * @param id
 	 * @return: String
 	 */
+	 @Log(title = "x更新信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@RequestMapping("/detail")
 	public String trainingHoursDetail(String id,String Id, Model model) {
 		PtTrainingHours trainingHours = trainingHoursService.get(id);
@@ -281,6 +299,8 @@ public class PtTrainingHoursController extends GenericController {
 	 * @Description: 培训学时列表页面
 	 * @return: String
 	 */
+	 @Log(title = "查询学时信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/editTrainingHours")
 	public String editTrainingHours(String id,Model model) {
 		PtTrainingHours trainingHours = trainingHoursService.get(id);

@@ -17,6 +17,8 @@ package com.wondersgroup.human.service.pubinst.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
+import com.wondersgroup.framework.core.exception.BusinessException;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
@@ -128,5 +131,28 @@ public class PtJobLevelServiceImpl extends GenericServiceImpl<PtJobLevel> implem
 			publicInstitutionService.update(pubinst);
 		}
 		super.delete(entity);
+	}
+	/** (non Javadoc) 
+	 * @Title: getJobLevelByServantId
+	 * @Description: TODO
+	 * @param id
+	 * @return 
+	 * @see com.wondersgroup.human.service.ofc.JobLevelService#getJobLevelByServantId(java.lang.String) 
+	 */
+	@Override
+	public PtJobLevel getJobLevelByServantId(String id) {
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(PtJobLevel.class);
+		DetachedCriteria s = detachedcriteria.createAlias("publicInstitution", "s");
+		s.add(Restrictions.eq("s.id", id));
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		detachedcriteria.add(Restrictions.eq("currentIdentification", dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO)));
+		
+		List<PtJobLevel> list = this.findByCriteria(detachedcriteria);
+		
+		if(list.size()>0){
+			return list.get(0);
+		}else{
+			throw new BusinessException("当前人员没有现行职级!");
+		}
 	}
 }

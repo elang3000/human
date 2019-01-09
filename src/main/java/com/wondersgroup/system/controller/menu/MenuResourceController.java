@@ -3,14 +3,14 @@
  * 文件名: MenuResourceController.java
  * 工程名: human
  * 包名: com.wondersgroup.system.controller.menu
- * 描述: TODO
+ * 描述: 系统菜单控制器
  * 创建人: Wonders-Rain
  * 创建时间: 2018年8月3日 上午10:47:45
  * 版本号: V1.0
- * 修改人：Wonders-Rain
- * 修改时间：2018年8月3日 上午10:47:45
+ * 修改人：
+ * 修改时间：
  * 修改任务号
- * 修改内容：TODO
+ * 修改内容：
  */
 
 package com.wondersgroup.system.controller.menu;
@@ -39,7 +39,7 @@ import com.wondersgroup.framework.util.StringUtils;
 
 /**
  * @ClassName: MenuResourceController
- * @Description: TODO
+ * @Description: 系统菜单控制器
  * @author: Wonders-Rain
  * @date: 2018年8月3日 上午10:47:45
  * @version [版本号, YYYY-MM-DD]
@@ -51,7 +51,7 @@ import com.wondersgroup.framework.util.StringUtils;
 public class MenuResourceController extends GenericController {
 	
 	private static String RESOURCE_MENU_INDEX = "resource/queryMenuResourceIndex",
-			RESOURCE_MENU_CREATE_INDEX = "resource/createMenuResourceIndex",
+	        RESOURCE_MENU_CREATE_INDEX = "resource/createMenuResourceIndex",
 	        RESOURCE_MENU_EDIT_INDEX = "resource/editMenuResourceIndex",
 	        RESOURCE_MENU_ICON_INDEX = "resource/queryMenuResourceIconIndex";
 	
@@ -112,7 +112,7 @@ public class MenuResourceController extends GenericController {
 	@RequestMapping("/load")
 	public String queryMenuResourceById(String id, Model model) {
 		
-		MenuResource menu = null,parentMenu = null;
+		MenuResource menu = null, parentMenu = null;
 		if (StringUtils.isNotBlank(id)) {
 			parentMenu = menuService.getParentResourceById(id);
 			menu = menuService.getMenuResourceById(id);
@@ -129,6 +129,7 @@ public class MenuResourceController extends GenericController {
 	
 	@RequestMapping("/create")
 	public String createMenuResource(String id, Model model) {
+		
 		MenuResource menu = menuService.get(id);
 		model.addAttribute("menu", menu.toViewObject());
 		return RESOURCE_MENU_CREATE_INDEX;
@@ -137,14 +138,12 @@ public class MenuResourceController extends GenericController {
 	@RequestMapping("/create/save")
 	@ResponseBody
 	public AjaxResult saveCreateMenuResource(MenuResourceVO param) {
+		
 		try {
-			
 			
 			MenuResource parentMenu = menuService.get(param.getParentId());
 			MenuResource menu = menuService.getMenuResourceByCode(param.getCode());
-			if (menu != null) {
-				return new AjaxResult(false, AjaxResult.MESSAGE_ERROR_TYPE, "菜单代码已存在，请重新输入！");
-			}
+			if (menu != null) { return new AjaxResult(false, AjaxResult.MESSAGE_ERROR_TYPE, "菜单代码已存在，请重新输入！"); }
 			MenuResource menuResource = new MenuResource();
 			menuResource.setCode(param.getCode());
 			menuResource.setAppNodeId(parentMenu.getAppNodeId());
@@ -187,6 +186,7 @@ public class MenuResourceController extends GenericController {
 	@RequestMapping("remove/save")
 	@ResponseBody
 	public AjaxResult removeMenuResource(String id) {
+		
 		try {
 			menuService.deleteMenuResourceById(id);
 			return new AjaxResult(true, AjaxResult.MESSAGE_SUCCESS_TYPE, getMessage("system.success"));
@@ -200,6 +200,7 @@ public class MenuResourceController extends GenericController {
 	
 	@RequestMapping("/icon")
 	public String iconIndex(String id, Model model) {
+		
 		if (StringUtils.isNotBlank(id)) {
 			MenuResource menu = menuService.get(id);
 			model.addAttribute("icon", menu.getIcon());

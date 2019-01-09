@@ -25,10 +25,14 @@
 						<smart:form id="searchForm">
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
-									<smart:textInput labelName="事项类型：" autocomplete="off" placeholder="组织节点类型编码" name="busType"></smart:textInput>
+									<smart:singleSelect labelName="业务类型" isAddDefaltOption="true" name="busType" 
+									display="block" data="${busTypeList}" isSearch="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
-									<smart:textInput labelName="发文单位：" autocomplete="off" placeholder="组织节点类型名称" name="sourceOrganNodeId"></smart:textInput>
+									<smart:singleSelect labelName="来文单位：" name="sourceOrganNodeId"
+									isSearch="true" display="block"
+									url="system/organ/node/query?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517"
+									isAddDefaltOption="true"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
 									<smart:buttonGroup container="true">
@@ -44,7 +48,7 @@
 						</smart:form>
 					</smart:fieldSet>
 					<smart:gridColumn>
-						<smart:table id="navigationList" url="workflow/done/page?busId=${busId}" height="full-150" sortField="createTime" sortType="desc" text="未找到已办事项数据！" page="true">
+						<smart:table id="navigationList" url="workflow/done/page?busId=${busId}&category=${category}" height="full-150" text="未找到已办事项数据！" page="true">
 							<tr>
 								<smart:tableItem field="targetOrganNode" width=".1" templet="topTpl">办理单位</smart:tableItem>
 								<smart:tableItem field="targetSecurityUser" width=".1" templet="downTpl">办理人员</smart:tableItem>
@@ -68,6 +72,7 @@
 		</smart:card>
 	</smart:grid>
 	<smart:scriptHead models="form,layer,element,table">
+		<smart:utils/>
 		<smart:tableScriptAction tableId="navigationList">
 			viewFlowRecord : function(record) {
 				smart.show({

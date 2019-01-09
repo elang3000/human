@@ -38,6 +38,9 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.service.pubinst.PtRegistrationService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PtRegistrationVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: RegistrationController
@@ -85,6 +88,8 @@ public class PtRegistrationController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<RegistrationVO>
 	 */
+	@Log(title = "查询登记信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PtRegistrationVO> pageList(String Id, Integer limit, Integer page) {
@@ -102,6 +107,8 @@ public class PtRegistrationController extends GenericController {
 	 * @param temp 登记信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑登记信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PtRegistration temp) {
@@ -133,6 +140,8 @@ public class PtRegistrationController extends GenericController {
 	 * @param temp 登记信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除登记信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

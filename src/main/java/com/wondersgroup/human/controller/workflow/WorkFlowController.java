@@ -30,6 +30,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wondersgroup.common.contant.FlowBusTypeConstant;
 import com.wondersgroup.framework.console.bo.FrameWorkResource;
 import com.wondersgroup.framework.console.service.FrameWorkService;
 import com.wondersgroup.framework.controller.GenericController;
@@ -78,41 +79,48 @@ public class WorkFlowController extends GenericController {
 		flowRecordMapping.put("ProbationServant", "/ofcflow/probation/workFlow");//试用期 考核合格
 		flowRecordMapping.put("CancelProbationServant", "/ofcflow/probation/workFlow");//试用期 考核不合格
 		
-		flowRecordMapping.put("ZhuanRenTLBIntoMgr_THIS", "/ofcflow/zrtlbInto/workFlow");//本区内同类别转任
-		flowRecordMapping.put("ZhuanRenTLBIntoMgr_OUTER", "/ofcflow/zrtlbInto/workFlow");//外区同类别转任
-		flowRecordMapping.put("ZhuanRenTLBOutMgr", "/ofcflow/zrtlbInto/workFlow");//同类别转任转出
+		flowRecordMapping.put("ZhuanRenTLBIntoMgr_THIS", "/ofcflow/zrtlbIntoB/workFlow");//本区内同类别转任
+		flowRecordMapping.put("ZhuanRenTLBIntoMgr_OUTER", "/ofcflow/zrtlbIntoB/workFlow");//外区同类别转任
+		flowRecordMapping.put("ZhuanRenTLBOutMgr", "/ofcflow/zrtlbIntoB/workFlow");//同类别转任转出
 		
-		flowRecordMapping.put("ZhuanRenKLBIntoMgr_THIS", "/ofcflow/zrklbInto/workFlow");//本区内跨类别转任
-		flowRecordMapping.put("ZhuanRenKLBIntoMgr_OUTER", "/ofcflow/zrklbInto/workFlow");//外区跨类别转任
-		flowRecordMapping.put("ZhuanRenKLBOutMgr", "/ofcflow/zrklbInto/workFlow");//跨类别转任转出
+		flowRecordMapping.put("ZhuanRenKLBIntoMgr_THIS", "/ofcflow/zrklbIntoB/workFlow");//本区内跨类别转任
+		flowRecordMapping.put("ZhuanRenKLBIntoMgr_OUTER", "/ofcflow/zrklbIntoB/workFlow");//外区跨类别转任
+		flowRecordMapping.put("ZhuanRenKLBOutMgr", "/ofcflow/zrklbIntoB/workFlow");//跨类别转任转出
 		
-		flowRecordMapping.put("ReferenceExchange_THIS", "/ofcflow/exchange/workFlow");//本区内参公交流
-		flowRecordMapping.put("ReferenceExchange_OUTER", "/ofcflow/exchange/workFlow");//外区参公交流
+		flowRecordMapping.put("ReferenceExchange_THIS", "/ofcflow/exchangeB/workFlow");//本区内参公交流
+		flowRecordMapping.put("ReferenceExchange_OUTER", "/ofcflow/exchangeB/workFlow");//外区参公交流
+		flowRecordMapping.put("ReferenceExchange_OutMgr", "/ofcflow/exchangeOutB/workFlow");//参公交流转出
 		
 		flowRecordMapping.put("DiaoRenIntoMgr_THIS", "/ofcflow/diaoren/workFlow");//本区内调入
 		flowRecordMapping.put("DiaoRenIntoMgr_OUTER", "/ofcflow/diaoren/workFlow");//外区调入
 		flowRecordMapping.put("DiaoRenOutMgr_THIS", "/ofcflow/diaoren/workFlow");//调出到本区
 		
-		flowRecordMapping.put("ResignServant", "/ofcflow/resign/resignFlow");//辞职
+		flowRecordMapping.put("ResignServant", "/ofcflow/resignB/resignFlow");//辞职
 		
 		flowRecordMapping.put("DeathServant", "/ofcflow/death/deathFlow");//死亡
 		
-		flowRecordMapping.put("Train", "/ofcflow/train/trainFlow");//培训学时考核
+		flowRecordMapping.put("Train", "/ofcflow/trainServant/trainFlow");//培训学时考核
 		
 		flowRecordMapping.put("PunishServant", "/ofcflow/punish/punishFlow");//处分
 		
-		flowRecordMapping.put("Abroad", "/ofcflow/abroad/abroadFlow");//因公出国政审
+		flowRecordMapping.put("Abroad", "/ofcflow/abroadB/abroadFlow");//因公出国政审
 
 
-		flowRecordMapping.put("JOBSHIFT_PROMOTE", "/ofcflow/jobchange/jobChangeFlow");//职务变动-升职
-		flowRecordMapping.put("JOBSHIFT_DEMOTE", "/ofcflow/jobchange/jobChangeFlow");//职务变动-降职
-		flowRecordMapping.put("JOBSHIFT_DEPOSE", "/ofcflow/jobchange/jobChangeFlow");//职务变动-免职
-		flowRecordMapping.put("JOBSHIFT_SHIFT", "/ofcflow/jobchange/jobChangeFlow");//职务变动-轮岗
-		flowRecordMapping.put("ASSESS_REWARD", "/ofcflow/assess/assessFlow");//年度考核奖励
+		flowRecordMapping.put(FlowBusTypeConstant.FLOW_JOBSHIFT_PROMOTE, "/ofcflow/jobchange/jobChangeFlow");//职务变动-升职
+		flowRecordMapping.put(FlowBusTypeConstant.FLOW_JOBSHIFT_PROMOTEB, "/ofcflow/jobchangeB/jobChangeFlow");//职务变动-升职
+		flowRecordMapping.put(FlowBusTypeConstant.FLOW_JOBSHIFT_DEMOTE, "/ofcflow/jobchange/jobChangeFlow");//职务变动-降职
+		flowRecordMapping.put(FlowBusTypeConstant.FLOW_JOBSHIFT_DEPOSE, "/ofcflow/jobchange/jobChangeFlow");//职务变动-免职
+		flowRecordMapping.put(FlowBusTypeConstant.FLOW_JOBSHIFT_SHIFT, "/ofcflow/jobchange/jobChangeFlow");//职务变动-轮岗
+		flowRecordMapping.put(FlowBusTypeConstant.FLOW_ASSESS_REWARD, "/ofcflow/assess/assessFlow");//年度考核奖励
 
-		flowRecordMapping.put("H004001001", "/orgInfoflow/applyApprovalPage");
-		flowRecordMapping.put("H004001002", "/orgInfoflow/adjustApprovalPage");
-		flowRecordMapping.put("H004001004", "/orgFormationFlow/adjustApprovalPage");
+		flowRecordMapping.put("H004001001", "/orgInfoflow/applyApprovalPage");//新增机构信息
+		flowRecordMapping.put("H004001002", "/orgInfoflow/adjustApprovalPage");//修改机构信息
+		flowRecordMapping.put("H004001004", "/orgFormationFlow/adjustApprovalPage");//调整行政编制信息
+		flowRecordMapping.put("H004001005", "/institutionOrgFormationFlow/adjustApprovalPage");//调整事业编制信息
+		flowRecordMapping.put("H001003023", "/importantEventApply/approvalPage");//重大事项申请
+		
+		
+		
 		flowRecordMapping.put("MemberInfoRegister", "/instflow/inforegister/queryRegisterInfo");
 		flowRecordMapping.put("AlternatingRotation", "/instflow/alternatingrotation/queryRegisterInfo");
 		flowRecordMapping.put("InformationChange", "/instflow/informationchanges/queryinformation");
@@ -137,17 +145,66 @@ public class WorkFlowController extends GenericController {
 	@RequestMapping("doing/index")
 	public String getWorkFlowDoingIndex(String busId, Model model,String category) {
 		
+		StringBuffer sb  = this.installBusTypeListSB(category);
+		model.addAttribute("busTypeList", sb.toString());//业务类型
+		
 		model.addAttribute("category", category);//数据类型,区分公务员和事业单位等
 		model.addAttribute("busId", busId);
 		model.addAttribute("userId", SecurityUtils.getUserId());
 		return WORKFLOW_DOING_INDEX;
 	}
-	
+
 	@RequestMapping("done/index")
-	public String getWorkFlowDoneIndex(String busId, Model model) {
-		
+	public String getWorkFlowDoneIndex(String busId, Model model,String category) {
+		StringBuffer sb  = this.installBusTypeListSB(category);
+		model.addAttribute("busTypeList", sb.toString());//业务类型
+		model.addAttribute("category", category);//数据类型,区分公务员和事业单位等
 		model.addAttribute("busId", busId);
 		return WORKFLOW_DONE_INDEX;
+	}
+	
+	private StringBuffer installBusTypeListSB(String category) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("[");
+		if(FlowRecord.FLOW_RECORD_CATEGORY_GOV.equals(category)){
+			sb.append("{'value':'招录计划','key':'RecruitEmployPlan'}");
+			sb.append(",{'value':'录用计划职位上报','key':'RecruitPost'}");
+			sb.append(",{'value':'试用期管理','key':'ProbationServant'}");
+			sb.append(",{'value':'试用期取消录用','key':'CancelProbationServant'}");
+			sb.append(",{'value':'本区同类别转任','key':'ZhuanRenTLBIntoMgr_THIS'}");
+			sb.append(",{'value':'外区同类别转任','key':'ZhuanRenTLBIntoMgr_OUTER'}");
+			sb.append(",{'value':'同类别转出','key':'ZhuanRenTLBOutMgr'}");
+			sb.append(",{'value':'本区跨类别转任','key':'ZhuanRenKLBIntoMgr_THIS'}");
+			sb.append(",{'value':'外区跨类别转任','key':'ZhuanRenKLBIntoMgr_OUTER'}");
+			sb.append(",{'value':'跨类别转出','key':'ZhuanRenKLBOutMgr'}");
+			sb.append(",{'value':'本区参公交流','key':'ReferenceExchange_THIS'}");
+			sb.append(",{'value':'外区参公交流','key':'ReferenceExchange_OUTER'}");
+			sb.append(",{'value':'本区公务员调任','key':'DiaoRenIntoMgr_THIS'}");
+			sb.append(",{'value':'外区公务员调任','key':'DiaoRenIntoMgr_OUTER'}");
+			sb.append(",{'value':'公务员调任调出','key':'DiaoRenOutMgr_THIS'}");
+			sb.append(",{'value':'辞职','key':'ResignServant'}");
+			sb.append(",{'value':'死亡','key':'DeathServant'}");
+			sb.append(",{'value':'培训学时考核','key':'Train'}");
+			sb.append(",{'value':'处分','key':'PunishServant'}");
+			sb.append(",{'value':'因公出国政审','key':'Abroad'}");
+			sb.append(",{'value':'职务变动升职','key':'JOBSHIFT_PROMOTE'}");
+			sb.append(",{'value':'职务变动免职','key':'JOBSHIFT_DEPOSE'}");
+			sb.append(",{'value':'职务变动轮岗','key':'JOBSHIFT_SHIFT'}");
+			sb.append(",{'value':'年度考核奖励','key':'ASSESS_REWARD'}");
+			sb.append(",{'value':'重大事项申请','key':'H001003023'}");
+		}else if(FlowRecord.FLOW_RECORD_CATEGORY_ORG.equals(category)){
+			sb.append("{'value':'机构申请','key':'H004001001'}");
+			sb.append(",{'value':'机构调整','key':'H004001002'}");
+			sb.append(",{'value':'行政编制调整','key':'H004001004'}");
+			sb.append(",{'value':'事业编制调整','key':'H004001005'}");
+		}else if (FlowRecord.FLOW_RECORD_CATEGORY_INS.equals(category)) {
+			sb.append("{'value':'人员招录登记','key':'MemberInfoRegister'}");
+			sb.append(",{'value':'人员轮岗交流','key':'AlternatingRotation'}");
+			sb.append(",{'value':'人员信息变动审核','key':'InformationChange'}");
+			sb.append(",{'value':'人员离退备案','key':'RecordableRecord'}");
+		}
+		sb.append("]");
+		return sb;
 	}
 	
 	/**
@@ -250,13 +307,30 @@ public class WorkFlowController extends GenericController {
 		return flowRecordService.findFlowRecord(params, page, limit, false);
 	}
 	
+	@RequestMapping("step/detail")
+	@ResponseBody
+	public List<FlowRecordVO> queryOperationDetail(String busId, String code) {
+		
+		return flowRecordService.findFlowRecordByBusinessId(busId, null, code, null, false);
+	}
+	
 	@RequestMapping("detail/index")
-	public String queryFlowRecordDetail(String id, Model model) {
+	public String queryFlowRecordDetail(String id, String back, Model model) {
 		
 		FlowRecord flowRecord = flowRecordService.get(id);
-		flowRecord = flowRecordService.queryLastFlowRecord(flowRecord.getBusId(), flowRecord.getBusType());
+		flowRecord = flowRecordService.queryLastFlowRecord(flowRecord.getBusId(), flowRecord.getBusType(),flowRecord.getProcessInstanceId());
 		List<FrameWorkResource> frameWorkResources = frameWorkService
 		        .getParentFrameWorkResourceByCode(flowRecord.getAppNodeId(), flowRecord.getOperationCode(), true);
+		
+		if (StringUtils.isNotBlank(flowRecord.getLinkProcessInstanceId())) {
+			FlowRecord linkFlowRecord = flowRecordService.queryLastFlowRecord(flowRecord.getBusId(), flowRecord.getBusType(), flowRecord.getLinkProcessInstanceId());
+			if (linkFlowRecord != null) {
+				model.addAttribute("linkFlowRecordId", linkFlowRecord.getId());
+			}
+		}
+		if (StringUtils.isNotBlank(back) && StringUtils.equals(back, "yes")) {
+			model.addAttribute("back", "yes");
+		}
 		List<FlowRecordSeq> seqs = new ArrayList<FlowRecordSeq>();
 		Integer index = 1;
 		FlowRecordSeq seq = new FlowRecordSeq();
@@ -291,7 +365,7 @@ public class WorkFlowController extends GenericController {
 		seqs.add(seq);
 		model.addAttribute("seqs", seqs);
 		List<FlowRecordVO> records = flowRecordService.findFlowRecordByBusinessId(flowRecord.getBusId(),
-		        flowRecord.getBusType(), false);
+		        flowRecord.getBusType(),flowRecord.getProcessInstanceId(), false);
 		model.addAttribute("records", records);
 		return WORKFLOW_DETAIL_INDEX;
 	}

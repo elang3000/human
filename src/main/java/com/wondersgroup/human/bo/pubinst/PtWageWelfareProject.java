@@ -1,10 +1,14 @@
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.pubinst.base.InstBaseWageWelfareProject;
 /**
@@ -18,6 +22,8 @@ import com.wondersgroup.human.bo.pubinst.base.InstBaseWageWelfareProject;
  */
 @Entity
 @Table(name = "C33")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtWageWelfareProject  extends InstBaseWageWelfareProject<PtWageWelfareProject> {
 
 	private static final long serialVersionUID = 4778028239040676324L;

@@ -17,6 +17,9 @@ package com.wondersgroup.human.bo.analysis;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.wondersgroup.framework.core.bo.GenericEntity;
 
 /** 
@@ -28,11 +31,25 @@ import com.wondersgroup.framework.core.bo.GenericEntity;
  * @see       [相关类/方法]
  * @since     [产品/模块版本] 
  */
-@Entity(name = "HUMAN_GENERAL_QUERY")
+@Entity
+@Table(name = "HUMAN_GENERAL_QUERY")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class GeneralQuery extends GenericEntity {
 
 	private static final long serialVersionUID = -6124402418745571238L;
 
+	// 公务员分类
+	public static final String CATEGORY_GOV = "G";
+	
+	// 事业单位分类
+	public static final String CATEGORY_INS = "I";
+	
+	// 国企分类
+	public static final String CATEGORY_PUB = "P";
+	
+	// 社工分类
+	public static final String CATEGORY_SOC = "S";
+		
 	/**
 	 * @fieldName: queryName
 	 * @fieldType: java.lang.String
@@ -42,7 +59,7 @@ public class GeneralQuery extends GenericEntity {
 	private String name;
 	
 	/**
-	 * @fieldName: queryName
+	 * @fieldName: code
 	 * @fieldType: java.lang.String
 	 * @Description: 查询条件 name 用于查询条件 格式: xx(类).查询值name,name值
 	 */
@@ -50,7 +67,7 @@ public class GeneralQuery extends GenericEntity {
 	private String code;
 	
 	/**
-	 * @fieldName: queryName
+	 * @fieldName: codeId
 	 * @fieldType: java.lang.String
 	 * @Description: id值
 	 */
@@ -58,7 +75,7 @@ public class GeneralQuery extends GenericEntity {
 	private String codeId;
 	
 	/**
-	 * @fieldName: queryName
+	 * @fieldName: type
 	 * @fieldType: java.lang.String
 	 * @Description: 查询条件类型（单级下拉框，多级下拉框，文本，数字，时间范围）
 	 */
@@ -66,7 +83,7 @@ public class GeneralQuery extends GenericEntity {
 	private String type;
 	
 	/**
-	 * @fieldName: queryName
+	 * @fieldName: url
 	 * @fieldType: java.lang.String
 	 * @Description: 查询条件类型为下拉框时对应的URL地址
 	 */
@@ -74,12 +91,20 @@ public class GeneralQuery extends GenericEntity {
 	private String url;
 	
 	/**
-	 * @fieldName: queryName
+	 * @fieldName: queryOrder
 	 * @fieldType: java.lang.String
-	 * @Description: 查询条件类型为下拉框时对应的URL地址
+	 * @Description: 查询条件类型为下拉框时顺序
 	 */
 	@Column(name = "QUERY_ORDER")
 	private Integer queryOrder;
+	
+	/**
+	 * @fieldName: category
+	 * @fieldType: java.lang.String
+	 * @Description: 查询条件类型 category:G公务员，I事业单位，P国企，S社工
+	 */
+	@Column(name = "QUERY_CATEGORY")
+	private String category;
 
 	/**
 	 * @return the name
@@ -149,5 +174,33 @@ public class GeneralQuery extends GenericEntity {
 	 */
 	public void setCodeId(String codeId) {
 		this.codeId = codeId;
+	}
+
+	/**
+	 * @return the queryOrder
+	 */
+	public Integer getQueryOrder() {
+		return queryOrder;
+	}
+
+	/**
+	 * @param queryOrder the queryOrder to set
+	 */
+	public void setQueryOrder(Integer queryOrder) {
+		this.queryOrder = queryOrder;
+	}
+
+	/**
+	 * @return the category
+	 */
+	public String getCategory() {
+		return category;
+	}
+
+	/**
+	 * @param category the category to set
+	 */
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

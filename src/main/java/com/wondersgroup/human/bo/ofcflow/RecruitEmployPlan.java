@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +32,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.wondersgroup.framework.core.bo.GenericEntity;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
@@ -47,7 +50,9 @@ import com.wondersgroup.framework.workflow.bo.FlowRecord;
  */
 @Entity
 @Table(name = "HUMAN_RECRUIT_EMPLOY_PLAN")
-public class RecruitEmployPlan extends GenericEntity {
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class RecruitEmployPlan extends BaseFlowOrgFormation<RecruitEmployPlan> {
 	
 	private static final long serialVersionUID = -2045142251901326764L;
 	
@@ -63,6 +68,7 @@ public class RecruitEmployPlan extends GenericEntity {
 	// 待提交招录计划
 	@Transient
 	public final static Integer RECRUIT_EMPLOY_PLAN_STATE_POST = 0;
+	
 	// 待上级单位初审
 	@Transient
 	public final static Integer RECRUIT_EMPLOY_PLAN_SUPERIOR_TRIAL = 1;
@@ -123,21 +129,21 @@ public class RecruitEmployPlan extends GenericEntity {
 	 * 权限代码map
 	 * key：权限代码，value：业务状态
 	 */
-	public final static Map<String,Integer> power = new HashMap<>();
+	public final static Map<String, Integer> power = new HashMap<>();
 	
 	static {
-		power.put("REPORT_EMPLOY_PLAN",RECRUIT_EMPLOY_PLAN_STATE_POST);
+		power.put("REPORT_EMPLOY_PLAN", RECRUIT_EMPLOY_PLAN_STATE_POST);
 		power.put("REPORT_EMPLOY_PLAN_SUPERIOR_TRIAL", RECRUIT_EMPLOY_PLAN_SUPERIOR_TRIAL);
 		power.put("FIRST_APPROVAL_EMPLOY_PLAN", RECRUIT_EMPLOY_PLAN_FIRST_TRIAL_1);
-		power.put( "SECOND_APPROVAL_EMPLOY_PLAN",RECRUIT_EMPLOY_PLAN_FIRST_TRIAL_2);
-		power.put( "THIRD_APPROVAL_EMPLOY_PLAN",RECRUIT_EMPLOY_PLAN_FIRST_TRIAL_3);
+		power.put("SECOND_APPROVAL_EMPLOY_PLAN", RECRUIT_EMPLOY_PLAN_FIRST_TRIAL_2);
+		power.put("THIRD_APPROVAL_EMPLOY_PLAN", RECRUIT_EMPLOY_PLAN_FIRST_TRIAL_3);
 		power.put("FOUTH_APPROVAL_EMPLOY_PLAN", RECRUIT_EMPLOY_PLAN_FIRST_TRIAL_4);
 		power.put("FINAL_APPROVAL_EMPLOY_PLAN", RECRUIT_EMPLOY_PLAN_AREA_OGR);
-		power.put( "REPORT_EMPLOY_PLAN_POST",RECRUIT_EMPLOY_PLAN_CONFIRM);
+		power.put("REPORT_EMPLOY_PLAN_POST", RECRUIT_EMPLOY_PLAN_CONFIRM);
 		
 		// 职位上报权限代码
-		power.put("REPORT_EMPLOY_PLAN_POST_DOING",RECRUIT_EMPLOY_PLAN_POST );
-		power.put("RECRUIT_EMPLOY_POST_SUPERIOR_TRIAL",RECRUIT_EMPLOY_POST_SUPERIOR_TRIAL );
+		power.put("REPORT_EMPLOY_PLAN_POST_DOING", RECRUIT_EMPLOY_PLAN_POST);
+		power.put("RECRUIT_EMPLOY_POST_SUPERIOR_TRIAL", RECRUIT_EMPLOY_POST_SUPERIOR_TRIAL);
 		power.put("FIRST_APPROVAL_EMPLOY_PLAN_POST", RECRUIT_EMPLOY_PLAN_POST_FIRST_TRIAL_1);
 		power.put("SECOND_APPROVAL_EMPLOY_PLAN_POST", RECRUIT_EMPLOY_PLAN_POST_FIRST_TRIAL_2);
 		power.put("THIRD_APPROVAL_EMPLOY_PLAN_POST", RECRUIT_EMPLOY_PLAN_POST_FIRST_TRIAL_3);
@@ -168,38 +174,6 @@ public class RecruitEmployPlan extends GenericEntity {
 	 */
 	@OneToOne
 	private OrganNode employOrgan;
-	
-	/**
-	 * @fieldName: allowWeaveNum
-	 * @fieldType: Integer
-	 * @Description: 核定编制数
-	 */
-	@Column(name = "ALLOW_WEAVE_NUM")
-	private Integer allowWeaveNum;
-	
-	/**
-	 * @fieldName: realNum
-	 * @fieldType: Integer
-	 * @Description: 实有人数
-	 */
-	@Column(name = "REAL_NUM")
-	private Integer realNum;
-	
-	/**
-	 * @fieldName: thisYearLackWeaveNum
-	 * @fieldType: Integer
-	 * @Description: 机构缺编数
-	 */
-	@Column(name = "THIS_YEAR_LACK_WEAVE_NUM")
-	private Integer thisYearLackWeaveNum;
-	
-	/**
-	 * @fieldName: chiefLackWeaveNum
-	 * @fieldType: Integer
-	 * @Description: 处级实职缺编人数
-	 */
-	@Column(name = "CHIEF_LACK_WEAVE_NUM")
-	private Integer chiefLackWeaveNum;
 	
 	/**
 	 * @fieldName: planCutNum
@@ -371,35 +345,6 @@ public class RecruitEmployPlan extends GenericEntity {
 		this.employOrgan = employOrgan;
 	}
 	
-	public Integer getAllowWeaveNum() {
-		
-		return allowWeaveNum;
-	}
-	
-	public void setAllowWeaveNum(Integer allowWeaveNum) {
-		
-		this.allowWeaveNum = allowWeaveNum;
-	}
-	
-	public Integer getRealNum() {
-		
-		return realNum;
-	}
-	
-	public void setRealNum(Integer realNum) {
-		
-		this.realNum = realNum;
-	}
-	
-	public Integer getThisYearLackWeaveNum() {
-		
-		return thisYearLackWeaveNum;
-	}
-	
-	public void setThisYearLackWeaveNum(Integer thisYearLackWeaveNum) {
-		
-		this.thisYearLackWeaveNum = thisYearLackWeaveNum;
-	}
 	
 	public Integer getPlanCutNum() {
 		
@@ -531,16 +476,6 @@ public class RecruitEmployPlan extends GenericEntity {
 		this.personType = personType;
 	}
 	
-	public Integer getChiefLackWeaveNum() {
-		
-		return chiefLackWeaveNum;
-	}
-	
-	public void setChiefLackWeaveNum(Integer chiefLackWeaveNum) {
-		
-		this.chiefLackWeaveNum = chiefLackWeaveNum;
-	}
-	
 	public Integer getFirstEmployNum() {
 		
 		return firstEmployNum;
@@ -580,5 +515,4 @@ public class RecruitEmployPlan extends GenericEntity {
 		
 		this.employNum = employNum;
 	}
-	
 }

@@ -83,7 +83,7 @@ public class HumanKeepRecordServiceImpl extends GenericServiceImpl<HumanKeepReco
 			s.add(Restrictions.like("s.name", param.getName(), MatchMode.ANYWHERE));
 		}
 		if (StringUtils.isNotBlank(param.getCardNo())) {// 身份证
-			s.add(Restrictions.like("s.cardNo",param.getCardNo(), MatchMode.ANYWHERE));
+			s.add(Restrictions.eq("s.cardNo",param.getCardNo()));
 		}
 		if (StringUtils.isNotBlank(param.getRecordType())) {// 事项管理
 			detachedcriteria.add(Restrictions.eq("recordType.id", param.getRecordType()));

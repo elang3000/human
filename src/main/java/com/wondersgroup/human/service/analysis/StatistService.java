@@ -46,4 +46,24 @@ public interface StatistService {
 	 * @return: Map<String,Integer>
 	 */
 	Map<String,Integer> statistServantTopEducation(List<String> organNodeIds);
+	
+	/**
+	 * 最高学历毕业学校学校属性（是否985，是否211，是否双一流，是否普通）
+	 * @Title: statistServantSchoolNature 
+	 * @Description: TODO
+	 * @param organNodeIds
+	 * @return
+	 * @return: Map<String,Integer>
+	 */
+	public Map<String, Integer> statistServantSchoolNature(List<String> organNodeIds);
+	
+	/**
+	 * 是否上海本地人口（身份证号码310开头）
+	 * @Title: statistServantisshanghailocal 
+	 * @Description: TODO
+	 * @param organNodeIds
+	 * @return
+	 * @return: Map<String,Integer>
+	 */
+	public Map<String, Integer> statistServantisshanghailocal(List<String> organNodeIds);
 }

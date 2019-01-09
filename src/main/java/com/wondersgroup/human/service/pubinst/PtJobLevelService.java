@@ -53,4 +53,12 @@ public interface PtJobLevelService extends GenericService<PtJobLevel>{
 	 * @see com.wondersgroup.framework.core.service.GenericService#delete(com.wondersgroup.framework.core.bo.GenericEntity)
 	 */
 	void delete(PtJobLevel entity);
+	/**
+	 * 
+	 * @Title: getAllPost
+	 * @Description: 查询人员现行职级
+	 * @param entity 
+	 * @see com.wondersgroup.framework.core.service.GenericService#getAllPost(com.wondersgroup.framework.core.bo.GenericEntity)
+	 */
+	public PtJobLevel getJobLevelByServantId(String id);
 }

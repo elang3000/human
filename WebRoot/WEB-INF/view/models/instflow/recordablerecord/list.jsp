@@ -38,6 +38,47 @@
 					</smart:tabPanelParent>
 				</smart:gridRow>
 				<smart:gridRow>
+					<smart:fieldSet title="查询条件" style="margin-top: 5px;" color="blue">
+						<smart:form id="searchForm">
+							<smart:gridRow>
+								<smart:gridColumn colPart="4">
+									<smart:textInput labelName="姓名：" autocomplete="off"
+										placeholder="姓名" name="name">
+									</smart:textInput>
+								</smart:gridColumn>
+
+								<smart:gridColumn colPart="4">
+									<smart:textInput labelName="身份证号：" autocomplete="off"
+										placeholder="身份证号" name="cardNo">
+									</smart:textInput>
+								</smart:gridColumn>
+								
+							</smart:gridRow>
+
+							<smart:gridRow>
+
+								<smart:gridColumn colPart="4" colOffset="8">
+									<smart:buttonGroup container="true">
+										<smart:button size="sm" method="search" title="查询"
+											theme="primary">
+											<smart:icon icon="search"></smart:icon>&nbsp;查询
+				  				 </smart:button>
+										<smart:button size="sm" method="history" title="重置"
+											theme="primary" type="reset">
+											<smart:icon icon="history"></smart:icon>&nbsp;重置
+				   				</smart:button>
+				   						 <shiro:hasPermission name="H002005004"> 
+			   						    <smart:button size="sm" method="add" title="新增离退人员备案">
+										    <smart:icon icon="plus">&nbsp;新增离退人员备案</smart:icon>
+									    </smart:button>
+								     </shiro:hasPermission> 
+									</smart:buttonGroup>
+								</smart:gridColumn>
+							</smart:gridRow>
+						</smart:form>
+					</smart:fieldSet>
+				</smart:gridRow>
+				<%-- <smart:gridRow>
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form>
 							<smart:gridColumn colPart="4">
@@ -69,25 +110,21 @@
 						</smart:gridColumn>
 					</smart:fieldSet>
 					
-				</smart:gridRow>
+				</smart:gridRow> --%>
 				<smart:gridRow colSpace="5">
-					<smart:gridColumn colPart="12" deviceType="md">
-						<smart:table id="navigationList" url="workflow/doing/page?busType=${busType}"
-							height="full-315" text="未找到有效数据！">
+					<smart:gridColumn>
+						<smart:table id="navigationList" url="instflow/recordablerecord/pageList" height="full-235" text="未找到用户数据！" page="true">
 							<tr>
-								<smart:tableItem field="sourceOrganNode" width=".1" sort="true">来文单位</smart:tableItem>
-								<smart:tableItem field="createTime" width=".1" sort="true">来文时间</smart:tableItem>
-								<smart:tableItem field="targetOrganNode" width=".1" templet="topTpl">办理单位</smart:tableItem>
-								<smart:tableItem field="targetSecurityUser" width=".1" templet="downTpl">办理人员</smart:tableItem>
-								<smart:tableItem field="busName" width=".2">业务类型</smart:tableItem>
-								<smart:tableItem field="ofcFlowDescription" width=".2">业务描述</smart:tableItem>
-								<smart:tableItem align="center" width=".2" toolbar="navListToolBar">操作</smart:tableItem>
+								<smart:tableItem field="name" width=".2" sort="true">姓名</smart:tableItem>
+								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
+								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
+								<smart:tableItem field="departName" width=".2">单位名称</smart:tableItem>
+								<smart:tableItem field="recodeWay" width=".2" sort="true">备案类型</smart:tableItem>
+								<smart:tableItem align="center" fixed="right" unresize="true"
+									toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
-							<smart:tableToolBar id="navListToolBar" >
-								<smart:tableToolBtn theme="danger" event="shenpi" title="审批离退">
-									<smart:icon icon="edit">审批离退</smart:icon>
-								</smart:tableToolBtn>
-								<smart:tableToolBtn theme="normal" event="viewFlowRecord" title="查看流程记录">
+							<smart:tableToolBar id="navListToolBar">
+								<smart:tableToolBtn theme="warm" event="view" title="查看">
 									<smart:icon icon="eye"></smart:icon>
 								</smart:tableToolBtn>
 							</smart:tableToolBar>
@@ -101,7 +138,15 @@
 		<smart:utils/>
 		<smart:tableScriptAction tableId="navigationList" checkbox="true"
 			sort="true" rowEdit="true">
-			shenpi : function(data) {
+			view : function(data) {
+					smart.show({
+					title : '人员离退详情',
+					size : 'full',
+					url : 'instflow/recordablerecord/recordDetail?id='+data.data.id,
+					scrollbar : false,
+					});
+				}
+			<%-- shenpi : function(data) {
 				<c:if test="${busType eq 'RecordableRecord'}">
 					var url = "instflow/recordablerecord/queryRegister";
 				</c:if>
@@ -112,7 +157,7 @@
 					params:{id:data.data.id},
 					scrollbar : false
 				});
-			}
+			} --%>
 			,viewFlowRecord : function(record) {
 				smart.show({
 					title : '查看流程记录',

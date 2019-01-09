@@ -84,7 +84,7 @@
 											</smart:gridRow>
 											<smart:gridRow colSpace="5">
 												<smart:gridColumn>
-													<smart:table id="navigationList_ofcList" url="company/outMgrPageList" text="未找到用户数据！" page="true">
+													<smart:table id="navigationList_ofcList" url="company/outMgrPageList" height="full-240" text="未找到用户数据！" page="true">
 														<tr>
 														    <%-- 
 														    <smart:tableItem type="hidden" field="swId"></smart:tableItem>

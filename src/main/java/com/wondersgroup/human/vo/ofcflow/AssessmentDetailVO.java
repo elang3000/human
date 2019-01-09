@@ -36,7 +36,7 @@ public class AssessmentDetailVO {
 	
 	public AssessmentDetailVO(AssessmentDetail assessmentDetail) {
 		this.id = assessmentDetail.getId();
-		this.cardNo = assessmentDetail.getServant().getCardNo();
+		this.cardNo = assessmentDetail.getServant().getCardNoView();
 		this.orgName = assessmentDetail.getServant().getDepartName();
 		this.name = assessmentDetail.getServant().getName();
 		this.remarks = assessmentDetail.getRemarks();

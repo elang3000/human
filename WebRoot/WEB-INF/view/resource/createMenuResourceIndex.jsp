@@ -56,8 +56,8 @@
 								<div class="layui-form-item">
 									<label class="layui-form-label">提供快捷菜单</label>
 									<div class="layui-input-block">
-										<input type="radio" name="isShortcut" value="Y" title="是"> 
-										<input type="radio" name="isShortcut" value="N" title="否">
+										<input type="radio" name="isShortcut" value="true" title="是"> 
+										<input type="radio" name="isShortcut" value="false" title="否">
 									</div>
 								</div>
 							</smart:gridColumn>

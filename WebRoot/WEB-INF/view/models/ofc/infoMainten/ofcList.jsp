@@ -1,7 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="smart"
-	uri="http://smart.wondersgroup.com/page/component"%>
+<%  
+String path = request.getContextPath();  
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
+%> 
+<%@ taglib prefix="smart" uri="http://smart.wondersgroup.com/page/component"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>	
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,44 +23,35 @@
 			</smart:cardHead>
 			<smart:cardBody>
 				<smart:gridRow>
-					<smart:gridColumn colPart="3">
-						<smart:card>
-							<smart:cardHead>
-								<blockquote class="layui-elem-quote" style="padding:5px;">
-									<div>&nbsp;&nbsp;&nbsp;组织结构树</div>
-								</blockquote>
-							</smart:cardHead>
-							<smart:cardBody>
-								<script>
-									function loadListById(event, treeId, treeNode) {
-										$('.searchForm button[type="reset"]').click();//先重置表单
-										$(".searchForm input[name='departId']").val(treeNode.id);//赋值当前选中单位id
-										$('.searchForm button[search_btn]').click();//查询
-							        };
-								</script>
-								<smart:customDynamicTree id="treeArea" url="org/orgRelations" style="border:1px solid #e6e6e6;" cutSize="155" customEvent="true" funcType="onClick" funcName="loadListById"/>
-							</smart:cardBody>
-						</smart:card>
-					</smart:gridColumn>
-					<smart:gridColumn colPart="9">
+					<smart:gridColumn colPart="12">
 						<smart:gridRow>
 							<div class="layui-card">
 								<div class="layui-card-body">
 									<div class="layui-tab">
 										<ul class="layui-tab-title">
 											<li class="layui-this">在职人员</li>
-											<li>历史人员</li>
+											<shiro:hasPermission name="H001005001">
+												<li>历史人员</li>
+											</shiro:hasPermission>
 										</ul>
-										<div class="layui-tab-content">
+										<div class="layui-tab-content" style="padding:0px">
 											<div class="layui-tab-item layui-show">
 											<smart:gridRow>
 												<smart:fieldSet title="查询条件" color="blue">
 													<smart:form id="searchForm_ofcList" clazz="searchForm">
 														<smart:gridRow>
 															<smart:gridColumn colPart="4">
-																<smart:textInput labelName="姓名：" autocomplete="off" placeholder="输入姓名" name="name"></smart:textInput>
-																<smart:textInput type="hidden" name="departId"></smart:textInput>
+																<smart:linkSelect labelName="所属区域：" id="organTreeIdTag" display="block" />
 															</smart:gridColumn>
+															<smart:gridColumn colPart="4">
+																<smart:linkSelect labelName="所属单位：" id="organNodeIdTag" display="block" />
+															</smart:gridColumn>
+															<smart:gridColumn colPart="4">
+																<smart:textInput labelName="姓名：" autocomplete="off" placeholder="输入姓名" name="name"></smart:textInput>
+															</smart:gridColumn>
+															
+														</smart:gridRow>
+														<smart:gridRow>
 															<smart:gridColumn colPart="4">
 																<smart:textInput labelName="身份证号：" autocomplete="off" placeholder="输入身份证号" name="cardNo"></smart:textInput>
 															</smart:gridColumn>
@@ -64,9 +59,7 @@
 																<smart:singleSelect labelName="性别：" display="block" name="sex.id" url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true">
 																</smart:singleSelect>
 															</smart:gridColumn>
-														</smart:gridRow>
-														<smart:gridRow>
-															<smart:gridColumn colPart="12">
+															<smart:gridColumn colPart="4">
 																<smart:buttonGroup container="true" align="right">
 																	<smart:button size="sm" method="search_ofcList" title="查询"
 																		theme="primary" other="search_btn">
@@ -76,29 +69,15 @@
 																		theme="primary" type="reset">
 																		<smart:icon icon="history"></smart:icon>&nbsp;重置
 										   						</smart:button>
-										   						
-										   						<%-- <smart:button size="sm" method="check" title="常用查询方案"
-																		theme="normal">
-																		<smart:icon icon="plus"></smart:icon>&nbsp;新增方案
-										   						</smart:button>
-																	<smart:button size="sm" method="check" title="数据校验">
-																		<smart:icon icon="check"></smart:icon>&nbsp;数据校验
-									   							</smart:button>
-																	<smart:button size="sm" method="check" title="变更部门"
-																		theme="warm">
-																		<smart:icon icon="info"></smart:icon>&nbsp;变更部门
-										   						</smart:button> --%>
-										   						
 																</smart:buttonGroup>
 															</smart:gridColumn>
-															
 														</smart:gridRow>
 													</smart:form>
 												</smart:fieldSet>
 											</smart:gridRow>
 											<smart:gridRow colSpace="5">
 												<smart:gridColumn>
-													<smart:table id="navigationList_ofcList" url="ofc/pageList" text="未找到用户数据！" height="full-310" page="true" doneCallBack="fixedCol">
+													<smart:table id="navigationList_ofcList" url="ofc/ofcPageList" text="未找到用户数据！" height="full-295" page="true" doneCallBack="fixedCol">
 														<tr>
 															<smart:tableItem isCheckbox="true">全选</smart:tableItem>
 															<smart:tableItem field="name" width="120" sort="true">姓名</smart:tableItem>
@@ -113,9 +92,11 @@
 																unresize="true" toolbar="navListToolBar_ofcList">操作</smart:tableItem>
 														</tr>
 														<smart:tableToolBar id="navListToolBar_ofcList">
-															<smart:tableToolBtn theme="warm" event="edit_ofcList" title="编辑">
-																<smart:icon icon="edit"></smart:icon>
-															</smart:tableToolBtn>
+															<shiro:hasPermission name="H001005002">
+																<smart:tableToolBtn theme="warm" event="edit_ofcList" title="编辑">
+																	<smart:icon icon="edit"></smart:icon>
+																</smart:tableToolBtn>
+															</shiro:hasPermission>	
 														</smart:tableToolBar>
 													</smart:table>
 												</smart:gridColumn>
@@ -127,9 +108,16 @@
 													<smart:form id="searchForm_ofcOldList" clazz="searchForm" >
 														<smart:gridRow>
 															<smart:gridColumn colPart="4">
-																<smart:textInput labelName="姓名：" autocomplete="off" placeholder="输入姓名" name="name"></smart:textInput>
-																<smart:textInput type="hidden" name="departId"></smart:textInput>
+																<smart:linkSelect labelName="所属区域：" id="organTreeIdTagOld" display="block" />
 															</smart:gridColumn>
+															<smart:gridColumn colPart="4">
+																<smart:linkSelect labelName="所属单位：" id="organNodeIdTagOld" display="block" />
+															</smart:gridColumn>
+															<smart:gridColumn colPart="4">
+																<smart:textInput labelName="姓名：" autocomplete="off" placeholder="输入姓名" name="name"></smart:textInput>
+															</smart:gridColumn>
+														</smart:gridRow>
+														<smart:gridRow>
 															<smart:gridColumn colPart="4">
 																<smart:textInput labelName="身份证号：" autocomplete="off" placeholder="输入身份证号" name="cardNo"></smart:textInput>
 															</smart:gridColumn>
@@ -137,9 +125,7 @@
 																<smart:singleSelect labelName="性别：" display="block" name="sex.id" url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true">
 																</smart:singleSelect>
 															</smart:gridColumn>
-														</smart:gridRow>
-														<smart:gridRow>
-															<smart:gridColumn colPart="12">
+															<smart:gridColumn colPart="4">
 																<smart:buttonGroup container="true" align="right">
 																	<smart:button size="sm" method="search_ofcOldList" title="查询"
 																		theme="primary" other="search_btn">
@@ -157,7 +143,7 @@
 											</smart:gridRow>
 											<smart:gridRow colSpace="5">
 												<smart:gridColumn>
-													<smart:table id="navigationList_ofcOldList" url="ofc/oldPageList" height="full-310" text="未找到用户数据！" page="true" doneCallBack="fixedCol">
+													<smart:table id="navigationList_ofcOldList" url="ofc/oldPageList" height="full-295" text="未找到用户数据！" page="true" doneCallBack="fixedCol">
 														<tr>
 															<smart:tableItem isCheckbox="true">全选</smart:tableItem>
 															<smart:tableItem field="name" width="120" sort="false">姓名</smart:tableItem>
@@ -190,12 +176,28 @@
 			</smart:cardBody>
 		</smart:card>
 	</smart:grid>
-	<smart:scriptHead models="table,form,layer,element">
+	<smart:scriptHead models="table,form,layer,element,linkSelect">
+		var linkOrganNodeSelect = function(value) {
+			var params = {};
+			params.organTreeId = value;
+			organNodeIdTag.refresh(params);
+		}
+		<smart:initLinkSelect id="organTreeIdTag" name="organTreeId" tips="请选择所属区域" url="system/organ/tree/query" linkFunction="linkOrganNodeSelect" />
+		<smart:initLinkSelect id="organNodeIdTag" name="organNodeId" tips="请选择所属单位" url="system/organ/node/query" />
+		
+		var linkOrganNodeSelectOld = function(value) {
+			var params = {};
+			params.organTreeId = value;
+			organNodeIdTagOld.refresh(params);
+		}
+		<smart:initLinkSelect id="organTreeIdTagOld" name="organTreeIdOld" tips="请选择所属区域" url="system/organ/tree/query" linkFunction="linkOrganNodeSelectOld" />
+		<smart:initLinkSelect id="organNodeIdTagOld" name="organNodeIdOld" tips="请选择所属单位" url="system/organ/node/query" />
+		
 		<smart:utils />
 		<smart:tableScriptAction tableId="navigationList_ofcList" checkbox="true"
 			sort="false" rowEdit="true">
 			edit_ofcList : function(data) {
-				window.location.href='ofc/main?id='+data.data.id;
+				window.location.href='<%=basePath %>ofc/main?id='+data.data.id;
 			}
 		</smart:tableScriptAction>
 		<smart:buttonScriptAction>
@@ -221,7 +223,7 @@
 		<smart:tableScriptAction tableId="navigationList_ofcOldList" checkbox="true"
 			sort="false" rowEdit="true">
 			edit_ofcOldList : function(data) {
-				window.location.href='ofc/main?id='+data.data.id;
+				window.location.href='<%=basePath %>ofc/main?id='+data.data.id;
 			}
 		</smart:tableScriptAction>
 	</smart:scriptHead>

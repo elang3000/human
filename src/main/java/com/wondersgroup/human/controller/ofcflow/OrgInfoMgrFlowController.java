@@ -52,6 +52,9 @@ import com.wondersgroup.human.service.ofcflow.OrgInfoMgrFlowService;
 import com.wondersgroup.human.service.organization.OrgInfoHistoryService;
 import com.wondersgroup.human.service.organization.OrgInfoService;
 import com.wondersgroup.human.vo.ofcflow.OrgInfoMgrFlowVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: OrgInfoMgrFlowController
@@ -148,7 +151,7 @@ public class OrgInfoMgrFlowController extends GenericController {
 	@RequestMapping("/adjustPage")
 	public String adjustPage(Model model, String organId, String id) {
 		
-		if (StringUtils.isNoneBlank(id)) {
+		if (StringUtils.isNotBlank(id)) {
 			OrgInfoMgrFlow orgInfoMgrFlow = orgInfoMgrFlowService.get(id);
 			model.addAttribute("orgInfoMgrFlow", orgInfoMgrFlow);
 			
@@ -194,7 +197,7 @@ public class OrgInfoMgrFlowController extends GenericController {
 		
 		// 改操作为机构维护类型中 新增操作,并且默认流程状态为待提交
 		temp.setOptionType(
-				dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAM_ORGINFO_MAINTIAN_TYPE));
+				dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_ORGINFO_MAINTIAN_TYPE));
 		temp.setStatus(OrgInfoMgrFlow.STATUS_ORG_INFO_MGR_FLOW_STATE);
 		AjaxResult result = new AjaxResult(true);
 		try {
@@ -223,13 +226,15 @@ public class OrgInfoMgrFlowController extends GenericController {
 	 * @param temp
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑机构信息调整申请", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/adjustSave")
 	public AjaxResult adjustSave(OrgInfoMgrFlow temp) {
 		
 		// 改操作为机构维护类型中 调整操作,并且默认流程状态为待提交
 		temp.setOptionType(
-				dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_HUMAM_ORGINFO_MAINTIAN_TYPE));
+				dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_HUMAN_ORGINFO_MAINTIAN_TYPE));
 		temp.setStatus(OrgInfoMgrFlow.STATUS_ORG_INFO_MGR_FLOW_STATE);
 		AjaxResult result = new AjaxResult(true);
 		try {
@@ -260,12 +265,14 @@ public class OrgInfoMgrFlowController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "提交机构信息新增申请流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/applySubmit")
 	public AjaxResult applySubmit(OrgInfoMgrFlow temp, HttpServletRequest request) {
 		
 		temp.setOptionType(
-				dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAM_ORGINFO_MAINTIAN_TYPE));
+				dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_ORGINFO_MAINTIAN_TYPE));
 		AjaxResult result = new AjaxResult(true);
 		try {
 			if (StringUtils.isBlank(temp.getId())) {
@@ -303,12 +310,14 @@ public class OrgInfoMgrFlowController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "提交机构信息调整申请流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/adjustSubmit")
 	public AjaxResult adjustSubmit(OrgInfoMgrFlow temp, HttpServletRequest request) {
 		
 		temp.setOptionType(
-				dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_HUMAM_ORGINFO_MAINTIAN_TYPE));
+				dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_HUMAN_ORGINFO_MAINTIAN_TYPE));
 		AjaxResult result = new AjaxResult(true);
 		try {
 			if (StringUtils.isBlank(temp.getId())) {
@@ -338,6 +347,8 @@ public class OrgInfoMgrFlowController extends GenericController {
 		return result;
 	}
 	
+	@Log(title = "审批机构信息新增申请流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/auditApplyFlow")
 	public AjaxResult auditApplyFlow(OrgInfoMgrFlow temp, HttpServletRequest request) {
@@ -360,6 +371,9 @@ public class OrgInfoMgrFlowController extends GenericController {
 		return result;
 	}
 	
+	
+	@Log(title = "审批机构信息调整申请流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/auditAdjustFlow")
 	public AjaxResult auditAdjustFlow(OrgInfoMgrFlow temp, HttpServletRequest request) {
@@ -388,6 +402,8 @@ public class OrgInfoMgrFlowController extends GenericController {
 	 * @param temp 流程信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除机构信息申请", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/deleteApply")
 	public AjaxResult delete(String id) {
@@ -507,6 +523,8 @@ public class OrgInfoMgrFlowController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<ServantVO>
 	 */
+	@Log(title = "查询机构信息维护申请", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<OrgInfoMgrFlowVO> pageList(OrgInfoMgrFlow orgInfoMgrFlow, Integer limit, Integer page,

@@ -48,11 +48,13 @@ import com.wondersgroup.human.bo.organization.OrgFormation;
 import com.wondersgroup.human.bo.organization.OrgFormationHistory;
 import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.service.ofcflow.OrgFormationMgrFlowService;
-import com.wondersgroup.human.service.ofcflow.OrgInfoMgrFlowService;
 import com.wondersgroup.human.service.organization.OrgFormationHistoryService;
 import com.wondersgroup.human.service.organization.OrgFormationService;
 import com.wondersgroup.human.service.organization.OrgInfoService;
 import com.wondersgroup.human.vo.ofcflow.OrgFormationMgrFlowVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: OrgFormationMgrFlowController
@@ -66,9 +68,6 @@ import com.wondersgroup.human.vo.ofcflow.OrgFormationMgrFlowVO;
 @RequestMapping("/orgFormationFlow")
 @Controller
 public class OrgFormationMgrFlowController extends GenericController {
-	
-	@Autowired
-	private OrgInfoMgrFlowService orgInfoMgrFlowService;
 	
 	@Autowired
 	private OrgFormationMgrFlowService orgFormationMgrFlowService;
@@ -127,7 +126,8 @@ public class OrgFormationMgrFlowController extends GenericController {
 			
 			OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id",
 					orgFormationMgrFlow.getOrgInfo().getId());
-			
+			if (orgFormation == null)
+				orgFormation = new OrgFormation();
 			model.addAttribute("orgFormationMgrFlow", orgFormationMgrFlow);
 			model.addAttribute("orgFormation", orgFormation);
 		} else {
@@ -142,7 +142,7 @@ public class OrgFormationMgrFlowController extends GenericController {
 			// 复制到调整申请表
 			OrgFormationMgrFlow orgFormationMgrFlow = new OrgFormationMgrFlow();
 			BeanUtils.copyProperties(orgFormation, orgFormationMgrFlow, new String[] {
-					"id"
+					"id","planPath"
 			});
 			
 			orgFormationMgrFlow.setOrgInfo(orgInfo);
@@ -158,6 +158,8 @@ public class OrgFormationMgrFlowController extends GenericController {
 	 * @param temp
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑行政编制调整申请", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/adjustSave")
 	public AjaxResult adjustSave(OrgFormationMgrFlow temp) {
@@ -166,10 +168,10 @@ public class OrgFormationMgrFlowController extends GenericController {
 		OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", temp.getOrgInfo().getId());
 		if (orgFormation == null) {
 			temp.setOptionType(
-					dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAM_ORGFORMATION_MAINTIAN_TYPE));
+					dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_ORGFORMATION_MAINTIAN_TYPE));
 		} else {
 			temp.setOptionType(
-					dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_HUMAM_ORGFORMATION_MAINTIAN_TYPE));
+					dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_HUMAN_ORGFORMATION_MAINTIAN_TYPE));
 		}
 		
 		temp.setStatus(OrgFormationMgrFlow.STATUS_ORG_FORMATION_MGR_FLOW_STATE);
@@ -202,6 +204,8 @@ public class OrgFormationMgrFlowController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "提交行政编制调整申请流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/adjustSubmit")
 	public AjaxResult adjustSubmit(OrgFormationMgrFlow flow, HttpServletRequest request) {
@@ -210,10 +214,10 @@ public class OrgFormationMgrFlowController extends GenericController {
 		OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", flow.getOrgInfo().getId());
 		if (orgFormation == null) {
 			flow.setOptionType(
-					dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAM_ORGFORMATION_MAINTIAN_TYPE));
+					dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_ORGFORMATION_MAINTIAN_TYPE));
 		} else {
 			flow.setOptionType(
-					dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_HUMAM_ORGFORMATION_MAINTIAN_TYPE));
+					dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_HUMAN_ORGFORMATION_MAINTIAN_TYPE));
 		}
 		
 		AjaxResult result = new AjaxResult(true);
@@ -221,7 +225,8 @@ public class OrgFormationMgrFlowController extends GenericController {
 			if (StringUtils.isBlank(flow.getId())) {
 				DictUtils.operationCodeInfo(flow);// 将CodeInfo中id为空的属性 设置为null
 				flow.setId(null);
-				orgFormationMgrFlowService.startOrgFormationAdjustFlow(flow);;
+				orgFormationMgrFlowService.startOrgFormationAdjustFlow(flow);
+				;
 			} else {
 				OrgFormationMgrFlow orgFormationMgrFlow = orgFormationMgrFlowService.get(flow.getId());
 				BeanUtils.copyPropertiesIgnoreNull(flow, orgFormationMgrFlow);
@@ -245,6 +250,8 @@ public class OrgFormationMgrFlowController extends GenericController {
 		return result;
 	}
 	
+	@Log(title = "审批行政编制调整申请流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/auditAdjustFlow")
 	public AjaxResult auditAdjustFlow(OrgFormationMgrFlow temp, HttpServletRequest request) {
@@ -284,6 +291,8 @@ public class OrgFormationMgrFlowController extends GenericController {
 		
 		OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id",
 				orgFormationMgrFlow.getOrgInfo().getId());
+		if (orgFormation == null)
+			orgFormation = new OrgFormation();
 		
 		model.addAttribute("orgFormationMgrFlow", orgFormationMgrFlow);
 		model.addAttribute("orgFormation", orgFormation);
@@ -307,20 +316,18 @@ public class OrgFormationMgrFlowController extends GenericController {
 		
 		OrgFormationMgrFlow orgFormationMgrFlow = orgFormationMgrFlowService.get(id);
 		
-		
-		OrgFormationHistory orgFormationHistory = orgFormationHistoryService.findUniqueBy("orgFormationMgrFlow.id", orgFormationMgrFlow.getId());
-		if(orgFormationHistory == null){
+		OrgFormationHistory orgFormationHistory = orgFormationHistoryService.findUniqueBy("orgFormationMgrFlow.id",
+				orgFormationMgrFlow.getId());
+		if (orgFormationHistory == null) {
 			OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id",
 					orgFormationMgrFlow.getOrgInfo().getId());
-			
+			if (orgFormation == null)
+				orgFormation = new OrgFormation();
 			model.addAttribute("orgFormation", orgFormation);
-		}else{
+		} else {
 			model.addAttribute("orgFormation", orgFormationHistory);
 		}
-		
-		
 		model.addAttribute("orgFormationMgrFlow", orgFormationMgrFlow);
-		
 		
 		return ORG_FORMATION_MGR_FlOW_ADJUST_VIEW;
 	}
@@ -331,6 +338,8 @@ public class OrgFormationMgrFlowController extends GenericController {
 	 * @param temp 流程信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除行政编制调整申请", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {
@@ -356,6 +365,8 @@ public class OrgFormationMgrFlowController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<ServantVO>
 	 */
+	@Log(title = "查询行政编制调整申请", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<OrgFormationMgrFlowVO> pageList(OrgFormationMgrFlow orgFormationMgrFlow, Integer limit, Integer page,

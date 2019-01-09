@@ -24,41 +24,39 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true"  name="relationCode.id" labelName="关系名称 ：" display="block" url="dictquery/sub/code/GBT_4761_2008" initSelectedKey="${family.relationCode.id}" isSaveShowName="true" inputShowName="relationName"></smart:singleSelect>
+										<smart:textInput labelName="关系人：" name="name" value="${family.name}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="关系人姓名：" name="name" value="${family.name}" ></smart:textInput>
+										<smart:singleSelect isAddDefaltOption="true"  name="relationCode.id" labelName="关系 ：" display="block" url="dictquery/sub/code/GBT_4761_2008" initSelectedKey="${family.relationCode.id}" isSaveShowName="true" inputShowName="relationName"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect isAddDefaltOption="true"  name="sex.id" labelName="性别：" display="block" url="dictquery/sub/code/GBT_2261_1_2003" initSelectedKey="${family.sex.id}"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true"  name="nation.id" labelName="民族：" display="block" url="dictquery/sub/code/GBT_3304_1991" initSelectedKey="${family.nation.id}"></smart:singleSelect>
-									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:textInput labelName="公民身份号码：" name="identityNo" value="${family.identityNo}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:date labelName="出生日期：" display="block" name="birthDate" id="birthDate" value="${family.birthDate}"></smart:date>
 									</smart:gridColumn>
-									
+									<smart:gridColumn colPart="4">
+										<smart:singleSelect isAddDefaltOption="true"  name="nation.id" labelName="民族：" display="block" url="dictquery/sub/code/GBT_3304_1991" initSelectedKey="${family.nation.id}"></smart:singleSelect>
+									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect isAddDefaltOption="true"  name="politicalCode.id" labelName="政治面貌 ：" display="block" url="dictquery/sub/code/GBT_4762_1984" initSelectedKey="${family.politicalCode.id}" isSaveShowName="true" inputShowName="politicalName"></smart:singleSelect>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
+								</smart:gridRow>
+								<smart:gridRow>
+								<smart:gridColumn colPart="4">
 										<smart:textInput labelName="工作单位：" name="unitAndJob" value="${family.unitAndJob}" ></smart:textInput>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
+									<smart:gridColumn colPart="8">
 										<smart:textInput labelName="职务：" name="post" value="${family.post}" ></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:numberInput min="0" labelName="关系人序号:" name="sortNo" value="${family.sortNo}"  display="block" type="text"></smart:numberInput>

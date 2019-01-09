@@ -31,13 +31,14 @@ import com.wondersgroup.framework.core.dao.support.Predicate.Operator;
 import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.framework.utils.DictUtils;
-import com.wondersgroup.human.bo.ofc.Degree;
 import com.wondersgroup.human.bo.ofc.Family;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.FamilyService;
 import com.wondersgroup.human.service.ofc.ServantService;
-import com.wondersgroup.human.vo.ofc.DegreeVO;
 import com.wondersgroup.human.vo.ofc.FamilyVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: FamilyController
@@ -102,6 +103,8 @@ public class FamilyController extends GenericController {
 	 * @param temp 学位信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑家庭信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Family temp) {
@@ -133,6 +136,8 @@ public class FamilyController extends GenericController {
 	 * @param temp 家庭信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除家庭信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

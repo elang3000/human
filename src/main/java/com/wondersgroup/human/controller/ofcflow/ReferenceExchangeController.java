@@ -15,25 +15,6 @@
  */
 package com.wondersgroup.human.controller.ofcflow;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
@@ -54,13 +35,33 @@ import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.ReferenceExchange;
 import com.wondersgroup.human.bo.ofcflow.ReferenceExchangeOut;
-import com.wondersgroup.human.bo.ofcflow.ZhuanRenKLBIntoMgr;
+import com.wondersgroup.human.bo.ofcflow.ZhuanRenKLBIntoBatch;
+import com.wondersgroup.human.bo.organization.OrgFormation;
+import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.service.ofc.ServantService;
+import com.wondersgroup.human.service.ofcflow.OfcFlowNumberService;
 import com.wondersgroup.human.service.ofcflow.ReferenceExchangeOutService;
 import com.wondersgroup.human.service.ofcflow.ReferenceExchangeService;
 import com.wondersgroup.human.service.organization.FormationControlService;
-import com.wondersgroup.human.util.WordUtils;
+import com.wondersgroup.human.service.organization.OrgFormationService;
+import com.wondersgroup.human.service.organization.OrgInfoService;
+import com.wondersgroup.human.util.ExcelUtilsPOI;
+import com.wondersgroup.human.util.ImgPicUtil;
+import com.wondersgroup.human.util.Number2CN;
 import com.wondersgroup.human.vo.ofcflow.ReferenceExchangeVO;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /** 
  * @ClassName: ReferenceExchangeController 
@@ -86,9 +87,15 @@ public class ReferenceExchangeController extends GenericController{
 	private FlowRecordService flowRecordService;
 	@Autowired
 	private DictableService dictableService;
+	@Autowired
+	private OfcFlowNumberService ofcFlowNumberService;
 
 	@Autowired
 	private FormationControlService formationControlService;
+	@Autowired
+	private OrgFormationService orgFormationService;
+	@Autowired
+	private OrgInfoService orgInfoService;
 	
 	/**
 	 * 参公交流列表
@@ -211,14 +218,29 @@ public class ReferenceExchangeController extends GenericController{
 				return EXCHANGE_INTO_EDIT;
 			}
 		}else{
+			//查询当前单位编制情况
+			OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+			OrgInfo org = orgInfoService.findUniqueBy("organ.id", x.getId());
+			if(org!=null){
+				OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", org.getId());
+				if(orgFormation!=null){
+					ReferenceExchange z = new ReferenceExchange();
+//					z.setAllowWeaveNum(orgFormation.getUnitPlanningTotal());//核定编制数
+//					z.setRealNum(orgFormation.getActualNumber());//实有人数
+//					z.setThisYearLackWeaveNum(orgFormation.getVacancyExcessNumber());//机构缺编数
+//					z.setChiefLackWeaveNum(orgFormation.getVacancyDivisionChiefLevelNumber());//处级实职缺编人数
+//					z.setVacancySectionChiefLevelNumber(orgFormation.getVacancySectionChiefLevelNumber());//科级领导实职缺编人数
+//					z.setVacancyNonLeaderSectionChiefLevelNumber(orgFormation.getVacancyNonLeaderSectionChiefLevelNumber());//科级非领导实职缺编人数
+//					z.setNotIntoSectionChiefNum(orgFormation.getNotIntoSectionChiefNum());//科级领导未调入数
+//					z.setNotIntoDeputySectionChiefNum(orgFormation.getNotIntoDeputySectionChiefNum());//科级非领导未调入数
+//					z.setNotIntoNum(orgFormation.getNotIntoNum());//尚未调入人数
+					model.addAttribute("d", z);
+				}
+			}
 			if(StringUtils.isNotBlank(servantId)){//如果人员id不为空，该人员在系统中已存在，查询人员基本信息，返回人员已存在的编辑页面
 				model.addAttribute("s", servantService.load(servantId));
 				return EXCHANGE_INTO_EDIT_EXIST;
 			}else{//如果人员id为空，返回姓名和身份证号到页面，需要录入其他基本信息，姓名和身份证号不能录入
-				Map<String,String> map = new HashMap<>();
-				map.put("name", name);
-				map.put("cardNo", cardNo);
-				model.addAttribute("d", map);
 				return EXCHANGE_INTO_EDIT;
 			}
 		}
@@ -329,8 +351,8 @@ public class ReferenceExchangeController extends GenericController{
 			model.addAttribute("name", name);
 		}
 		if(StringUtils.isNotBlank(cardNo)){
-			hql.append( " and cardNo like :cardNo");
-			queryParameteritem=new QueryParameter("cardNo", "%"+cardNo+"%");
+			hql.append( " and cardNo = :cardNo");
+			queryParameteritem=new QueryParameter("cardNo", cardNo);
 			listqueryparameter.add(queryParameteritem);
 			model.addAttribute("cardNo", cardNo);
 		}
@@ -405,6 +427,15 @@ public class ReferenceExchangeController extends GenericController{
 	public AjaxResult saveOuter(ReferenceExchange temp){
 		AjaxResult result = new AjaxResult(true);
 		try {
+			List<Servant> servantList = servantService.getServantByCardNo(temp.getCardNo());
+			
+			if(servantList!=null && servantList.size()>0){
+				throw new BusinessException("该人员在系统中已存在！");
+			}
+			// 保存头像
+			if(StringUtils.isNotBlank(temp.getPhotoPath())){
+				temp.setPhotoPath(ImgPicUtil.savePic(temp.getPhotoPath()));
+			}
 			if(StringUtils.isNotBlank(temp.getId())){//更新
 				ReferenceExchange post = referenceExchangeService.get(temp.getId());
 				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
@@ -538,6 +569,17 @@ public class ReferenceExchangeController extends GenericController{
 			if(StringUtils.isBlank(r)||(!FlowRecord.PASS.equals(r)&&!FlowRecord.NOPASS.equals(r))){
 				throw new BusinessException("审批结果信息不正确！");
 			}
+			
+			List<Servant> servantList = servantService.getServantByCardNo(temp.getCardNo());
+			
+			if(servantList!=null && servantList.size()>0){
+				throw new BusinessException("该人员在系统中已存在！");
+			}
+			
+			// 保存头像
+			if(StringUtils.isNotBlank(temp.getPhotoPath())){
+				temp.setPhotoPath(ImgPicUtil.savePic(temp.getPhotoPath()));
+			}
 			if (StringUtils.isBlank(temp.getId())) {
 				DictUtils.operationCodeInfo(temp);//将CodeInfo中id为空的属性 设置为null
 				OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
@@ -583,38 +625,51 @@ public class ReferenceExchangeController extends GenericController{
 				throw new BusinessException("打印信息不正确！");
 			}
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Map<String,String> params = new HashMap<>();
+			Map<String,Object> params = new HashMap<>();
 			params.put("sourceOrgan", "");//源单位名称
 			params.put("targetOrgan", "");//目标单位名称
-			params.put("name", "");//转任人员名称
-			params.put("date", "");//转任时间
+			params.put("name", "");//调任人员名称
+			params.put("sex", "");//性别
+			params.put("post", "");//原职务
+			params.put("postLevel", "");//原级别
 			if("1".equals(type)){
 				ReferenceExchange into = referenceExchangeService.get(id);
 				params.put("sourceOrgan", into.getSourceOrganName());//源单位名称
 				params.put("targetOrgan", into.getTargetOrgan()==null?"":into.getTargetOrgan().getName());//目标单位名称
-				if(ZhuanRenKLBIntoMgr.AREA_THIS.equals(into.getAreaType())){//本区
+				if(ZhuanRenKLBIntoBatch.AREA_THIS.equals(into.getAreaType())){//本区
 					params.put("name", into.getServant().getName());//转任人员名称
+					params.put("sex", into.getServant().getSex()==null?"":into.getServant().getSex().getName());//调任人员性别
+					params.put("post", into.getServant().getNowPostName()==null?"":into.getServant().getNowPostName());//原职务
+					params.put("postLevel", into.getServant().getNowJobLevel()==null?"":into.getServant().getNowJobLevel().getName());//原级别
 				}else{
 					params.put("name", into.getName());//转任人员名称
-				}
-				if(into.getOutDate()!=null){
-					params.put("date", sdf.format(into.getOutDate()));//转任时间
-				}else{
-					params.put("date", sdf.format(new Date()));//转任时间
 				}
 			}else{
 				ReferenceExchangeOut out = referenceExchangeOutService.get(id);
 				params.put("sourceOrgan", out.getSourceOrgan().getName());//源单位名称
 				params.put("targetOrgan", out.getGotoUnitName());//目标单位名称
 				params.put("name", out.getServant().getName());//转任人员名称
-				if(out.getOutDate()!=null){
-					params.put("date", sdf.format(out.getOutDate()));//转任时间
-				}else{
-					params.put("date", sdf.format(new Date()));//转任时间
-				}
+				params.put("sex", out.getServant().getSex()==null?"":out.getServant().getSex().getName());//调任人员性别
+				params.put("post", out.getServant().getNowPostName()==null?"":out.getServant().getNowPostName());//原职务
+				params.put("postLevel", out.getServant().getNowJobLevel()==null?"":out.getServant().getNowJobLevel().getName());//原级别
 			}
 			params.put("now", sdf.format(new Date()));//打印介绍信时间
-			WordUtils.exportMillCertificateWord(request, response, params, params.get("sourceOrgan")+"参公交流介绍信", "cgjlIntroduction.ftl");
+			params.put("busType", "参公交流");//转移原因
+			
+			Map<String,String> number = ofcFlowNumberService.executeNumber("ReferenceExchange", id);//介绍信编号
+			params.put("number", number.get("year")+"字第"+number.get("number"));//介绍信编号
+			//编号转换为大写
+			String cnYear = Number2CN.convert(number.get("year"));
+			String cnNumber = Number2CN.convert(number.get("number"));
+			params.put("cnNumber", cnYear+"字第"+cnNumber+"号");//介绍信编号大写
+			//当前操作人
+			params.put("userName", SecurityUtils.getPrincipal().getName());
+			
+			String savePath = request.getSession().getServletContext().getRealPath("/");
+			String templet = savePath+"\\static\\templates\\introduce.xls";//模板路径
+			String path = savePath+"\\static\\templates\\"+id+".xls";//生成excel文件路径，临时存放，下载成功之后会删除
+			ExcelUtilsPOI.replaceModel(params, templet,path, 1,null);//替换模板数据 生成excel到tomcat服务器
+		  	ExcelUtilsPOI.exceldown(path, params.get("sourceOrgan")+"参公交流介绍信"+".xls", request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

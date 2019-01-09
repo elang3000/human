@@ -26,12 +26,12 @@
 								<smart:singleSelect isNotNull="true" display="block" labelName="免基层实习:" initSelectedKey="${d.isBasePractice.id}" name="isBasePractice.id" url="dictquery/sub/code/DM215"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:date isNotNull="true" display="block" labelName="所在单位意见时间:" isDefaultVal="true" value="${d.deptOpinionDate}" name="deptOpinionDate" id="time" placeholder="时间"></smart:date>
+								<smart:date isNotNull="true" display="block" labelName="所在单位意见时间:" shortName="单位意见时间" isDefaultVal="true" value="${d.deptOpinionDate}" name="deptOpinionDate" id="time" placeholder="时间"></smart:date>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:date display="block" labelName="上级主管单位意见时间:" id="time2" value="${d.unitOpinionDate}" name="unitOpinionDate" placeholder="时间"></smart:date>
+								<smart:date display="block" labelName="上级主管单位意见时间:" shortName="上级意见时间"  id="time2" value="${d.unitOpinionDate}" name="unitOpinionDate" placeholder="时间"></smart:date>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:singleSelect isNotNull="true" display="block" labelName="录用标识:" initSelectedKey="${d.employResult.id}" name="employResult.id" url="dictquery/sub/code/DM035"></smart:singleSelect>
@@ -47,6 +47,6 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="12">
-								<smart:textarea isNotNull="true" display="block" labelName="录用鉴定（评语）:" name="employComment">${d.employComment}</smart:textarea>
+								<smart:textarea isNotNull="true" display="block" labelName="录用鉴定（评语）:" shortName="录用评语" name="employComment">${d.employComment}</smart:textarea>
 							</smart:gridColumn>
 						</smart:gridRow>

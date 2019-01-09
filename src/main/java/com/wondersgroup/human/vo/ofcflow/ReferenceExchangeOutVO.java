@@ -22,6 +22,9 @@ import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.ReferenceExchangeOut;
+import com.wondersgroup.human.bo.ofcflow.ReferenceExchangeOutBatch;
+import com.wondersgroup.human.bo.ofcflow.ZhuanRenTLBIntoBatch;
+import com.wondersgroup.human.bo.ofcflow.ZhuanRenTLBOutBatch;
 
 /** 
  * @ClassName: ReferenceExchangeOutVO 
@@ -138,7 +141,7 @@ public class ReferenceExchangeOutVO {
 			if (s.getNation() != null) {
 				this.nation = s.getNation().getName();
 			}
-			this.cardNo = s.getCardNo();
+			this.cardNo = s.getCardNoView();
 			if (s.getPersonType() != null) {
 				this.personType = s.getPersonType().getName();
 			}
@@ -154,24 +157,13 @@ public class ReferenceExchangeOutVO {
 			this.sourceOrgan = d.getSourceOrgan().getName();
 		}
 		this.gotoUnitName = d.getGotoUnitName();
-		if(d.getStatus() == ReferenceExchangeOut.STATUS_DIAOCHU_CONFIRM){
-			OrganNode organ = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-			if(organ!=null&&d.getSourceOrgan()!=null){
-				if(!organ.getId().equals(d.getSourceOrgan().getId())){//如果当前登录人所在单位不是调出单位，只有查看权限
-					this.status = "3";
-				}else{
-					this.status = ReferenceExchangeOut.STATUS_DIAOCHU_CONFIRM+"";
-				}
-			}else{
-				this.status = "3";
-			}
-		}else{
+		if (d.getStatus() != null) {
 			this.status = String.valueOf(d.getStatus());
-		}
+			this.statusName = convertStatebatch(d.getStatus());
+		} 
 		if (d.getReasonType() != null) {
 			this.reasonType = d.getReasonType().getName();
 		}
-		this.statusName = convertState(d.getStatus());
 	}
 	
 	public String convertState(int state) {
@@ -182,6 +174,31 @@ public class ReferenceExchangeOutVO {
 			return "待调出单位备案";
 		} else if (state == ReferenceExchangeOut.STATUS_DIAOCHU_FINISH) {
 			return "人员调出信息已备案";
+		} else {
+			return "";
+		}
+	}
+	
+	public String convertStatebatch(int state) {
+//		if (state==null){
+//			return "待发起转出流程";
+//		}
+		if (state == ReferenceExchangeOutBatch.STATUS_EXCHANGE_OUT_STATE) {
+			return "待发起转出流程";
+		} else if (state == ReferenceExchangeOutBatch.STATUS_EXCHANGE_OUT_TRIAL) {
+			return "待转出单位确认";
+		} else if (state == ReferenceExchangeOutBatch.STATUS_EXCHANGE_OUT_TRIAL_1) {
+			return "待区人事主管部门一级审核";
+		} else if (state == ReferenceExchangeOutBatch.STATUS_EXCHANGE_OUT_TRIAL_2) {
+			return "待区人事主管部门二级审核";
+		} else if (state == ReferenceExchangeOutBatch.STATUS_EXCHANGE_OUT_TRIAL_3) {
+			return "待区人事主管部门三级审核";
+		} else if (state == ReferenceExchangeOutBatch.STATUS_EXCHANGE_OUT_TRIAL_4) {
+			return "待区人事主管部门四级审核";
+		}  else if (state == ReferenceExchangeOutBatch.STATUS_EXCHANGE_OUT_TRIAL_5) {
+			return "待区人事主管部门打印介绍信";
+		}else if (state == ReferenceExchangeOutBatch.STATUS_EXCHANGE_OUT_FINISH) {
+			return "已完成人员转出";
 		} else {
 			return "";
 		}

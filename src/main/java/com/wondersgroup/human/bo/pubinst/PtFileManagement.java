@@ -1,10 +1,14 @@
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.pubinst.base.InstBaseFileManagement;
 /**
@@ -18,6 +22,8 @@ import com.wondersgroup.human.bo.pubinst.base.InstBaseFileManagement;
  */
 @Entity
 @Table(name = "C38")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtFileManagement extends InstBaseFileManagement<PtFileManagement> {
 
 	private static final long serialVersionUID = 3604307090469454485L;

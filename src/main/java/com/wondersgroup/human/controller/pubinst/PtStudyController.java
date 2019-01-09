@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.service.pubinst.PtStudyService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PtStudyVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: StudyController
@@ -83,6 +86,8 @@ public class PtStudyController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<PostVO>
 	 */
+	@Log(title = "查询学习(培训/进修)信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PtStudyVO> pageList(String Id, Integer limit, Integer page) {
@@ -100,6 +105,8 @@ public class PtStudyController extends GenericController {
 	 * @param temp 学习（培训、进修）信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑学习(培训/进修)信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PtStudy temp) {
@@ -131,6 +138,8 @@ public class PtStudyController extends GenericController {
 	 * @param temp 学习（培训、进修）信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除学习(培训/进修)信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

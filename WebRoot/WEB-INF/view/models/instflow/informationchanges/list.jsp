@@ -2,13 +2,12 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%> 
-
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <!DOCTYPE html >
 <html>
 <head>
-<smart:initHead title="长宁区人事管理信息系统--人员信息变更审核" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<smart:initHead title="事项申请--辞职管理" />
 </head>
 <smart:body>
 	<smart:grid>
@@ -16,8 +15,8 @@
 			<smart:cardHead>
 				<smart:breadcrumbNavMenu separator=">">
 					<smart:breadcrumbNavMenuItem iname="您现在的所在位置"></smart:breadcrumbNavMenuItem>
-					<smart:breadcrumbNavMenuItem iname="事项申请"></smart:breadcrumbNavMenuItem>
-					<smart:breadcrumbNavMenuItem iname="人员信息变更" cite="true"></smart:breadcrumbNavMenuItem>
+						<smart:breadcrumbNavMenuItem iname="公务员管理"></smart:breadcrumbNavMenuItem>
+						<smart:breadcrumbNavMenuItem iname="信息变更" cite="true"></smart:breadcrumbNavMenuItem>
 				</smart:breadcrumbNavMenu>
 			</smart:cardHead>
 			<smart:cardBody>
@@ -25,70 +24,74 @@
 					<smart:tabPanelParent filter="tab"
 						style="margin-left:10px;margin-right:10px;">
 						<smart:tabPanel>
-							<%-- 
-							<c:if test="${busType eq 'MemberInfoRegister'}">
-								<smart:tabPanelItem show="false" turnurl="instflow/inforegister/index"
-									eId="" itemName="登记人员"></smart:tabPanelItem>
-							</c:if> 
-							--%>
-							<%-- 
-							<smart:tabPanelItem show="true" eId="" itemName="流程审批"></smart:tabPanelItem>
-							 --%>
+							<smart:tabPanelItem show="true" eId="" itemName="变更列表"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="instflow/informationchanges/inforapprove_flow" show="false" eId="" itemName="流程审批"></smart:tabPanelItem>
 						</smart:tabPanel>
 					</smart:tabPanelParent>
 				</smart:gridRow>
+				
 				<smart:gridRow>
-					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
-						<smart:form>
-							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="来文单位：" name="sourceOrganNode" placeholder="请输入来文单位"></smart:textInput>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="5" >
-								<smart:buttonGroup container="true">
-									<smart:button size="sm" method="search" title="查询"
-										theme="primary">
-										<smart:icon icon="search"></smart:icon>&nbsp;查询
-		  				 			</smart:button>
-									<smart:button size="sm" title="重置"
-										theme="primary" type="reset">
-										<smart:icon icon="history"></smart:icon>&nbsp;重置
-		   						    </smart:button>
-		   						     <shiro:hasPermission name="H002005003">  
+					<smart:fieldSet title="查询条件" style="margin-top: 5px;" color="blue">
+						<smart:form id="searchForm">
+							<smart:gridRow>
+								<smart:gridColumn colPart="4">
+									<smart:textInput labelName="姓名：" autocomplete="off"
+										placeholder="姓名" name="name1">
+									</smart:textInput>
+								</smart:gridColumn>
+
+								<smart:gridColumn colPart="4">
+									<smart:textInput labelName="身份证号：" autocomplete="off"
+										placeholder="身份证号" name="cardNo">
+									</smart:textInput>
+								</smart:gridColumn>
+								<smart:gridColumn colPart="4">
+									<smart:textInput labelName="变动职级：" autocomplete="off"
+										placeholder="变动职级" name="name">
+									</smart:textInput>
+								</smart:gridColumn>
+
+								
+							</smart:gridRow>
+
+							<smart:gridRow>
+
+								<smart:gridColumn colPart="4" colOffset="8">
+									<smart:buttonGroup container="true">
+										<smart:button size="sm" method="search" title="查询"
+											theme="primary">
+											<smart:icon icon="search"></smart:icon>&nbsp;查询
+				  				 </smart:button>
+										<smart:button size="sm" method="history" title="重置"
+											theme="primary" type="reset">
+											<smart:icon icon="history"></smart:icon>&nbsp;重置
+				   				</smart:button>
+				   						 <shiro:hasPermission name="H002005003">  
 			   						    <smart:button size="sm" method="add" title="添加人员信息变更">
 										    <smart:icon icon="plus">&nbsp;新增人员信息变更</smart:icon>
 									    </smart:button>
-	 								     </shiro:hasPermission> 
- 									</smart:buttonGroup>
-							</smart:gridColumn>
+	 								     </shiro:hasPermission>
+									</smart:buttonGroup>
+								</smart:gridColumn>
+							</smart:gridRow>
 						</smart:form>
-						
-						<smart:gridColumn colPart="6" deviceType="md" colOffset="4">
-							<smart:buttonGroup container="true">
-								
-							</smart:buttonGroup>
-						</smart:gridColumn>
 					</smart:fieldSet>
-					
 				</smart:gridRow>
+
 				<smart:gridRow colSpace="5">
-					<smart:gridColumn colPart="12" deviceType="md">
-						<smart:table id="navigationList" url="workflow/doing/page?busType=${busType}"
-							height="full-315" text="未找到有效数据！">
+					<smart:gridColumn>
+						<smart:table id="navigationList" url="instflow/informationchanges/pageList" height="full-235" text="未找到用户数据！" page="true">
 							<tr>
-								<smart:tableItem field="sourceOrganNode" width=".1" sort="true">来文单位</smart:tableItem>
-								<smart:tableItem field="createTime" width=".1" sort="true">来文时间</smart:tableItem>
-								<smart:tableItem field="targetOrganNode" width=".1" templet="topTpl">办理单位</smart:tableItem>
-								<smart:tableItem field="targetSecurityUser" width=".1" templet="downTpl">办理人员</smart:tableItem>
-								<smart:tableItem field="busName" width=".2">业务类型</smart:tableItem>
-								<smart:tableItem field="ofcFlowDescription" width=".2">业务描述</smart:tableItem>
-								<smart:tableItem align="center" width=".2" toolbar="navListToolBar">操作</smart:tableItem>
+								<smart:tableItem field="name1" width=".2" sort="true">姓名</smart:tableItem>
+								<smart:tableItem field="name" width=".2" sort="true">职级名称</smart:tableItem>
+								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
+								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
+								<smart:tableItem field="status" width=".15">状态</smart:tableItem>
+								<smart:tableItem align="center" fixed="right" unresize="true"
+									toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
-							<smart:tableToolBar id="navListToolBar" >
-								<smart:tableToolBtn theme="danger" event="shenpi" title="审批变更信息">
-									<smart:icon icon="edit">审批变更信息</smart:icon>
-								</smart:tableToolBtn>
-								
-								<smart:tableToolBtn theme="normal" event="viewFlowRecord" title="查看流程记录">
+							<smart:tableToolBar id="navListToolBar">
+								<smart:tableToolBtn theme="warm" event="view" title="查看">
 									<smart:icon icon="eye"></smart:icon>
 								</smart:tableToolBtn>
 							</smart:tableToolBar>
@@ -99,36 +102,22 @@
 		</smart:card>
 	</smart:grid>
 	<smart:scriptHead models="table,form,layer,element">
-		<smart:utils/>
+		<smart:utils />
+
 		<smart:tableScriptAction tableId="navigationList" checkbox="true"
 			sort="true" rowEdit="true">
-			shenpi : function(data) {
-				<c:if test="${busType eq 'InformationChange'}">
-					var url = "instflow/informationchanges/queryinformation";
-				</c:if>
-				smart.show({
-					title : '审批人员信息变更',
+				view : function(data) {
+					smart.show({
+					title : '信息变更详情',
 					size : 'full',
-					url : url,
-					params:{id:data.data.id},
-					scrollbar : false
-				});
-			}
-			,viewFlowRecord : function(record) {
-				smart.show({
-					title : '查看流程记录',
-					url : 'workflow/detail/index',
-					params : {
-						id : record.data.id
-					},
-					size:'full',
-					scrollbar : false
-				});
-			}
-		</smart:tableScriptAction>
-		<smart:buttonScriptAction>
+					url : 'instflow/informationchanges/informationDetail?id='+data.data.id,
+					scrollbar : false,
+					});
+				}
+			</smart:tableScriptAction>
+		var buttonInvokeMethod = {
 			search : function() {
-				var params = utils.json($('.layui-form'));
+				var params = utils.json($('#searchForm'));
 				table.reload('navigationList', {
 					where : params,
 					page : {
@@ -138,13 +127,19 @@
 			},
 			add : function() {
 			    smart.show({
-					title : '事业单位人员信息',
+					title : '新增人员信息变更',
 					size : 'full',
 					url : "instflow/informationchanges/index",
 					scrollbar : false
 				});
 			}
-		 </smart:buttonScriptAction>
+		};
+
+		$('#searchForm button').on('click', function() {
+			var othis = $(this), method = othis.data('method');
+			buttonInvokeMethod[method] ? buttonInvokeMethod[method].call(this, othis) : '';
+		});
 	</smart:scriptHead>
+
 </smart:body>
 </html>

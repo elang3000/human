@@ -97,8 +97,8 @@ public class OrganizationServiceTester extends AbstractTest {
 	public void queryAvailabledOrganNode() {
 		/*List<OrganTree> organTreees = organTreeService.queryAvailabledOrganTree();
 		logger.debug("结果：" + organTreees.size());*/
-		List<OrganNodeVO> organNodes = organizationService.queryAvailabledDepartmentOrganNode("394e21fa-1eb6-42ee-ba32-50655fa16517", null);
-		logger.debug("结果：" + organNodes.size());
+/*		List<OrganNodeVO> organNodes = organizationService.queryAvailabledDepartmentOrganNode("394e21fa-1eb6-42ee-ba32-50655fa16517", null);
+		logger.debug("结果：" + organNodes.size());*/
 	}
 	
 	@Test

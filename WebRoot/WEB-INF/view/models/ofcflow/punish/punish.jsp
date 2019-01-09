@@ -21,10 +21,10 @@
 									<smart:gridColumn colPart="8">
 										<smart:gridRow>
 											<smart:gridColumn colPart="6">
-												<smart:selectResource labelName="姓名：" id="selectNameTag" display="block"/>
+												<smart:selectResource isNotNull="true" labelName="姓名：" id="selectNameTag" display="block"/>
 											</smart:gridColumn>
 											<smart:gridColumn colPart="6">
-												<smart:textInput otherAttr="disabled" labelName="身份证号：" name="cardNo" display="block" value="${servant.cardNo}"></smart:textInput>
+												<smart:textInput otherAttr="disabled" labelName="身份证号：" name="cardNo" display="block" value="${servant.cardNoView}"></smart:textInput>
 											</smart:gridColumn>
 										</smart:gridRow>
 										<smart:gridRow>
@@ -63,7 +63,7 @@
 									<smart:gridColumn colPart="3" colOffset="1">
 										<smart:gridRow>
 											<smart:gridColumn colPart="12">
-												<img alt="照片" src="static/image/20170705135600.jpg">
+												<img style="width:150px;height:200px;min-width:150px;min-height:200px;" name="photoPath" alt="照片" src="ftp/getImg?imgName=${servant.photoPath}">
 											</smart:gridColumn>
 										</smart:gridRow>
 									</smart:gridColumn>
@@ -73,30 +73,31 @@
 									<smart:textInput type="hidden" id="id" name="id" value="${punishServant.id }"></smart:textInput>
 									<smart:textInput type="hidden" id="id" name="organ.id" value="${organ.id }"></smart:textInput>
 									<smart:textInput type="hidden" id="status" name="status" value="1"></smart:textInput>
-									<smart:textInput type="hidden" id="sign" name="sign" value="1"></smart:textInput>
+									<smart:textInput type="hidden" id="sign" name="sign" value="0"></smart:textInput>
 									
 									<smart:title title="处分信息" style="margin-top: 5px;" color="blue" />
 								</smart:gridRow>
 								
-								<smart:gridRow>
+								<smart:gridRow>																	
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="处分原始文件号：" name="punishFileName" value="${punishServant.punishFileName}"></smart:textInput>
+										<smart:singleSelect labelName="处分名称：" name="punishCode.id" display="block" url="dictquery/sub/code/GBT_8563_3_2005/1" isAddDefaltOption="true" verify="required" isNotNull="true" initSelectedKey="${punishServant.punishCode.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect labelName="处分原因：" name="punishReason.id" display="block" url="dictquery/sub/code/DM021_PUNISH" isAddDefaltOption="true" verify="required" isNotNull="true" initSelectedKey="${punishServant.punishReason.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:date labelName="处分批准日期 ：" value="${punishServant.punishApprovalDate}" display="block" name="punishApprovalDate" id="punishApprovalDate" verify="required" isNotNull="true"></smart:date>
+										<smart:textInput labelName="处分原始文件号：" name="punishFileName" value="${punishServant.punishFileName}" verify="required" isNotNull="true"></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:numberInput labelName="处分期限（年）："  value="${punishServant.punishYear}" name="punishYear" min="0" type="text"  isNotNull="true" verify="required" placeholder="处分期限（年）" display="block"></smart:numberInput>
+										<smart:date labelName="处分批准日期 ：" value="${punishServant.punishApprovalDate}" display="block" name="punishApprovalDate" id="punishApprovalDate" verify="required" isNotNull="true"></smart:date>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="处分名称：" name="punishCode.id" display="block" url="dictquery/sub/code/GBT_8563_3_2005/1" isAddDefaltOption="true" verify="required" isNotNull="true" initSelectedKey="${punishServant.punishCode.id }"></smart:singleSelect>
+										<smart:numberInput labelName="处分期限（月）："  value="${punishServant.punishYear}" name="punishYear" min="0" type="text"  isNotNull="true" verify="required" placeholder="处分期限（月）" display="block"></smart:numberInput>
 									</smart:gridColumn>
+									
 								</smart:gridRow>
 								
 								<smart:gridRow>
@@ -120,7 +121,7 @@
 									theme="default">
 									<smart:icon icon="plus">&nbsp;暂存</smart:icon>
 								</smart:button>
-								<smart:button theme="warm" size="sm" method="goBack" title="返回">
+								<smart:button theme="primary" size="sm" method="goBack" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>
@@ -133,9 +134,9 @@
 	<smart:scriptHead models="table,form,layer,element,laydate,selectResource">
 		<smart:utils/>
 		<smart:continuousSelectAction/>
-		<smart:initSelectResource value="${servant.name}" hiddenValue="${servant.id}" id = "selectNameTag" name="servant.name" hiddenName="servant.id" winSize="lg" winTitle="选择人员信息" winUrl="orgInfo/selectServant?createOrganNodeId=${createOrganNodeId}" 
+		<smart:initSelectResource verify="required" value="${servant.name}" hiddenValue="${servant.id}" id = "selectNameTag" name="servant.name" hiddenName="servant.id" winSize="full" winTitle="选择人员信息" winUrl="orgInfo/selectServant?createOrganNodeId=${createOrganNodeId}" 
 		linkElement="{fieldName :'cardNo',fieldValue : 'cardNo'},{fieldName :'sex',fieldValue : 'sex'},{fieldName :'birthDate',fieldValue : 'birthDate'},{fieldName :'nation',fieldValue : 'nation'},{fieldName :'politics',fieldValue : 'politics'}
-		,{fieldName :'birthPlaceName',fieldValue : 'birthPlaceName'},{fieldName :'nativePlaceName',fieldValue : 'nativePlaceName'},{fieldName :'personType',fieldValue : 'personType'},{fieldName :'health',fieldValue : 'health'},{fieldName :'organ.id',fieldValue : 'departId'}"/>
+		,{fieldName :'birthPlaceName',fieldValue : 'birthPlaceName'},{fieldName :'nativePlaceName',fieldValue : 'nativePlaceName'},{fieldName :'personType',fieldValue : 'personType'},{fieldName :'health',fieldValue : 'health'},{fieldName :'organ.id',fieldValue : 'departId'},{fieldName :'photoPath',fieldValue : 'photoPath',fieldType:'img'}"/>
 		<smart:buttonScriptAction>
 			goBack : function(data) {
 				var index=parent.layer.getFrameIndex(window.name);
@@ -167,7 +168,6 @@
 		form.on('submit(submit)', function (data) {//表单提交
 				var params=data.field;
 				params.result="1";
-				debugger;
 				var url="ofcflow/punish/operationFlow";
 				$.post(url,params,function(result){
 					if(result.success){//保存成功

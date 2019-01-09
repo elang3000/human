@@ -77,57 +77,52 @@ public class ServantRepositoryImpl extends GenericRepositoryImpl<Servant> implem
 		}
 		return result;
 	}
-
-	/** 
-	 * @see com.wondersgroup.human.repository.ofc.ServantRepository#queryServantInfoBySeniorCondation(java.util.List, java.lang.Integer, java.lang.Integer) 
+	
+	/**
+	 * @see com.wondersgroup.human.repository.ofc.ServantRepository#queryServantInfoBySeniorCondation(java.util.List,
+	 *      java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
-	public Page<ServantVO> queryServantInfoBySeniorCondation(List<ServantParam> spList, Integer page,
-			Integer limit) {
+	public Page<ServantVO> queryServantInfoBySeniorCondation(List<ServantParam> spList, Map<String, String> m,
+	        Integer page, Integer limit) {
+		
 		StringBuffer sql = new StringBuffer();
 		
 		sql.append("select * from A01 where removed ='N' and id in (");
 		sql.append("select distinct a1.id from a01 a1 ");
-		sql.append("left join A02 a2 on a1.id = a2.servant_id ");
-		sql.append("left join A03 a3 on a1.id = a3.servant_id ");
-		sql.append("left join A04 a4 on a1.id = a4.servant_id ");
-		sql.append("left join A05 a5 on a1.id = a5.servant_id ");
-		sql.append("left join A06 a6 on a1.id = a6.servant_id ");
-		sql.append("left join A08 a8 on a1.id = a8.servant_id ");
-		sql.append("left join A09 a9 on a1.id = a9.servant_id ");
-		sql.append("left join A11 a11 on a1.id = a11.servant_id ");
-		sql.append("left join A14 a14 on a1.id = a14.servant_id ");
-		sql.append("left join A15 a15 on a1.id = a15.servant_id ");
-		sql.append("left join A17 a17 on a1.id = a17.servant_id ");
-		sql.append("left join A29 a29 on a1.id = a29.servant_id ");
-		sql.append("left join A30 a30 on a1.id = a30.servant_id ");
-//		sql.append("left join A36 a36 on a1.id = a36.servant_id ");
-//		sql.append("left join A51 a51 on a1.id = a51.servant_id ");
-//		sql.append("left join A52 a52 on a1.id = a52.servant_id ");
-		sql.append("left join A61 a61 on a1.id = a61.servant_id ");
-		sql.append("where 1=1 ");
-		for(ServantParam s : spList){
-			sql.append(" AND  "+s.getCode1()+" "+s.getCode3()+" '"+s.getCode2()+"' ");
+		for (String key : m.keySet()) {// keySet获取map集合key的集合  然后在遍历key即可
+			String value = m.get(key).toString();//
+			sql.append("left join " + key + " " + value + " on a1.id = " + value + ".servant_id ");
+		}
+		sql.append("where 1=1 and a1.removed = 'N' ");
+		for (String key : m.keySet()) {// keySet获取map集合key的集合  然后在遍历key即可
+			String value = m.get(key).toString();//
+			sql.append("and " + value + ".removed = 'N' ");
+		}
+		for (ServantParam s : spList) {
+			sql.append(" AND  " + s.getCode1() + " " + s.getCode3() + " '" + s.getCode2() + "' ");
 		}
 		sql.append(" group by a1.id) order by SH_REPORT_DATE desc");
 		
-		Query query =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString()).addEntity(Servant.class);
-		List<Servant> list1=query.list();
-		query.setFirstResult((page - 1) * limit);  
-		query.setMaxResults(limit); 
-        List<Servant> list =query.list();  
-		List<ServantVO> listVO=new ArrayList<>();
+		Query query = this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString())
+		        .addEntity(Servant.class);
+		List<Servant> list1 = query.list();
+		query.setFirstResult((page - 1) * limit);
+		query.setMaxResults(limit);
+		List<Servant> list = query.list();
+		List<ServantVO> listVO = new ArrayList<>();
 		for (Servant s : list) {
 			ServantVO vo = new ServantVO(s);
 			listVO.add(vo);
 		}
-
-		Page<ServantVO> pages = new Page<>((page-1)*limit, page, list1.size(), limit, listVO);
+		
+		Page<ServantVO> pages = new Page<>((page - 1) * limit, page, list1.size(), limit, listVO);
 		return pages;
 	}
-
+	
 	@Override
 	public List<Map<String, Object>> getSexMapData(String orgId) {
+		
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(t.id) value, c.name ");
 		sql.append("  from a01 t ");
@@ -135,15 +130,16 @@ public class ServantRepositoryImpl extends GenericRepositoryImpl<Servant> implem
 		sql.append("    on t.A01004 = c.id ");
 		sql.append(" where t.DEPARTID = :orgId ");
 		sql.append(" group by t.A01004, c.name ");
-		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		Query queryObject = this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 		queryObject.setParameter("orgId", orgId);
 		queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
-		List<Map<String, Object>> list =queryObject.list();
+		List<Map<String, Object>> list = queryObject.list();
 		return list;
 	}
-
+	
 	@Override
 	public List<Map<String, Object>> getNationMapData(String orgId) {
+		
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(t.id) value, c.name ");
 		sql.append("  from a01 t ");
@@ -151,41 +147,46 @@ public class ServantRepositoryImpl extends GenericRepositoryImpl<Servant> implem
 		sql.append("    on t.A01017 = c.id ");
 		sql.append(" where t.DEPARTID = :orgId ");
 		sql.append(" group by t.A01017, c.name ");
-		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		Query queryObject = this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 		queryObject.setParameter("orgId", orgId);
 		queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
-		List<Map<String, Object>> list =queryObject.list();
+		List<Map<String, Object>> list = queryObject.list();
 		return list;
 	}
-
+	
 	@Override
 	public List<Map<String, Object>> getEducationMapData(String orgId) {
+		
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(t.id) value, nvl(t.SH_ZGXL,'未知') name ");
 		sql.append("  from a01 t ");
 		sql.append(" where t.DEPARTID = :orgId ");
 		sql.append(" group by t.SH_ZGXL ");
-		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		Query queryObject = this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 		queryObject.setParameter("orgId", orgId);
 		queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
-		List<Map<String, Object>> list =queryObject.list();
+		List<Map<String, Object>> list = queryObject.list();
 		return list;
 	}
+	
 	@Override
 	public List<Map<String, Object>> getDegreeMapData(String orgId) {
+		
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(t.id) value, nvl(t.SH_ZGXW,'未知') name ");
 		sql.append("  from a01 t ");
 		sql.append(" where t.DEPARTID = :orgId ");
 		sql.append(" group by t.SH_ZGXW ");
-		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		Query queryObject = this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 		queryObject.setParameter("orgId", orgId);
 		queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
-		List<Map<String, Object>> list =queryObject.list();
+		List<Map<String, Object>> list = queryObject.list();
 		return list;
 	}
+	
 	@Override
 	public List<Map<String, Object>> getJobLevelMapData(String orgId) {
+		
 		StringBuilder sql = new StringBuilder();
 		sql.append("select count(t.id) value, nvl(c.name, '未知') name ");
 		sql.append("  from a01 t ");
@@ -193,15 +194,16 @@ public class ServantRepositoryImpl extends GenericRepositoryImpl<Servant> implem
 		sql.append("    on t.SH_A0192E = c.id ");
 		sql.append(" where t.DEPARTID = :orgId ");
 		sql.append(" group by t.SH_A0192E, c.name ");
-		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		Query queryObject = this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 		queryObject.setParameter("orgId", orgId);
 		queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
-		List<Map<String, Object>> list =queryObject.list();
+		List<Map<String, Object>> list = queryObject.list();
 		return list;
 	}
-
+	
 	@Override
 	public List<Map<String, Object>> getPostMapData(String orgId) {
+		
 		StringBuilder sql = new StringBuilder();
 		sql.append("select nvl(p.A02016A, '未知') name, count(t.id) value ");
 		sql.append("  from a01 t ");
@@ -209,11 +211,144 @@ public class ServantRepositoryImpl extends GenericRepositoryImpl<Servant> implem
 		sql.append("    on t.id = p.servant_id ");
 		sql.append(" where t.DEPARTID = :orgId ");
 		sql.append(" group by p.A02016A; ");
-		Query queryObject =this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+		Query queryObject = this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 		queryObject.setParameter("orgId", orgId);
 		queryObject.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
-		List<Map<String, Object>> list =queryObject.list();
+		List<Map<String, Object>> list = queryObject.list();
 		return list;
 	}
+	
+	/**
+	 * (non Javadoc)
+	 * @Title: querybyBaseSql
+	 * @Description: TODO
+	 * @param orgIds
+	 * @return
+	 * @see com.wondersgroup.human.repository.ofc.ServantRepository#querybyBaseSql(java.lang.String)
+	 */
+	@Override
+	public Map<String, Integer> statistServantSchoolNature(String isHold, String isflag, List<String> organNodeIds) {
+		
+		String querybase = "select count(*) from a08 a8 left join a01 a1 on a8.servant_id=a1.id where "
+				+ " a1.a01063=:zgxl "
+				+" and a1.DEPARTID IN (:departId)" ;
+		String queryString1 = " and a8.A08034 =:nineflag and a8.nine_eight_five_flag=:nineflag";
+		SQLQuery query = currentSession().createSQLQuery(querybase + queryString1);
+		query.setString("zgxl", isHold);
+		query.setString("nineflag", isflag);
+		query.setParameterList("departId", organNodeIds);
+		List queryResult = query.list();
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		Object nineflag = queryResult.get(0);
+		Integer nineflagint = Integer.parseInt(String.valueOf(nineflag));
+		result.put("985大学", nineflagint);
+		
+		queryString1 = " and a8.TWO_ONE_ONE_FLAG=:nineflag";
+		query = currentSession().createSQLQuery(querybase + queryString1);
+		query.setString("zgxl", isHold);
+		query.setString("nineflag", isflag);
+		query.setParameterList("departId", organNodeIds);
+		queryResult = query.list();
+		nineflag = queryResult.get(0);
+		nineflagint = Integer.parseInt(String.valueOf(nineflag));
+		result.put("211大学", nineflagint);
+		
+		queryString1 = " and a8.A08034 =:nineflag  and a8.DOUBLE_FIRST_RATE_FlAG=:nineflag";
+		query = currentSession().createSQLQuery(querybase + queryString1);
+		query.setString("zgxl", isHold);
+		query.setString("nineflag", isflag);
+		query.setParameterList("departId", organNodeIds);
+		queryResult = query.list();
+		nineflag = queryResult.get(0);
+		nineflagint = Integer.parseInt(String.valueOf(nineflag));
+		result.put("双一流大学", nineflagint);
+		
+		queryString1 = " and (a8.nine_eight_five_flag!=:nineflag or a8.nine_eight_five_flag is null)  and (a8.TWO_ONE_ONE_FLAG!=:nineflag or a8.TWO_ONE_ONE_FLAG is null) and (a8.DOUBLE_FIRST_RATE_FlAG!=:nineflag or a8.DOUBLE_FIRST_RATE_FlAG is null)";
+		query = currentSession().createSQLQuery(querybase + queryString1);
+		query.setString("zgxl", isHold);
+		query.setString("nineflag", isflag);
+		query.setParameterList("departId", organNodeIds);
+		queryResult = query.list();
+		nineflag = queryResult.get(0);
+		nineflagint = Integer.parseInt(String.valueOf(nineflag));
+		result.put("其他", nineflagint);
+		
+		return result;
+	}
 
+	/** (non Javadoc) 
+	 * @Title: statistServantisshanghailocal
+	 * @Description: TODO
+	 * @param isHold
+	 * @param organNodeIds
+	 * @return 
+	 * @see com.wondersgroup.human.repository.ofc.ServantRepository#statistServantisshanghailocal(java.lang.String, java.util.List) 
+	 */
+	@Override
+	public Map<String, Integer> statistServantisshanghailocal(String isHold, List<String> organNodeIds) {
+		String querybase = "select count(*) from a01 a1 where a1.A01085 like '310%' "
+				+ " and a1.a01063=:zgxl "
+				+" and a1.DEPARTID IN (:departId)" ;
+		SQLQuery query = currentSession().createSQLQuery(querybase);
+		query.setString("zgxl", isHold);
+		query.setParameterList("departId", organNodeIds);
+		List queryResult = query.list();
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		Object nineflag = queryResult.get(0);
+		Integer nineflagint = Integer.parseInt(String.valueOf(nineflag));
+		result.put("310人员", nineflagint);
+		
+		querybase = "select count(*) from a01 a1 where 1=1 "
+				+ " and a1.a01063=:zgxl "
+				+" and a1.DEPARTID IN (:departId)" ;
+		query = currentSession().createSQLQuery(querybase);
+		query.setString("zgxl", isHold);
+		query.setParameterList("departId", organNodeIds);
+		queryResult = query.list();
+		nineflag = queryResult.get(0);
+		Integer nineflagint1 = Integer.parseInt(String.valueOf(nineflag));
+		
+		result.put("非310人员", (nineflagint1-nineflagint));
+		
+		return result;
+	}
+
+	/** 
+	 * @see com.wondersgroup.human.repository.ofc.ServantRepository#queryServantInfoBySeniorCondation(java.util.List, java.util.List, java.lang.Integer, java.lang.Integer) 
+	 */
+	@Override
+	public Page<ServantVO> queryServantInfoBySeniorCondation(List<String> pList, List<String> l, Integer page,
+			Integer limit) {
+StringBuffer sql = new StringBuffer();
+		
+		sql.append("select * from A01 where removed ='N' and id in (");
+		sql.append("select distinct a1.id from a01 a1 ");
+		for (String s : l) {
+			sql.append("left join " + s + " on a1.id = " + s + ".servant_id ");
+		}
+		sql.append("where 1=1 and a1.removed = 'N' ");
+		for (String s : l) {
+			sql.append("and " + s + ".removed = 'N' ");
+		}
+		for (String s  : pList) {
+			sql.append(" AND  ("+s+") ");
+		}
+		sql.append(" group by a1.id) order by SH_REPORT_DATE desc");
+		
+		Query query = this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString())
+		        .addEntity(Servant.class);
+		List<Servant> list1 = query.list();
+		query.setFirstResult((page - 1) * limit);
+		query.setMaxResults(limit);
+		List<Servant> list = query.list();
+		List<ServantVO> listVO = new ArrayList<>();
+		for (Servant s : list) {
+			ServantVO vo = new ServantVO(s);
+			listVO.add(vo);
+		}
+		
+		Page<ServantVO> pages = new Page<>((page - 1) * limit, page, list1.size(), limit, listVO);
+		return pages;
+	}
+	
 }

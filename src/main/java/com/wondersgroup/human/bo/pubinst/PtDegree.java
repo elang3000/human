@@ -15,11 +15,15 @@
 
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.ofc.base.BaseDegree;
 
@@ -36,6 +40,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseDegree;
  */
 @Entity
 @Table(name = "C09")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtDegree extends BaseDegree<PtDegree> {
 	
 	private static final long serialVersionUID = -4156213718845762776L;

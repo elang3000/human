@@ -24,7 +24,7 @@
 					<smart:fromTokenTag/>
 					<smart:gridRow>
 						<smart:gridRow>
-							<smart:title title="人员离退备案" style="margin-top: 5px;"
+							<smart:title title="人员信息" style="margin-top: 5px;"
 								color="blue" />
 						</smart:gridRow>
 						<smart:gridRow>
@@ -33,65 +33,79 @@
  							    <smart:textInput type="hidden" id="pid" name="pid" value="${publicInstitution.id}"></smart:textInput>
 							    <smart:textInput type="hidden" id="rootId" name="rootId" value="${root.id}"></smart:textInput>
 							    <smart:textInput type="hidden" id="currentUnitId" name="currentUnitId" value="${currentUnit.id}"></smart:textInput>
-<%-- 							<smart:infoShowerLabel infoname="用户名" infovalue="${publicInstitution.name}"></smart:infoShowerLabel>
- --%>								
-								<smart:textInput labelName="用户名:" value="${publicInstitution.name}" name="name" placeholder="用户名"></smart:textInput>
+ 								<smart:infoShowerLabel infoname="用户名" infovalue="${publicInstitution.name}"></smart:infoShowerLabel>
+ 								
+								<%-- <smart:textInput  labelName="用户名:" value="${publicInstitution.name}" name="name" placeholder="用户名"></smart:textInput> --%>
 								
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect labelName="性别：" initSelectedKey="${publicInstitution.sex.id}" display="block" name="sex.id"  url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true">
-								</smart:singleSelect>
+								<smart:infoShowerLabel infoname="性别" infovalue="${publicInstitution.sex.name }"></smart:infoShowerLabel>
+								<%--  <smart:singleSelect  labelName="性别：" initSelectedKey="${publicInstitution.sex.id}" display="block" name="sex.id"  url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true">
+								</smart:singleSelect>  --%>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:textInput name="birthDate" labelName="出生日期" value="${publicInstitution.birthDate}"  id="birthDate" placeholder="出生日期"></smart:textInput>
+								<smart:infoShowerLabel infoname="出生日期" infovalue="${publicInstitution.birthDate }"></smart:infoShowerLabel>
+								<%-- <smart:textInput name="birthDate" labelName="出生日期" value="${publicInstitution.birthDate}"  id="birthDate" placeholder="出生日期"></smart:textInput> --%>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 						    <smart:gridColumn colPart="4">
-<%-- 							    <smart:infoShowerLabel infoname="当前单位:" infovalue="${root.name} ${currentUnit.name}"></smart:infoShowerLabel>
- --%>								
-								<smart:textInput labelName="当前单位:" value="${root.name} ${currentUnit.name}" name="name" placeholder="当前单位"></smart:textInput>
-							
+							    <smart:infoShowerLabel infoname="当前单位" infovalue="${root.name} ${currentUnit.name}"></smart:infoShowerLabel>
+ 								
+<%-- 								<smart:textInput labelName="当前单位:" value="${root.name} ${currentUnit.name}" name="name" placeholder="当前单位"></smart:textInput>
+ --%>							
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect isNotNull="true" verify="required" name="nation.id" labelName="民族：" initSelectedKey="${publicInstitution.nation.id}" display="block" url="dictquery/sub/code/GBT_3304_1991" isAddDefaltOption="true"></smart:singleSelect>
-							</smart:gridColumn>
+									<smart:infoShowerLabel infoname="民族" infovalue="${publicInstitution.nation.name }"></smart:infoShowerLabel>
+<%--  								<smart:singleSelect isNotNull="true" verify="required" name="nation.id" labelName="民族：" initSelectedKey="${publicInstitution.nation.id}" display="block" url="dictquery/sub/code/GBT_3304_1991" isAddDefaltOption="true"></smart:singleSelect>
+ --%> 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect labelName="政治面貌：" name="politics.id" initSelectedKey="${publicInstitution.politics.id}" display="block" url="dictquery/sub/code/GBT_4762_1984" isAddDefaltOption="true"></smart:singleSelect>
-							</smart:gridColumn>
+								<smart:infoShowerLabel infoname="政治面貌" infovalue="${publicInstitution.politics.name }"></smart:infoShowerLabel>
+<%-- 								<smart:singleSelect labelName="政治面貌：" name="politics.id" initSelectedKey="${publicInstitution.politics.id}" display="block" url="dictquery/sub/code/GBT_4762_1984" isAddDefaltOption="true"></smart:singleSelect>
+ --%>							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect labelName="健康状况：" name="health.id" initSelectedKey="${publicInstitution.health.id}" display="block" url="dictquery/sub/code/GBT_2261_3_2003" isAddDefaltOption="true"></smart:singleSelect>
-							</smart:gridColumn>
+								<smart:infoShowerLabel infoname="健康状况" infovalue="${publicInstitution.health.name }"></smart:infoShowerLabel>
+<%-- 								<smart:singleSelect labelName="健康状况：" name="health.id" initSelectedKey="${publicInstitution.health.id}" display="block" url="dictquery/sub/code/GBT_2261_3_2003" isAddDefaltOption="true"></smart:singleSelect>
+ --%>							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect labelName="婚姻状况：" name="marriage.id" initSelectedKey="${publicInstitution.marriage.id}" display="block" url="dictquery/sub/code/GBT_2261_2_2003" isAddDefaltOption="true"></smart:singleSelect>
-							</smart:gridColumn>
+								<smart:infoShowerLabel infoname="婚姻状况" infovalue="${publicInstitution.marriage.name }"></smart:infoShowerLabel>
+<%-- 								<smart:singleSelect labelName="婚姻状况：" name="marriage.id" initSelectedKey="${publicInstitution.marriage.id}" display="block" url="dictquery/sub/code/GBT_2261_2_2003" isAddDefaltOption="true"></smart:singleSelect>
+ --%>							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="身份证:" value="${publicInstitution.cardNo}" name="cardNo" placeholder="身份证"></smart:textInput>
-							</smart:gridColumn>
+								<smart:infoShowerLabel infoname="身份证" infovalue="${publicInstitution.cardNo }"></smart:infoShowerLabel>
+<%-- 								<smart:textInput labelName="身份证:" value="${publicInstitution.cardNo}" name="cardNo" placeholder="身份证"></smart:textInput>
+ --%>							</smart:gridColumn>
 						</smart:gridRow>
 					</smart:gridRow>
 					<smart:gridRow>
-							<%-- <smart:gridColumn colPart="4">
- 							     <smart:infoShowerLabel infoname="籍贯" infovalue="${publicInstitution.nativePlaceName}"></smart:infoShowerLabel>
- 					         </smart:gridColumn> --%>
- 					         <smart:gridColumn colPart="8">
-								<smart:continuousSelect verify="required" id="nativePlace" labelName="籍贯：" inputName="nativePlace.id" codeTypeCode="GBT_2260_2007" inputVal="${publicInstitution.nativePlace.id}" valType="ID" widthPercent="0.3" isSaveShowName="true" inputShowName="nativePlaceName"/>
-							</smart:gridColumn>
 							 <smart:gridColumn colPart="4">
-							    <smart:singleSelect labelName="离退备案类型:" name="recodeWay.id" initSelectedKey="" display="block" url="dictquery/sub/code/SY101" isAddDefaltOption="true"></smart:singleSelect>
-							</smart:gridColumn>
+ 							     <smart:infoShowerLabel infoname="籍贯" infovalue="${publicInstitution.nativePlaceName}"></smart:infoShowerLabel>
+ 					         </smart:gridColumn> 
+ 					         <%-- <smart:gridColumn colPart="8">
+								<smart:continuousSelect verify="required" id="nativePlace" labelName="籍贯：" inputName="nativePlace.id" codeTypeCode="GBT_2260_2007" inputVal="${publicInstitution.nativePlace.id}" valType="ID" widthPercent="0.3" isSaveShowName="true" inputShowName="nativePlaceName"/>
+							</smart:gridColumn> --%>
+							 <%-- <smart:gridColumn colPart="4">
+							    <smart:singleSelect isNotNull="true" verify="required" labelName="离退备案类型:" name="recodeWay.id" initSelectedKey="" display="block" url="dictquery/sub/code/SY101" isAddDefaltOption="true"></smart:singleSelect>
+							</smart:gridColumn> --%>
 					</smart:gridRow>
 					<smart:gridRow>
-							
+							<smart:title title="离退备案信息" style="margin-top: 5px;"
+								color="blue" />
+						</smart:gridRow>
+					<smart:gridRow>
+							<smart:gridColumn colPart="4">
+							    <smart:singleSelect isNotNull="true" verify="required" labelName="离退备案类型:" name="recodeWay.id" initSelectedKey="" display="block" url="dictquery/sub/code/SY101" isAddDefaltOption="true"></smart:singleSelect>
+							</smart:gridColumn>
 							 <smart:gridColumn colPart="4">
-								<smart:textInput name="recordDate" labelName="离退日期:" value=""  id="recordDate" placeholder="离退日期"></smart:textInput>
+								<smart:textInput isNotNull="true" verify="required" name="recordDate" labelName="离退日期:" value=""  id="recordDate" placeholder="离退日期"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:textInput labelName="备注:" value="${recruitemployplan.remark}" name="remark" placeholder="备注"></smart:textInput>
 							</smart:gridColumn>
 					</smart:gridRow>
+					
 					
 					
 					<%--  <smart:gridRow>
@@ -121,10 +135,10 @@
 									title="提交" theme="normal">
 									<smart:icon icon="check">&nbsp;提交</smart:icon>
 								</smart:button>
-								<smart:button id="save" other="lay-submit" size="sm" title="暂存"
+								<%-- <smart:button id="save" other="lay-submit" size="sm" title="暂存"
 									theme="default">
 									<smart:icon icon="plus">&nbsp;暂存</smart:icon>
-								</smart:button>
+								</smart:button> --%>
 								<smart:button theme="warm" size="sm" method="goBack" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
@@ -155,30 +169,24 @@
 		  
 		  <smart:buttonScriptAction>
 			goBack : function(data) {
+				var index=parent.layer.getFrameIndex(window.name);
+				parent.layer.close(index);
 				window.location.href='instflow/recordablerecord/list';
 			}
 		 </smart:buttonScriptAction>
 		 
-		  form.on('submit(save)', function (data) {//表单保存
-				var params=data.field;
-				var url=data.form.action;
-				$.post(url,params,function(result){
-					if(result.success){//保存成功
-						layer.alert(
-		                result.message, 
-		                {icon: 1,closeBtn: 1 },
-		                function () {
-							parent.layui.table.reload('navigationList');
-		                	var index=parent.layer.getFrameIndex(window.name);
-							parent.layer.close(index);
-		                });
-					}else{
-						layer.alert(
-		                result.message, 
-		                {icon: 0,closeBtn:0 });
-					}
-				});
-				return false;
+		  form.on('submit(save)', function (data) {//表单保存(暂存)
+				smart.confirm({
+				title:'暂存备案信息',
+				message:'确认提交保存吗？',
+				url:'instflow/recordablerecord/save',
+				params : smart.json("#editForm"),
+				callback : function(){
+					parent.layui.table.reload('navigationList');
+					var index=parent.layer.getFrameIndex(window.name);
+					parent.layer.close(index);
+				}
+			});
 			});
 	 		form.on('submit(submit)', function (data) {//表单提交
 				var params=data.field;

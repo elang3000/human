@@ -1,6 +1,5 @@
 package com.wondersgroup.human.controller.instflow;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,13 +15,10 @@ import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
-import com.wondersgroup.framework.core.bo.Sorts;
-import com.wondersgroup.framework.core.dao.support.Predicate;
-import com.wondersgroup.framework.core.dao.support.Predicate.Operator;
 import com.wondersgroup.framework.core.exception.BusinessException;
-import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
+import com.wondersgroup.framework.organization.service.OrganNodeService;
 import com.wondersgroup.framework.organization.service.OrganizationService;
 import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.SecurityUtils;
@@ -30,12 +26,16 @@ import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.framework.workflow.vo.FlowRecordVO;
-import com.wondersgroup.human.bo.instflow.MemberInfoRegister;
+import com.wondersgroup.human.bo.instflow.InformationChange;
 import com.wondersgroup.human.bo.instflow.RecordableRecord;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.instflow.RecordableRecordQuery;
 import com.wondersgroup.human.service.instflow.RecordableRecordService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
-import com.wondersgroup.human.vo.pubinst.PublicInstitutionVO;
+import com.wondersgroup.human.vo.instflow.RecordableRecordVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 @Controller
 @RequestMapping("/instflow/recordablerecord")//离退备案instflow/recordablerecord/index
@@ -53,6 +53,9 @@ public class RecordableRecordController extends GenericController{
 	private FlowRecordService flowRecordService;
 
 	
+	@Autowired
+	private OrganNodeService organNodeService;
+	
 	//人员列表index
 	private static final String  VIEW_INSTITUTION_LIST = "models/instflow/recordablerecord/list";
 	//事业单位待离退备案人员信息查看
@@ -61,8 +64,11 @@ public class RecordableRecordController extends GenericController{
 	//离退人员申请页面
 	private static final String INST_RECORD_APPLY = "models/instflow/recordablerecord/applyregister";
 	
-	//跳转提交审核信息列表
-	//private static final String RETURN_SUBMIT_PAGE ="models/instflow/recordablerecord/register";
+	//人员信息首页详情
+	private static final String RECORD_DETAIL = "models/instflow/recordablerecord/recordDetail";
+	
+	private String busType = "RecordableRecord";
+	
 	
 	//审批页面
 	private static final String OPINION_RECORD_FLOW = "models/instflow/recordablerecord/queryregister";
@@ -84,7 +90,30 @@ public class RecordableRecordController extends GenericController{
 		return VIEW_RECORD_LIST;
 	}
 	
+	/**
+	 * @Title: pageList
+	 * @Description: 列表
+	 * @param params查询条件
+	 * @param limit页大小
+	 * @param page页码
+	 * @return: Page<InformationChangesVO>
+	 */
+	@Log(title = "查询信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
+	@ResponseBody
+	@RequestMapping("/pageList")
+	public Page<RecordableRecordVO> pageList(RecordableRecordQuery record,Integer page,Integer limit){
+		Page<RecordableRecordVO> pageInfo = recordableService.pageList(record, page, limit);
+		
+		return pageInfo;
+	}
+	
+	
+	
+	
 	//离退人员提交申请页面
+	@Log(title = "新增人员备案", operatorType = OperatorType.MANAGE, businessType = BusinessType.INSERT,
+		     isSaveRequestData = true)
 	@RequestMapping("/recordApply")
 	public String returnApply(Model model,String id) {
 		//当前用户信息
@@ -117,6 +146,10 @@ public class RecordableRecordController extends GenericController{
 	}
 	*/
 	
+	
+	
+	
+	
 	/**
 	 * @Title: operationRegister
 	 * @Description: 人员离退备案(上报)
@@ -125,6 +158,8 @@ public class RecordableRecordController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "新增人员备案", operatorType = OperatorType.MANAGE, businessType = BusinessType.INSERT,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/submitregister")
 	public AjaxResult submitRegister(RecordableRecord temp,HttpServletRequest request){
@@ -177,9 +212,35 @@ public class RecordableRecordController extends GenericController{
 		
 	}
 	
+	/**
+	 * 离退备案人员信息详情
+	 * @param model
+	 * @param id
+	 * @return
+	 */
+	@Log(title = "更新详情", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
+	@RequestMapping("/recordDetail")
+	public String informationDetail(Model model,String id){
+		
+		
+		RecordableRecord recordablerecord = recordableService.get(id);
+		List<FlowRecordVO> records = flowRecordService.findFlowRecordByBusinessId(id, busType, null, false);
+		
+		model.addAttribute("recordablerecord", recordablerecord);
+		model.addAttribute("records", records);
+		
+		return RECORD_DETAIL;
+		
+		
+	}
+	
+	
 	/*
 	 * 审批详情页面
 	 */
+	@Log(title = "更新详情", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@RequestMapping("/queryRegister")
 	public String planFlow(Model model,String id) {
 		FlowRecord flow = flowRecordService.load(id);
@@ -200,7 +261,7 @@ public class RecordableRecordController extends GenericController{
 	public List<FlowRecordVO> recordFlowRecordDetail(String id, Model model) {
 		FlowRecord flowRecord = flowRecordService.get(id);
 		List<FlowRecordVO> records = flowRecordService.findFlowRecordByBusinessId(flowRecord.getBusId(),
-		        flowRecord.getBusType(), false);
+		        flowRecord.getBusType(),flowRecord.getProcessInstanceId(), false);
 		//model.addAttribute("records", records);
 		return records;
 	}

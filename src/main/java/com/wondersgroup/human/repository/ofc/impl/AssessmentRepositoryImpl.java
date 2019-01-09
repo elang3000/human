@@ -100,7 +100,7 @@ public class AssessmentRepositoryImpl extends GenericRepositoryImpl<Assessment> 
         queryObject.setParameter("servantId", servant.getId());
         queryObject.setParameter("year", year);
         BigDecimal count = (BigDecimal)queryObject.uniqueResult();
-		return count.intValue()>=4;
+		return count.intValue()>=1;
 //		return true;
 	
 	}

@@ -118,7 +118,7 @@ public class BaseUnitFormation<T> extends GenericEntity {
 	 * @Description: 编制主管部门核定批准该单位（机构）的人员编制人数。
 	 */
 	@Column(name = "B02024", length = 2)
-	private Integer unitPlanningTotal;
+	private Integer unitPlanningTotal = 0;
 	
 	/**
 	 * @fieldName: 行政编制数
@@ -126,7 +126,7 @@ public class BaseUnitFormation<T> extends GenericEntity {
 	 * @Description: 编制主管部门批准的该单位（机构）的行政编制人数。
 	 */
 	@Column(name = "B02027", length = 2)
-	private Integer adminWeaveNumber;
+	private Integer adminWeaveNumber = 0;
 	
 	/**
 	 * @fieldName: 事业编制数
@@ -134,7 +134,7 @@ public class BaseUnitFormation<T> extends GenericEntity {
 	 * @Description: 编制主管部门批准的该单位（机构）的事业编制人数。
 	 */
 	@Column(name = "B02031", length = 2)
-	private Integer institutionWeaveNumber;
+	private Integer institutionWeaveNumber = 0;
 	
 	/**
 	 * @fieldName: 参照公务员法管理事业编制数
@@ -142,7 +142,7 @@ public class BaseUnitFormation<T> extends GenericEntity {
 	 * @Description: 编制主管部门批准的该单位（机构）参照公务员法管理的事业编制人数。
 	 */
 	@Column(name = "B02032", length = 2)
-	private Integer causeWeaveNumber;
+	private Integer causeWeaveNumber = 0 ;
 	
 	/**
 	 * @fieldName: 其他事业编制数
@@ -246,7 +246,7 @@ public class BaseUnitFormation<T> extends GenericEntity {
 	 * @Description: 本机构内占编制的实有人数。
 	 */
 	@Column(name = "B02110", length = 2)
-	private Integer actualNumber;
+	private Integer actualNumber = 0;
 	
 	/**
 	 * @fieldName: 空编人数
@@ -254,7 +254,7 @@ public class BaseUnitFormation<T> extends GenericEntity {
 	 * @Description: 本机构内空编或超编人数。
 	 */
 	@Column(name = "B02115", length = 2)
-	private Integer vacancyExcessNumber;
+	private Integer vacancyExcessNumber = 0;
 	
 	/**
 	 * @fieldName: 工勤编制数

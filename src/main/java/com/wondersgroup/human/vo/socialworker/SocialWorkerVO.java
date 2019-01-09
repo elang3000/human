@@ -127,7 +127,8 @@ public class SocialWorkerVO {
 		if(s.getSex()!=null){
 			this.sex=s.getSex().getName();
 		}
-		this.cardNo=s.getCardNo();
+		//this.cardNo=s.getCardNo();
+		this.cardNo = s.getCardNoView();//身份证加密
 		this.departName=s.getDepartName();
         this.nowPostName=s.getNowPostName();
         this.topEducation = s.getTopEducation();

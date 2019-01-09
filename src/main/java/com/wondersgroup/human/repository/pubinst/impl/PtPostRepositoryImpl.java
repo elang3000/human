@@ -54,7 +54,8 @@ public class PtPostRepositoryImpl extends GenericRepositoryImpl<PtPost> implemen
 	@Override
 	public void updateAllPostNowTipBySid(String Id, CodeInfo codeInfo) {
 		
-		Query query = this.currentSession().createQuery("update com.wondersgroup.human.bo.pubinst.PtPost set nowPostSign = :nowPostSign where publicInstitution.id = :Id");
+		//Query query = this.currentSession().createQuery("update com.wondersgroup.human.bo.pubinst.PtPost set nowPostSign = :nowPostSign where publicInstitution.id = :Id");
+		Query query = this.currentSession().createQuery("update com.wondersgroup.human.bo.pubinst.PtPost set tenureStatus = :nowPostSign where publicInstitution.id = :Id");
 		query.setParameter("nowPostSign", codeInfo);
 		query.setParameter("Id",Id);
 		query.executeUpdate();

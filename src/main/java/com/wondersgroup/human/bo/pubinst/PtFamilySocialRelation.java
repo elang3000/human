@@ -1,10 +1,14 @@
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.pubinst.base.InstBaseFamilySocialRelation;
 import com.wondersgroup.human.bo.pubinst.base.InstBaseWorkTechnology;
@@ -19,6 +23,8 @@ import com.wondersgroup.human.bo.pubinst.base.InstBaseWorkTechnology;
  */
 @Entity
 @Table(name = "C36")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtFamilySocialRelation extends InstBaseFamilySocialRelation<PtFamilySocialRelation> {
 
 	private static final long serialVersionUID = 4453289947547175598L;

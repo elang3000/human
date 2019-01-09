@@ -17,6 +17,7 @@ package com.wondersgroup.human.vo.ofcflow;
 
 import java.text.SimpleDateFormat;
 
+import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.human.bo.ofcflow.ProbationServant;
 
 /**
@@ -92,7 +93,7 @@ public class ProbationServantVO {
 			if (s.getDraftServant().getSex() != null) {
 				this.sex = s.getDraftServant().getSex().getName();
 			}
-			this.cardNo = s.getDraftServant().getCardNo();
+			this.cardNo = s.getDraftServant().getCardNoView();
 			this.draftDeptName = s.getDraftServant().getDraftUnit().getOrgan().getName();
 		}
 		if (s.getProbationStartDate() != null) {
@@ -128,6 +129,8 @@ public class ProbationServantVO {
 			return "取消录用，待区人事主管部门备案确认";
 		} else if (state == 8) {
 			return "取消录用，区人事主管部门已备案确认";
+		} else if (state == FlowRecord.BUS_STOP) {
+			return "业务被中止";
 		} else {
 			return "";
 		}

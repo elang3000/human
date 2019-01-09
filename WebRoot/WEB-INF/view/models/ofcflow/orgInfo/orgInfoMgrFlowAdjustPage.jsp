@@ -37,22 +37,22 @@
 							    <tr>
 							    	<td>单位名称：</td>
 							    	<td><label>${orgInfo.unitBasicName == '' ? '无原数据':orgInfo.unitBasicName}</label></td>
-							    	<td><smart:textInput id="unitBasicName" display="inline" name="unitBasicName" value="${orgInfoMgrFlow.unitBasicName }"></smart:textInput></td>
+							    	<td><smart:textInput id="unitBasicName" display="inline" name="unitBasicName" value="${orgInfoMgrFlow.unitBasicName }" verify="required"></smart:textInput></td>
 							    </tr>
 							    <tr>
 							    	<td>单位简称：</td>
 							    	<td><label>${empty orgInfo.unitBasicSimpleName ? '无原数据':orgInfo.unitBasicSimpleName}</label></td>
-							    	<td><smart:textInput id="unitBasicSimpleName" display="inline" name="unitBasicSimpleName" value="${orgInfoMgrFlow.unitBasicSimpleName }"></smart:textInput></td>
+							    	<td><smart:textInput id="unitBasicSimpleName" display="inline" name="unitBasicSimpleName" value="${orgInfoMgrFlow.unitBasicSimpleName }" verify="required"></smart:textInput></td>
 							    </tr>
 							    <tr>
 							    	<td>单位缩写：</td>
 							    	<td><label>${empty orgInfo.unitBasicShortName ? '无原数据':orgInfo.unitBasicShortName}</label></td>
-							    	<td><smart:textInput id="unitBasicShortName" display="inline" name="unitBasicShortName" value="${orgInfoMgrFlow.unitBasicShortName }" ></smart:textInput></td>
+							    	<td><smart:textInput id="unitBasicShortName" display="inline" name="unitBasicShortName" value="${orgInfoMgrFlow.unitBasicShortName }" verify="required"></smart:textInput></td>
 							    </tr>
 							    <tr>
 							    	<td>社会信用代码：</td>
 							    	<td><label>${empty orgInfo.xydm ? '无原数据':orgInfo.xydm}</label></td>
-							    	<td><smart:textInput id="xydm" display="inline" name="xydm" value="${orgInfoMgrFlow.xydm }"></smart:textInput></td>
+							    	<td><smart:textInput id="xydm" display="inline" name="xydm" value="${orgInfoMgrFlow.xydm }" verify="required"></smart:textInput></td>
 							    </tr>
 							    <tr>
 							    	<td>行政区划：</td>
@@ -82,10 +82,12 @@
 									url="dictquery/sub/code/DM046"></smart:singleSelect></td>
 							    </tr>
 							    <tr>
-							    	<td>性质级别：</td>
+							    	<td>性质类别：</td>
 							    	<td><label>${empty orgInfo.unitPropertyLevel ? '无原数据':orgInfo.unitPropertyLevel.name}</label></td>
-							    	<td><smart:singleSelect name="unitPropertyLevel.id" id="unitPropertyLevel" isAddDefaltOption="true" initSelectedKey="${orgInfoMgrFlow.unitPropertyLevel.id}"
-									display="inline" url="dictquery/sub/code/DM142"></smart:singleSelect></td>
+							    	<td>
+							    		<label>${orgInfoMgrFlow.unitPropertyLevel.name}</label>
+							    		<smart:textInput id="unitPropertyLevelId" name="unitPropertyLevel.id" value="${orgInfoMgrFlow.unitPropertyLevel.id}" type="hidden"></smart:textInput>
+									</td>
 							    </tr>
 							    <tr>
 							    	<td>隶属单位名称：</td>
@@ -180,12 +182,6 @@
 							    	<td><smart:singleSelect name="appropriation.id" id="appropriation" display="inline" isAddDefaltOption="true" initSelectedKey="${orgInfoMgrFlow.appropriation.id }"
 										url="dictquery/sub/code/DM047"></smart:singleSelect></td>
 							    </tr>
-							    <tr>
-							    	<td>机构类别：</td>
-							    	<td><label>${empty orgInfo.orgCategory ? '无原数据':orgInfo.orgCategory.name}</label></td>
-							    	<td><smart:singleSelect name="orgCategory.id" isAddDefaltOption="true" initSelectedKey="${orgInfoMgrFlow.orgCategory.id }"
-										id="orgCategory" display="inline" url="dictquery/sub/code/0305"></smart:singleSelect></td>
-							    </tr>
 							</tbody>
 						</table>
 					</smart:gridRow>
@@ -232,6 +228,7 @@
 		                result.message, 
 		                {icon: 1,closeBtn: 1 },
 		                function () {
+		                	parent.layui.table.reload('navigationList');
 							parent.layui.table.reload('orgInfoMgrFlowList');
 		                	var index=parent.layer.getFrameIndex(window.name);
 							parent.layer.close(index);
@@ -254,6 +251,7 @@
 				url:url,
 				params : params,
 				callback : function(){
+					parent.layui.table.reload('navigationList');
 					parent.layui.table.reload('orgInfoMgrFlowList');
 					var index=parent.layer.getFrameIndex(window.name);
 					parent.layer.close(index);

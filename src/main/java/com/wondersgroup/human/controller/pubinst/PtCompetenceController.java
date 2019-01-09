@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.service.pubinst.PtCompetenceService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PtCompetenceVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: CompetenceController
@@ -83,6 +86,8 @@ public class PtCompetenceController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<CompetenceVO>
 	 */
+	@Log(title = "查询信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PtCompetenceVO> pageList(String Id, Integer limit, Integer page) {
@@ -100,6 +105,8 @@ public class PtCompetenceController extends GenericController {
 	 * @param temp 专业技术资格信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑专业技术信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PtCompetence temp) {
@@ -131,6 +138,8 @@ public class PtCompetenceController extends GenericController {
 	 * @param temp 专业技术资格信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除专业技术信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

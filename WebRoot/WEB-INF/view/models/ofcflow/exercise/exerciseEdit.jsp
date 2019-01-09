@@ -21,7 +21,7 @@
 			</smart:cardHead>
 			<smart:cardBody>
 				<smart:form id="editForm">
-					<smart:fromTokenTag/>
+					<smart:fromTokenTag />
 					<smart:textInput type="hidden" name="id" value="${d.id}"></smart:textInput>
 					<smart:gridRow>
 						<smart:title title="公务员基本信息" style="margin-top: 5px;" color="blue" />
@@ -30,49 +30,69 @@
 						<smart:gridColumn colPart="8">
 							<smart:gridRow>
 								<smart:gridColumn colPart="6">
-									<smart:selectResource labelName="姓名:" id="selectNameTag" display="block"/>
+									<smart:selectResource isNotNull="true" labelName="姓名:"
+										id="selectNameTag" display="block" />
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
-									<smart:textInput otherAttr="disabled" labelName="身份证号：" name="cardNo" display="block" value="${s.cardNo}"></smart:textInput>
-								</smart:gridColumn>
-							</smart:gridRow>
-							<smart:gridRow>
-								<smart:gridColumn colPart="6">
-									<smart:textInput otherAttr="disabled" labelName="性别：" name="sex" display="block" value="${s.sex.name}"></smart:textInput>
-								</smart:gridColumn>
-								<smart:gridColumn colPart="6">
-									<smart:textInput otherAttr="disabled" labelName="出生日期：" name="birthDate" display="block" value="${s.birthDate}"></smart:textInput>
+									<smart:textInput otherAttr="disabled" labelName="身份证号："
+										name="cardNo" display="block" value="${s.cardNoView}"></smart:textInput>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="6">
-									<smart:textInput otherAttr="disabled" labelName="民族：" name="nation" display="block" value="${s.nation.name}"></smart:textInput>
+									<smart:textInput otherAttr="disabled" labelName="性别："
+										name="sex" display="block" value="${s.sex.name}"></smart:textInput>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
-									<smart:textInput otherAttr="disabled" labelName="政治面貌：" name="politics" display="block" value="${s.politics.name}"></smart:textInput>
-								</smart:gridColumn>
-							</smart:gridRow>
-							<smart:gridRow>
-								<smart:gridColumn colPart="6">
-									<smart:textInput otherAttr="disabled" labelName="出生地：" name="birthPlaceName" display="block" value="${s.birthPlaceName}"></smart:textInput>
-								</smart:gridColumn>
-								<smart:gridColumn colPart="6">
-									<smart:textInput otherAttr="disabled" labelName="籍贯：" name="nativePlaceName" display="block" value="${s.nativePlaceName}"></smart:textInput>
+									<smart:textInput otherAttr="disabled" labelName="出生日期："
+										name="birthDate" display="block" value="${s.birthDate}"></smart:textInput>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="6">
-									<smart:textInput otherAttr="disabled" labelName="人员类别：" name="personType" display="block" value="${s.personType.name}"></smart:textInput>
+									<smart:textInput otherAttr="disabled" labelName="民族："
+										name="nation" display="block" value="${s.nation.name}"></smart:textInput>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
-									<smart:textInput otherAttr="disabled" labelName="健康状况：" name="health" display="block" value="${s.health.name}"></smart:textInput>
+									<smart:textInput otherAttr="disabled" labelName="政治面貌："
+										name="politics" display="block" value="${s.politics.name}"></smart:textInput>
+								</smart:gridColumn>
+							</smart:gridRow>
+							<smart:gridRow>
+								<smart:gridColumn colPart="6">
+									<smart:textInput otherAttr="disabled" labelName="职务："
+										name="postName" display="block" value="${s.nowPostName}"></smart:textInput>
+								</smart:gridColumn>
+								<smart:gridColumn colPart="6">
+									<smart:textInput otherAttr="disabled" labelName="级别："
+										name="jobLevel" display="block" value="${s.nowJobLevel.name}"></smart:textInput>
+								</smart:gridColumn>
+							</smart:gridRow>
+							<smart:gridRow>
+								<smart:gridColumn colPart="6">
+									<smart:textInput otherAttr="disabled" labelName="籍贯："
+										name="nativePlaceName" display="block"
+										value="${s.nativePlaceName}"></smart:textInput>
+								</smart:gridColumn>
+								<smart:gridColumn colPart="6">
+									<smart:textInput otherAttr="disabled" labelName="健康状况："
+										name="health" display="block" value="${s.health.name}"></smart:textInput>
+								</smart:gridColumn>
+							</smart:gridRow>
+							<smart:gridRow>
+								<smart:gridColumn colPart="6">
+									<smart:textInput otherAttr="disabled" labelName="人员类别："
+										name="personType" display="block" value="${s.personType.name}"></smart:textInput>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="3" colOffset="1">
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<img alt="照片" src="static/image/20170705135600.jpg">
+									<img
+										style="width: 150px; height: 200px; min-width: 150px; min-height: 200px;"
+										name="photoPath" alt="照片"
+										src="ftp/getImg?imgName=${s.photoPath}">
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:gridColumn>
@@ -82,22 +102,32 @@
 					</smart:gridRow>
 					<smart:gridRow>
 						<smart:gridColumn colPart="4">
-							<smart:textInput labelName="去向单位名称:" isNotNull="true" verify="required" value="${d.targetOrgan}" name="targetOrgan"></smart:textInput>
+							<smart:textInput labelName="去向单位名称:" isNotNull="true"
+								verify="required" value="${d.targetOrgan}" name="targetOrgan"></smart:textInput>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
-							<smart:date isNotNull="true" verify="required"
-										labelName="挂职锻炼开始时间：" name="startDate" id="startDate"
-										value="${d.startDate}" display="block"></smart:date>
+							<smart:date isNotNull="true" verify="required" shortName="开始时间"
+								labelName="挂职锻炼开始时间：" name="startDate" id="startDate"
+								value="${d.startDate}" display="block"></smart:date>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
-							<smart:date isNotNull="true" verify="required"
-										labelName="挂职锻炼结束时间：" name="endDate" id="endDate"
-										value="${d.endDate}" display="block"></smart:date>
+							<smart:date isNotNull="true" verify="required" shortName="结束时间"
+								labelName="挂职锻炼结束时间：" name="endDate" id="endDate"
+								value="${d.endDate}" display="block"></smart:date>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:singleSelect isAddDefaltOption="true"
+								name="exercisePost.id" labelName="挂职职务：" display="block"
+								url="dictquery/sub/code/GBT_12403_1990"
+								initSelectedKey="${d.exercisePost.id}" verify="required"
+								isNotNull="true"></smart:singleSelect>
 						</smart:gridColumn>
 					</smart:gridRow>
 					<smart:gridRow>
 						<smart:gridColumn colPart="12">
-							<smart:textarea labelName="备注：" name="remark"  display="block">${d.remark}</smart:textarea>
+							<smart:textarea labelName="备注：" name="remark" display="block">${d.remark}</smart:textarea>
 						</smart:gridColumn>
 					</smart:gridRow>
 					<smart:gridRow>
@@ -111,7 +141,7 @@
 									theme="default">
 									<smart:icon icon="plus">&nbsp;暂存</smart:icon>
 								</smart:button>
-								<smart:button theme="warm" size="sm" method="goBack" title="返回">
+								<smart:button theme="primary" size="sm" method="goBack" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>
@@ -121,12 +151,17 @@
 			</smart:cardBody>
 		</smart:card>
 	</smart:grid>
-	<smart:scriptHead models="table,form,layer,element,selectResource,laydate">
+	<smart:scriptHead
+		models="table,form,layer,element,selectResource,laydate">
+		<smart:utils/>
 		<smart:dateRender id="startDate" />
 		<smart:dateRender id="endDate" />
-		<smart:initSelectResource value="${s.name}" hiddenValue="${s.id}" id = "selectNameTag" name="servant.name" hiddenName="servant.id" winSize="lg" winTitle="选择人员信息" winUrl="orgInfo/selectServant?createOrganNodeId=${createOrganNodeId}" 
-		linkElement="{fieldName :'cardNo',fieldValue : 'cardNo'},{fieldName :'sex',fieldValue : 'sex'},{fieldName :'birthDate',fieldValue : 'birthDate'},{fieldName :'nation',fieldValue : 'nation'},{fieldName :'politics',fieldValue : 'politics'}
-		,{fieldName :'birthPlaceName',fieldValue : 'birthPlaceName'},{fieldName :'nativePlaceName',fieldValue : 'nativePlaceName'},{fieldName :'personType',fieldValue : 'personType'},{fieldName :'health',fieldValue : 'health'}"/>
+		<smart:initSelectResource verify="required" value="${s.name}"
+			hiddenValue="${s.id}" id="selectNameTag" name="servant.name"
+			hiddenName="servant.id" winSize="lg" winTitle="选择人员信息"
+			winUrl="orgInfo/selectServant?createOrganNodeId=${createOrganNodeId}"
+			linkElement="{fieldName :'cardNo',fieldValue : 'cardNo'},{fieldName :'sex',fieldValue : 'sex'},{fieldName :'birthDate',fieldValue : 'birthDate'},{fieldName :'nation',fieldValue : 'nation'},{fieldName :'politics',fieldValue : 'politics'}
+		,{fieldName :'postName',fieldValue : 'postName'},{fieldName :'jobLevel',fieldValue : 'jobLevel'},{fieldName :'nativePlaceName',fieldValue : 'nativePlaceName'},{fieldName :'personType',fieldValue : 'personType'},{fieldName :'health',fieldValue : 'health'},{fieldName :'photoPath',fieldValue : 'photoPath',fieldType:'img'}" />
 		<smart:buttonScriptAction>
 			goBack : function() {
 				var index=parent.layer.getFrameIndex(window.name);

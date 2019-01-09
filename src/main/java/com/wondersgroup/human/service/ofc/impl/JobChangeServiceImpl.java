@@ -15,13 +15,22 @@
  */
 package com.wondersgroup.human.service.ofc.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wondersgroup.framework.core.bo.Page;
+import com.wondersgroup.framework.core.bo.Sorts;
+import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
+import com.wondersgroup.human.bo.ofc.Degree;
 import com.wondersgroup.human.bo.ofc.JobChange;
 import com.wondersgroup.human.repository.ofc.JobChangeRepository;
 import com.wondersgroup.human.service.ofc.JobChangeService;
+import com.wondersgroup.human.vo.ofc.DegreeVO;
+import com.wondersgroup.human.vo.ofc.JobChangeVO;
 
 /**
  * 
@@ -37,6 +46,19 @@ import com.wondersgroup.human.service.ofc.JobChangeService;
 public class JobChangeServiceImpl extends GenericServiceImpl<JobChange> implements JobChangeService{
 	@Autowired
 	private JobChangeRepository JobChangeRepository;
+
+	@Override
+	public Page<JobChangeVO> getPage(List<Predicate> filter, Sorts sort, Integer page, Integer limit) {
+		
+		Page<JobChange> jobChangePage = JobChangeRepository.findByFilter(filter, sort, page, limit);
+		List<JobChangeVO> voList = new ArrayList<>();
+		for (JobChange e : jobChangePage.getResult()) {
+			JobChangeVO vo = new JobChangeVO(e);
+			voList.add(vo);
+		}
+		return new Page<>(jobChangePage.getStart(), jobChangePage.getCurrentPageSize(), jobChangePage.getTotalSize(),
+				jobChangePage.getPageSize(), voList);
+	}
 	
 	
 }

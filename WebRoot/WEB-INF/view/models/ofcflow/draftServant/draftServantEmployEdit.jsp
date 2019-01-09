@@ -3,6 +3,7 @@
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +32,7 @@
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="身份证号"
-									infovalue="${d.cardNo }"></smart:infoShowerLabel>
+									infovalue="${d.cardNoView }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="性别" infovalue="${d.sex.name }"></smart:infoShowerLabel>
@@ -39,124 +40,129 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-<%-- 								<smart:infoShowerLabel infoname="出生日期" infovalue="${d.birthDate }"></smart:infoShowerLabel> --%>
+								<smart:textInput labelName="电话号码" isNotNull="true" name="phoneNumber" verify="phone"  value="${d.phoneNumber}"></smart:textInput>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:textInput labelName="户籍地址" name="residencePlace"  value="${d.residencePlace }"></smart:textInput>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:textInput labelName="通讯地址" name="homeAddress" value="${d.homeAddress }"></smart:textInput>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="4">
 								<smart:date isNotNull="true" verify="required" labelName="出生日期：" value="${d.birthDate}" name="birthDate" id="birthDate" display="block"></smart:date>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="出生地" infovalue="${d.birthPlaceName }"></smart:infoShowerLabel> --%>
-								<smart:singleSelect isSearch="true" isNotNull="true" verify="required" name="birthPlace.id" labelName="出生地：" initSelectedKey="${d.birthPlace.id}" display="block" url="dictquery/sub/id/GBT_2260_2007/null" isAddDefaltOption="true"></smart:singleSelect>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="籍贯" infovalue="${d.nativePlaceName }"></smart:infoShowerLabel> --%>
-								<smart:singleSelect isNotNull="true" verify="required" name="nativePlace.id" labelName="籍贯：" initSelectedKey="${d.nativePlace.id}" display="block" url="dictquery/sub/id/GBT_2260_2007/null" isAddDefaltOption="true"></smart:singleSelect>
-							</smart:gridColumn>
-						</smart:gridRow>
-						<smart:gridRow>
-							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="民族" infovalue="${d.nation.name }"></smart:infoShowerLabel> --%>
 								<smart:singleSelect isNotNull="true" verify="required" name="nation.id" labelName="民族：" initSelectedKey="${d.nation.id}" display="block" url="dictquery/sub/id/GBT_3304_1991/null" isAddDefaltOption="true"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="政治面貌" infovalue="${d.politics.name }"></smart:infoShowerLabel> --%>
 								<smart:singleSelect labelName="政治面貌：" name="politics.id" initSelectedKey="${d.politics.id}" display="block" url="dictquery/sub/code/GBT_4762_1984" isAddDefaltOption="true"></smart:singleSelect>
 							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="是否退役士兵" infovalue="${d.isRetiredSoldier.name }"></smart:infoShowerLabel> --%>
-								<smart:singleSelect labelName="是否退役士兵：" name="isRetiredSoldier.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isRetiredSoldier.id }"></smart:singleSelect>
+
+						</smart:gridRow>
+
+						<smart:gridRow>
+							<smart:gridColumn colPart="12">
+								<smart:continuousSelect verify="required" isNotNull="true" id="birthPlace" labelName="出生地：" inputName="birthPlace.id" codeTypeCode="GBT_2260_2007" inputVal="${d.birthPlace.id}" valType="ID" widthPercent="0.33333" isSaveShowName="true" inputShowName="birthPlaceName"/>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="12">
+								<smart:continuousSelect verify="required" isNotNull="true" id="nativePlace" labelName="籍贯：" inputName="nativePlace.id" codeTypeCode="GBT_2260_2007" inputVal="${d.nativePlace.id}" valType="ID" widthPercent="0.33333" isSaveShowName="true" inputShowName="nativePlaceName"/>
+							</smart:gridColumn>
+						</smart:gridRow>
+
+						<smart:gridRow>
+							<smart:gridColumn colPart="12">
+								<smart:continuousSelect id="eductionCode" labelName="学历名称：" inputName="degree.id" codeTypeCode="GBT_4658_2006" inputVal="${d.degree.id}" valType="ID" widthPercent="0.33333" verify="required" isNotNull="true"  allOrLast="last"/>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="是否退役大学生士兵" infovalue="${d.isRetiredCollegeStudentSoldier.name }"></smart:infoShowerLabel> --%>
-								<smart:singleSelect labelName="是否退役大学生士兵 ：" name="isRetiredCollegeStudentSoldier.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isRetiredCollegeStudentSoldier.id }"></smart:singleSelect>
+								<smart:singleSelect labelName="是否应届毕业生："  isNotNull="true" verify="required"  display="block" url="dictquery/sub/code/DM215" name="isGraduating.id" isAddDefaltOption="true" initSelectedKey="${d.isGraduating.id }"></smart:singleSelect>
 							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="是否残疾人" infovalue="${d.isdisabled.name }"></smart:infoShowerLabel> --%>
-								<smart:singleSelect labelName="是否残疾人 ：" name="isdisabled.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isdisabled.id }"></smart:singleSelect>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="是否有海外留学经历" infovalue="${d.isStudyAbroad.name }"></smart:infoShowerLabel> --%>
-								<%-- <smart:singleSelect labelName="是否有海外留学经历：" name="isStudyAbroad.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isStudyAbroad.id }"></smart:singleSelect> --%>
+							<smart:gridColumn colPart="8">
+								<smart:continuousSelect id="eductionalType" labelName="教育类别：" inputName="eductionalType.id" codeTypeCode="DM024" inputVal="${d.eductionalType.id}" valType="ID" widthPercent="0.33333" verify="required" isNotNull="true" />
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="留学年限" infovalue="${d.studyAbroadTime }"></smart:infoShowerLabel> --%>
-								<smart:singleSelect labelName="是否有海外留学经历：" name="isStudyAbroad.id" display="block" url="dictquery/sub/code/DM215"  isAddDefaltOption="true" initSelectedKey="${d.isStudyAbroad.id }"></smart:singleSelect>
+								<smart:singleSelect shortName="持有上海居住证" isNotNull="true" verify="required" labelName="持有《上海市居住证》一年以上（仍在有效期内），且积分达到标准分值120分" name="isResidencePermit.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isResidencePermit.id }"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="是否有海外工作经历" infovalue="${d.isWorkAbroad.name }"></smart:infoShowerLabel> --%>
-								<smart:singleSelect labelName="是否有海外工作经历 ：" name="isWorkAbroad.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isWorkAbroad.id }"></smart:singleSelect>
+								<smart:singleSelect shortName="加入上海户籍" isNotNull="true" verify="required" labelName="是否加入上海户籍" name="isJoinResidence.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isJoinResidence.id }"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<%-- <smart:infoShowerLabel infoname="海外工作年限" infovalue="${d.workAbroadTime }"></smart:infoShowerLabel> --%>
+								<smart:singleSelect shortName="大学生村官"  isNotNull="true" verify="required" labelName="是否大学生村官、“三支一扶”人员、优秀村（居）干部" name="collegeVillageOfficer.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.collegeVillageOfficer.id }"></smart:singleSelect>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+
+							<smart:gridColumn colPart="4">
+								<smart:singleSelect shortName="退役大学生士兵 " labelName="是否退役大学生士兵 ：" name="isRetiredCollegeStudentSoldier.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isRetiredCollegeStudentSoldier.id }"></smart:singleSelect>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:singleSelect shortName="残疾人 " labelName="是否残疾人 ：" name="isdisabled.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isdisabled.id }"></smart:singleSelect>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:singleSelect labelName="录聘方式(标识) ：" name="employResult.id" display="block" url="dictquery/sub/code/DM035" isAddDefaltOption="true" initSelectedKey="${d.employResult.id }"></smart:singleSelect>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="4">
+								<smart:singleSelect shortName="海外留学经历" labelName="是否有海外留学经历：" name="isStudyAbroad.id" display="block" url="dictquery/sub/code/DM215"  isAddDefaltOption="true" initSelectedKey="${d.isStudyAbroad.id }"></smart:singleSelect>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:singleSelect shortName="海外工作经历" labelName="是否有海外工作经历 ：" name="isWorkAbroad.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${d.isWorkAbroad.id }"></smart:singleSelect>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
 								<smart:numberInput labelName="海外工作年限 ：" name="workAbroadTime" value="${d.workAbroadTime }" type="text" display="block"></smart:numberInput>
 							</smart:gridColumn>
 						</smart:gridRow>
-						<%-- <smart:gridRow>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="来源" infovalue="${d.source.name }"></smart:infoShowerLabel>
-								<smart:continuousSelect labelName="来源 ：" inputName="shSource.id" codeTypeCode="0126" inputVal="${d.source.id}" valType="ID" widthPercent="0.3333333"/>
-							</smart:gridColumn>
-						</smart:gridRow> --%>
 						<smart:gridRow>
 							<smart:title title="招录信息" style="margin-top: 5px;" color="blue" />
 						</smart:gridRow>
 						<smart:gridRow>
-	<%-- 						<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="拟录用单位" infovalue="${d.draftUnitName }"></smart:infoShowerLabel>
-								<smart:singleSelect labelName="拟录用单位" name="draftUnit.id" display="block" url="ofcflow/draftServant/getUnitSelect" isAddDefaltOption="true" initSelectedKey="${d.draftUnit.id}"></smart:singleSelect>
-							</smart:gridColumn> --%>
 							<smart:gridColumn colPart="4">
-								<%-- <smart:textInput labelName="体检" name="physicalEXAM"  verify="required" value="${d.physicalEXAM }"></smart:textInput> --%>
 								<smart:textInput labelName="拟录用部门" name="draftDeptName"  value="${d.draftDeptName}"></smart:textInput>
-								<%-- <smart:infoShowerLabel infoname="拟录用部门" infovalue="${d.draftDeptName }"></smart:infoShowerLabel> --%>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								
 								<smart:textInput labelName="职位名称" name="employJobName"  value="${d.employJobName }"></smart:textInput>
-								<%-- <smart:infoShowerLabel infoname="职位名称" infovalue="${d.employJobName }"></smart:infoShowerLabel> --%>
 							</smart:gridColumn>
-														<smart:gridColumn colPart="4">
+							<smart:gridColumn colPart="4">
 								<smart:textInput labelName="政审考核" name="politicalExam" value="${d.politicalExam }"></smart:textInput>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-							<smart:textInput labelName="录用考试准考证号：" name="ticketId" value="${d.ticketId }"></smart:textInput>
-								<%-- <smart:infoShowerLabel infoname="录用考试准考证号" infovalue="${d.ticketId }"></smart:infoShowerLabel> --%>
+							<smart:textInput shortName="录用准考证" labelName="录用考试准考证号：" name="ticketId" value="${d.ticketId }"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-							<smart:numberInput labelName="专业能力测试成绩：" name="aptitudeTestScore" value="${d.aptitudeTestScore }" type="text" display="block"></smart:numberInput>
-								<%-- <smart:infoShowerLabel infoname="专业能力测试成绩" infovalue="${d.aptitudeTestScore }"></smart:infoShowerLabel> --%>
+							<smart:numberInput shortName="专业能力成绩" labelName="专业能力测试成绩：" name="aptitudeTestScore" value="${d.aptitudeTestScore }" type="text" display="block"></smart:numberInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-							<smart:numberInput labelName="公共科目笔试成绩 ：" name="publicSubjectTestScore" value="${d.publicSubjectTestScore }" type="text" display="block"></smart:numberInput>
-<%-- 								<smart:infoShowerLabel infoname="公共科目笔试成绩" infovalue="${d.publicSubjectTestScore }"></smart:infoShowerLabel> --%>
+							<smart:numberInput  shortName="公科笔试成绩" labelName="公共科目笔试成绩 ：" name="publicSubjectTestScore" value="${d.publicSubjectTestScore }" type="text" display="block"></smart:numberInput>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-							<smart:numberInput labelName="笔试（行政职业能力测试）成绩 ：" name="writtenExamTestScore" value="${d.writtenExamTestScore }" type="text" display="block"></smart:numberInput>
-<%-- 								<smart:infoShowerLabel infoname="笔试（行政职业能力测试）成绩" infovalue="${d.writtenExamTestScore }"></smart:infoShowerLabel> --%>
+							<smart:numberInput shortName="行政职能成绩" labelName="笔试（行政职业能力测试）成绩 ：" name="writtenExamTestScore" value="${d.writtenExamTestScore }" type="text" display="block"></smart:numberInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-							<smart:numberInput labelName="笔试（申论）成绩：" name="explainingScore" value="${d.explainingScore }" type="text" display="block"></smart:numberInput>
-								<%-- <smart:infoShowerLabel infoname="笔试（申论）成绩" infovalue="${d.explainingScore }"></smart:infoShowerLabel> --%>
+							<smart:numberInput shortName="申论成绩" labelName="笔试（申论）成绩：" name="explainingScore" value="${d.explainingScore }" type="text" display="block"></smart:numberInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-							<smart:numberInput labelName="笔试（专业科目）成绩：" name="professionalSubjectScore" value="${d.professionalSubjectScore }" type="text" display="block"></smart:numberInput>
-								<%-- <smart:infoShowerLabel infoname="笔试（专业科目）成绩" infovalue="${d.professionalSubjectScore }"></smart:infoShowerLabel> --%>
+							<smart:numberInput shortName="专业科目成绩" labelName="笔试（专业科目）成绩：" name="professionalSubjectScore" value="${d.professionalSubjectScore }" type="text" display="block"></smart:numberInput>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
 							<smart:numberInput labelName="面试成绩：" name="interviewScore" value="${d.interviewScore }" type="text" display="block"></smart:numberInput>
-								<%-- <smart:infoShowerLabel infoname="面试成绩" infovalue="${d.interviewScore }"></smart:infoShowerLabel> --%>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 							<smart:numberInput labelName="其他科目成绩：" name="otherSubjectScore" value="${d.otherSubjectScore }" type="text" display="block"></smart:numberInput>
-								<%-- <smart:infoShowerLabel infoname="其他科目成绩" infovalue="${d.otherSubjectScore }"></smart:infoShowerLabel> --%>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:textInput labelName="体检" name="physicalEXAM"  value="${d.physicalEXAM }"></smart:textInput>
@@ -208,9 +214,6 @@
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="录用单位" infovalue="${d.draftUnitName }"></smart:infoShowerLabel>
 							</smart:gridColumn>
-<%-- 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="录用部门:" placeholder="录用部门" name="draftDeptName" value="${d.draftDeptName}"></smart:textInput>
-							</smart:gridColumn> --%>
 							<smart:gridColumn colPart="4">
 								<smart:date display="block" labelName="参加工作年月" id="time3" value="${d.attendDate}" name="attendDate" isNotNull="true" verify="required"></smart:date>
 							</smart:gridColumn>
@@ -226,7 +229,7 @@
 								<smart:singleSelect isNotNull="true" verify="required" display="block" labelName="免基层实习:" initSelectedKey="${d.isBasePractice.id}" name="isBasePractice.id" url="dictquery/sub/code/DM215"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:date isNotNull="true" verify="required" display="block" labelName="所在单位意见时间:" isDefaultVal="true" value="${d.deptOpinionDate}" name="deptOpinionDate" id="time" placeholder="时间"></smart:date>
+								<smart:date isNotNull="true" verify="required" display="block" labelName="所在单位意见时间:" shortName="单位意见时间" isDefaultVal="true" value="${d.deptOpinionDate}" name="deptOpinionDate" id="time" placeholder="时间"></smart:date>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -235,7 +238,7 @@
 								<smart:textInput labelName="上级主管"  value="${d.supervisor}" name="supervisor"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:date display="block" labelName="上级主管单位意见时间:" id="time2" value="${d.unitOpinionDate}" name="unitOpinionDate" placeholder="时间"></smart:date>
+								<smart:date display="block" labelName="上级主管单位意见时间:" shortName="上级意见时间"   id="time2" value="${d.unitOpinionDate}" name="unitOpinionDate" placeholder="时间"></smart:date>
 							</smart:gridColumn>
 							
 							<smart:gridColumn colPart="4">
@@ -245,18 +248,21 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:date display="block" id="probationStartTime" labelName="试用期开始时间:" isNotNull="true"  verify="required" value="${d.probationStartTime}" name="probationStartTime" placeholder="时间"></smart:date>
+								<smart:date display="block" id="probationStartTime" labelName="报道时间:" isNotNull="true"  verify="required" value="${d.probationStartTime}" name="probationStartTime" placeholder="时间"></smart:date>
 							</smart:gridColumn>
 							<c:if test="${!empty report.isAgree}">
-							<smart:gridColumn colPart="4"  colOffset="1">
-								<smart:button id="download" size="sm" method="download" title="下载电子介绍信">
-									<smart:icon icon="plus">&nbsp;下载电子介绍信</smart:icon>
-								</smart:button>
-																		<c:if test="${!empty d.isElecLetter}">
-												已确认电子介绍信
-										</c:if>
-							</smart:gridColumn>
+                                <smart:gridColumn colPart="4"  colOffset="1">
+                                    <smart:button id="download" size="sm" method="download" title="下载电子介绍信">
+                                        <smart:icon icon="plus">&nbsp;下载电子介绍信</smart:icon>
+                                    </smart:button>
+                                     <c:if test="${!empty d.isElecLetter}">
+                                         已确认电子介绍信
+                                     </c:if>
+                                </smart:gridColumn>
 							</c:if>
+                            <c:if test="${empty report.isAgree}">
+                                <label style="color: crimson;" class="layui-form-label">市局暂未批复同意</label>
+                            </c:if>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="12">
@@ -265,7 +271,7 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="12">
-								<smart:textarea isNotNull="true" display="block" verify="required" labelName="录用鉴定（评语）:" name="employComment">${d.employComment}</smart:textarea>
+								<smart:textarea isNotNull="true" display="block" verify="required" labelName="录用鉴定（评语）:" shortName="录用评语" name="employComment">${d.employComment}</smart:textarea>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -275,15 +281,20 @@
 									<c:if test="${!empty report.isAgree}">
 										<c:if test="${empty d.isElecLetter}">
 											<c:if test="${isCurrentOrgan}">
-												<smart:button id="save" other="lay-submit" size="sm" method="add" title="确认电子介绍信,录用人员试用期开始">
-													<smart:icon icon="check">&nbsp;确认电子介绍信</smart:icon>
-												</smart:button>
+												<shiro:hasPermission name="DRAFTSERVANT_CONFIRM">
+													<smart:button id="save" other="lay-submit" size="sm" method="add" title="确认电子介绍信,录用人员试用期开始">
+														<smart:icon icon="check">&nbsp;确认电子介绍信</smart:icon>
+													</smart:button>
+												</shiro:hasPermission>
 											</c:if>
 										</c:if>
 									</c:if>
-									<smart:button size="sm" method="temporary" title="暂存">
-										<smart:icon icon="plus">&nbsp;暂存</smart:icon>
-									</smart:button>
+
+									<shiro:hasPermission name="DRAFTSERVANT_CONFIRM">
+										<smart:button id="temporary" other="lay-submit" size="sm"  title="确认电子介绍信,录用人员试用期开始">
+											<smart:icon icon="check">&nbsp;暂存</smart:icon>
+										</smart:button>
+									</shiro:hasPermission>
 									<smart:button theme="warm" size="sm" method="back" title="返回">
 										<smart:icon icon="reply">&nbsp;返回</smart:icon>
 									</smart:button>
@@ -299,7 +310,7 @@
 	</smart:grid>
 	<smart:scriptHead models="table,form,layer,element,laydate">
 		<smart:utils/>
-
+		<smart:continuousSelectAction/>
 		<smart:buttonScriptAction>
 			back : function() {
 				var index=parent.layer.getFrameIndex(window.name);
@@ -324,19 +335,6 @@
 		            $eleForm.submit();
 				}
 				
-			},
-			temporary:function(){
-				smart.confirm({
-					title:'保存录用信息',
-					message:'确认提交保存吗？',
-					url:'ofcflow/draftServant/updateDraft',
-					params : smart.json("#editForm"),
-					callback : function(){
-						parent.layui.table.reload('navigationList');
-						var index=parent.layer.getFrameIndex(window.name);
-						parent.layer.close(index);
-					}
-				});
 			}
 		 </smart:buttonScriptAction>
 		<smart:dateRender id="time" />
@@ -358,6 +356,21 @@
 						parent.layer.close(index);
 					}
 				});
+		});
+
+
+		form.on('submit(temporary)', function (data) {//确认电子介绍信
+			smart.confirm({
+				title:'保存录用信息',
+				message:'确认提交保存吗？',
+				url:'ofcflow/draftServant/updateDraft',
+				params : smart.json("#editForm"),
+				callback : function(){
+					parent.layui.table.reload('navigationList');
+					var index=parent.layer.getFrameIndex(window.name);
+					parent.layer.close(index);
+				}
+			});
 		});
 	</smart:scriptHead>
 </smart:body>

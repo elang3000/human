@@ -74,6 +74,10 @@ public class AssessmentDetail extends GenericEntity {
 	@Column(name = "IS_TCREDIT")  
 	private String iscredit;
 
+	//投票数,没有季度考核的单位才有投票数
+	@Column(name="VOTE_NUMB")
+	private Integer voteNumb;
+
 	
 	public Servant getServant() {
 		
@@ -170,7 +174,12 @@ public class AssessmentDetail extends GenericEntity {
 		
 		this.iscredit = iscredit;
 	}
-	
-	
-	
+
+	public Integer getVoteNumb() {
+		return voteNumb;
+	}
+
+	public void setVoteNumb(Integer voteNumb) {
+		this.voteNumb = voteNumb;
+	}
 }

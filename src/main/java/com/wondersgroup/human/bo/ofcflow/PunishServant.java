@@ -19,16 +19,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
@@ -46,7 +50,10 @@ import com.wondersgroup.human.bo.ofc.Servant;
  * @see       [相关类/方法]
  * @since     [产品/模块版本] 
  */
-@Entity(name = "HUMAN_PUNISH")
+@Entity
+@Table(name = "HUMAN_PUNISH")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PunishServant extends GenericEntity {
 
 	private static final long serialVersionUID = 370048502682652986L;
@@ -60,6 +67,14 @@ public class PunishServant extends GenericEntity {
 	//区人事主管部门备案通过
 	@Transient
 	public final static Integer PUNISH_SERVANT_PASS = 3;
+	
+	//处分未解除
+	@Transient
+	public final static Integer PUNISH_SIGN = 0;
+	
+	//处分解除
+	@Transient
+	public final static Integer PUNISH_SIGN_PASS = 1;
 	
 	/**
 	 * 权限代码map
@@ -77,7 +92,7 @@ public class PunishServant extends GenericEntity {
 	 * @fieldType: com.wondersgroup.human.bo.ofc.Servant
 	 * @Description: 人员信息主表信息。
 	 */
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "SERVANT_ID")
 	private Servant servant;
 	
@@ -147,7 +162,7 @@ public class PunishServant extends GenericEntity {
 	/**
 	 * @fieldName: punishYear
 	 * @fieldType: Integer
-	 * @Description: 处分期限（年）
+	 * @Description: 处分期限（月）
 	 */
 	@JoinColumn(name = "PUNISH_YEAR")
 	private Integer punishYear;

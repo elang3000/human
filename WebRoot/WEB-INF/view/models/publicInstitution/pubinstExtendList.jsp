@@ -425,7 +425,7 @@
 						</smart:buttonGroup>
 					</smart:accordionPanelItem>
 					
-					<smart:accordionPanelItem title="退出（调出）信息">
+					<%-- <smart:accordionPanelItem title="退出（调出）信息">
 						<smart:table id="outMgrNavigationList" url="pubinst/outMgr/pageList?Id=${id}" height="full" page="false" limit="10000" text="未找到用户数据！">
 							<tr>
 								<smart:tableItem field="category" width=".2" sort="false">调出本单位类别 </smart:tableItem>
@@ -450,9 +450,9 @@
 								<smart:icon icon="plus"></smart:icon>&nbsp;&nbsp;新增退出信息
 				  		    </smart:button>
 						</smart:buttonGroup>
-					</smart:accordionPanelItem>
+					</smart:accordionPanelItem> --%>
 					
-					<smart:accordionPanelItem title="进入（调入）信息">
+					<%-- <smart:accordionPanelItem title="进入（调入）信息">
 						<smart:table id="intoMgrNavigationList" url="pubinst/intoMgr/pageList?Id=${id}" height="full" page="false" limit="10000" text="未找到用户数据！">
 							<tr>
 								<smart:tableItem field="enterTheUnitChangeType" width=".2" sort="false">进入本单位类别 </smart:tableItem>
@@ -477,7 +477,7 @@
 								<smart:icon icon="plus"></smart:icon>&nbsp;&nbsp;新增进入信息
 				  		    </smart:button>
 						</smart:buttonGroup>
-					</smart:accordionPanelItem>
+					</smart:accordionPanelItem> --%>
 					
 				</smart:accordionPanel>
 			</smart:cardBody>

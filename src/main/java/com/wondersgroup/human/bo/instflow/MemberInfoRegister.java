@@ -14,6 +14,7 @@ package com.wondersgroup.human.bo.instflow;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,6 +22,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.organization.bo.OrganNode;
@@ -38,6 +42,8 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
  */
 @Entity
 @Table(name = "HUMAN_INST_REGISTER")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MemberInfoRegister extends GenericEntity {
 	
 	private static final long serialVersionUID = -2045142251901326764L;

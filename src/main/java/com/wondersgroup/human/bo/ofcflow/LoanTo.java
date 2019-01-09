@@ -17,6 +17,7 @@ package com.wondersgroup.human.bo.ofcflow;
 
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,6 +27,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
@@ -43,6 +46,8 @@ import com.wondersgroup.human.bo.ofc.Servant;
  */
 @Entity
 @Table(name = "HUMAN_LOAN_TO")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class LoanTo extends GenericEntity {
 	
 	private static final long serialVersionUID = 5805368140489576886L;
@@ -92,6 +97,16 @@ public class LoanTo extends GenericEntity {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date startDate;
+	
+	/**
+	 * @fieldName: endDate
+	 * @fieldType: java.util.Date
+	 * @Description: 借调结束时间。
+	 */
+	@Column(name = "END_DATE")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	private Date endDate;
 	
 	/**
 	 * @fieldName: remark
@@ -167,6 +182,16 @@ public class LoanTo extends GenericEntity {
 	public void setStartDate(Date startDate) {
 		
 		this.startDate = startDate;
+	}
+	
+	public Date getEndDate() {
+		
+		return endDate;
+	}
+	
+	public void setEndDate(Date endDate) {
+		
+		this.endDate = endDate;
 	}
 	
 }

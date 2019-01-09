@@ -49,6 +49,11 @@ public class PostVO {
 	 * @Description: 职务名称 ,该人担任职务的具体名称。
 	 */
 	private String postName;
+
+	/**
+	 * 职务变动中 下拉列表使用的名称
+	 */
+	private String name;
 	
 	/**
 	 * @fieldName: tenureName
@@ -122,6 +127,7 @@ public class PostVO {
 	public PostVO(Post s) {
 		this.id = s.getId();
 		this.postName = s.getPostName();
+		this.name = s.getPostName();
 		this.tenureName = s.getTenureName();
 		this.workContentRange = s.getWorkContentRange();
 		if (s.getTenureReason() != null) {
@@ -272,5 +278,12 @@ public class PostVO {
 		
 		this.workContentRange = workContentRange;
 	}
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

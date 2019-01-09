@@ -63,9 +63,9 @@
 							</smart:gridColumn>
 							
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect labelName="性质级别："
+								<smart:singleSelect labelName="性质类别："
 									name="unitPropertyLevel.id" id="unitPropertyLevel" isAddDefaltOption="true" initSelectedKey="${orgInfoMgrFlow.unitPropertyLevel.id}"
-									display="block" url="dictquery/sub/code/DM142"></smart:singleSelect>
+									display="block" url="dictquery/sub/code/DM142" initIncludeKey="1,4,5" isNotNull="true" verify="required"></smart:singleSelect>
 							</smart:gridColumn>
 					</smart:gridRow>
 					
@@ -158,10 +158,6 @@
 								id="appropriation" display="block" isAddDefaltOption="true" initSelectedKey="${orgInfoMgrFlow.appropriation.id }"
 								url="dictquery/sub/code/DM047"></smart:singleSelect>
 						</smart:gridColumn>
-						<smart:gridColumn colPart="4">
-							<smart:singleSelect labelName="机构类别：" name="orgCategory.id" isAddDefaltOption="true" initSelectedKey="${orgInfoMgrFlow.orgCategory.id }" isNotNull="true" verify="required"
-								id="orgCategory" display="block" url="dictquery/sub/code/0305"></smart:singleSelect>
-						</smart:gridColumn>
 					</smart:gridRow>
 					
 					<smart:gridRow>
@@ -206,6 +202,7 @@
 		                result.message, 
 		                {icon: 1,closeBtn: 1 },
 		                function () {
+		                	parent.layui.table.reload('navigationList');
 							parent.layui.table.reload('orgInfoMgrFlowList');
 		                	var index=parent.layer.getFrameIndex(window.name);
 							parent.layer.close(index);
@@ -228,6 +225,7 @@
 				url:url,
 				params : params,
 				callback : function(){
+					parent.layui.table.reload('navigationList');
 					parent.layui.table.reload('orgInfoMgrFlowList');
 					var index=parent.layer.getFrameIndex(window.name);
 					parent.layer.close(index);

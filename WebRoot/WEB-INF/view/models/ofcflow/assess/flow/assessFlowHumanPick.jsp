@@ -43,7 +43,7 @@
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
 									<smart:infoShowerLabel infoname="申请优秀人数"
-										infovalue="${percent.outstandingNumb }"></smart:infoShowerLabel>
+										infovalue="${percent.unitOutStandingNumb }"></smart:infoShowerLabel>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
@@ -56,11 +56,11 @@
 							<smart:gridRow>
 										<div class="layui-col-md6">
 									<div style="width: 100%;">
-										<label class="layui-form-label formLabel"> 上报嘉奖名单 ： </label>
+										<label class="layui-form-label formLabel"> 单位人员考核 ： </label>
 										<div class="layui-input-block">
-										<smart:button method="pick" size="sm" title="跳转到选择考核页面,对单位人员进行考核"
+										<smart:button method="pick" size="sm" title="跳转到选择考核页面，对单位人员进行考核。考核优秀即为嘉奖。"
 											theme="normal">
-											<smart:icon icon="user-o">&nbsp;选择</smart:icon>
+											<smart:icon icon="user-o">&nbsp;考核</smart:icon>
 										</smart:button>
 										</div>
 									</div>
@@ -68,18 +68,20 @@
 								</div>
 							</smart:gridRow>
 							</c:if>
-											<smart:gridRow colSpace="5">
+					<smart:gridRow colSpace="5">
+						<label style="font-size: medium;" class="layui-form-label">嘉奖人员列表:</label>
 					<smart:gridColumn colPart="12" deviceType="md">
+
 						<smart:table  id="navigationList"
 							url="ofcflow/assess/unitCheckPageList?assessCollectId=${collectId }&orgId=${percent.orgNode.id }&id=${fineCodeInfoId }"
-							height="full-415" limits="10,100,300,1000" text="未找到有效数据！">
+							height="full-415" limits="10,100,300,1000" text="未找到有效数据！"  doneCallBack="fixedCol">
 							<tr>
-								<smart:tableItem field="name" width="200" sort="true">姓名</smart:tableItem>
-								<smart:tableItem field="orgName" width="300" sort="true">单位</smart:tableItem>
-								<smart:tableItem field="cardNo" width="200" sort="true">身份证号</smart:tableItem>
-								<smart:tableItem field="result" width="200" sort="false">审核结果</smart:tableItem>
-								<smart:tableItem field="remarks" width="500" sort="false">备注</smart:tableItem>
-								<smart:tableItem align="center" width="200"  fixed="right"
+								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
+								<smart:tableItem field="orgName" width=".2" sort="true">单位</smart:tableItem>
+								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
+								<smart:tableItem field="result" width=".2" sort="false">审核结果</smart:tableItem>
+								<smart:tableItem field="remarks" width=".2" sort="false">备注</smart:tableItem>
+								<smart:tableItem align="center" width=".1"  fixed="right"
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar">
@@ -94,7 +96,7 @@
 				<smart:gridRow>
 				<c:if test="${step != 'STATUS_ASSESS_STEP7' }">
 								<smart:gridColumn colPart="6">
-									<smart:textarea labelName="审批意见:" display="block" name="opinion" placeholder="审批意见"></smart:textarea>
+									<smart:textarea labelName="审批意见:" display="block" name="opinion" id="opinion" placeholder="审批意见"></smart:textarea>
 								</smart:gridColumn>
 								</c:if>
 							</smart:gridRow>
@@ -181,12 +183,19 @@
 					smart.show({
 						title : '人员考核,考核优秀的人为嘉奖人员',
 						size : 'full',
-						url : 'ofcflow/assess/unitCheckIndexPage/${collect.id }',
+						url : 'ofcflow/assess/unitCheckIndexPage/${collect.id }?isFlow=1',
 						scrollbar : false
 					});
 			},
 			noPass : function() {
 				$("#result").val("0");//审批不通过
+				if(!$("#opinion").val()){
+					smart.message({
+					message : "请输入审批不通过意见！",
+					type : 'W' //S保存  I问号  W感叹号 E错误
+					});
+					return;
+				}
 				smart.confirm({
 					title:'确认审批不通过',
 					message:'确认审批不通过吗？',

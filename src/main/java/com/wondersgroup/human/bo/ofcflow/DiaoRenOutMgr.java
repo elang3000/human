@@ -114,7 +114,7 @@ public class DiaoRenOutMgr extends BaseEventOutMgr<DiaoRenOutMgr> {
 	 */
 	@Column(name = "IS_LOW_TO_HIGH")
 	@org.hibernate.annotations.Type(type = "yes_no")
-	private Boolean isLowToHigh = false;
+	private Boolean isLowToHigh;
 	
 	/**
 	 * @fieldName: postCode

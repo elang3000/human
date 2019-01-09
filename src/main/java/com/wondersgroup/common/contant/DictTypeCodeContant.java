@@ -32,10 +32,10 @@ public class DictTypeCodeContant {
 	// 字典项【GB/T 2261.1-2003 性别】代码
 	public static final String CODE_TYPE_SEX = "GBT_2261_1_2003";
 	
-	// 字典项【GB/T 4658-2006 学历代码	】代码
+	// 字典项【GB/T 4658-2006 学历代码 】代码
 	public static final String CODE_TYPE_EDUCATION = "GBT_4658_2006";
 	
-	// 字典项【GB/T 6864-2003 学位代码	】代码
+	// 字典项【GB/T 6864-2003 学位代码 】代码
 	public static final String CODE_TYPE_DEGREE = "GBT_6864_2003";
 	
 	// 字典项【GB/T 4762-1984 政治面貌】代码
@@ -49,28 +49,28 @@ public class DictTypeCodeContant {
 	
 	// 字典项【DM215 是否】代码
 	public static final String CODE_TYPE_YESNO = "DM215";
-
+	
 	// 字典项【GB/T 2261.3-2003 健康状况代码】代码
 	public static final String CODE_TYPE_HEALTH = "GBT_2261_3_2003";
 	
 	// 字典项【GB/T 4754-2011 国民经济行业分类】代码
 	public static final String CODE_TYPE_ECONOMICS_CLASS = "GBT_4754_2011";
-
+	
 	// 字典项【学习形式】代码
 	public static final String CODE_TYPE_STUDY_TYPE = "0015";
-
+	
 	// 字典项【考核类别】代码
 	public static final String CODE_TYPE_EXPEDITION_TYPE = "PROBATION_SERVANT_STATUS";
-
+	
 	// 字典项【GB/T 12403-1990 干部职务名称代码】代码
 	public static final String CODE_TYPE_POST_NAME = "GBT_12403_1990";
-
+	
 	// 字典项【GB/T 12407-2008 职务级别代码】代码
 	public static final String CODE_TYPE_POST_LEVEL = "GBT_12407_2008";
-
+	
 	// 字典项【ZRB27―2006/CXDW《从学单位类别代码》DM022】代码
 	public static final String CODE_TYPE_STUDYINGUNIT_TYPE = "DM022";
-
+	
 	// 字典项【RB114-2006/RZXS 《任职形式》】代码
 	public static final String CODE_TYPE_HOLD_POST_TYPE = "0199";
 	
@@ -89,21 +89,21 @@ public class DictTypeCodeContant {
 	// 字典项【录聘方式代码 DM035】代码
 	public static final String CODE_TYPE_HIRE_MODE = "DM035";
 	
-	// 字典项【DM142 单位性质】代码
+	// 字典项【DM142 单位性质类别】代码
 	public static final String CODE_TYPE_UNIT_NATURE = "DM142";
 	
 	// 字典项【GB/T 12405-2008 单位增员减员代码】代码
 	public static final String CODE_TYPE_UNIT_A_R = "GBT_12405_2008";
-
+	
 	// 字典项【GB/T 2261.4-2003 从业状况(个人身份)代码】代码
 	public static final String CODE_TYPE_IDENTITY = "GBT_2261_4_2003";
-
+	
 	// 字典项【流动原因代码】代码
 	public static final String CODE_TYPE_FLUCTUATEFLOW_REASON = "DM015";
 	
 	// 字典项【GB/T 12404-1997 单位隶属关系代码】代码
 	public static final String CODE_TYPE_UNIT_SUBJECTION = "GBT_12404_1997";
-
+	
 	// 字典项【单位级别】代码
 	public static final String CODE_TYPE_UNIT_LEVEL = "DM141";
 	
@@ -112,7 +112,7 @@ public class DictTypeCodeContant {
 	
 	// 字典项【考核结论代码】代码
 	public static final String CODE_TYPE_CHECK_CONCLUSION = "DM018";
-
+	
 	// 字典项【人员类别】代码
 	public static final String CODE_TYPE_MEMBER_TYPE = "DM199";
 	
@@ -124,7 +124,7 @@ public class DictTypeCodeContant {
 	
 	// 字典项【教育培训结果】代码
 	public static final String CODE_TYPE_EDUCATION_RESULT = "DM025";
-
+	
 	// 字典项【家庭关系】代码
 	public static final String CODE_TYPE_FAMILY_RELATION = "GBT_4761_2008";
 	
@@ -133,28 +133,28 @@ public class DictTypeCodeContant {
 	
 	// 字典项【任职范围类别】代码
 	public static final String CODE_TYPE_POST_RANGE = "DM218";
-
+	
 	// 字典项【任职方式】代码
 	public static final String CODE_TYPE_POST_TYPE = "DM003";
-
+	
 	// 字典项【任职原因】代码
 	public static final String CODE_TYPE_POST_REASON = "DM004";
-
+	
 	// 字典项【职务变动类别】代码
 	public static final String CODE_TYPE_POST_CHANGE = "DM006";
-
+	
 	// 字典项【任职状态】代码
 	public static final String CODE_TYPE_POST_STATUS = "DM007";
-
+	
 	// 字典项【免职、辞职原因】代码
 	public static final String CODE_TYPE_DEPOSE_REASON = "DM009_ALL";
-
+	
 	// 字典项【奖惩类别】代码
 	public static final String CODE_TYPE_REWARDPUNISH_TYPE = "DM019";
 	
 	// 字典项【GB/T 8563.1-2005 奖励代码】代码
 	public static final String CODE_TYPE_REWARD = "GBT_8563_1_2005";
-
+	
 	// 字典项【荣誉称号级别】代码
 	public static final String CODE_TYPE_HONOR_LEVEL = "GBT_8563_2_2005";
 	
@@ -163,7 +163,7 @@ public class DictTypeCodeContant {
 	
 	// 字典项【奖励撤销原因】代码
 	public static final String CODE_TYPE_REWARD_REVOKE_REASON = "DM189";
-
+	
 	// 字典项【奖励原因】代码
 	public static final String CODE_TYPE_REWARD_REASON = "DM021_REWARD";
 	
@@ -414,22 +414,28 @@ public class DictTypeCodeContant {
 	// 字典项【当年申诉情况】代码
 	public static final String CODE_TYPE_APPEAL = "SM";
 	
-	//字典项【晋升原因代码】代码
+	// 字典项【晋升原因代码】代码
 	public static final String CODE_TYPE_PROMOTE = "DM113";
 	
-	//字典项【降级原因代码】代码
+	// 字典项【降级原因代码】代码
 	public static final String CODE_TYPE_DEMOTE = "DM114";
 	
-	//机构信息维护类型
-	public static final String CODE_HUMAM_ORGINFO_MAINTIAN_TYPE = "HUMAM_ORGINFO_MAINTIAN_TYPE";
+	// 机构信息维护类型
+	public static final String CODE_HUMAN_ORGINFO_MAINTIAN_TYPE = "HUMAN_ORGINFO_MAINTIAN_TYPE";
 	
-	//机构编制信息维护类型
-	public static final String CODE_HUMAM_ORGFORMATION_MAINTIAN_TYPE = "HUMAM_ORGFORMATION_MAINTIAN_TYPE";
+	// 机构编制信息维护类型
+	public static final String CODE_HUMAN_ORGFORMATION_MAINTIAN_TYPE = "HUMAN_ORGFORMATION_MAINTIAN_TYPE";
 	
-	//人员状态
+	// 机构编制信息维护类型
+	public static final String HUMAN_IMPORTANT_EVENT_TYPE = "HUMAN_IMPORTANT_EVENT_TYPE";
+	
+	// 人员状态
 	public static final String CODE_HUMAN_STATUS = "DM200";
 	
-	//交流原因
+	// 交流原因
 	public static final String CODE_EXCHANGE_REASON = "DM083";
+	
+	//标识是否标识符
+	public static final String CODE_YESORNO_REASON = "DM215";
 	
 }

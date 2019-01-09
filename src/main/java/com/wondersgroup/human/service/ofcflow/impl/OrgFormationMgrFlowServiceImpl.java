@@ -16,12 +16,17 @@ package com.wondersgroup.human.service.ofcflow.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
+import com.wondersgroup.framework.announcement.event.SystemAnnouncementEvent;
+import com.wondersgroup.framework.announcement.util.AnnouncementManger;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.organization.bo.OrganNode;
@@ -36,6 +41,7 @@ import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.ofcflow.InstitutionOrgFormationMgrFlow;
 import com.wondersgroup.human.bo.ofcflow.OrgFormationMgrFlow;
 import com.wondersgroup.human.bo.ofcflow.OrgInfoMgrFlow;
 import com.wondersgroup.human.bo.organization.OrgFormation;
@@ -80,6 +86,9 @@ public class OrgFormationMgrFlowServiceImpl extends GenericServiceImpl<OrgFormat
 	@Autowired
 	private OrgFormationHistoryService orgFormationHistoryService;
 	
+	@Autowired
+	private MessageSource messageSource;
+	
 	@Override
 	public Page<OrgFormationMgrFlowVO> getPage(DetachedCriteria detachedCriteria, Integer pageNo, Integer limit) {
 		
@@ -110,7 +119,7 @@ public class OrgFormationMgrFlowServiceImpl extends GenericServiceImpl<OrgFormat
 		FlowRecord flow = new FlowRecord();
 		flow.setAppNodeId(appNode.getId());// 流程业务所在系统
 		flow.setBusId(orgFormationMgrFlow.getId());// 流程业务ID
-		flow.setBusName("调整机构编制（" + orgInfo.getUnitBasicName() + "）申请流程");// 流程业务名称
+		flow.setBusName("调整行政编制（" + orgInfo.getUnitBasicName() + "）申请流程");// 流程业务名称
 		flow.setBusType("H004001004");// 流程业务类型
 		flow.setTargetOrganNode(userOrg);// 流程业务目标组织
 		flow.setTargetSecurityUser(user);// 流程业务目标人员
@@ -131,10 +140,24 @@ public class OrgFormationMgrFlowServiceImpl extends GenericServiceImpl<OrgFormat
 		flow.setResult(result);
 		flow = workflowService.completeWorkItem(flow);// 提交下个节点
 		if (flow == null) {
-			// 流程结束，做创建机构单位申请通过操作
+			if (FlowRecord.PASS.equals(result)) {
+				// 流程正常结束，做申请通过操作
+				executeAdjustFlowPassSaveBusiness(orgFormationMgrFlow);
+				orgFormationMgrFlow.setStatus(InstitutionOrgFormationMgrFlow.STATUS_ORG_FORMATION_MGR_FLOW_TRIAL2);
+			} else if (FlowRecord.STOP.equals(result)) {
+				orgFormationMgrFlow.setStatus(FlowRecord.BUS_STOP);
+				
+				// 流程非正常结束，发送通知
+				String title = messageSource.getMessage("stopFlowTitle", new Object[] {
+						"调整行政编制申请"
+				}, Locale.CHINESE);
+				String content = messageSource.getMessage("stopFlowContent", new Object[] {
+						"调整行政编制申请"
+				}, Locale.CHINESE);
+				AnnouncementManger.send(new SystemAnnouncementEvent(
+						new AnnouncementEventData(true, orgFormationMgrFlow.getCreater(), title, content, "","调整行政编制")));
+			}
 			
-			executeAdjustFlowPassSaveBusiness(orgFormationMgrFlow);
-			orgFormationMgrFlow.setStatus(OrgFormationMgrFlow.STATUS_ORG_FORMATION_MGR_FLOW_TRIAL2);
 		} else {
 			// 流程未结束
 			orgFormationMgrFlow.setStatus(OrgFormationMgrFlow.power.get(flow.getOperationCode()));
@@ -157,7 +180,7 @@ public class OrgFormationMgrFlowServiceImpl extends GenericServiceImpl<OrgFormat
 		if (orgFormation == null)
 			orgFormation = new OrgFormation();
 		
-		//将修改前的值赋值给历史表
+		// 将修改前的值赋值给历史表
 		OrgFormationHistory orgFormationHistory = new OrgFormationHistory();
 		BeanUtils.copyProperties(orgFormation, orgFormationHistory, new String[] {
 				"id"
@@ -169,7 +192,7 @@ public class OrgFormationMgrFlowServiceImpl extends GenericServiceImpl<OrgFormat
 		});
 		orgFormationService.saveOrUpdate(orgFormation);
 		
-		//调整历史信息表
+		// 调整历史信息表
 		orgFormationHistory.setOrgInfo(orgFormationMgrFlow.getOrgInfo());
 		orgFormationHistory.setOrgFormationMgrFlow(orgFormationMgrFlow);
 		orgFormationHistoryService.save(orgFormationHistory);

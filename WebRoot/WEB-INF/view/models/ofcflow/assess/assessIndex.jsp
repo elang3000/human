@@ -3,6 +3,7 @@
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <!DOCTYPE html >
 <html>
 <head>
@@ -49,15 +50,17 @@
 										theme="primary" type="reset">
 										<smart:icon icon="history"></smart:icon>&nbsp;重置
 		   							</smart:button>
-							<c:if test="${isBureau }">
-									<smart:button size="sm" method="history" id="seasonAssess"
-										title="发起季度考核" theme="normal">
-										<smart:icon icon="plus"></smart:icon>&nbsp;发起季度考核
-		   							</smart:button>
-									<smart:button size="sm" method="history" id="yearAssess"
-										title="发起年度考核" theme="normal">
-										<smart:icon icon="plus-circle"></smart:icon>&nbsp;发起年度考核
-		   							</smart:button>
+									<c:if test="${isBureau }">
+										<shiro:hasPermission name="ASSESS_START">
+											<smart:button size="sm" method="history" id="seasonAssess"
+												title="发起季度考核" theme="normal">
+												<smart:icon icon="plus"></smart:icon>&nbsp;发起季度考核
+											</smart:button>
+											<smart:button size="sm" method="history" id="yearAssess"
+												title="发起年度考核" theme="normal">
+												<smart:icon icon="plus-circle"></smart:icon>&nbsp;发起年度考核
+											</smart:button>
+										</shiro:hasPermission>
 		   							</c:if>
 								</smart:buttonGroup>
 							</smart:gridColumn>
@@ -67,7 +70,7 @@
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn colPart="12" deviceType="md">
 						<smart:table  id="navigationList"
-							url="ofcflow/assess/assessCollects" height="full-215"
+							url="ofcflow/assess/assessCollects" height="full-195"
 							text="未找到有效数据！">
 							<tr>
 								<smart:tableItem field="assessmentTypeStr" width=".1"
@@ -92,33 +95,46 @@
 								<c:if test="${isBureau }">
 								<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="view"  title="查看考核状态">
 											<i class="fa fa-eye"></i>
-										</a>	
-
-									{{#  if(d.assessmentType=="1"){ }}
-										<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="editPercent"  title="编辑拟优秀人数">
-											<i class="fa fa-edit"></i>
 										</a>
- 									{{#  } }}
-								</c:if>
-
-									<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="unitCheck"  title="单位人员考核">
-										<i class="fa fa-legal"></i>
-									</a>
-									<c:if test="${!isBureau }">
-									{{#  if(d.assessmentTypeStr=="年度考核"){ }}
-										{{#  if(d.flowStatus!="0" && d.flowStatus!="1"){ }}
-											<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="startUnitAssess"  title="发起考核流程">
-												<i class="fa fa-send"></i>
+									<shiro:hasPermission name="ASSESS_EDIT_NUM">
+										{{#  if(d.assessmentType=="1"){ }}
+											<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="editPercent"  title="编辑拟优秀人数">
+												<i class="fa fa-edit"></i>
 											</a>
- 										{{#  } }}
-
-										{{#  if(d.flowStatus=="0" || d.flowStatus=="1"){ }}
-											<%--<a class="layui-btn layui-btn-xs layui-btn-disabled" lay-event=""  title="流程已经启动">
-												<i class="fa fa-send"></i>
-											</a>--%>
- 										{{#  } }}
- 									{{#  } }}
+										{{#  } }}
+									</shiro:hasPermission>
 								</c:if>
+
+									<shiro:hasPermission name="ASSESS_EDIT_BTN">
+
+										{{#  if(d.unitStatus=="考核完成"){ }}
+											<a class="layui-btn layui-btn-xs layui-btn-default" lay-event="unitCheck"  title="考核查看">
+												<i class="fa fa-eye"></i>
+											</a>
+										{{#  } }}
+										{{#  if(d.unitStatus!="考核完成"){ }}
+											<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="unitCheck"  title="单位人员考核">
+												<i class="fa fa-legal"></i>
+											</a>
+										{{#  } }}
+									</shiro:hasPermission>
+									<shiro:hasPermission name="ASSESS_START_FLOW">
+										<%--<c:if test="${!isBureau }">--%>
+											{{#  if(d.assessmentTypeStr=="年度考核"){ }}
+												{{#  if(d.flowStatus!="0" && d.flowStatus!="1"){ }}
+													<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="startUnitAssess"  title="发起考核流程">
+														<i class="fa fa-send"></i>
+													</a>
+												{{#  } }}
+
+												{{#  if(d.flowStatus=="0" || d.flowStatus=="1"){ }}
+													<%--<a class="layui-btn layui-btn-xs layui-btn-disabled" lay-event=""  title="流程已经启动">
+														<i class="fa fa-send"></i>
+													</a>--%>
+												{{#  } }}
+											{{#  } }}
+										<%--</c:if>--%>
+									</shiro:hasPermission>
 							</script>
 						</smart:table>
 					</smart:gridColumn>
@@ -185,6 +201,7 @@
 					smart.show({
 					title : '季度考核',
 					url : 'ofcflow/assess/assessStart/2',
+					size : 'lg',
 					scrollbar : false
 					});
 		});
@@ -193,6 +210,7 @@
 					smart.show({
 					title : '年度考核',
 					url : 'ofcflow/assess/assessStart/1',
+					size : 'lg',
 					scrollbar : false
 					});
 		});

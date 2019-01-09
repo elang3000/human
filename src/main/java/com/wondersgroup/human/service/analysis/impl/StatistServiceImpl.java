@@ -100,4 +100,32 @@ public class StatistServiceImpl implements StatistService {
 		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
 		return servantRepository.statistServantTopEducation(organNodeIds, isOnHold.getId());
 	}
+
+	/** (non Javadoc) 
+	 * @Title: statistServantSchoolNature
+	 * @Description: TODO
+	 * @param organNodeIds
+	 * @return 
+	 * @see com.wondersgroup.human.service.analysis.StatistService#statistServantSchoolNature(java.util.List) 
+	 */
+	@Override
+	public Map<String, Integer> statistServantSchoolNature(List<String> organNodeIds) {
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
+		CodeInfo yesflag = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_YESORNO_REASON);// 在职CODE
+		return servantRepository.statistServantSchoolNature(isOnHold.getId(),yesflag.getId(),organNodeIds);
+	}
+
+	/** (non Javadoc) 
+	 * @Title: statistServantisshanghailocal
+	 * @Description: TODO
+	 * @param organNodeIds
+	 * @return 
+	 * @see com.wondersgroup.human.service.analysis.StatistService#statistServantisshanghailocal(java.util.List) 
+	 */
+	@Override
+	public Map<String, Integer> statistServantisshanghailocal(List<String> organNodeIds) {
+		
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
+		return servantRepository.statistServantisshanghailocal(isOnHold.getId(),organNodeIds);
+	}
 }

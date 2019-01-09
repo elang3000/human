@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.context.annotation.FilterType;
@@ -15,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.accept.HeaderContentNegotiationStrategy;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -43,15 +46,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.wondersgroup.framework.interceptor.FromTokenInteractor;
 import com.wondersgroup.framework.util.StringUtils;
+import com.wondersgroup.system.log.config.LogConfig;
 
 @ComponentScan(basePackages = {
-        "com.wondersgroup.**.controller", "com.wondersgroup.**.rest"
+        "com.wondersgroup.**.controller", "com.wondersgroup.**.rest", "com.wondersgroup.**.aspect"
 }, includeFilters = {
         @Filter(type = FilterType.ANNOTATION, value = Controller.class),
         @Filter(type = FilterType.ANNOTATION, value = RestController.class),
         @Filter(type = FilterType.ANNOTATION, value = ControllerAdvice.class),
-        @Filter(type = FilterType.ANNOTATION, value = RestControllerAdvice.class)
+        @Filter(type = FilterType.ANNOTATION, value = RestControllerAdvice.class),
+        @Filter(type = FilterType.ANNOTATION, value = Component.class),
+        @Filter(type = FilterType.ANNOTATION, value = LogConfig.class)
 })
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+@EnableAsync
 public class WebDispatcherServletConfiguration extends WebMvcConfigurationSupport {
 	
 	@Value("#{mvc['mvc.file.upload.max.size']}")
@@ -89,7 +97,7 @@ public class WebDispatcherServletConfiguration extends WebMvcConfigurationSuppor
 		FromTokenInteractor fromTokenInteractor = new FromTokenInteractor();
 		return fromTokenInteractor;
 	}
-
+	
 	@Bean
 	public MultipartResolver multipartResolver() {
 		

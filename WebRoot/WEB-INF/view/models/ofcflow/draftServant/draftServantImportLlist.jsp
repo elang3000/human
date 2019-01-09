@@ -3,6 +3,7 @@
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <!DOCTYPE html >
 <html>
 <head>
@@ -24,10 +25,7 @@
 			</smart:cardHead>
 			<smart:cardBody>
 				<smart:gridRow>
-					<smart:tabPanelParent filter="tab"
-						style="margin-left:10px;margin-right:10px;">
 						<%@include file="modual/draftHeadTab.jsp" %>
-					</smart:tabPanelParent>
 				</smart:gridRow>
 				<smart:gridRow>
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
@@ -47,11 +45,11 @@
 								<c:if test="${isBureau }">
 							<smart:gridColumn colPart="1">
 								<smart:buttonGroup container="true">
-								
-									<smart:button size="sm" method="draftImport" title="拟录用导入">
-										<smart:icon icon="plus">&nbsp;拟录用导入</smart:icon>
-									</smart:button>
-									
+									<shiro:hasPermission name="DRAFTSERVANT_IMPORT">
+										<smart:button size="sm" method="draftImport" title="拟录用导入">
+											<smart:icon icon="plus">&nbsp;拟录用导入</smart:icon>
+										</smart:button>
+									</shiro:hasPermission>
 								</smart:buttonGroup>
 							</smart:gridColumn>
 							</c:if>

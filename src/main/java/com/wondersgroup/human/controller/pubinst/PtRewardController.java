@@ -37,6 +37,9 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.service.pubinst.PtRewardAndPunishService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PtRewardVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: RewardController
@@ -84,6 +87,8 @@ public class PtRewardController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<PostVO>
 	 */
+	@Log(title = "查询奖励信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PtRewardVO> pageList(String Id, Integer limit, Integer page) {
@@ -103,6 +108,8 @@ public class PtRewardController extends GenericController {
 	 * @param temp 奖励信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑奖励信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PtRewardAndPunish temp) {
@@ -135,6 +142,8 @@ public class PtRewardController extends GenericController {
 	 * @param temp 奖励信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除奖励信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

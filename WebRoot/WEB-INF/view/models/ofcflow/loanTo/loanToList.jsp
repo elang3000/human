@@ -56,12 +56,12 @@
 						<smart:table id="navigationList" url="ofcflow/loanto/infoList"
 							height="full-150" text="未获取到数据！">
 							<tr>
-								<smart:tableItem field="name" width=".2" sort="true">姓名</smart:tableItem>
+								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
 								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
 								<smart:tableItem field="cardNo" width=".2" sort="false">身份证号</smart:tableItem>
 								<smart:tableItem field="sourceOrgan" width=".2" sort="false">借出单位</smart:tableItem>
 								<smart:tableItem field="targetOrgan" width=".2" sort="false">去向单位</smart:tableItem>
-								<smart:tableItem align="center" fixed="right" width=".1" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
+								<smart:tableItem align="center" fixed="right" width=".2" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<script type="text/html" id="navListToolBar">
 										{{#  if(d.status=="1"){ }}

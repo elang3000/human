@@ -3,6 +3,7 @@
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page import="com.wondersgroup.framework.util.SecurityUtils" %>
 <!DOCTYPE html >
 <html>
 <head>
@@ -28,20 +29,20 @@
 									eId="" itemName="招录计划"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'ZhuanRenTLBIntoMgr_THIS,ZhuanRenTLBIntoMgr_OUTER,ZhuanRenTLBOutMgr'}">
-								<smart:tabPanelItem turnurl="ofcflow/zrtlbInto/index" show="false" eId="" itemName="转入情况列表"></smart:tabPanelItem>
-								<smart:tabPanelItem turnurl="ofcflow/zrtlbOut/index" show="false" eId="" itemName="转出情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/zrtlbIntoB/index" show="false" eId="" itemName="转入情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/zrtlbOutB/index" show="false" eId="" itemName="转出情况列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'ZhuanRenKLBIntoMgr_THIS,ZhuanRenKLBIntoMgr_OUTER,ZhuanRenKLBOutMgr'}">
-								<smart:tabPanelItem turnurl="ofcflow/zrklbInto/index" show="false" eId="" itemName="转入情况列表"></smart:tabPanelItem>
-								<smart:tabPanelItem turnurl="ofcflow/zrklbOut/index" show="false" eId="" itemName="转出情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/zrklbIntoB/index" show="false" eId="" itemName="转入情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/zrklbOutB/index" show="false" eId="" itemName="转出情况列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'DiaoRenIntoMgr_THIS,DiaoRenIntoMgr_OUTER,DiaoRenOutMgr_THIS'}">
 								<smart:tabPanelItem turnurl="ofcflow/diaoren/index" show="false" eId="" itemName="调入情况列表"></smart:tabPanelItem>
 								<smart:tabPanelItem turnurl="ofcflow/diaorenOut/index" show="false" eId="" itemName="调出情况列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'ReferenceExchange_THIS,ReferenceExchange_OUTER'}">
-								<smart:tabPanelItem turnurl="ofcflow/exchange/index" show="false" eId="" itemName="调入情况列表"></smart:tabPanelItem>
-								<smart:tabPanelItem turnurl="ofcflow/exchangeOut/index" show="false" eId="" itemName="调出情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/exchangeB/index" show="false" eId="" itemName="调入情况列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/exchangeOutB/outindex" show="false" eId="" itemName="调出情况列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'ProbationServant,CancelProbationServant'}">
 								<smart:tabPanelItem turnurl="ofcflow/probation/index" eId="" show="false" itemName="试用期名单列表"></smart:tabPanelItem>
@@ -50,16 +51,23 @@
 								<smart:tabPanelItem turnurl="ofcflow/jobchange/index" eId="" show="false" itemName="职务变动名单列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'Train'}">
-								<smart:tabPanelItem turnurl="ofcflow/train/index" eId="" show="false" itemName="培训学时考核列表"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/trainServant/index" eId="" show="false" itemName="培训学时考核列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'PunishServant'}">
 								<smart:tabPanelItem turnurl="ofcflow/punish/index" eId="" show="false" itemName="处分备案列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'Abroad'}">
-								<smart:tabPanelItem turnurl="ofcflow/abroad/index" eId="" show="false" itemName="因公出国政审"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/abroadB/index" eId="" show="false" itemName="因公出国政审列表"></smart:tabPanelItem>
 							</c:if>
 							<c:if test="${busType eq 'ASSESS_REWARD'}">
 								<smart:tabPanelItem turnurl="ofcflow/assess/assessIndex" eId="" show="false" itemName="考核记录"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'ResignServant'}">
+								<smart:tabPanelItem turnurl="ofcflow/resignB/index" eId="" show="false" itemName="辞职申请"></smart:tabPanelItem>
+								<smart:tabPanelItem turnurl="ofcflow/resignB/resignPeople/index" show="false" eId="" itemName="辞职人员"></smart:tabPanelItem>
+							</c:if>
+							<c:if test="${busType eq 'DeathServant'}">
+								<smart:tabPanelItem turnurl="ofcflow/death/index" eId="" show="false" itemName="死亡列表"></smart:tabPanelItem>
 							</c:if>
 							<smart:tabPanelItem show="true" eId="" itemName="流程审批"></smart:tabPanelItem>
 						</smart:tabPanel>
@@ -103,9 +111,11 @@
 								<smart:tableItem align="center" width=".2" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar" >
+								{{# if (d.targetSecurityUserId == '<%=SecurityUtils.getUserId()%>') { }}
 								<smart:tableToolBtn theme="danger" event="shenpi" title="办理">
 									<smart:icon icon="edit"></smart:icon>
 								</smart:tableToolBtn>
+								{{# } }}
 								<smart:tableToolBtn theme="normal" event="viewFlowRecord" title="查看流程记录">
 									<smart:icon icon="eye"></smart:icon>
 								</smart:tableToolBtn>
@@ -125,16 +135,16 @@
 					var url = "ofcflow/recruit/planFlow";
 				</c:if>
 				<c:if test="${busType eq 'ZhuanRenTLBIntoMgr_THIS,ZhuanRenTLBIntoMgr_OUTER,ZhuanRenTLBOutMgr'}">
-					var url = "ofcflow/zrtlbInto/workFlow";
+					var url = "ofcflow/zrtlbIntoB/workFlow";
 				</c:if>
 				<c:if test="${busType eq 'ZhuanRenKLBIntoMgr_THIS,ZhuanRenKLBIntoMgr_OUTER,ZhuanRenKLBOutMgr'}">
-					var url = "ofcflow/zrklbInto/workFlow";
+					var url = "ofcflow/zrklbIntoB/workFlow";
 				</c:if>
 				<c:if test="${busType eq 'DiaoRenIntoMgr_THIS,DiaoRenIntoMgr_OUTER,DiaoRenOutMgr_THIS'}">
 					var url = "ofcflow/diaoren/workFlow";
 				</c:if>
 				<c:if test="${busType eq 'ReferenceExchange_THIS,ReferenceExchange_OUTER'}">
-					var url = "ofcflow/exchange/workFlow";
+					var url = "ofcflow/exchangeB/workFlow";
 				</c:if>
 				<c:if test="${busType eq 'ProbationServant,CancelProbationServant'}">
 					var url = "ofcflow/probation/workFlow";
@@ -143,16 +153,22 @@
 					var url = "ofcflow/jobchange/jobChangeFlow";
 				</c:if>
 				<c:if test="${busType eq 'Train'}">
-					var url = "ofcflow/train/trainPlanFlow";
+					var url = "ofcflow/trainServant/trainFlow";
 				</c:if>
 				<c:if test="${busType eq 'PunishServant'}">
 					var url = "ofcflow/punish/punishFlow";
 				</c:if>
 				<c:if test="${busType eq 'Abroad'}">
-					var url = "ofcflow/abroad/abroadFlow";
+					var url = "ofcflow/abroad1/abroadFlow";
 				</c:if>
 				<c:if test="${busType eq 'ASSESS_REWARD'}">
 					var url = "ofcflow/assess/assessFlow";
+				</c:if>
+				<c:if test="${busType eq 'ResignServant'}">
+					var url = "ofcflow/resignB/resignFlow";
+				</c:if>
+				<c:if test="${busType eq 'DeathServant'}">
+					var url = "ofcflow/death/deathFlow";
 				</c:if>
 				smart.show({
 					title : '流程审批',

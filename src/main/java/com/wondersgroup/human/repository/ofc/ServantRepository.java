@@ -38,6 +38,7 @@ public interface ServantRepository extends GenericRepository<Servant>{
 	Map<String, Integer> statistServantTopEducation(List<String> organNodeIds,String isHold);
 
 	/** 
+	 * @param m 
 	 * @Title: queryServantInfoBySeniorCondation 
 	 * @Description: 综合查询
 	 * @param filter
@@ -46,7 +47,7 @@ public interface ServantRepository extends GenericRepository<Servant>{
 	 * @return
 	 * @return: Page<ServantVO>
 	 */
-	Page<ServantVO> queryServantInfoBySeniorCondation(List<ServantParam> spList, Integer page, Integer limit);
+	Page<ServantVO> queryServantInfoBySeniorCondation(List<ServantParam> spList, Map<String, String> m, Integer page, Integer limit);
 
 	/**
 	 * 获取性别echarts图形数据
@@ -87,5 +88,42 @@ public interface ServantRepository extends GenericRepository<Servant>{
 	 * @return
 	 */
 	public List<Map<String, Object>> getPostMapData(String orgId);
+	
+	
+	/**
+	 * 统计学校属性
+	 * @Title: statistServantSchoolNature 
+	 * @Description: TODO
+	 * @param isHold
+	 * @param isflag
+	 * @param organNodeIds
+	 * @return
+	 * @return: Map<String,Integer>
+	 */
+	public Map<String, Integer> statistServantSchoolNature(String isHold,String isflag,List<String> organNodeIds);
+	
+	
+	/**
+	 * 统计是否310开头
+	 * @Title: statistServantisshanghailocal 
+	 * @Description: TODO
+	 * @param isHold
+	 * @param organNodeIds
+	 * @return
+	 * @return: Map<String,Integer>
+	 */
+	public Map<String, Integer> statistServantisshanghailocal(String isHold,List<String> organNodeIds);
+
+	/** 
+	 * @Title: queryServantInfoBySeniorCondation 
+	 * @Description: TODO
+	 * @param pList
+	 * @param l
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<ServantVO>
+	 */
+	Page<ServantVO> queryServantInfoBySeniorCondation(List<String> pList, List<String> l, Integer page, Integer limit);
 
 }

@@ -63,6 +63,9 @@ public class TimeWarningTaskImpl{
 		DetachedCriteria criteria = DetachedCriteria.forClass(Warning.class);
 		criteria.add(Restrictions.eq("removed", false));
 		List<Warning> list = warningService.findByCriteria(criteria);
+		DetachedCriteria c = DetachedCriteria.forClass(FrameWorkResource.class);
+		c.add(Restrictions.eq("code", "PROGRAMINFO_NEWS"));
+		List<FrameWorkResource>  f = frameWorkService.findByCriteria(c);//根据权限代码查询权限ID
 		for(Warning w : list){
 			ProgramInfo info = w.getProgramInfo();//方案信息
 			
@@ -84,9 +87,6 @@ public class TimeWarningTaskImpl{
 					organNode = w.getOrgInfo().getOrgan();//获取cf单位信息
 				}
 				//查询单位下有权限人员
-				DetachedCriteria c = DetachedCriteria.forClass(FrameWorkResource.class);
-				c.add(Restrictions.eq("code", "PROGRAMINFO_NEWS"));
-				List<FrameWorkResource>  f = frameWorkService.findByCriteria(c);//根据权限代码查询权限ID
 				if(f!=null&&f.size()>0){
 					List<SecurityUser>  a = workFlowService.queryAuthUser(organNode.getId(), f.get(0).getId());//查询单位下有权限人员
 					

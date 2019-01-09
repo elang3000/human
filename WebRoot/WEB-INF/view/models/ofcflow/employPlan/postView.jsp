@@ -63,10 +63,12 @@
 								<smart:infoShowerLabel infoname="最低工作年限" infovalue="${post.workYear.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="职位简介" infovalue="${post.description }"></smart:infoShowerLabel>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="其他条件" infovalue="${post.other }"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="12">
+								<smart:infoShowerLabel infoname="职位简介" infovalue="${post.description }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -82,7 +84,7 @@
 						<smart:line color="blue" />
 						<smart:gridColumn colPart="2" deviceType="md" colOffset="5">
 							<smart:buttonGroup container="true">
-								<smart:button theme="warm" size="sm" method="back" title="返回">
+								<smart:button theme="primary" size="sm" method="back" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>

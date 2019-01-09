@@ -1,17 +1,13 @@
 package com.wondersgroup.human.controller.ofc;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import org.apache.http.HttpRequest;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,30 +15,36 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.common.contant.DictTypeCodeContant;
-import com.wondersgroup.common.utils.FtpTool;
-import com.wondersgroup.config.ReadProperties;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
+import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
+import com.wondersgroup.framework.organization.service.OrganNodeService;
 import com.wondersgroup.framework.organization.service.OrganizationService;
 import com.wondersgroup.framework.util.BeanUtils;
+import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.framework.utils.DictUtils;
+import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.human.bo.ofc.Experience;
 import com.wondersgroup.human.bo.ofc.RewardAndPunish;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofc.ServantBasicInfo;
+import com.wondersgroup.human.bo.organization.FormationControl;
 import com.wondersgroup.human.service.ofc.ExperienceService;
 import com.wondersgroup.human.service.ofc.RewardAndPunishService;
 import com.wondersgroup.human.service.ofc.ServantBasicInfoService;
 import com.wondersgroup.human.service.ofc.ServantService;
+import com.wondersgroup.human.util.ImgPicUtil;
 import com.wondersgroup.human.vo.ofc.ServantVO;
-
-import sun.misc.BASE64Decoder;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: OfcController
@@ -59,19 +61,9 @@ public class OfcController extends GenericController {
 	
 	// 跳转路径
 	/**
-	 * 在职人员列表
+	 * 人员列表
 	 */
 	private static final String VIEW_OFC_LIST = "models/ofc/infoMainten/ofcList";
-	
-	/**
-	 * 历史人员列表
-	 */
-	private static final String VIEW_OFC_OLD_LIST = "models/ofc/infoMainten/ofcOldList";
-	
-	/**
-	 * 进出管理列表
-	 */
-	private static final String VIEW_OFC_INTO_LIST = "models/ofc/infoMainten/ofcIntoList";
 	
 	/**
 	 * 公务员登记表
@@ -114,6 +106,9 @@ public class OfcController extends GenericController {
 	@Autowired
 	ServantBasicInfoService servantBasicInfoService;
 	
+	@Autowired
+	OrganNodeService organNodeService;
+	
 	/**
 	 * @Title: ofclist
 	 * @Description: 在职人员信息列表
@@ -127,29 +122,58 @@ public class OfcController extends GenericController {
 	}
 	
 	/**
-	 * @Title: oldList
-	 * @Description:历史人员
-	 * @return
-	 * @return: String
+	 * @Title: pageList
+	 * @Description: 信息维护 人员信息列表，查询在职和试用期人员
+	 * @param servant 查询条件
+	 * @param limit 页大小
+	 * @param page 页码
+	 * @return: Page<ServantVO>
 	 */
-	@RequestMapping("/oldList")
-	public String oldList() {
+	@Log(title = "查询在职和试用期人员信息列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
+	@ResponseBody
+	@RequestMapping("/ofcPageList")
+	public Page<ServantVO> ofcPageList(Servant servant, Integer limit, Integer page) {
 		
-		return VIEW_OFC_OLD_LIST;
-	}
-	
-	/**
-	 * @Title: intoList
-	 * @Description: 进出管理
-	 * @return
-	 * @return: String
-	 */
-	@RequestMapping("/intoList")
-	public String intoList() {
+		String organNodeId = this.getRequest().getParameter("organNodeId");
+		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
 		
-		return VIEW_OFC_INTO_LIST;
+		if (StringUtils.isBlank(organNodeId)) {
+			if (organNode.getCode().equals(CommonConst.HR_ROOT_ORGAN_CODE)) {
+				// 如果是长宁人事局，可查看长宁下所有单位
+				organNodeId = organNodeService.loadOrganNodeByCode(CommonConst.ROOT_ORGAN_CODE).getId();
+			} else {
+				organNodeId = organNode.getId();
+			}
+		}
+		
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
+		// 查询本节点下所有单位
+		List<OrganNode> orgNodeList = organizationService.getAllChildOrganNode(organNodeId);
+		List<String> departList = new ArrayList<>();
+		for (OrganNode org : orgNodeList) {
+			departList.add(org.getId());
+		}
+		detachedCriteria.add(Restrictions.in("departId", departList));
+		
+		if (StringUtils.isNotBlank(servant.getName())) {
+			detachedCriteria.add(Restrictions.like("name", servant.getName(), MatchMode.ANYWHERE));
+			
+		}
+		if (StringUtils.isNotBlank(servant.getCardNo())) {// 身份证
+			detachedCriteria.add(Restrictions.eq("cardNo", servant.getCardNo()));
+		}
+		if (servant.getSex() != null && StringUtils.isNotBlank(servant.getSex().getId())) {// 性别
+			detachedCriteria.add(Restrictions.eq("sex.id", servant.getSex().getId()));
+		}
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
+		CodeInfo probation = dictableService.getCodeInfoByCode("6", DictTypeCodeContant.CODE_HUMAN_STATUS);// 试用期人员CODE
+		detachedCriteria.add(Restrictions.in("isOnHold.id", isOnHold.getId(),probation.getId()));
+		detachedCriteria.addOrder(Order.desc("reportDate"));
+		detachedCriteria.add(Restrictions.eq("removed", false));
+		Page<ServantVO> pageInfo = servantService.getPage(detachedCriteria, page, limit);
+		return pageInfo;
 	}
-	
 	/**
 	 * @Title: pageList
 	 * @Description: 在职人员信息列表
@@ -158,26 +182,39 @@ public class OfcController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<ServantVO>
 	 */
+	@Log(title = "查询在职人员信息列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
-	public Page<ServantVO> pageList(Servant servant, Integer limit, Integer page) {
+	public Page<ServantVO> pageList(Servant servant, Integer limit, Integer page,String type) {
+		
+		String organNodeId = this.getRequest().getParameter("organNodeId");
+		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		
+		if (StringUtils.isBlank(organNodeId)) {
+			if (organNode.getCode().equals(CommonConst.HR_ROOT_ORGAN_CODE)) {
+				// 如果是长宁人事局，可查看长宁下所有单位
+				organNodeId = organNodeService.loadOrganNodeByCode(CommonConst.ROOT_ORGAN_CODE).getId();
+			} else {
+				organNodeId = organNode.getId();
+			}
+		}
 		
 		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
-		if (StringUtils.isNotBlank(servant.getDepartId())) {// 单位下人员
-			// 查询本节点下所有单位
-			List<OrganNode> orgNodeList = organizationService.getAllChildOrganNode(servant.getDepartId());
-			List<String> departList = new ArrayList<>();
-			for (OrganNode org : orgNodeList) {
-				departList.add(org.getId());
-			}
-			detachedCriteria.add(Restrictions.in("departId", departList));
+		// 查询本节点下所有单位
+		List<OrganNode> orgNodeList = organizationService.getAllChildOrganNode(organNodeId);
+		List<String> departList = new ArrayList<>();
+		for (OrganNode org : orgNodeList) {
+			departList.add(org.getId());
 		}
+		detachedCriteria.add(Restrictions.in("departId", departList));
+		
 		if (StringUtils.isNotBlank(servant.getName())) {
 			detachedCriteria.add(Restrictions.like("name", servant.getName(), MatchMode.ANYWHERE));
 			
 		}
 		if (StringUtils.isNotBlank(servant.getCardNo())) {// 身份证
-			detachedCriteria.add(Restrictions.like("cardNo", servant.getCardNo(), MatchMode.ANYWHERE));
+			detachedCriteria.add(Restrictions.eq("cardNo", servant.getCardNo()));
 		}
 		if (servant.getSex() != null && StringUtils.isNotBlank(servant.getSex().getId())) {// 性别
 			detachedCriteria.add(Restrictions.eq("sex.id", servant.getSex().getId()));
@@ -186,6 +223,12 @@ public class OfcController extends GenericController {
 		detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
 		detachedCriteria.addOrder(Order.desc("reportDate"));
 		detachedCriteria.add(Restrictions.eq("removed", false));
+		
+		if("1".equals(type)){
+			CodeInfo director =dictableService.getCodeInfoByCode(FormationControl.DIRECTOR, "GBT_12407_2008");//正处
+			CodeInfo deputyDirector =dictableService.getCodeInfoByCode(FormationControl.DEPUTY_DIRECTOR, "GBT_12407_2008");//副处
+			detachedCriteria.add(Restrictions.not(Restrictions.in("nowJobLevel", director,deputyDirector)));//不能处理处级人员的数据
+		}
 		Page<ServantVO> pageInfo = servantService.getPage(detachedCriteria, page, limit);
 		return pageInfo;
 	}
@@ -198,32 +241,46 @@ public class OfcController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<ServantVO>
 	 */
+	@Log(title = "查询历史人员信息列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/oldPageList")
 	public Page<ServantVO> oldPageList(Servant servant, Integer limit, Integer page) {
 		
-		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
-		if (StringUtils.isNotBlank(servant.getDepartId())) {// 单位下人员
-			// 查询本节点下所有单位
-			List<OrganNode> orgNodeList = organizationService.getAllChildOrganNode(servant.getDepartId());
-			List<String> departList = new ArrayList<>();
-			for (OrganNode org : orgNodeList) {
-				departList.add(org.getId());
+		String organNodeId = this.getRequest().getParameter("organNodeIdOld");
+		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		
+		if (StringUtils.isBlank(organNodeId)) {
+			if (organNode.getCode().equals(CommonConst.HR_ROOT_ORGAN_CODE)) {
+				// 如果是长宁人事局，可查看长宁下所有单位
+				organNodeId = organNodeService.loadOrganNodeByCode(CommonConst.ROOT_ORGAN_CODE).getId();
+			} else {
+				organNodeId = organNode.getId();
 			}
-			detachedCriteria.add(Restrictions.in("departId", departList));
 		}
+		
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
+		// 查询本节点下所有单位
+		List<OrganNode> orgNodeList = organizationService.getAllChildOrganNode(organNodeId);
+		List<String> departList = new ArrayList<>();
+		for (OrganNode org : orgNodeList) {
+			departList.add(org.getId());
+		}
+		detachedCriteria.add(Restrictions.in("departId", departList));
+		
 		if (StringUtils.isNotBlank(servant.getName())) {
 			detachedCriteria.add(Restrictions.like("name", servant.getName(), MatchMode.ANYWHERE));
 			
 		}
 		if (StringUtils.isNotBlank(servant.getCardNo())) {// 身份证
-			detachedCriteria.add(Restrictions.like("cardNo", servant.getCardNo(), MatchMode.ANYWHERE));
+			detachedCriteria.add(Restrictions.eq("cardNo", servant.getCardNo()));
 		}
 		if (servant.getSex() != null && StringUtils.isNotBlank(servant.getSex().getId())) {// 性别
 			detachedCriteria.add(Restrictions.eq("sex.id", servant.getSex().getId()));
 		}
 		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", "DM200");// 在职CODE
-		detachedCriteria.add(Restrictions.ne("isOnHold.id", isOnHold.getId()));
+		CodeInfo probation = dictableService.getCodeInfoByCode("6", DictTypeCodeContant.CODE_HUMAN_STATUS);// 试用期人员CODE
+		detachedCriteria.add(Restrictions.not(Restrictions.in("isOnHold.id", isOnHold.getId(),probation.getId())));
 		detachedCriteria.addOrder(Order.desc("reportDate"));
 		detachedCriteria.add(Restrictions.eq("removed", false));
 		Page<ServantVO> pageInfo = servantService.getPage(detachedCriteria, page, limit);
@@ -236,29 +293,14 @@ public class OfcController extends GenericController {
 	 * @param servant
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑人员基本信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/saveServant")
 	public AjaxResult saveServant(Servant temp, String photostr) {
 		
 		// 保存头像
-		if (StringUtils.isNotBlank(photostr)) {
-			String[] base64photostrarr = photostr.split(",");
-			if (base64photostrarr.length > 1) {
-				BASE64Decoder decoder = new BASE64Decoder();
-				try {
-					byte[] b = decoder.decodeBuffer(base64photostrarr[1]);
-					String newName = UUID.randomUUID().toString() + ".jpg";
-					FtpTool.ftpUpload(ReadProperties.getInstance().FTP_DIR_NAME_PHOTO, b, newName);
-					temp.setPhotoPath(newName);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else {
-				if (StringUtils.isNotBlank(temp.getId())) {
-					temp.setPhotoPath(photostr);
-				}
-			}
-		}
+		temp.setPhotoPath(ImgPicUtil.savePic(photostr));
 		
 		AjaxResult result = new AjaxResult(true);
 		try {
@@ -281,11 +323,13 @@ public class OfcController extends GenericController {
 	 * @param servantId
 	 * @return: String
 	 */
+	@Log(title = "查询公务员登记表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/main")
 	public String ofcMain(String id, Model model) {
 		
 		Servant servant = servantService.get(id);
-		System.out.println(id);
+		// System.out.println(id);
 		model.addAttribute("id", id);
 		model.addAttribute("servant", servant);
 		installInfoList(id, model);
@@ -314,6 +358,8 @@ public class OfcController extends GenericController {
 	 * @param servantId
 	 * @return: String
 	 */
+	@Log(title = "进入人员基本信息编辑页面", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/servant_edit")
 	public String servantEdit(String id, Model model) {
 		
@@ -344,6 +390,8 @@ public class OfcController extends GenericController {
 	 * @param id
 	 * @return: String
 	 */
+	@Log(title = "查询其他子集信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("extend_list")
 	public String extendList(String id, Model model) {
 		
@@ -379,7 +427,8 @@ public class OfcController extends GenericController {
 		// criteria.setFetchMode("servant", FetchMode.JOIN);
 		detachedCriteria.add(Restrictions.eq("servant.id", servantId));
 		detachedCriteria.add(Restrictions.eq("removed", false));
-		detachedCriteria.addOrder(Order.desc("startDate"));
+		detachedCriteria.addOrder(Order.asc("startDate"));
+		detachedCriteria.addOrder(Order.asc("endDate"));
 		List<Experience> experienceList = experienceService.findByCriteria(detachedCriteria);
 		// 拼装简历信息
 		List<String> experienceInfos = new ArrayList<>();
@@ -410,7 +459,7 @@ public class OfcController extends GenericController {
 		detachedCriteria.add(Restrictions.eq("servant.id", servantId));
 		detachedCriteria.add(Restrictions.eq("removed", false));
 		detachedCriteria.add(Restrictions.eq("type", RewardAndPunish.TYPE_OF_REWARD));
-		detachedCriteria.addOrder(Order.desc("rewardApprovalDate"));
+		detachedCriteria.addOrder(Order.asc("rewardApprovalDate"));
 		
 		List<RewardAndPunish> rewardList = rewardAndPunishService.findByCriteria(detachedCriteria);
 		
@@ -418,7 +467,7 @@ public class OfcController extends GenericController {
 		detachedCriteria.add(Restrictions.eq("servant.id", servantId));
 		detachedCriteria.add(Restrictions.eq("removed", false));
 		detachedCriteria.add(Restrictions.eq("type", RewardAndPunish.TYPE_OF_PUNISH));
-		detachedCriteria.addOrder(Order.desc("punishApprovalDate"));
+		detachedCriteria.addOrder(Order.asc("punishApprovalDate"));
 		
 		List<RewardAndPunish> punishList = rewardAndPunishService.findByCriteria(detachedCriteria);
 		
@@ -468,8 +517,126 @@ public class OfcController extends GenericController {
 		
 		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ServantBasicInfo.class);
 		if (StringUtils.isNotBlank(organNodeId)) {
-			detachedCriteria.add(Restrictions.eq("content.departId", organNodeId));
+			detachedCriteria.add(Restrictions.eq("departId", organNodeId));
 		}
 		return servantBasicInfoService.findByCriteria(detachedCriteria, page, limit);
+	}
+	
+	/**
+	 * @Title: pageList
+	 * @Description: 在职人员信息列表
+	 * @param servant 查询条件
+	 * @param limit 页大小
+	 * @param page 页码
+	 * @return: Page<ServantVO>
+	 */
+	@ResponseBody
+	@RequestMapping("/pageListByNodeTree")
+	public Page<ServantVO> pageListByNodeTree(Servant servant, Integer limit, Integer page) {
+		
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
+		if (StringUtils.isNotBlank(servant.getDepartId())) {// 单位下人员
+			// 查询本节点下所有单位
+			List<OrganNode> orgNodeList = organizationService.getAllChildOrganNode(servant.getDepartId());
+			List<String> departList = new ArrayList<>();
+			for (OrganNode org : orgNodeList) {
+				departList.add(org.getId());
+			}
+			detachedCriteria.add(Restrictions.in("departId", departList));
+		}
+		if (StringUtils.isNotBlank(servant.getName())) {
+			detachedCriteria.add(Restrictions.like("name", servant.getName(), MatchMode.ANYWHERE));
+			
+		}
+		if (StringUtils.isNotBlank(servant.getCardNo())) {// 身份证
+			detachedCriteria.add(Restrictions.like("cardNo", servant.getCardNo(), MatchMode.ANYWHERE));
+		}
+		if (servant.getSex() != null && StringUtils.isNotBlank(servant.getSex().getId())) {// 性别
+			detachedCriteria.add(Restrictions.eq("sex.id", servant.getSex().getId()));
+		}
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
+		detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
+		detachedCriteria.addOrder(Order.desc("reportDate"));
+		detachedCriteria.add(Restrictions.eq("removed", false));
+		Page<ServantVO> pageInfo = servantService.getPage(detachedCriteria, page, limit);
+		return pageInfo;
+	}
+	
+	/**
+	 * @Title: pageList
+	 * @Description: 在职人员信息列表根据传过来的人员id返回带复选框的数据
+	 * @param servant 查询条件
+	 * @param limit 页大小
+	 * @param page 页码
+	 * @param	type  1 人社局查看所有人员
+	 * @param	busClass  排除业务数据实体类路径  示例：com.wondersgroup.human.bo.ofcflow.ZhuanRenTLBInto
+	 * @param	busCol  排除业务数据字段名	   示例：zhuanRenTLBIntoBatch.id
+	 * @param	busId  排除业务数据ID值
+	 * @param	busParentClass  排除业务数据批次状态为-1（业务中止）的  示例：ZhuanRenTLBInto类中批次变量zhuanRenTLBOutBatch
+	 * @return: Page<ServantVO>
+	 */
+	@ResponseBody
+	@RequestMapping("/pageListWithCheckBox")
+	public Page<ServantVO> pageListWithCheckBox(Servant servant, Integer limit, Integer page,String ids,String type,String busClass,String busCol,String busId,String busParentClass) {
+		
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
+		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		if("1".equals(type)){
+			if (StringUtils.isNotBlank(servant.getDepartId())) {// 单位下人员
+				String organNodeId = "";
+				if (organNode.getCode().equals(CommonConst.HR_ROOT_ORGAN_CODE)) {
+					// 如果是长宁人事局，可查看长宁下所有单位
+					organNodeId = organNodeService.loadOrganNodeByCode(CommonConst.ROOT_ORGAN_CODE).getId();
+				} else {
+					organNodeId = servant.getDepartId();
+				}
+				// 查询本节点下所有单位
+				List<OrganNode> orgNodeList = organizationService.getAllChildOrganNode(organNodeId);
+				List<String> departList = new ArrayList<>();
+				for (OrganNode org : orgNodeList) {
+					departList.add(org.getId());
+				}
+				detachedCriteria.add(Restrictions.in("departId", departList));
+			}
+		}else{
+			detachedCriteria.add(Restrictions.eq("departId", servant.getDepartId()));
+		}
+		if (StringUtils.isNotBlank(servant.getName())) {
+			detachedCriteria.add(Restrictions.like("name", servant.getName(), MatchMode.ANYWHERE));
+		}
+		if (StringUtils.isNotBlank(servant.getCardNo())) {// 身份证
+			detachedCriteria.add(Restrictions.eq("cardNo", servant.getCardNo()));
+		}
+		if (servant.getSex() != null && StringUtils.isNotBlank(servant.getSex().getId())) {// 性别
+			detachedCriteria.add(Restrictions.eq("sex.id", servant.getSex().getId()));
+		}
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
+		detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
+		detachedCriteria.addOrder(Order.desc("reportDate"));
+		detachedCriteria.add(Restrictions.eq("removed", false));
+		
+		CodeInfo director =dictableService.getCodeInfoByCode(FormationControl.DIRECTOR, "GBT_12407_2008");//正处
+		CodeInfo deputyDirector =dictableService.getCodeInfoByCode(FormationControl.DEPUTY_DIRECTOR, "GBT_12407_2008");//副处
+		detachedCriteria.add(Restrictions.not(Restrictions.in("nowJobLevel", director,deputyDirector)));//不能处理处级人员的数据
+		
+		if(StringUtils.isNoneBlank(busClass)){//排除业务表中数据
+			DetachedCriteria dc = DetachedCriteria.forEntityName(busClass);
+			//添加TrainPeople实体的查询条件
+			if(StringUtils.isNotBlank(busCol)){
+				dc.add(Restrictions.eq(busCol, busId));
+			}
+			if(StringUtils.isNotBlank(busParentClass)){
+				DetachedCriteria t = dc.createAlias(busParentClass, "t");
+				t.add(Restrictions.ne("t.status", FlowRecord.BUS_STOP));
+			}
+			dc.add(Restrictions.eq("removed", false));
+			dc.add(Restrictions.isNotNull("servant.id"));
+			//设置这个表的查询结果。注意servant.id为实体映射文件中对应的字段，不是数据库中的列名
+			dc.setProjection(Property.forName("servant.id"));
+			//关联两个实体的关系
+			detachedCriteria.add(Property.forName("id").notIn(dc));
+		}
+		Page<ServantVO> pageInfo = servantService.getPage(detachedCriteria,page,limit,ids);
+		return pageInfo;
 	}
 }

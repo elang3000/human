@@ -54,7 +54,7 @@ public class SwPostRepositoryImpl extends GenericRepositoryImpl<SrPost> implemen
 	@Override
 	public void updateAllPostNowTipBySid(String Id, CodeInfo codeInfo) {
 		
-		Query query = this.currentSession().createQuery("update com.wondersgroup.human.bo.socialworker.SrPost set nowPostSign = :nowPostSign where socialWorker.id = :Id");
+		Query query = this.currentSession().createQuery("update com.wondersgroup.human.bo.socialworker.SrPost set tenureStatus = :nowPostSign where socialWorker.id = :Id");
 		query.setParameter("nowPostSign", codeInfo);
 		query.setParameter("Id",Id);
 		query.executeUpdate();

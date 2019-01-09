@@ -18,6 +18,7 @@ package com.wondersgroup.human.bo.company;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,9 +29,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.ofc.base.BaseServant;
 
 /**
@@ -45,6 +49,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseServant;
  */
 @Entity
 @Table(name = "D01")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class NationalCompany extends BaseServant<NationalCompany> {
 	
 	private static final long serialVersionUID = -3546598474369158295L;
@@ -301,6 +307,14 @@ public class NationalCompany extends BaseServant<NationalCompany> {
 	
 	@Transient
 	private String graduateDateStr;
+	
+	/**
+	 * @fieldName: cardNoView
+	 * @fieldType: java.lang.String
+	 * @Description: 身份证号加密显示。
+	 */
+	@Transient
+	private String cardNoView;
 	
 	public String getGrowPlaceName() {
 		
@@ -605,5 +619,19 @@ public class NationalCompany extends BaseServant<NationalCompany> {
 		
 		this.departId = departId;
 	}
+	
+	 public String getCardNoView() {
+			
+			if (StringUtils.isBlank(this.getCardNo())) {
+				return "";
+			} else {
+				if (this.getCardNo().length() <= 4) {
+					return "XXXX";
+				} else {
+					this.cardNoView = StringUtils.substring(this.getCardNo(), 0, (this.getCardNo().length() - 4)) + "XXXX";
+					return cardNoView;
+				}
+			}
+	 }
 	
 }

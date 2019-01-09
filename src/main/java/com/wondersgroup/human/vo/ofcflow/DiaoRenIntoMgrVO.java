@@ -109,7 +109,7 @@ public class DiaoRenIntoMgrVO {
 			if (d.getNation() != null) {
 				this.nation = d.getNation().getName();
 			}
-			this.cardNo = d.getCardNo();
+			this.cardNo = d.getCardNoView();
 		}else{
 			if (DiaoRenIntoMgr.SOURCE_TYPE_1.equals(d.getSourceType())) {// 事业人员
 				if (d.getPublicInstitution() != null) {
@@ -124,7 +124,7 @@ public class DiaoRenIntoMgrVO {
 					if (s.getNation() != null) {
 						this.nation = s.getNation().getName();
 					}
-					this.cardNo = s.getCardNo();
+					this.cardNo = s.getCardNoView();
 				}
 			} else if (DiaoRenIntoMgr.SOURCE_TYPE_2.equals(d.getSourceType())) {// 国企职工
 				if (d.getNationalCompany() != null) {
@@ -139,7 +139,7 @@ public class DiaoRenIntoMgrVO {
 					if (s.getNation() != null) {
 						this.nation = s.getNation().getName();
 					}
-					this.cardNo = s.getCardNo();
+					this.cardNo = s.getCardNoView();
 				}
 			}
 		}
@@ -153,7 +153,12 @@ public class DiaoRenIntoMgrVO {
 		
 		this.sourceorgan = d.getFormerUnitName();
 		this.id = String.valueOf(d.getId());
-		this.status = String.valueOf(d.getStatus());
+		//如果已经提交流程，并且是起始节点，设置流程状态为99，不能编辑和删除
+		if(d.getFlowRecord()!=null&&d.getStatus()==DiaoRenIntoMgr.STATUS_DIAOREN_STATE){
+			this.status = "99";
+		}else{
+			this.status = String.valueOf(d.getStatus());
+		}
 		this.statusName = convertState(d.getStatus());
 	}
 	

@@ -24,10 +24,10 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="试用类别：" name="type.id" display="block" url="dictquery/sub/code/DM058" isAddDefaltOption="true" initSelectedKey="${probation.type.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="试用类别：" isNotNull="true" verify="required" name="type.id" display="block" url="dictquery/sub/code/DM058" isAddDefaltOption="true" initSelectedKey="${probation.type.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="试用单位：" name="unitName" value="${probation.unitName }"></smart:textInput>
+										<smart:textInput labelName="试用单位：" isNotNull="true" verify="required" name="unitName" value="${probation.unitName }"></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:date labelName="开始日期 ：" placeholder="试用开始日期" display="block" name="startDate" id="startDate" value="${probation.startDate}"></smart:date>

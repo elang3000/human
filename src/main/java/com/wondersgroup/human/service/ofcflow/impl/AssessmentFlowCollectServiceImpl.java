@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -150,5 +151,26 @@ public class AssessmentFlowCollectServiceImpl extends GenericServiceImpl<Assessm
 		Page<AssessFlowUnitCollectVO> map=this.assessmentFlowCollectRepository.getCollectAndFlowStatus(org,year,page,limit);
 		return map;
 	}
-	
+
+	/**
+	 * 获取当前年份中的季度考核
+	 *
+	 * @param year
+	 * @return
+	 */
+	@Override
+	public List<AssessmentFlowCollect> getCurrentYearSeasonCollect(Integer year) {
+		List<QueryParameter> listqueryparameter=new ArrayList<>();
+		StringBuilder hql=new StringBuilder();
+		hql.append("from AssessmentFlowCollect t  where t.removed=:removed  and t.year=:year and assessmentType=:assessmentType");
+		QueryParameter queryParameteritem=new QueryParameter("removed", false);
+		listqueryparameter.add(queryParameteritem);
+		queryParameteritem=new QueryParameter("year", year);
+		listqueryparameter.add(queryParameteritem);
+		queryParameteritem=new QueryParameter("assessmentType", AssessmentFlowCollect.ASSESSSEASON);
+		listqueryparameter.add(queryParameteritem);
+		List<AssessmentFlowCollect> list = this.findByHQL(hql.toString(), listqueryparameter);
+		return list;
+	}
+
 }

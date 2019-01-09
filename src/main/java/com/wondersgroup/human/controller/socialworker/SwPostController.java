@@ -40,6 +40,9 @@ import com.wondersgroup.human.service.socialworker.SocialWorkerService;
 import com.wondersgroup.human.service.socialworker.SwExperienceService;
 import com.wondersgroup.human.service.socialworker.SwPostService;
 import com.wondersgroup.human.vo.socialworker.SwPostVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: PostController 
@@ -89,6 +92,8 @@ public class SwPostController extends GenericController{
 	 * @param page			页码
 	 * @return: Page<PostVO>
 	 */
+	@Log(title = "查询职务", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<SwPostVO> pageListSw(String Id,Integer limit,Integer page){
@@ -104,6 +109,8 @@ public class SwPostController extends GenericController{
 	 * @param temp		职务信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑职务信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult saveSw(SrPost temp){
@@ -145,6 +152,8 @@ public class SwPostController extends GenericController{
 	 * @param temp		职务信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除职务信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult deleteSw(String id){

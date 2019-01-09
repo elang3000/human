@@ -15,12 +15,19 @@
 
 package com.wondersgroup.human.bo.organization;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
@@ -38,26 +45,61 @@ import com.wondersgroup.framework.organization.bo.OrganNode;
  */
 @Entity
 @Table(name = "HUMAN_FORMATION_CONTROL")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FormationControl extends GenericEntity {
 	
 	private static final long serialVersionUID = 299081902696419075L;
 	
-	//正处
-	public static final String DIRECTOR = "131";
-	//副处
-	public static final String DEPUTY_DIRECTOR = "132";
-	//正科
-	public static final String SECTION_CHIEF = "141";
-	//副科
-	public static final String DEPUTY_SECTION_CHIEF = "142";
-	//科员
-	public static final String CLERK = "150";
-	//办事员
-	public static final String C_CLERK = "160";
-	
 	/**
+	 * 机关职级map
+	 * key：标识，value：字典code
 	 * 实空=定编数-在编数-处级领导空缺数-供给关系尚未调入人员+允许溢出人员数
 	 */
+	
+	public final static String DIRECTOR ="131";// 正处
+	public final static String DEPUTY_DIRECTOR ="132";// 副处
+	public final static String SECTION_CHIEF ="141";// 正科
+	public final static String DEPUTY_SECTION_CHIEF ="142";// 副科
+	public final static String CLERK ="150";// 科员
+	public final static String C_CLERK ="160";// 办事员
+	
+	
+	/**
+	 * 事业单位职级
+	 * 实空=定编数-在编数-供给关系尚未调入人员+允许溢出人员数
+	 */
+	public final static String SYDW_MGR_I ="9001";// 管理一级
+	public final static String SYDW_MGR_II ="9002";// 管理二级
+	public final static String SYDW_MGR_III ="9003";// 管理三级
+	public final static String SYDW_MGR_IV ="9004";// 管理四级
+	public final static String SYDW_MGR_V ="9005";// 管理五级
+	public final static String SYDW_MGR_VI ="9006";// 管理六级
+	public final static String SYDW_MGR_VII ="9007";// 管理七级
+	public final static String SYDW_MGR_VIII ="9008";// 管理八级
+	public final static String SYDW_MGR_IX ="9009";// 管理九级
+	public final static String SYDW_MGR_X ="9010";// 管理十级
+	
+	public final static String SYDW_TECH_I = "9101"; // 专技一级
+	public final static String SYDW_TECH_II = "9102"; // 专技二级
+	public final static String SYDW_TECH_III = "9103"; // 专技三级
+	public final static String SYDW_TECH_IV = "9104"; // 专技四级
+	public final static String SYDW_TECH_V = "9105"; // 专技五级
+	public final static String SYDW_TECH_VI = "9106"; // 专技六级
+	public final static String SYDW_TECH_VII = "9107"; // 专技七级
+	public final static String SYDW_TECH_VIII = "9108"; // 专技八级
+	public final static String SYDW_TECH_IX = "9109"; // 专技九级
+	public final static String SYDW_TECH_X = "9110"; // 专技十级
+	public final static String SYDW_TECH_XI = "9111"; // 专技十一级
+	public final static String SYDW_TECH_XII = "9112"; // 专技十二级
+	public final static String SYDW_TECH_XIII = "9113"; // 专技十三级
+	
+	public final static String SYDW_WORK_I = "9201"; // 工勤技术工一级
+	public final static String SYDW_WORK_II = "9202"; // 工勤技术工二级
+	public final static String SYDW_WORK_III = "9203"; // 工勤技术工三级
+	public final static String SYDW_WORK_IV = "9204"; // 工勤技术工四级
+	public final static String SYDW_WORK_V = "9205"; // 工勤技术工五级
+	
 	
 	/**
 	 * 关联组织结构

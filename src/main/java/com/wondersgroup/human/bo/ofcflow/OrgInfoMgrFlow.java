@@ -18,6 +18,7 @@ package com.wondersgroup.human.bo.ofcflow;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,6 +26,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.organization.bo.OrganNode;
@@ -43,6 +47,8 @@ import com.wondersgroup.human.bo.organization.base.BaseUnitInfo;
  */
 @Entity
 @Table(name = "HUMAN_FLOW_ORGINFO_MGR")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OrgInfoMgrFlow extends BaseUnitInfo<OrgInfoMgrFlow> {
 	
 	/**

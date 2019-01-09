@@ -19,10 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wondersgroup.common.contant.DictTypeCodeContant;
+import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
+import com.wondersgroup.framework.announcement.event.SystemAnnouncementEvent;
+import com.wondersgroup.framework.announcement.util.AnnouncementManger;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
@@ -33,15 +37,22 @@ import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.resource.bo.AppNode;
+import com.wondersgroup.framework.security.bo.SecurityGroup;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
+import com.wondersgroup.human.bo.instflow.AlternatingRotation;
+import com.wondersgroup.human.bo.instflow.InformationChange;
 import com.wondersgroup.human.bo.instflow.MemberInfoRegister;
+import com.wondersgroup.human.bo.instflow.RecordableRecord;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.repository.pubinst.PublicInstitutionRepository;
+import com.wondersgroup.human.service.instflow.AlternatingRotationService;
+import com.wondersgroup.human.service.instflow.InformationChangeService;
 import com.wondersgroup.human.service.instflow.MemberInfoRegisterService;
+import com.wondersgroup.human.service.instflow.RecordableRecordService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PublicInstitutionVO;
 
@@ -75,6 +86,15 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 	
 	@Autowired
 	private DictableService dictableService;
+	
+	@Autowired
+	private AlternatingRotationService alternatingRotationService;
+	
+	@Autowired
+	private InformationChangeService informationChangeService;
+	
+	@Autowired
+	private RecordableRecordService recordableRecordService;
 	
 
 	/**
@@ -165,6 +185,11 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 			CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", "DM200");//在职CODE
 			temp.setIsOnHold(isOnHold);
 			merge(temp);
+			
+			String title = "事业单位人员信息登记信息维护通知";
+			String content = "请完善" + registerExist.getPublicInstitution().getName() + "(" + registerExist.getPublicInstitution().getCardNo() + ")的职务信息、职级信息、学历信息、学位信息、考核信息、家庭信息";
+			//通知人员信息登记
+			publicInstitutionService.getPublicQuLeadersToNotice(registerExist.getId(), MemberInfoRegister.class.getSimpleName(), title, content);
 		}else{
 			registerExist.setPlanState(MemberInfoRegister.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			registerExist.setFlowRecord(flow);//修改当前业务的流程节点
@@ -184,6 +209,64 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 		member.setOpinion(opinion);
 		memberInfoRegisterService.save(member);
 		return member;
+	}
+
+	@Override
+	public boolean getPublicQuLeadersToNotice(String id, String type, String title, String content) {
+		SecurityGroup group = userService.loadGroupByCode("SY_QU_LEADERS_INFORMATION");
+		SecurityUser[] allUsersInGroup = userService.getAllUsersInGroup(group);
+		MemberInfoRegister memberInfoRegister = null;
+		AlternatingRotation alternatingRotation = null;
+		InformationChange informationChange = null;
+		RecordableRecord recordableRecord = null;
+        String infoCreater = null;
+        
+		if ("MemberInfoRegister".equals(type)) {
+			memberInfoRegister = memberInfoRegisterService.load(id);
+			infoCreater = memberInfoRegister.getCreater();
+		}else if("AlternatingRotation".equals(type)){
+			alternatingRotation = alternatingRotationService.load(id);
+			infoCreater = alternatingRotation.getCreater();
+		}else if("InformationChange".equals(type)){
+			informationChange = informationChangeService.load(id);
+			infoCreater = informationChange.getCreater();
+		}else if("RecordableRecord".equals(type)){
+			recordableRecord = recordableRecordService.load(id);
+			infoCreater = recordableRecord.getCreater();
+		}
+		
+		if (allUsersInGroup != null && allUsersInGroup.length > 0) {
+			for (SecurityUser securityUser : allUsersInGroup) {
+				AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, infoCreater, title, content, "")));
+			}
+			return true;
+		}
+		return false;
+	}
+
+
+
+	/** (non Javadoc) 
+	 * @see com.wondersgroup.human.service.pubinst.PublicInstitutionService#getPage(org.hibernate.criterion.DetachedCriteria, java.lang.Integer, java.lang.Integer, java.lang.String) 
+	 */
+	@Override
+	public Page<PublicInstitutionVO> getPage(DetachedCriteria detachedCriteria, Integer pageNo, Integer limit, String ids) {
+		Page<PublicInstitution> servantPage = publicInstitutionRepository.findByCriteria(detachedCriteria, pageNo, limit);
+		List<PublicInstitutionVO> voList = new ArrayList<>();
+//		String[] id = ids.split(",");
+		for (PublicInstitution s : servantPage.getResult()) {
+			PublicInstitutionVO vo = new PublicInstitutionVO(s);
+//			for(String ant:id){
+//				if(ant.equals(s.getId())){
+//					vo.setLAY_CHECKED(true);
+//					break;
+//				}
+//			}
+			voList.add(vo);
+		}
+		Page<PublicInstitutionVO> page = new Page<>(servantPage.getStart(), servantPage.getCurrentPageSize(),
+				servantPage.getTotalSize(), servantPage.getPageSize(), voList);
+		return page;
 	}
 
 }

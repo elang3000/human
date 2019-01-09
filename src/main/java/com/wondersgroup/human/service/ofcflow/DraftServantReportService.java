@@ -15,11 +15,11 @@
  */
 package com.wondersgroup.human.service.ofcflow;
 
-import java.util.List;
-
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.ofcflow.DraftServant;
 import com.wondersgroup.human.bo.ofcflow.DraftServantReport;
+
+import java.util.List;
 
 /** 
  * @ClassName: DraftServantReportService 
@@ -39,7 +39,7 @@ public interface DraftServantReportService extends GenericService<DraftServantRe
 	 * @param report	上报信息，两个附件的ftp路径
 	 * @return: void
 	 */
-	public void createReportWork(String ids,String type,DraftServantReport report);
+	public void createReportWork(List<DraftServant> draftServantList,String type,DraftServantReport report);
 	/**
 	 * @Title: addProbationServant 
 	 * @Description: 录用数据进入试用期

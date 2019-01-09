@@ -15,12 +15,17 @@
 
 package com.wondersgroup.human.bo.ofc;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.wondersgroup.common.contant.CommonConst;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.human.bo.ofc.base.BaseJobLevel;
@@ -36,10 +41,14 @@ import com.wondersgroup.human.bo.ofc.base.BaseJobLevel;
  */
 @Entity
 @Table(name = "A05")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class JobLevel extends BaseJobLevel<JobLevel> {
-	
+
 	private static final long serialVersionUID = -70237391712662148L;
-	
+	public static final String LEADER = "领导";
+	public static final String NOTLEADER = "非领导";
+
 	/**
 	 * @fieldName: servant
 	 * @fieldType: com.wondersgroup.human.bo.ofc.Servant
@@ -58,9 +67,29 @@ public class JobLevel extends BaseJobLevel<JobLevel> {
 	@JoinColumn(name = "SH_A0524")
 	private CodeInfo status;
 	
-	@Column(name = "IS_LOW_TO_HIGH")
-	@org.hibernate.annotations.Type(type = "yes_no")
-	private Boolean isLowToHigh = false;
+	/**
+	 * @fieldName: isLeader
+	 * @fieldType: java.lang.Integer
+	 * @Description: 是否是领导属性
+	 */
+	@Column(name = "IS_LEADER")
+	private Integer isLeader;
+	
+	/**
+	 * @fieldName: realJobLevelCode
+	 * @fieldType: java.lang.String
+	 * @Description: 占编时 使用的职级代码
+	 */
+	@Column(name = "REAL_JOB_LVL_CODE")
+	private String realJobLevelCode;
+	
+	/**
+	 * @fieldName: realLeader
+	 * @fieldType: java.lang.Integer
+	 * @Description: 占编时 是否是领导属性
+	 */
+	@Column(name = "REAL_LEADER")
+	private Integer realLeader;
 	
 	public Servant getServant() {
 		
@@ -81,14 +110,51 @@ public class JobLevel extends BaseJobLevel<JobLevel> {
 		
 		this.status = status;
 	}
+
 	
-	public Boolean getIsLowToHigh() {
+	public Integer getIsLeader() {
 		
-		return isLowToHigh;
+		return isLeader;
+	}
+
+	public String getIsLeaderStr(){
+		if(isLeader== CommonConst.YES){
+			return LEADER;
+		}else if(isLeader== CommonConst.NO){
+			return NOTLEADER;
+		}else{
+			return "";
+		}
+	}
+
+	
+	public void setIsLeader(Integer isLeader) {
+		
+		this.isLeader = isLeader;
+	}
+
+	
+	public String getRealJobLevelCode() {
+		
+		return realJobLevelCode;
+	}
+
+	
+	public void setRealJobLevelCode(String realJobLevelCode) {
+		
+		this.realJobLevelCode = realJobLevelCode;
+	}
+
+	
+	public Integer getRealLeader() {
+		
+		return realLeader;
+	}
+
+	
+	public void setRealLeader(Integer realLeader) {
+		
+		this.realLeader = realLeader;
 	}
 	
-	public void setIsLowToHigh(Boolean isLowToHigh) {
-		
-		this.isLowToHigh = isLowToHigh;
-	}
 }

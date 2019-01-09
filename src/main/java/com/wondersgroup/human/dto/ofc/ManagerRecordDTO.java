@@ -132,6 +132,13 @@ public class ManagerRecordDTO {
 		this.recordType = recordType;
 	}
 	
+	public ManagerRecordDTO(String servantId,String recordType,String organId){
+		super();
+		this.servantId = servantId;
+		this.recordType = recordType;
+		this.organId = organId;
+	}
+	
 	/**
 	 * @return the servantId
 	 */

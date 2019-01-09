@@ -63,7 +63,7 @@
 							height="full-215" text="未获取到数据！">
 							<tr>
 								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
-								<smart:tableItem field="yearTip" width="150" sort="true">年度</smart:tableItem>
+								<smart:tableItem field="yearTip" width="150" sort="true">年度123</smart:tableItem>
 								<smart:tableItem field="draftUnitName" width="150" sort="true">录用单位</smart:tableItem>
 								<smart:tableItem field="draftDeptName" width="150" sort="true">录用部门</smart:tableItem>
 								<smart:tableItem field="name" width="150" sort="false">姓名</smart:tableItem>

@@ -90,7 +90,7 @@ public class GeneralCountController extends GenericController {
         model.addAttribute("orgId", id);
         OrganNode organNode = organNodeService.load(id);
         model.addAttribute("orgName",organNode.getName());
-        System.out.println(organNode.getName());
+        //System.out.println(organNode.getName());
         return GENERAL_COUNT_UNIT_PAGE;
     }
 

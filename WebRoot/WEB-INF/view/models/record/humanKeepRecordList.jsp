@@ -25,13 +25,13 @@
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
 									<smart:textInput labelName="姓名：" autocomplete="off"
-										placeholder="输入姓名" name="name">
+										placeholder="姓名" name="name">
 									</smart:textInput>
 								</smart:gridColumn>
 
 								<smart:gridColumn colPart="4">
 									<smart:textInput labelName="身份证号：" autocomplete="off"
-										placeholder="输入身份证号" name="cardNo">
+										placeholder="身份证号" name="cardNo">
 									</smart:textInput>
 								</smart:gridColumn>
 
@@ -65,22 +65,21 @@
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn>
 						<smart:table id="navigationList" url="keep/getPage"
-							height="full-210" sortField="" sortType="" text="未找到用户数据！"
+							height="full-190" sortField="" sortType="" text="未找到用户数据！"
 							page="true">
 							<tr>
-								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
 								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
 								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
 								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
-								<smart:tableItem field="organName" width=".1" sort="false">人事单位</smart:tableItem>
+								<smart:tableItem field="organName" width=".2" sort="false">事项发生时单位</smart:tableItem>
 								<smart:tableItem field="recordType" width=".15" sort="false">备案类型</smart:tableItem>
-								<smart:tableItem field="recordTime" width=".2" sort="false">备案时间</smart:tableItem>
+								<smart:tableItem field="recordTime" width=".15" sort="false">备案时间</smart:tableItem>
 								<smart:tableItem align="center" width=".1" fixed="right" unresize="true"
 									toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar">
-								<smart:tableToolBtn theme="normal" event="search1" title="查看">
-									<smart:icon icon="search"></smart:icon>
+								<smart:tableToolBtn theme="warm" event="search1" title="查看">
+									<smart:icon icon="eye"></smart:icon>
 								</smart:tableToolBtn>
 							</smart:tableToolBar>
 						</smart:table>

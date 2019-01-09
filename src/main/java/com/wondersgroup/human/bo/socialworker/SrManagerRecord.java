@@ -17,6 +17,7 @@ package com.wondersgroup.human.bo.socialworker;
 
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +28,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
@@ -44,6 +47,8 @@ import com.wondersgroup.human.bo.ofc.Servant;
  */
 @Entity
 @Table(name = "HUMAN_MANAGE_RECORD_WORKER")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SrManagerRecord extends GenericEntity {
 
 	// 进出管理：进

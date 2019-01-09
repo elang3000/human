@@ -17,6 +17,7 @@ package com.wondersgroup.human.bo.ofcflow;
 
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,9 +27,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
+import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.human.bo.ofc.Servant;
 
@@ -43,6 +47,8 @@ import com.wondersgroup.human.bo.ofc.Servant;
  */
 @Entity
 @Table(name = "HUMAN_EXERCISE")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Exercise extends GenericEntity {
 	
 	private static final long serialVersionUID = 5805368140489576886L;
@@ -102,6 +108,15 @@ public class Exercise extends GenericEntity {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date endDate;
+	
+	/**
+	 * @fieldName: exercisePost
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 挂职职务
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXERCISEPOST")
+	private CodeInfo exercisePost;
 	
 	/**
 	 * @fieldName: remark
@@ -187,6 +202,16 @@ public class Exercise extends GenericEntity {
 	public void setStatus(Integer status) {
 		
 		this.status = status;
+	}
+	
+	public CodeInfo getExercisePost() {
+		
+		return exercisePost;
+	}
+	
+	public void setExercisePost(CodeInfo exercisePost) {
+		
+		this.exercisePost = exercisePost;
 	}
 	
 }

@@ -24,6 +24,54 @@
 					<smart:fromTokenTag />
 					<smart:textInput type="hidden" name="id" value="${d.id}"></smart:textInput>
 					<smart:textInput type="hidden" name="result" id="result"></smart:textInput>
+					<smart:textInput type="hidden" name="allowWeaveNum"  value="${d.allowWeaveNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="realNum"  value="${d.realNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="thisYearLackWeaveNum"  value="${d.thisYearLackWeaveNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="chiefLackWeaveNum"  value="${d.chiefLackWeaveNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="vacancySectionChiefLevelNumber"  value="${d.vacancySectionChiefLevelNumber}" ></smart:textInput>
+					<smart:textInput type="hidden" name="vacancyNonLeaderSectionChiefLevelNumber"  value="${d.vacancyNonLeaderSectionChiefLevelNumber}" ></smart:textInput>
+					<smart:textInput type="hidden" name="notIntoSectionChiefNum"  value="${d.notIntoSectionChiefNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="notIntoDeputySectionChiefNum"  value="${d.notIntoDeputySectionChiefNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="notIntoNum"  value="${d.notIntoNum}" ></smart:textInput>
+					<smart:gridRow>
+						<smart:title title="机构编制信息" style="margin-top: 5px;" color="blue" />
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="机构编制数" infovalue="${d.allowWeaveNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="机构实有人数" infovalue="${d.realNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="机构缺编数" infovalue="${d.thisYearLackWeaveNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="处级实职缺编人数" shortName="处级实职缺编数" infovalue="${d.chiefLackWeaveNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级(领导)实职缺编人数" infovalue="${d.vacancySectionChiefLevelNumber}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级(非领导)实职缺编人数" infovalue="${d.vacancyNonLeaderSectionChiefLevelNumber}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级领导未调入数 " infovalue="${d.notIntoSectionChiefNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级非领导未调入数" infovalue="${d.notIntoDeputySectionChiefNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="尚未调入人数" infovalue="${d.notIntoNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:title title="人员基本信息" style="margin-top: 5px;" color="blue" />
+					</smart:gridRow>
 					<smart:gridRow>
 						<smart:gridColumn colPart="8">
 							<smart:gridRow>
@@ -81,7 +129,7 @@
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<smart:continuousSelect verify="required" id="birthPlace"
+									<smart:continuousSelect isNotNull="true" verify="required" id="birthPlace"
 										labelName="出生地：" inputName="birthPlace.id"
 										codeTypeCode="GBT_2260_2007" inputVal="${d.birthPlace.id}"
 										valType="ID" widthPercent="0.4" isSaveShowName="true"
@@ -90,7 +138,7 @@
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<smart:continuousSelect verify="required" id="nativePlace"
+									<smart:continuousSelect isNotNull="true" verify="required" id="nativePlace"
 										labelName="籍贯：" inputName="nativePlace.id"
 										codeTypeCode="GBT_2260_2007" inputVal="${d.nativePlace.id}"
 										valType="ID" widthPercent="0.4" isSaveShowName="true"
@@ -101,7 +149,7 @@
 						<smart:gridColumn colPart="3" colOffset="1">
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<img alt="照片" src="static/image/20170705135600.jpg">
+									<smart:headPic imgId="headImg" photostrInputId="photostrInput" headBtnId="headBtn" initPhotoPath="${d.photoPath}" photostrInputName="photoPath"/>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:gridColumn>
@@ -135,7 +183,7 @@
 						<smart:gridColumn colPart="4">
 							<smart:singleSelect
 								initSelectedKey="${d.enterTheUnitChangeType.id}"
-								name="enterTheUnitChangeType.id" labelName="进入本单位变动类别："
+								name="enterTheUnitChangeType.id" labelName="进入本单位变动类别：" shortName="变动类别"
 								isNotNull="true" verify="required"
 								url="dictquery/sub/code/GBT_12405_2008/10" display="block"
 								isAddDefaltOption="true"></smart:singleSelect>
@@ -148,21 +196,11 @@
 					</smart:gridRow>
 					<smart:gridRow>
 						<smart:gridColumn colPart="4">
-							<smart:date labelName="进入本单位日期：" display="block"
-								name="enterTheUnitDate" id="enterTheUnitDate"
-								value="${d.enterTheUnitDate}"></smart:date>
-						</smart:gridColumn>
-						<smart:gridColumn colPart="4">
-							<smart:numberInput min="0" labelName="进入本单位时基层工作经历时间（月）:"
-								name="intoBasicWorkTime" value="${d.intoBasicWorkTime}"
-								display="block" type="text"></smart:numberInput>
-						</smart:gridColumn>
-						<smart:gridColumn colPart="4">
 							<smart:singleSelect labelName="职级名称：" name="jobLevelCode.id"
 								display="block" url="dictquery/sub/code/GBT_12407_2008/1"
 								isAddDefaltOption="true" initSelectedKey="${d.jobLevelCode.id }"
-								verify="required" isNotNull="true" isSaveShowName="true"
-								inputShowName="jobLevelName" initCludeKey="[141,142,150,160]"></smart:singleSelect>
+								verify="required" isNotNull="true" isSaveShowName="true" id="jobLevelName"
+								inputShowName="jobLevelName" initIncludeKey="141,142,150,160"></smart:singleSelect>
 						</smart:gridColumn>
 					</smart:gridRow>
 					<smart:gridRow>
@@ -207,7 +245,7 @@
 		</smart:buttonScriptAction>
 		<smart:fileUploadUtils />
 		<smart:dateRender id="birthDate" />
-		<smart:dateRender id="enterTheUnitDate" />
+		<smart:headPicAction imgId="headImg" headBtnId="headBtn" photostrInputId="photostrInput"/>
 		form.on('submit(save)', function (data) {//表单保存
 			smart.confirm({
 				title:'保存调任信息',

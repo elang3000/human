@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,24 +26,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wondersgroup.common.contant.CommonConst;
+import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.exception.BusinessException;
+import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.service.OrganNodeService;
 import com.wondersgroup.framework.organization.service.OrganizationService;
 import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.framework.utils.DictUtils;
-import com.wondersgroup.human.bo.ofc.Degree;
 import com.wondersgroup.human.bo.organization.FormationControl;
+import com.wondersgroup.human.bo.organization.InstitutionOrgFormation;
 import com.wondersgroup.human.bo.organization.OrgFormation;
 import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.service.organization.FormationControlService;
+import com.wondersgroup.human.service.organization.InstitutionOrgFormationService;
 import com.wondersgroup.human.service.organization.OrgFormationService;
 import com.wondersgroup.human.service.organization.OrgInfoService;
 import com.wondersgroup.human.vo.organization.FormationControlVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: FormationControlController
@@ -74,6 +80,12 @@ public class FormationControlController extends GenericController {
 	@Autowired
 	private OrgFormationService orgFormationService;
 	
+	@Autowired
+	private InstitutionOrgFormationService institutionOrgFormationService;
+	
+	@Autowired
+	private DictableService dictableService;
+	
 	/**
 	 * 返回视图路径
 	 */
@@ -100,10 +112,13 @@ public class FormationControlController extends GenericController {
 	@RequestMapping("/edit")
 	public String edit(String organId, Model model) {
 		
+		boolean isDisabledLowToHigh = true;
 		// 查询出所属编控信息
 		FormationControl formationControl = formationControlService.findUniqueBy("organ.id", organId);
 		if (formationControl == null) {
 			formationControl = new FormationControl();
+			CodeInfo noCodeInfo = dictableService.getCodeInfoByCode("0", DictTypeCodeContant.CODE_TYPE_YESNO);
+			formationControl.setIsLowToHigh(noCodeInfo);
 		}
 		// 组织节点信息
 		OrganNode organNode = organNodeService.get(organId);
@@ -113,14 +128,28 @@ public class FormationControlController extends GenericController {
 			if (orgInfo == null) {
 				throw new BusinessException("单位基础信息为空，无法操作编控设置业务！");
 			} else {
-				OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", orgInfo.getId());
-				if (orgFormation == null)
-					throw new BusinessException("单位编制信息为空，无法操作编控设置业务！");
+				// 判断机构的类型为行政或事业单位
+				if (CommonConst.ORGAN_TYPE_D_CLASS_CODE.equals(orgInfo.getOrgan().getOrganNodeType().getCode())) {
+					OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", orgInfo.getId());
+					isDisabledLowToHigh = false;
+					if (orgFormation == null)
+						throw new BusinessException("单位编制信息为空，无法操作编控设置业务！");
+				} else if (CommonConst.ORGAN_TYPE_UNIT_CODE.equals(orgInfo.getOrgan().getOrganNodeType().getCode())) {
+					InstitutionOrgFormation orgFormation = institutionOrgFormationService.findUniqueBy("orgInfo.id",
+							orgInfo.getId());
+					if (orgFormation == null)
+						throw new BusinessException("单位编制信息为空，无法操作编控设置业务！");
+				} else {
+					throw new BusinessException("单位类型有误，无法操作编控设置业务！");
+				}
+				
 			}
+		}else{
+			isDisabledLowToHigh = false;
 		}
 		
 		model.addAttribute("formationControl", formationControl);
-		
+		model.addAttribute("isDisabledLowToHigh", isDisabledLowToHigh);
 		return FORMATION_CONTROLLER_EDIT;
 	}
 	
@@ -132,6 +161,8 @@ public class FormationControlController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<FormationControlVO>
 	 */
+	@Log(title = "查询机构编控信息列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<FormationControlVO> pageList(Integer limit, Integer page, String organId) {
@@ -160,6 +191,8 @@ public class FormationControlController extends GenericController {
 	 * @param temp 编控设置信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑机构编控信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(FormationControl temp) {
@@ -175,14 +208,30 @@ public class FormationControlController extends GenericController {
 			if (temp.getOverflowRule().indexOf("%") != -1) {
 				// 存在%获取，当前单位的定编人数
 				OrgInfo orgInfo = orgInfoService.findUniqueBy("organ.id", temp.getOrgan().getId());
-				OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", orgInfo.getId());
-				// 定编数
-				Integer unitPlanningTotal = orgFormation.getUnitPlanningTotal();
-				// 溢出比例
-				String scaleStr = temp.getOverflowRule().split("%")[0];
-				Double scale = Double.parseDouble(scaleStr) / 100;
-				Double flowNum = Math.ceil(unitPlanningTotal * scale);
-				temp.setOverflowNum(flowNum.intValue());
+				// 判断机构的类型为行政或事业单位
+				if (CommonConst.ORGAN_TYPE_D_CLASS_CODE.equals(orgInfo.getOrgan().getOrganNodeType().getCode())) {
+					OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", orgInfo.getId());
+					// 定编数
+					Integer unitPlanningTotal = orgFormation.getUnitPlanningTotal();
+					// 溢出比例
+					String scaleStr = temp.getOverflowRule().split("%")[0];
+					Double scale = Double.parseDouble(scaleStr) / 100;
+					Double flowNum = Math.ceil(unitPlanningTotal * scale);
+					temp.setOverflowNum(flowNum.intValue());
+				} else if (CommonConst.ORGAN_TYPE_UNIT_CODE.equals(orgInfo.getOrgan().getOrganNodeType().getCode())) {
+					InstitutionOrgFormation orgFormation = institutionOrgFormationService.findUniqueBy("orgInfo.id",
+							orgInfo.getId());
+					// 定编数
+					Integer unitPlanningTotal = orgFormation.getUnitPlanningTotal();
+					// 溢出比例
+					String scaleStr = temp.getOverflowRule().split("%")[0];
+					Double scale = Double.parseDouble(scaleStr) / 100;
+					Double flowNum = Math.ceil(unitPlanningTotal * scale);
+					temp.setOverflowNum(flowNum.intValue());
+				} else {
+					throw new BusinessException("单位类型有误，无法操作编控设置业务！");
+				}
+				
 			} else {
 				temp.setOverflowNum(Integer.parseInt(temp.getOverflowRule()));
 			}

@@ -24,7 +24,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="学校名称：" placeholder="毕业院校或单位名称" name="shoolName" value="${education.shoolName}" ></smart:textInput>
+										<smart:textInput labelName="学校名称：" placeholder="毕业院校或单位名称" name="shoolName" value="${education.shoolName}" verify="required" isNotNull="true"></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="8">
 										<smart:continuousSelect id="eductionCode" labelName="学历名称：" inputName="code.id" codeTypeCode="GBT_4658_2006" inputVal="${education.code.id}" valType="ID" widthPercent="0.33333" verify="required" isNotNull="true" isSaveShowName="true" inputShowName="name" allOrLast="last"/>
@@ -42,7 +42,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="学制：" placeholder="学制年限" name="eductionalSystem" value="${education.eductionalSystem}" ></smart:textInput>
+										<smart:textInput labelName="学制：" placeholder="学制年限" name="eductionalSystem" value="${education.eductionalSystem}"></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:textInput labelName="学历证书号：" placeholder="学历证书号" name="educationNo" value="${education.educationNo}" ></smart:textInput>
@@ -57,7 +57,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="最高学历标识：" name="topFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${education.topFlag.id }" ></smart:singleSelect>
+										<smart:singleSelect labelName="最高学历标识：" name="topFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${education.topFlag.id }" verify="required" isNotNull="true"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 									

@@ -53,11 +53,11 @@
 		}
 		.shakespan {
 		    border: 0px solid black;
-		    margin-left: 10px;
+		    margin-left: -5px;
 		    border-radius: 11px;
 		    min-width: 8px;
 		    line-height: 18px;
-		    font-size: 13px;
+		    font-size: 10px;
 		    position: absolute;
 		    top: 12px;
 		    background: #ff0000;
@@ -149,7 +149,7 @@
 				<div class="layui-side-scroll">
 					<div class="layui-logo">
 						<div style="height: 90px;clear:both;vertical-align: middle;display: table-cell;">
-							<div style="width:220px;height:90px;float:left;background-image:url(static/image/logo03.png);background-repeat:no-repeat; background-size:100% 100%;-moz-background-size:100% 100%;">
+							<div style="width:220px;height:90px;float:left;background-image:url(static/image/logo02.png);background-repeat:no-repeat; background-size:100% 100%;-moz-background-size:100% 100%;">
 							</div>
 							
 						</div>

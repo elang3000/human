@@ -20,6 +20,24 @@
 <link href="fontAwesome/css/font-awesome.min.css" rel="stylesheet" />
 <link href="common/css/common.css" rel="stylesheet" />
 <link href="layadmin/style/admin.css" rel="stylesheet" />
+<style type="text/css">
+
+.layadmin-backlog-body h2 {
+    height: 50px;
+    line-height:30px;
+}
+
+.layadmin-backlog-body p {
+    padding-top: 30px;
+}
+
+.layadmin-backlog-body p cite {
+    font-style: normal;
+    font-size: 50px;
+    font-weight: 300;
+    color: #0c4baa;
+}
+</style>
 </head>
 <body>
 	<div class="layui-fluid">
@@ -66,36 +84,30 @@
 								<div class="layui-carousel layadmin-carousel layadmin-backlog">
 									<div carousel-item>
 										<ul class="layui-row layui-col-space10">
-											<li class="layui-col-xs6"><a
+											<li class="layui-col-xs4" style="height:85%">
+												<a
 												lay-href="workflow/doing/index?category=G" id="servantDoing" 
-												lay-text="公务员事项待审"
+												lay-text="公务员事项待审" style="height:100%"
 												class="layadmin-backlog-body">
-													<h3>公务员事项待审</h3>
+													<h2>公务员事项待审</h2>
 													<p>
 														<cite>0</cite>
 													</p>
 											</a></li>
-											<li class="layui-col-xs6"><a
+											<li class="layui-col-xs4" style="height:85%"><a
 												lay-href="workflow/doing/indexPublic" id="bizDoing" 
-												lay-text="事业单位事项待审"
+												lay-text="事业单位事项待审" style="height:100%"
 												class="layadmin-backlog-body">
-													<h3>事业单位事项待审</h3>
+													<h2>事业单位事项待审</h2>
 													<p>
 														<cite>0</cite>
 													</p>
 											</a></li>
-											<li class="layui-col-xs6"><a
-												lay-href="workflow/doing/index?category=O" id="organDoing" lay-text="组织信息待审"
+											<li class="layui-col-xs4" style="height:85%"><a
+												lay-href="workflow/doing/index?category=O" id="organDoing" style="height:100%" 
+												lay-text="组织信息待审"
 												class="layadmin-backlog-body">
-													<h3>组织信息待审</h3>
-													<p>
-														<cite>0</cite>
-													</p>
-											</a></li>
-											<li class="layui-col-xs6"><a 
-												lay-href="workflow/doing/index?category=P" id="planDoing" lay-text="编制信息待审"
-												class="layadmin-backlog-body">
-													<h3>编制信息待审</h3>
+													<h2>组织信息待审</h2>
 													<p>
 														<cite>0</cite>
 													</p>
@@ -116,6 +128,8 @@
 										<div>
 											<i class="layui-icon layui-icon-loading1 layadmin-loading"></i>
 										</div>
+										<div></div>
+										<div></div>
 										<div></div>
 									</div>
 								</div>

@@ -121,7 +121,11 @@ public class PtFamilyVO {
 	public PtFamilyVO(PtFamily s) {
 		this.id = s.getId();
 		this.name = s.getName();
-		this.relationName = s.getRelationCode().getName();
+		if (s.getRelationCode() != null) {
+			this.relationName = s.getRelationCode().getName();
+		}else {
+			this.relationName = "";
+		}
 		this.unitAndJob = s.getUnitAndJob();
 		this.identityNo = s.getIdentityNo();
 		this.politicalName = s.getPoliticalName();

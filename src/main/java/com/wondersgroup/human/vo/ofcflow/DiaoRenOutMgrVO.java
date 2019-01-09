@@ -17,6 +17,9 @@ package com.wondersgroup.human.vo.ofcflow;
 
 import java.text.SimpleDateFormat;
 
+import com.wondersgroup.framework.organization.bo.OrganNode;
+import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
+import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.DiaoRenOutMgr;
 
@@ -120,7 +123,7 @@ public class DiaoRenOutMgrVO {
 			if (s.getNation() != null) {
 				this.nation = s.getNation().getName();
 			}
-			this.cardNo = s.getCardNo();
+			this.cardNo = s.getCardNoView();
 			if (s.getPersonType() != null) {
 				this.personType = s.getPersonType().getName();
 			}
@@ -133,7 +136,20 @@ public class DiaoRenOutMgrVO {
 			this.sourceOrgan = d.getSourceOrgan().getName();
 		}
 		this.gotoUnitName = d.getGotoUnitName();
-		this.status = String.valueOf(d.getStatus());
+		if(d.getStatus() == DiaoRenOutMgr.STATUS_DIAOCHU_CONFIRM_OUTER){
+			OrganNode organ = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+			if(organ!=null&&d.getSourceOrgan()!=null){
+				if(!organ.getId().equals(d.getSourceOrgan().getId())){//如果当前登录人所在单位不是转出单位，只有查看权限
+					this.status = "13";
+				}else{
+					this.status = DiaoRenOutMgr.STATUS_DIAOCHU_CONFIRM_OUTER+"";
+				}
+			}else{
+				this.status = "13";
+			}
+		}else{
+			this.status = String.valueOf(d.getStatus());
+		}
 		this.statusName = convertState(d.getStatus());
 	}
 	

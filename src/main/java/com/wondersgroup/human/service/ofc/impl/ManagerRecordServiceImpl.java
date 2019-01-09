@@ -29,6 +29,9 @@ import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
+import com.wondersgroup.framework.organization.bo.OrganNode;
+import com.wondersgroup.framework.organization.service.OrganNodeService;
+import com.wondersgroup.framework.util.DateUtils;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 import com.wondersgroup.human.bo.ofc.Servant;
@@ -62,7 +65,9 @@ public class ManagerRecordServiceImpl extends GenericServiceImpl<ManagerRecord> 
 
 	@Autowired
 	DictableService dictableService;
-
+	
+	@Autowired
+	OrganNodeService organNodeService;
 	/**
 	 * @see com.wondersgroup.human.service.ofc.ManagerRecordService#createManagerRecord(com.wondersgroup.human.event.ofc.ManagerRecordEvent)
 	 */
@@ -77,9 +82,15 @@ public class ManagerRecordServiceImpl extends GenericServiceImpl<ManagerRecord> 
 		record.setRecordTime(new Date());
 		record.setRecordType(recordTypeCodeInfo);
 		record.setItemType(event.getItemType());
-		record.setOrganId(servant.getDepartId());
-		record.setOrganName(servant.getDepartName());
 		
+		if(StringUtils.isNotBlank(dto.getOrganId())){
+			OrganNode node = organNodeService.get(dto.getOrganId());
+			record.setOrganId(dto.getOrganId());
+			record.setOrganName(node.getName());
+		}else{
+			record.setOrganId(servant.getDepartId());
+			record.setOrganName(servant.getDepartName());
+		}
 		record.setBusinessEntityId(dto.getBusinessEntityId());
 		record.setBusinessEntityTable(dto.getBusinessEntityTable());
 		record.setExt1(dto.getExt1());
@@ -138,7 +149,7 @@ public class ManagerRecordServiceImpl extends GenericServiceImpl<ManagerRecord> 
 			s.add(Restrictions.like("s.name", param.getName(), MatchMode.ANYWHERE));
 		}
 		if (StringUtils.isNotBlank(param.getCardNo())) {// 身份证
-			s.add(Restrictions.like("s.cardNo",param.getCardNo(), MatchMode.ANYWHERE));
+			s.add(Restrictions.eq("s.cardNo",param.getCardNo()));
 		}
 		if (StringUtils.isNotBlank(param.getSex())) {// 性别
 			s.add(Restrictions.eq("s.sex.id",param.getSex()));
@@ -148,6 +159,12 @@ public class ManagerRecordServiceImpl extends GenericServiceImpl<ManagerRecord> 
 		}
 		if (StringUtils.isNotBlank(param.getRecordType())) {// 事项管理
 			detachedcriteria.add(Restrictions.eq("recordType.id", param.getRecordType()));
+		}
+		if (StringUtils.isNotBlank(param.getDepartId())) {// 当时单位
+			detachedcriteria.add(Restrictions.eq("organId", param.getDepartId()));
+		}
+		if (StringUtils.isNotBlank(param.getYear())) {// 年度
+			detachedcriteria.add(Restrictions.between("recordTime", DateUtils.getYearFirst(Integer.parseInt(param.getYear())),DateUtils.getYearLast(Integer.parseInt(param.getYear()))));
 		}
 		
 		detachedcriteria.add(Restrictions.eq("removed", false));

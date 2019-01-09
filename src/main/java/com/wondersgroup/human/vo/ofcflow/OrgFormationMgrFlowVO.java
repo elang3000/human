@@ -17,6 +17,7 @@ package com.wondersgroup.human.vo.ofcflow;
 
 import java.text.SimpleDateFormat;
 
+import com.wondersgroup.human.bo.ofcflow.InstitutionOrgFormationMgrFlow;
 import com.wondersgroup.human.bo.ofcflow.OrgFormationMgrFlow;
 
 /**
@@ -79,16 +80,25 @@ public class OrgFormationMgrFlowVO {
 		}
 		this.statusName = convertState(s.getStatus());
 		this.createTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(s.getCreateTime());
+		// 如果已经提交流程，并且是起始节点，设置流程状态为99，不能编辑和删除
+		if (s.getFlowRecord() != null
+				&& s.getStatus() == OrgFormationMgrFlow.STATUS_ORG_FORMATION_MGR_FLOW_STATE) {
+			this.status = "99";
+		} else {
+			this.status = String.valueOf(s.getStatus());
+		}
 	}
 	
 	public String convertState(int state) {
 		
 		if (state == 0) {
-			return "待提交";
+			return "待提交申请";
 		} else if (state == 1) {
 			return "待上级审核";
 		} else if (state == 2) {
 			return "审核通过";
+		} else if (state == -1) {
+			return "业务被中止";
 		} else {
 			return "";
 		}
@@ -143,25 +153,21 @@ public class OrgFormationMgrFlowVO {
 		
 		this.statusName = statusName;
 	}
-
 	
 	public String getCreateTime() {
 		
 		return createTime;
 	}
-
 	
 	public void setCreateTime(String createTime) {
 		
 		this.createTime = createTime;
 	}
-
 	
 	public String getOptionTypeCode() {
 		
 		return optionTypeCode;
 	}
-
 	
 	public void setOptionTypeCode(String optionTypeCode) {
 		

@@ -102,8 +102,8 @@
 									<smart:gridColumn colPart="3" colOffset="1">
 										<smart:gridRow>
 											<smart:gridColumn colPart="12">
-												<img alt="照片" src="static/image/20170705135600.jpg">
-											</smart:gridColumn>
+												<img style="width:150px;height:200px;min-width:150px;min-height:200px;" alt="照片" src="ftp/getImg?imgName=${pubinst.photoPath}">
+										    </smart:gridColumn>
 										</smart:gridRow>
 									</smart:gridColumn>
 								</smart:gridRow>
@@ -265,7 +265,8 @@
 		<smart:continuousSelectAction/>
 		<smart:buttonScriptAction>
 			goBack : function(data) {
-				window.location.href='publicInstitution/list';
+				<!-- window.location.href='publicInstitution/list'; -->
+				window.history.back(-1);
 			},
 			edit:function(data) {
 				smart.show({

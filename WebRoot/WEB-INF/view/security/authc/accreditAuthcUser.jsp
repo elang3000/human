@@ -98,8 +98,8 @@
 			params.organTreeId = value;
 			organNodeId.refresh(params);
 		}
-		<smart:initLinkSelect verify="required" id="organTreeId" name="organTreeId" tips="请选择所用所在组织数" url="system/organ/tree/query"  linkFunction="linkOrganNodeSelect"/>
-		<smart:initLinkSelect verify="required" id="organNodeId" name="organNodeId" tips="请选择所用所在组织节点" url="system/organ/node/user/query/${user.id}"/>
+		<smart:initLinkSelect verify="required" id="organTreeId" name="organTreeId" tips="请选择所在组织数" url="system/organ/tree/query"  linkFunction="linkOrganNodeSelect"/>
+		<smart:initLinkSelect verify="required" id="organNodeId" name="organNodeId" tips="请选择所在组织节点" url="system/organ/node/user/query/${user.id}"/>
 		
 		 var treeTable =treeGrid.render({
             elem: '#treeTable'

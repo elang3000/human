@@ -18,6 +18,7 @@ package com.wondersgroup.human.bo.ofc;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 /**
  * @ClassName: ServantBasicInfoContent
@@ -28,6 +29,7 @@ import javax.persistence.Column;
  * @see       [相关类/方法]
  * @since     [产品/模块版本]
  */
+@Embeddable
 public class ServantBasicInfoContent implements Serializable {
 	
 	private static final long serialVersionUID = -2207121214201745042L;

@@ -125,11 +125,11 @@ public class JobShiftRepositoryImpl extends GenericRepositoryImpl<JobShift> impl
 		StringBuilder sql = new StringBuilder();
 		sql.append("select POST id ");
 		sql.append("  from HUMAN_SERVANT_JOBSHIFT_DEPOSE ");
-		sql.append(" where servant = :servantId and status!=0");
+		sql.append(" where servant = :servantId and (status!=0 or status is null) ");
 		sql.append("union ");
 		sql.append("select PREPOST id ");
 		sql.append("  from HUMAN_SERVANT_JOBSHIFT ");
-		sql.append(" where servant = :servantId and status!=0; ");
+		sql.append(" where servant = :servantId and (status!=0 or status is null) ");
 		Query sqlQuery = this.currentSession().createSQLQuery(sql.toString());
 		sqlQuery.setParameter("servantId", servantId);
 		List list = sqlQuery.list();

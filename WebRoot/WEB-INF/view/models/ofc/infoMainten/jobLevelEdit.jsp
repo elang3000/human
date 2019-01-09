@@ -15,34 +15,36 @@
 						<smart:gridColumn>
 							<smart:grid>
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
+									<smart:gridColumn colPart="6">
 										<smart:infoShowerLabel infoname="姓名" infovalue="${servant.name}"></smart:infoShowerLabel>
 										<smart:textInput type="hidden" name="id" value="${jobLevel.id }"></smart:textInput>
 										<smart:textInput type="hidden" name="servant.id" value="${servant.id}"></smart:textInput>
 									</smart:gridColumn>
-								</smart:gridRow>
-								
+								</smart:gridRow>				
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="职级名称：" id="codeId" name="code.id" display="block" url="dictquery/sub/code/GBT_12407_2008/1" isAddDefaltOption="true" initSelectedKey="${jobLevel.code.id }" verify="required" isNotNull="true" isSaveShowName="true" inputShowName="name" initCludeKey="[131,132,141,142,150,160]"></smart:singleSelect>
+									<smart:gridColumn colPart="6">
+										<smart:singleSelect labelName="职级名称：" id="codeId" name="code.id" display="block" url="dictquery/sub/code/GBT_12407_2008/1" isAddDefaltOption="true" initSelectedKey="${jobLevel.code.id }" verify="required" isNotNull="true" isSaveShowName="true" inputShowName="name" initIncludeKey="131,132,141,142,150,160"></smart:singleSelect>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
+									<smart:gridColumn colPart="6">
+										<smart:singleSelect labelName="职级属性：" data="[{'key':'1','value':'领导'},{'key':'0','value':'非领导'}]" id="isLeader" name="isLeader" display="block" isAddDefaltOption="true" initSelectedKey="${jobLevel.isLeader }" verify="required" isNotNull="true"></smart:singleSelect>
+									</smart:gridColumn>
+								</smart:gridRow>
+								<smart:gridRow>
+									<smart:gridColumn colPart="6">
 										<smart:textInput labelName="职级批准文号：" name="approvalNo" value="${jobLevel.approvalNo }"></smart:textInput>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
+									</smart:gridColumn>	
+									<smart:gridColumn colPart="6">
 										<smart:date labelName="职级批准日期：" display="block" name="approvalDate" id="approvalDate" value="${jobLevel.approvalDate}"></smart:date>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
+									<smart:gridColumn colPart="6">
 										<smart:date labelName="职级终止日期：" display="block" name="endDate" id="endDate" value="${jobLevel.endDate}"></smart:date>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
+									<smart:gridColumn colPart="6">
 										<smart:singleSelect labelName="现行职级标识：" id="currentIdentificationId" name="currentIdentification.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${jobLevel.currentIdentification.id }" verify="required" isNotNull="true"></smart:singleSelect>
 									</smart:gridColumn>
-								</smart:gridRow>
-								
+								</smart:gridRow>							
 							</smart:grid>
 						</smart:gridColumn>
 					</smart:gridRow>

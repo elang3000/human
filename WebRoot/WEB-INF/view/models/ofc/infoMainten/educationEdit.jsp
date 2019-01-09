@@ -23,24 +23,9 @@
 								</smart:gridRow>
 								
 								<smart:gridRow>
-									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="eductionCode" labelName="学历名称：" inputName="code.id" codeTypeCode="GBT_4658_2006" inputVal="${education.code.id}" valType="ID" widthPercent="0.5" verify="required" isNotNull="true" isSaveShowName="true" inputShowName="name" allOrLast="last"/>
-									</smart:gridColumn>
-								</smart:gridRow>
-								
-								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="学校（单位）名称：" name="shoolName" value="${education.shoolName}" verify="required" isNotNull="true"></smart:textInput>
+										<smart:singleSelect labelName="学历名称：" name="code.id" display="block" url="dictquery/sub/code/GBT_4658_2006_CN" isAddDefaltOption="true" initSelectedKey="${education.code.id }" verify="required" isNotNull="true" inputShowName="name" isSaveShowName="true"></smart:singleSelect>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:date labelName="入学日期：" display="block" name="enterDate" id="enterDate" value="${education.enterDate}"></smart:date>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:date labelName="毕（肄、结）业日期：" display="block" name="graduateDate" id="graduateDate" value="${education.graduateDate}" verify="required" isNotNull="true"></smart:date>
-									</smart:gridColumn>
-								</smart:gridRow>
-								
-								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:textInput labelName="学历证书号：" name="educationNo" value="${education.educationNo}" ></smart:textInput>
 									</smart:gridColumn>
@@ -50,8 +35,32 @@
 								</smart:gridRow>
 								
 								<smart:gridRow>
+									<smart:gridColumn colPart="4">
+										<smart:textInput labelName="学校（单位）名称：" shortName="学校名称" name="shoolName" value="${education.shoolName}" verify="required" isNotNull="true"></smart:textInput>
+									</smart:gridColumn>
+									<smart:gridColumn colPart="4">
+										<smart:date labelName="入学日期：" display="block" name="enterDate" id="enterDate" value="${education.enterDate}"></smart:date>
+									</smart:gridColumn>
+									<smart:gridColumn colPart="4">
+										<smart:date labelName="毕（肄、结）业日期：" shortName="毕业日期" display="block" name="graduateDate" id="graduateDate" value="${education.graduateDate}" verify="required" isNotNull="true"></smart:date>
+									</smart:gridColumn>
+								</smart:gridRow>
+								
+								<smart:gridRow>
+									<smart:gridColumn colPart="4">
+										<smart:singleSelect labelName="985标识：" name="nineEightFiveFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${education.nineEightFiveFlag.id }" verify="required" isNotNull="true"></smart:singleSelect>
+									</smart:gridColumn>
+									<smart:gridColumn colPart="4">
+										<smart:singleSelect labelName="211标识：" name="twoOneOneFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${education.twoOneOneFlag.id }" verify="required" isNotNull="true"></smart:singleSelect>
+									</smart:gridColumn>
+									<smart:gridColumn colPart="4">
+										<smart:singleSelect labelName="双一流标识：" name="doubleFirstRateFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${education.doubleFirstRateFlag.id }" verify="required" isNotNull="true"></smart:singleSelect>
+									</smart:gridColumn>
+								</smart:gridRow>
+								
+								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="eductionalType" labelName="教育类别：" inputName="eductionalType.id" codeTypeCode="DM024" inputVal="${education.eductionalType.id}" valType="ID" widthPercent="0.5"/>
+										<smart:continuousSelect id="eductionalType" labelName="教育类别：" inputName="eductionalType.id" codeTypeCode="DM024" inputVal="${education.eductionalType.id}" valType="ID" widthPercent="0.333"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 								

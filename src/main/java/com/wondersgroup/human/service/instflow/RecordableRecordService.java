@@ -8,6 +8,7 @@ import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.instflow.RecordableRecord;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.instflow.RecordableRecordQuery;
 import com.wondersgroup.human.vo.instflow.RecordableRecordVO;
 
 public interface RecordableRecordService  extends GenericService<RecordableRecord>{
@@ -34,6 +35,9 @@ public interface RecordableRecordService  extends GenericService<RecordableRecor
 	public void saveRegister(RecordableRecord temp, String opinion, String r, String planState);
 
 
+	//离退人员list展示页面
+	Page<RecordableRecordVO> pageList(RecordableRecordQuery record,Integer page,Integer limit);
+	
 	/**
 	 * 判断是否已在处理流程中
 	 * @param publicInst  人员信息对象

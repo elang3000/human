@@ -32,12 +32,13 @@ import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.human.bo.ofc.Competence;
-import com.wondersgroup.human.bo.ofc.Family;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.CompetenceService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.CompetenceVO;
-import com.wondersgroup.human.vo.ofc.FamilyVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: CompetenceController
@@ -102,6 +103,8 @@ public class CompetenceController extends GenericController {
 	 * @param temp 专业技术资格信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑专业技术资格信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Competence temp) {
@@ -133,6 +136,8 @@ public class CompetenceController extends GenericController {
 	 * @param temp 专业技术资格信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除专业技术资格信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

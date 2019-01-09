@@ -1,10 +1,14 @@
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.pubinst.base.InstBasePolitical;
 
@@ -20,6 +24,8 @@ import com.wondersgroup.human.bo.pubinst.base.InstBasePolitical;
  */
 @Entity
 @Table(name = "C58")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtPolitical extends InstBasePolitical<PtPolitical> {
 
 	private static final long serialVersionUID = -2365443345112654088L;

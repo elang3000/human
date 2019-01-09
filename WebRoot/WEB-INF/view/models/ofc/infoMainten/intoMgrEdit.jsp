@@ -24,36 +24,38 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="enterTheUnitChangeType" labelName="进入本单位变动类别：" inputName="enterTheUnitChangeType.id" codeTypeCode="GBT_12405_2008" inputVal="${intoMgr.enterTheUnitChangeType.id}" valType="ID" widthPercent="0.5"/>
+										<smart:continuousSelect id="enterTheUnitChangeType" labelName="进入本单位变动类别：" shortName="变动类别" inputName="enterTheUnitChangeType.id" codeTypeCode="GBT_12405_2008" inputVal="${intoMgr.enterTheUnitChangeType.id}" valType="ID" widthPercent="0.5"/>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
 										<smart:continuousSelect id="enterReason" labelName="进入本单位原因：" inputName="enterReason.id" codeTypeCode="DM015" inputVal="${intoMgr.enterReason.id}" valType="ID" widthPercent="0.5"/>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
+								<smart:gridColumn colPart="4">
 										<smart:date labelName="进入本单位日期：" display="block" name="enterTheUnitDate" id="enterTheUnitDate" value="${intoMgr.enterTheUnitDate}"></smart:date>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="进入本单位前工作单位名称：" name="formerUnitName" value="${intoMgr.formerUnitName}" ></smart:textInput>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="在原单位职务名称：" name="formerUnitJobName" value="${intoMgr.formerUnitJobName}" ></smart:textInput>
-									</smart:gridColumn>
+									
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="在原单位职务级别：" name="formerUnitRank" value="${intoMgr.formerUnitRank}" ></smart:textInput>
+										<smart:textInput labelName="进入本单位前工作单位名称：" shortName="原单位名称" name="formerUnitName" value="${intoMgr.formerUnitName}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:numberInput min="0" labelName="进入本单位时基层工作经历时间（月）:" name="intoBasicWorkTime" value="${intoMgr.intoBasicWorkTime}"  display="block" type="text"></smart:numberInput>
+										<smart:textInput labelName="原单位职务名称：" shortName="原单位职务" name="formerUnitJobName" value="${intoMgr.formerUnitJobName}" ></smart:textInput>
 									</smart:gridColumn>
+									<smart:gridColumn colPart="4">
+										<smart:textInput labelName="原单位职务级别：" shortName="原单位职务级别" name="formerUnitRank" value="${intoMgr.formerUnitRank}" ></smart:textInput>
+									</smart:gridColumn>
+									
 								</smart:gridRow>
+								<smart:gridRow>
+								<smart:gridColumn colPart="4">
+										<smart:numberInput min="0" labelName="进入本单位时基层工作经历时间（月）:" shortName="基层工作时间" name="intoBasicWorkTime" value="${intoMgr.intoBasicWorkTime}"  display="block" type="text"></smart:numberInput>
+									</smart:gridColumn>
+									</smart:gridRow>
 							</smart:grid>
 						</smart:gridColumn>
 					</smart:gridRow>

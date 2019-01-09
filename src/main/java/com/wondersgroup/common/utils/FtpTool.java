@@ -44,7 +44,7 @@ public class FtpTool {
 	
 	private static FTPClient generateFtpClient() throws Exception {
 		
-		logger.info("开始创建FTP服务器！");
+		logger.debug("开始创建FTP服务器！");
 		FTPClient ftp = new FTPClient();
 		ftp.setConnectTimeout(1000 * 10);
 		ftp.setCharset(Charset.defaultCharset());
@@ -64,7 +64,7 @@ public class FtpTool {
 			logger.error("FTP服务器响应错误！错误代码：" + reply);
 			throw new Exception("FTP服务器响应错误！错误代码：" + reply);
 		}
-		logger.info("创建FTP服务器成功！");
+		logger.debug("创建FTP服务器成功！");
 		return ftp;
 	}
 	
@@ -91,12 +91,11 @@ public class FtpTool {
 			
 			fos = new FileOutputStream(newfilename);
 			
-			logger.info("开始下载文件：" + filename + ",下载后文件为：" + newfilename);
+			logger.debug("开始下载文件：" + filename + ",下载后文件为：" + newfilename);
 			
 			result = ftp.retrieveFile(filename, fos);
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("从FTP下载文件失败：", ex);
 		} finally {
 			cleanFtp(ftp, null, null, null, fos);
@@ -159,10 +158,10 @@ public class FtpTool {
 			ftp.changeWorkingDirectory(path);
 			
 			bos = new ByteArrayOutputStream();
-			logger.info("开始下载文件:" + filename);
+			logger.debug("开始下载文件:" + filename);
 			if (ftp.retrieveFile(filename, bos)) {
 				buffer = bos.toByteArray();
-				logger.info("开始完成:BYTE大小：" + buffer.length);
+				logger.debug("开始完成:BYTE大小：" + buffer.length);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -192,9 +191,9 @@ public class FtpTool {
 			ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
 			ftp.changeWorkingDirectory(path);
 			fis = new FileInputStream(file);
-			logger.info("开始保存文件:" + newfilename);
+			logger.debug("开始保存文件:" + newfilename);
 			result = ftp.storeFile(newfilename, fis);
-			logger.info("保存文件:" + (result ? "成功" : "失败"));
+			logger.debug("保存文件:" + (result ? "成功" : "失败"));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("向FTP服务器上传文件失败：", ex);
@@ -223,9 +222,9 @@ public class FtpTool {
 			ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
 			ftp.changeWorkingDirectory(path);
 			bis = new ByteArrayInputStream(blob);
-			logger.info("开始保存文件：" + newfilename);
+			logger.debug("开始保存文件：" + newfilename);
 			result = ftp.storeFile(newfilename, bis);
-			logger.info("保存文件:" + (result ? "成功" : "失败"));
+			logger.debug("保存文件:" + (result ? "成功" : "失败"));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("向FTP服务器上传文件失败：", ex);
@@ -246,7 +245,7 @@ public class FtpTool {
 		Boolean result = false;
 		try {
 			ftp = generateFtpClient();
-			logger.info("开始删除文件：" + path);
+			logger.debug("开始删除文件：" + path);
 			result = ftp.deleteFile(path);
 			logger.info("删除文件:" + (result ? "成功" : "失败"));
 		} catch (Exception ex) {

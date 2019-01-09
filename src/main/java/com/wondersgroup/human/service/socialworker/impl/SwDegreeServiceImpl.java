@@ -92,7 +92,7 @@ public class SwDegreeServiceImpl extends GenericServiceImpl<SrDegree> implements
 			// 先重置该公务员下其他所有学位最高标识设为0
 			this.executeRestAllTopDegreeFlag(entity.getSocialWorker().getId());
 			// 修改公务员A01表中最高学位的输出显示
-			social.setTopDegree(entity.getCode().getId());
+			social.setTopDegree(entity.getName());
 			socialWorkerService.update(social);
 		} else if (entity.getTopFlag().getId().equals(noCodeInfo.getId())) {
 			// 如果该学历和公务员学位名称一致，选择否后，公务员信息表中最高学位设置为null

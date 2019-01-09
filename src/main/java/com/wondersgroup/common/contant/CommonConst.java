@@ -56,6 +56,9 @@ public class CommonConst {
 	// 组织类型：事业单位
 	public static final String ORGAN_TYPE_UNIT_CODE = "sy";
 	
+	// 组织类型：企业
+	public static final String ORGAN_TYPE_ENTERPRISE_CODE = "enterprise";
+	
 	// 组织类型：街道乡镇
 	public static final String ORGAN_TYPE_TOWN_CODE = "jdxzbm";
 	
@@ -95,11 +98,11 @@ public class CommonConst {
 	// 是否：是
 	public static final String TRUE = "T";
 	
-	//是否:是
-	public static final Integer YES=1;
+	// 是否:是
+	public static final Integer YES = 1;
 	
-	//是否:否
-	public static final Integer NO=0;
+	// 是否:否
+	public static final Integer NO = 0;
 	
 	// 是否：否
 	public static final String FALSE = "F";
@@ -181,11 +184,18 @@ public class CommonConst {
 	// 流程工作人员状态
 	public static final String PROCESS_WORKPERSON_STATE = "PROCESS_WORKPERSON_STATE";
 	
-	//操作成功返回语句
-	public static final String AJAXRESULT_SUCCESS="操作成功!";
+	// 操作成功返回语句
+	public static final String AJAXRESULT_SUCCESS = "操作成功!";
 	
-	//操作失败返回语句
-	public static final String AJAXRESULT_FAIL="操作失败!";
+	// 操作失败返回语句
+	public static final String AJAXRESULT_FAIL = "操作失败!";
 	
+	// 单位性质类别 机关
+	public static final String UNIT_NATURE_D_CLASS = "1";
 	
+	// 单位性质类别 事业单位
+	public static final String UNIT_NATURE_SY = "4";
+	
+	// 单位性质类别 企业
+	public static final String UNIT_NATURE_ENTERPRISE = "5";
 }

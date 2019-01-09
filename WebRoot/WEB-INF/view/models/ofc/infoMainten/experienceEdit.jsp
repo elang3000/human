@@ -15,42 +15,41 @@
 						<smart:gridColumn>
 							<smart:grid>
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
+									<smart:gridColumn colPart="6">
 										<smart:infoShowerLabel infoname="姓名" infovalue="${servant.name}"></smart:infoShowerLabel>
 										<smart:textInput type="hidden" name="id" value="${experience.id }"></smart:textInput>
 										<smart:textInput type="hidden" name="servant.id" value="${servant.id}"></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
+									<smart:gridColumn colPart="6">
 										<smart:textInput labelName="曾在单位：" name="formerUnit" value="${experience.formerUnit}" verify="required" isNotNull="true"></smart:textInput>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:date labelName="曾在单位起始日期：" display="block" name="startDate" id="startDate" value="${experience.startDate}" verify="required" isNotNull="true"></smart:date>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:date labelName="曾在单位终止日期：" display="block" name="endDate" id="endDate" value="${experience.endDate}"></smart:date>
+									<smart:gridColumn colPart="6">
+										<smart:textInput labelName="曾经从事工作或担任职务：" shortName="担任职务" name="formerJob" value="${experience.formerJob}" verify="required" isNotNull="true"></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="曾经从事工作或担任职务：" name="formerJob" value="${experience.formerJob}" verify="required" isNotNull="true"></smart:textInput>
+									<smart:gridColumn colPart="6">
+										<smart:date labelName="曾在单位起始日期：" shortName="起始日期" display="block" name="startDate" id="startDate" value="${experience.startDate}" verify="required" isNotNull="true"></smart:date>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="简历证明人：" name="reterence" value="${experience.reterence}" ></smart:textInput>
+									<smart:gridColumn colPart="6">
+										<smart:date labelName="曾在单位终止日期：" shortName="终止日期" display="block" name="endDate" id="endDate" value="${experience.endDate}"></smart:date>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<%-- <smart:gridRow>
 									<smart:gridColumn colPart="12">
 										<smart:continuousSelect id="formerJobCategory" labelName="曾在单位职务类别：" inputName="formerJobCategory.id" codeTypeCode="DM049" inputVal="${experience.formerJobCategory.id}" valType="ID" widthPercent="0.5"/>
 									</smart:gridColumn>
 								</smart:gridRow> --%>
 								
-								<smart:gridRow>
-									<smart:gridColumn colPart="8">
+								<smart:gridRow>									
+									<smart:gridColumn colPart="6">
+										<smart:textInput labelName="简历证明人：" name="reterence" value="${experience.reterence}" ></smart:textInput>
+									</smart:gridColumn>
+								</smart:gridRow>
+								<smart:gridRow>	
+									<smart:gridColumn colPart="12">
 										<smart:textarea labelName="简历：" name="introduce"  display="block">${experience.introduce}</smart:textarea>
 									</smart:gridColumn>
 								</smart:gridRow>

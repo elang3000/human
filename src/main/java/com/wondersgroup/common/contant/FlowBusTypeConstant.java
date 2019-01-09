@@ -17,6 +17,8 @@ public class FlowBusTypeConstant {
 	// 流程【职务变动-晋升】
 	public final static String FLOW_JOBSHIFT_PROMOTE = "JOBSHIFT_PROMOTE";
 	
+	public final static String FLOW_JOBSHIFT_PROMOTEB="JOBSHIFT_PROMOTEB";
+	
 	// 流程【职务变动-降级】
 	public final static String FLOW_JOBSHIFT_DEMOTE = "JOBSHIFT_DEMOTE";
 	
@@ -28,6 +30,9 @@ public class FlowBusTypeConstant {
 	
 	//流程【年度考核奖励】
 	public final static String FLOW_ASSESS_REWARD="ASSESS_REWARD";
+
+	//录用 标识 静态常量
+	public final static String DRAFT_SERVANT="DRAFT_SERVANT";
 	
 	// 职务变动所有流程,拼接字符串
 	public static String FLOW_JOBSHIFT_ALL;

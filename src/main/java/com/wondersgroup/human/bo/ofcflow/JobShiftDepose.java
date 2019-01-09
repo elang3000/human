@@ -202,6 +202,23 @@ public class JobShiftDepose extends GenericEntity {
 	@Column(name = "STATUS")
 	private Integer status;
 
+	/**
+	 * @fieldName: 免职后职务级别
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 免职后职务的等级。GB/T 12407-2008
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "NEWJOBLEVEL")
+	private CodeInfo newJobLevel;
+
+	public CodeInfo getNewJobLevel() {
+		return newJobLevel;
+	}
+
+	public void setNewJobLevel(CodeInfo newJobLevel) {
+		this.newJobLevel = newJobLevel;
+	}
+
 	public Integer getStatus() {
 		return status;
 	}

@@ -23,6 +23,9 @@ import com.wondersgroup.human.bo.socialworker.SrEducation;
 import com.wondersgroup.human.service.socialworker.SocialWorkerService;
 import com.wondersgroup.human.service.socialworker.SwEducationService;
 import com.wondersgroup.human.vo.socialworker.SwEducationVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 @Controller
 @RequestMapping("/social/education")
 public class SwEducationController extends GenericController{
@@ -49,8 +52,8 @@ public class SwEducationController extends GenericController{
 			model.addAttribute("education", education);
 			model.addAttribute("social", education.getSocialWorker());
 		} else {
-			SocialWorker servant = socialWorkerService.get(Id);
-			model.addAttribute("social", servant);
+			SocialWorker social = socialWorkerService.get(Id);
+			model.addAttribute("social", social);
 		}
 		return VIEW_EDUCATION_EDIT;
 	}
@@ -64,6 +67,8 @@ public class SwEducationController extends GenericController{
 	 * @param page 页码
 	 * @return: Page<PostVO>
 	 */
+	@Log(title = "查询学历信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<SwEducationVO> pageList(String Id, Integer limit, Integer page) {
@@ -81,6 +86,8 @@ public class SwEducationController extends GenericController{
 	 * @param temp 学历信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑学历信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(SrEducation temp) {
@@ -113,6 +120,8 @@ public class SwEducationController extends GenericController{
 	 * @param temp 学历信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除学历信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

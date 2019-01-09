@@ -41,7 +41,7 @@
 					<smart:line color="blue" />
 					<smart:gridColumn colPart="4" deviceType="md" colOffset="4">
 						<smart:buttonGroup container="true">
-							<smart:button theme="warm" size="sm" method="goBack" title="返回">
+							<smart:button theme="primary" size="sm" method="goBack" title="返回">
 								<smart:icon icon="reply">&nbsp;返回</smart:icon>
 							</smart:button>
 						</smart:buttonGroup>

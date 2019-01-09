@@ -27,6 +27,9 @@ import com.wondersgroup.human.dto.record.HumanKeepRecordParam;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.record.HumanKeepRecordService;
 import com.wondersgroup.human.vo.record.KeepRecordVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * 备案记录控制器
@@ -78,6 +81,8 @@ public class HumanKeepRecordController extends GenericController {
 	 * @param id
 	 * @return: String
 	 */
+	@Log(title = "备案管理详情", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/detail")
 	public String keepRecordDetail(String id, Model model) {
 		HumanKeepRecord humanKeepRecord = humanKeepRecordService.get(id);
@@ -96,6 +101,8 @@ public class HumanKeepRecordController extends GenericController {
 	 * @param page页码
 	 * @return: Page<HumanKeepRecordVO>
 	 */
+	@Log(title = "备案管理列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/getPage")
 	public Page<KeepRecordVO> getPage(HumanKeepRecordParam param, Integer limit,

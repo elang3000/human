@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.EmployService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.EmployVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: EmployController
@@ -77,7 +80,7 @@ public class EmployController extends GenericController {
 	
 	/**
 	 * @Title: pageList
-	 * @Description: 在职人员信息列表
+	 * @Description: 人员录用信息列表
 	 * @param servantId 人员id
 	 * @param limit 页大小
 	 * @param page 页码
@@ -100,6 +103,8 @@ public class EmployController extends GenericController {
 	 * @param temp 录用信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑录用信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Employ temp) {
@@ -131,6 +136,8 @@ public class EmployController extends GenericController {
 	 * @param temp 录用信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除录用信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

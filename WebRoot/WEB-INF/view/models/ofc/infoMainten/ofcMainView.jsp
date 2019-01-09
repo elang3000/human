@@ -5,6 +5,12 @@
 <html>
 <head>
 <smart:initHead title="信息--公务员登记"/>
+<style type="text/css">
+	.formLabel{
+	 	vertical-align: middle;
+	 	height:100%;
+	}
+</style>
 </head>
 <smart:body>
 	<smart:grid>
@@ -60,7 +66,7 @@
 									</smart:gridRow>
 									<smart:gridRow>
 										<smart:gridColumn colPart="6">
-											<smart:infoShowerLabel infoname="身份证号" infovalue="${servant.cardNo}"></smart:infoShowerLabel>
+											<smart:infoShowerLabel infoname="身份证号" infovalue="${servant.cardNoView}"></smart:infoShowerLabel>
 										</smart:gridColumn>
 										<smart:gridColumn colPart="6">
 											<smart:infoShowerLabel infoname="参加工作时间" infovalue="${servant.attendDate}"></smart:infoShowerLabel>
@@ -81,11 +87,11 @@
 									<div class="layui-form-item">
 										<label class="layui-form-label formLabel">工作简历：</label>
 										<div class="layui-inline">
-							                <div class="layui-form-mid">
+
 							                	<c:forEach var="info" items="${experienceInfos}" varStatus="index">
 											         ${info} <c:if test="${index.last==false}"><br/></c:if>
 												</c:forEach>
-							                </div>
+
 							            </div>
 									</div>
 								</div>
@@ -95,13 +101,11 @@
 							<div style="margin-top:5px;" class="layui-row">
 								<div class="layui-col-md12">
 									<div class="layui-form-item">
-										<label class="layui-form-label formLabel">何时受过何种奖惩：</label>
+										<label class="layui-form-label formLabel">奖惩情况：</label>
 										<div class="layui-inline">
-							                <div class="layui-form-mid">
 							                	<c:forEach var="info" items="${rewardAndPunishInfos}" varStatus="index">
 											         ${info} <c:if test="${index.last==false}"><br/></c:if>
 												</c:forEach>
-							                </div>
 							            </div>
 									</div>
 								</div>
@@ -127,7 +131,7 @@
 							
 							<smart:gridRow>
 								<smart:gridColumn colPart="8">
-									<smart:infoShowerLabel infoname="个人基本情况备注" infovalue="${servant.personRemark}"></smart:infoShowerLabel>
+									<smart:infoShowerLabel infoname="备注" infovalue="${servant.personRemark}"></smart:infoShowerLabel>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:grid>

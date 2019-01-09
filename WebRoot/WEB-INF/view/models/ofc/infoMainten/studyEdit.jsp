@@ -24,7 +24,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true" name="category.id" labelName="学习（培训、进修）类别：" display="block" url="dictquery/sub/code/DM040" initSelectedKey="${study.category.id}"></smart:singleSelect>
+										<smart:singleSelect isAddDefaltOption="true" name="category.id" shortName="学习类别" labelName="学习（培训、进修）类别：" display="block" url="dictquery/sub/code/DM040" initSelectedKey="${study.category.id}"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:date labelName="起始日期：" display="block" name="startDate" id="startDate" value="${study.startDate}"></smart:date>
@@ -42,7 +42,7 @@
 										<smart:textInput labelName="在学单位名称：" name="studyUnitName" value="${study.studyUnitName}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="学习（培训、进修）班名称：" name="studyClassName" value="${study.studyClassName}" ></smart:textInput>
+										<smart:textInput shortName="学习班名称" labelName="学习（培训、进修）班名称：" name="studyClassName" value="${study.studyClassName}" ></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
@@ -51,7 +51,7 @@
 										<smart:continuousSelect id="code" labelName="在学单位类别：" inputName="currentUnitType.id" codeTypeCode="DM022" inputVal="${study.currentUnitType.id}" valType="ID" widthPercent="0.33333"/>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true"  name="isAbroadStudy.id" labelName="出国（境）学习（培训）标识：" display="block" url="dictquery/sub/code/DM215" initSelectedKey="${study.isAbroadStudy.id}"></smart:singleSelect>
+										<smart:singleSelect shortName="出境学习标识" isAddDefaltOption="true"  name="isAbroadStudy.id" labelName="出国（境）学习（培训）标识：" display="block" url="dictquery/sub/code/DM215" initSelectedKey="${study.isAbroadStudy.id}"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 								

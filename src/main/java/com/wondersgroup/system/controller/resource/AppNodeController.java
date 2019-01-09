@@ -3,14 +3,14 @@
  * 文件名: AppController.java
  * 工程名: human
  * 包名: com.wondersgroup.system.controller.app
- * 描述: TODO
+ * 描述: 系统应用管理控制器
  * 创建人: Wonders-Rain
  * 创建时间: 2018年6月20日 下午9:25:03
  * 版本号: V1.0
- * 修改人：Wonders-Rain
- * 修改时间：2018年6月20日 下午9:25:03
+ * 修改人：
+ * 修改时间：
  * 修改任务号
- * 修改内容：TODO
+ * 修改内容：
  */
 
 package com.wondersgroup.system.controller.resource;
@@ -18,9 +18,7 @@ package com.wondersgroup.system.controller.resource;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -40,6 +38,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 import com.wondersgroup.framework.menu.bo.MenuResource;
 import com.wondersgroup.framework.menu.service.MenuService;
 import com.wondersgroup.framework.resource.bo.AppNode;
@@ -53,7 +54,7 @@ import com.wondersgroup.framework.util.StringUtils;
 
 /**
  * @ClassName: AppController
- * @Description: TODO
+ * @Description: 系统应用管理控制器
  * @author: Wonders-Rain
  * @date: 2018年6月20日 下午9:25:03
  * @version [版本号, YYYY-MM-DD]
@@ -87,6 +88,8 @@ public class AppNodeController extends GenericController {
 		return new ArrayList<AppNode>(Arrays.asList(nodes));
 	}
 	
+	@Log(title = "应用查询", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+	     isSaveRequestData = true)
 	@RequestMapping("query/page")
 	@ResponseBody
 	public Page<AppNodeViewModel> queryAppNode(String name, Integer page, Integer limit) {
@@ -125,6 +128,8 @@ public class AppNodeController extends GenericController {
 		return APP_NODE_CREATE_INDEX;
 	}
 	
+	@Log(title = "新增应用", operatorType = OperatorType.MANAGE, businessType = BusinessType.INSERT,
+	     isSaveRequestData = true)
 	@RequestMapping("create/save")
 	@ResponseBody
 	public AjaxResult saveCreateAppNodeIndex(AppNodeViewModel model) {
@@ -173,6 +178,8 @@ public class AppNodeController extends GenericController {
 		return APP_NODE_EDIT_INDEX;
 	}
 	
+	@Log(title = "修改应用", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+	     isSaveRequestData = true)
 	@RequestMapping("edit/save")
 	@ResponseBody
 	public AjaxResult saveEditAppNode(AppNodeViewModel model) {
@@ -196,6 +203,8 @@ public class AppNodeController extends GenericController {
 		}
 	}
 	
+	@Log(title = "删除应用", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+	     isSaveRequestData = true)
 	@RequestMapping("remove/save")
 	@ResponseBody
 	public AjaxResult removeAppNode(String id) {
@@ -219,6 +228,8 @@ public class AppNodeController extends GenericController {
 		return APP_USER_INDEX;
 	}
 	
+	@Log(title = "查询应用人员", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+	     isSaveRequestData = true)
 	@RequestMapping("user/page")
 	@ResponseBody
 	public Page<UserVO> queryAppNodeUser(String id, String loginName, String name, Integer inAppNode, Integer limit,
@@ -259,6 +270,8 @@ public class AppNodeController extends GenericController {
 		        securityUsers.getTotalSize(), securityUsers.getPageSize(), result);
 	}
 	
+	@Log(title = "新增应用人员", operatorType = OperatorType.MANAGE, businessType = BusinessType.INSERT,
+	     isSaveRequestData = true)
 	@RequestMapping("user/add/{appNodeId}")
 	@ResponseBody
 	public AjaxResult addUserInAppNode(@PathVariable("appNodeId") String appNodeId, @RequestBody List<String> userIds) {
@@ -278,6 +291,8 @@ public class AppNodeController extends GenericController {
 		}
 	}
 	
+	@Log(title = "删除应用人员", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+	     isSaveRequestData = true)
 	@RequestMapping("user/remove")
 	@ResponseBody
 	public AjaxResult removeUserFromAppNode(String appNodeId, String userId) {

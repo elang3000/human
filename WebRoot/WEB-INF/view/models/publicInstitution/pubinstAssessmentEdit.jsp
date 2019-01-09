@@ -21,7 +21,7 @@
 										<smart:textInput type="hidden" name="publicInstitution.id" value="${pubinst.id}"></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:date labelName="考核年度：" display="block" name="assessmentYear" id="assessmentYear" value="${assessment.assessmentYear}" format="yyyy"></smart:date>
+										<smart:date labelName="考核年度：" isNotNull="true" verify="required" display="block" name="assessmentYear" id="assessmentYear" value="${assessment.assessmentYear}" format="yyyy"></smart:date>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
@@ -36,7 +36,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="组织名称：" placeholder="负责考核组织名称" name="organizationName" value="${assessment.organizationName}" ></smart:textInput>
+										<smart:textInput labelName="组织名称：" isNotNull="true" verify="required" placeholder="负责考核组织名称" name="organizationName" value="${assessment.organizationName}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:textInput labelName="组织成员：" placeholder="负责考核组织成员姓名" name="allParticipantName" value="${assessment.allParticipantName}" ></smart:textInput>
@@ -46,7 +46,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="category" labelName="考核类别：" inputName="category.id" codeTypeCode="DM017" inputVal="${assessment.category.id}" valType="ID" widthPercent="0.3333"/>
+										<smart:continuousSelect id="category" labelName="考核类别：" isNotNull="true" verify="required" inputName="category.id" codeTypeCode="DM017" inputVal="${assessment.category.id}" valType="ID" widthPercent="0.3333"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 									<smart:gridColumn colPart="12">

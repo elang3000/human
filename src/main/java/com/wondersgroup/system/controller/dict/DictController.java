@@ -193,8 +193,11 @@ public class DictController extends GenericController {
 	public AjaxResult saveEditCodeInfo(CodeInfo codeInfo) {
 		
 		try {
-			CodeInfo targetCodeInfo = getDictableService().loadWithLazy(codeInfo.getId(), "codeType");
+			CodeInfo targetCodeInfo = getDictableService().loadWithLazy(codeInfo.getId(), "codeType","parent","children");
 			BeanUtils.copyPropertiesIgnoreNull(codeInfo, targetCodeInfo);
+			codeInfo.setCodeType(targetCodeInfo.getCodeType());
+			codeInfo.setParent(targetCodeInfo.getParent());
+			codeInfo.setChildren(targetCodeInfo.getChildren());
 			getDictableService().updateCodeInfo(codeInfo, targetCodeInfo.getCodeType());
 			return new AjaxResult(true, AjaxResult.MESSAGE_SUCCESS_TYPE, getMessage("system.success"));
 		} catch (Exception ex) {

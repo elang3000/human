@@ -258,24 +258,24 @@ public class RewardAndPunishRepositoryImpl extends GenericRepositoryImpl<RewardA
 		sql.append("ifnull(C.ccc,0) as seriousDemerit,ifnull(D.ddd,0) as demerit,ifnull(E.eee,0) as degrade,ifnull(F.fff,0) as dismiss ");
 		sql.append("from B01 b1 ");
 
-		//警告
+		//开除
 		sql.append("left join  ");
 		sql.append("(select departId,count(A01057A) as aaa from b01 b11 ");//开始
 		sql.append("join a01 a1 on b11.organid = a1.departId ");
 		sql.append("join a14 a14 on a14.servant_id = a1.id ");
-		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '10' ");
+		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '19' ");
 		sql.append("where a14.removed = 'N' ");
 		if(year!=null){
 			sql.append("and a14.A14307 between :start and :end ");//时间
 		}
 		sql.append("group by departId) A on A.departId = b1.organid ");//结束
-		
-		//记过
+				
+		//警告
 		sql.append("left join  ");
 		sql.append("(select departId,count(A01057A) as bbb from b01 b11 ");//开始
 		sql.append("join a01 a1 on b11.organid = a1.departId ");
 		sql.append("join a14 a14 on a14.servant_id = a1.id ");
-		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '12' ");
+		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '10' ");
 		sql.append("where a14.removed = 'N' ");
 		if(year!=null){
 			sql.append("and a14.A14307 between :start and :end ");//时间
@@ -293,10 +293,22 @@ public class RewardAndPunishRepositoryImpl extends GenericRepositoryImpl<RewardA
 			sql.append("and a14.A14307 between :start and :end ");//时间
 		}
 		sql.append("group by departId) C on C.departId = b1.organid ");//结束
+				
+		//记过
+		sql.append("left join  ");
+		sql.append("(select departId,count(A01057A) as ddd from b01 b11 ");//开始
+		sql.append("join a01 a1 on b11.organid = a1.departId ");
+		sql.append("join a14 a14 on a14.servant_id = a1.id ");
+		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '12' ");
+		sql.append("where a14.removed = 'N' ");
+		if(year!=null){
+			sql.append("and a14.A14307 between :start and :end ");//时间
+		}
+		sql.append("group by departId) D on D.departId = b1.organid ");//结束
 		
 		//降级
 		sql.append("left join  ");
-		sql.append("(select departId,count(A01057A) as ddd from b01 b11 ");//开始
+		sql.append("(select departId,count(A01057A) as eee from b01 b11 ");//开始
 		sql.append("join a01 a1 on b11.organid = a1.departId ");
 		sql.append("join a14 a14 on a14.servant_id = a1.id ");
 		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '14' ");
@@ -304,26 +316,14 @@ public class RewardAndPunishRepositoryImpl extends GenericRepositoryImpl<RewardA
 		if(year!=null){
 			sql.append("and a14.A14307 between :start and :end ");//时间
 		}
-		sql.append("group by departId) D on D.departId = b1.organid ");//结束
-		
-		//撤职
-		sql.append("left join  ");
-		sql.append("(select departId,count(A01057A) as eee from b01 b11 ");//开始
-		sql.append("join a01 a1 on b11.organid = a1.departId ");
-		sql.append("join a14 a14 on a14.servant_id = a1.id ");
-		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '17' ");
-		sql.append("where a14.removed = 'N' ");
-		if(year!=null){
-			sql.append("and a14.A14307 between :start and :end ");//时间
-		}
 		sql.append("group by departId) E on E.departId = b1.organid ");//结束
 		
-		//开除
+		//撤职
 		sql.append("left join  ");
 		sql.append("(select departId,count(A01057A) as fff from b01 b11 ");//开始
 		sql.append("join a01 a1 on b11.organid = a1.departId ");
 		sql.append("join a14 a14 on a14.servant_id = a1.id ");
-		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '19' ");
+		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '17' ");
 		sql.append("where a14.removed = 'N' ");
 		if(year!=null){
 			sql.append("and a14.A14307 between :start and :end ");//时间
@@ -369,24 +369,24 @@ public class RewardAndPunishRepositoryImpl extends GenericRepositoryImpl<RewardA
 		sql.append("ifnull(C.ccc,0) as \"3\",ifnull(D.ddd,0) as \"4\",ifnull(E.eee,0) as \"5\",ifnull(F.fff,0) as \"6\" ");
 		sql.append("from B01 b1 ");
 
-		//警告
+		//开除
 		sql.append("left join  ");
 		sql.append("(select departId,count(A01057A) as aaa from b01 b11 ");//开始
 		sql.append("join a01 a1 on b11.organid = a1.departId ");
 		sql.append("join a14 a14 on a14.servant_id = a1.id ");
-		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '10' ");
+		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '19' ");
 		sql.append("where a14.removed = 'N' ");
 		if(year!=null){
 			sql.append("and a14.A14307 between :start and :end ");//时间
 		}
 		sql.append("group by departId) A on A.departId = b1.organid ");//结束
-		
-		//记过
+				
+		//警告
 		sql.append("left join  ");
 		sql.append("(select departId,count(A01057A) as bbb from b01 b11 ");//开始
 		sql.append("join a01 a1 on b11.organid = a1.departId ");
 		sql.append("join a14 a14 on a14.servant_id = a1.id ");
-		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '12' ");
+		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '10' ");
 		sql.append("where a14.removed = 'N' ");
 		if(year!=null){
 			sql.append("and a14.A14307 between :start and :end ");//时间
@@ -404,10 +404,22 @@ public class RewardAndPunishRepositoryImpl extends GenericRepositoryImpl<RewardA
 			sql.append("and a14.A14307 between :start and :end ");//时间
 		}
 		sql.append("group by departId) C on C.departId = b1.organid ");//结束
+				
+		//记过
+		sql.append("left join  ");
+		sql.append("(select departId,count(A01057A) as ddd from b01 b11 ");//开始
+		sql.append("join a01 a1 on b11.organid = a1.departId ");
+		sql.append("join a14 a14 on a14.servant_id = a1.id ");
+		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '12' ");
+		sql.append("where a14.removed = 'N' ");
+		if(year!=null){
+			sql.append("and a14.A14307 between :start and :end ");//时间
+		}
+		sql.append("group by departId) D on D.departId = b1.organid ");//结束
 		
 		//降级
 		sql.append("left join  ");
-		sql.append("(select departId,count(A01057A) as ddd from b01 b11 ");//开始
+		sql.append("(select departId,count(A01057A) as eee from b01 b11 ");//开始
 		sql.append("join a01 a1 on b11.organid = a1.departId ");
 		sql.append("join a14 a14 on a14.servant_id = a1.id ");
 		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '14' ");
@@ -415,26 +427,14 @@ public class RewardAndPunishRepositoryImpl extends GenericRepositoryImpl<RewardA
 		if(year!=null){
 			sql.append("and a14.A14307 between :start and :end ");//时间
 		}
-		sql.append("group by departId) D on D.departId = b1.organid ");//结束
-		
-		//撤职
-		sql.append("left join  ");
-		sql.append("(select departId,count(A01057A) as eee from b01 b11 ");//开始
-		sql.append("join a01 a1 on b11.organid = a1.departId ");
-		sql.append("join a14 a14 on a14.servant_id = a1.id ");
-		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '17' ");
-		sql.append("where a14.removed = 'N' ");
-		if(year!=null){
-			sql.append("and a14.A14307 between :start and :end ");//时间
-		}
 		sql.append("group by departId) E on E.departId = b1.organid ");//结束
 		
-		//开除
+		//撤职
 		sql.append("left join  ");
 		sql.append("(select departId,count(A01057A) as fff from b01 b11 ");//开始
 		sql.append("join a01 a1 on b11.organid = a1.departId ");
 		sql.append("join a14 a14 on a14.servant_id = a1.id ");
-		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '19' ");
+		sql.append("JOIN CF_CODE_INFO TP ON TP.ID = a14.A14305B AND TP.TYPE_ID = (SELECT ID FROM CF_CODE_TYPE WHERE CODE = 'GBT_8563_3_2005')  AND TP.CODE = '17' ");
 		sql.append("where a14.removed = 'N' ");
 		if(year!=null){
 			sql.append("and a14.A14307 between :start and :end ");//时间

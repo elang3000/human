@@ -15,9 +15,8 @@
 
 package com.wondersgroup.human.controller.analysis;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -73,19 +72,53 @@ public class StatistController extends GenericController {
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		Map<String, Integer> queryResult = statistService.statistServantTopEducation(organNodeIds);
 		Iterator<Entry<String, Integer>> iterator = queryResult.entrySet().iterator();
+		
+		Integer otherValue = 0;
 		while (iterator.hasNext()) {
 			Entry<String, Integer> entry = iterator.next();
 			Map<String, Object> res = new HashMap<String, Object>();
-			res.put("name", entry.getKey());
-			res.put("counter", entry.getValue());
-			result.add(res);
+			switch (entry.getKey()) {
+				case "未知" : 
+					res.put("name", "未知");
+					res.put("counter", entry.getValue());
+					result.add(res);
+					break;
+				case "博士研究生毕业" : 
+					res.put("name", "博士");
+					res.put("counter", entry.getValue());
+					result.add(res);
+					break;
+				case "硕士研究生毕业" : 
+					res.put("name", "硕士");
+					res.put("counter", entry.getValue());
+					result.add(res);
+					break; 
+				case "大学本科毕业" : 
+					res.put("name", "本科");
+					res.put("counter", entry.getValue());
+					result.add(res);
+					break; 
+				case "大学专科毕业" : 
+					res.put("name", "专科");
+					res.put("counter", entry.getValue());
+					result.add(res);
+					break; 
+				default : 
+					otherValue += entry.getValue();
+					break;
+			}
+			
 		}
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put("name", "专科及以下");
+		res.put("counter", otherValue);
+		result.add(res);
 		return result;
 	}
 	
 	@RequestMapping("statist/years")
 	@ResponseBody
-	public Map<String, Object> statistServantYears() {
+	public List<Map<String, Object>> statistServantYears() {
 		
 		List<String> organNodeIds = new ArrayList<String>();
 		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
@@ -96,27 +129,62 @@ public class StatistController extends GenericController {
 		}
 		Map<String, Integer> years = statistService.statistServantYears(organNodeIds);
 		Iterator<Entry<String, Integer>> iterator = years.entrySet().iterator();
-		List<String> xAxis = new ArrayList<String>();
-		List<Integer> series0 = new ArrayList<Integer>();
-		List<Double> series1 = new ArrayList<Double>();
-		Double total = 0d;
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		while (iterator.hasNext()) {
 			Entry<String, Integer> entry = iterator.next();
-			xAxis.add(entry.getKey());
-			series0.add(entry.getValue());
-			total += entry.getValue();
+			Map<String, Object> res = new HashMap<String, Object>();
+			res.put("name", entry.getKey());
+			res.put("counter", entry.getValue());
+			result.add(res);
 		}
-		iterator = years.entrySet().iterator();
+		return result;
+	}
+	
+	@RequestMapping("statist/schoolnature")
+	@ResponseBody
+	public List<Map<String, Object>> statistServantSchoolNature() {
+		
+		List<String> organNodeIds = new ArrayList<String>();
+		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		organNode = organNodeService.loadOrganNodeByCode(CommonConst.ROOT_ORGAN_CODE);
+		List<OrganNode> organNodes = organizationService.getAllChildOrganNode(organNode.getId());
+		for (OrganNode node : organNodes) {
+			organNodeIds.add(node.getId());
+		}
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		Map<String, Integer> queryResult = statistService.statistServantSchoolNature(organNodeIds);
+		Iterator<Entry<String, Integer>> iterator = queryResult.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Integer> entry = iterator.next();
-			series1.add(
-			        new BigDecimal(new Double(entry.getValue()) / total).setScale(2, RoundingMode.HALF_UP).doubleValue()
-			                * 100);
+			Map<String, Object> res = new HashMap<String, Object>();
+			res.put("name", entry.getKey());
+			res.put("counter", entry.getValue());
+			result.add(res);
 		}
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("xAxis", xAxis);
-		result.put("series0", series0);
-		result.put("series1", series1);
+		return result;
+	}
+	
+	@RequestMapping("statist/isshlocal")
+	@ResponseBody
+	public List<Map<String, Object>> statistServantisshanghailocal() {
+		
+		List<String> organNodeIds = new ArrayList<String>();
+		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		organNode = organNodeService.loadOrganNodeByCode(CommonConst.ROOT_ORGAN_CODE);
+		List<OrganNode> organNodes = organizationService.getAllChildOrganNode(organNode.getId());
+		for (OrganNode node : organNodes) {
+			organNodeIds.add(node.getId());
+		}
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		Map<String, Integer> queryResult = statistService.statistServantisshanghailocal(organNodeIds);
+		Iterator<Entry<String, Integer>> iterator = queryResult.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, Integer> entry = iterator.next();
+			Map<String, Object> res = new HashMap<String, Object>();
+			res.put("name", entry.getKey());
+			res.put("counter", entry.getValue());
+			result.add(res);
+		}
 		return result;
 	}
 }

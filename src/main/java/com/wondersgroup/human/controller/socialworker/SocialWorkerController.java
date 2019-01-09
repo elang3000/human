@@ -39,6 +39,9 @@ import com.wondersgroup.human.service.socialworker.SwOutMgrService;
 import com.wondersgroup.human.service.socialworker.SwRewardAndPunishService;
 import com.wondersgroup.human.vo.socialworker.OutMgrVO;
 import com.wondersgroup.human.vo.socialworker.SocialWorkerVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * 
@@ -112,6 +115,8 @@ public class SocialWorkerController extends GenericController {
 	 * @return: Page<SocialWorkerVO>
 	 * @throws Exception 
 	 */
+	@Log(title = "查询人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<SocialWorkerVO> pageList(SocialWorker socialWorker,Integer limit,Integer page) throws Exception{
@@ -125,7 +130,7 @@ public class SocialWorkerController extends GenericController {
 		String name = socialWorker.getName();
 		if(StringUtils.isNotBlank(name)){//姓名
 			//name = new String(name.trim().getBytes("iso-8859-1"), "utf-8");
-			Predicate p = new Predicate("name", Operator.EQ, name, "");
+			Predicate p = new Predicate("name", Operator.LIKE, name, "");
 			filter.add(p);
 		}
 		if(StringUtils.isNotBlank(socialWorker.getCardNo())){//身份证
@@ -318,7 +323,11 @@ public class SocialWorkerController extends GenericController {
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
 					for (SrExperience e : experienceList) {
 						StringBuilder info = new StringBuilder();
-						info.append(sdf.format(e.getStartDate()) + " ~ ");
+						if(e.getStartDate() != null){
+							info.append(sdf.format(e.getStartDate()) + " ~ ");
+						}else {
+							info.append(" ~ ");
+						}
 						if (e.getEndDate() == null) {
 							info.append("至今");
 						} else {
@@ -376,7 +385,11 @@ public class SocialWorkerController extends GenericController {
 						info.append("在&nbsp;&nbsp;" + sdf.format(r.getPunishApprovalDate()));
 						info.append("&nbsp;&nbsp;接受");
 						info.append("&nbsp;&nbsp;&nbsp;");
-						info.append(r.getCategory().getName());
+						if (r.getCategory() != null) {
+							info.append(r.getCategory().getName());
+						}else {
+							info.append("");
+						}
 						info.append("&nbsp;&nbsp;");
 						info.append(r.getPunishName());
 						rewardAndPunishInfos.add(info.toString());

@@ -21,14 +21,19 @@ public class RecordableRecordVO {
 private String id;
 	
 	private String name;
-	
+	private String sex;
+	private String cardNo;
 	private String remark;
 	
-	private String planState;//状态
 	//离退人当前机构
-	private String recordOrgan;
+	//private String recordOrgan;
 	//离退日期
 	private Date recordDate;
+	//单位
+	private String departName;
+	
+	//备案类型
+	private String recodeWay;
 	
 	public RecordableRecordVO(){
 		
@@ -36,24 +41,88 @@ private String id;
 	
 	public RecordableRecordVO(RecordableRecord record) {
 		this.id = record.getId();
+		this.name = record.getPublicInstitution().getName();
+		this.cardNo = record.getPublicInstitution().getCardNoView();
+		if(record.getPublicInstitution().getSex() != null){
+			this.sex = record.getPublicInstitution().getSex().getName();
+		}
+		
 		if (StringUtils.isNotBlank(record.getRemark())) {
 			this.remark = record.getRemark();
 		}
-		this.recordOrgan = record.getRecordOrgan().getName();
+		//this.recordOrgan = record.getRecordOrgan().getName();
 		this.recordDate = record.getRecordDate();
-		this.planState = convertState(record.getPlanState());
+		this.departName = record.getPublicInstitution().getDepartName();
+		this.recodeWay = record.getRecodeWay().getName();
 	}
 	
-	public String convertState(int state){
-		
-		if (state == 0) {
-			return "待提交离退备案";
-		} else if (state == 1) {
-			return "待上级单位确定";
-		}else{
-			return "";
-		}
+	
+
+	public String getRecodeWay() {
+		return recodeWay;
 	}
+
+	public void setRecodeWay(String recodeWay) {
+		this.recodeWay = recodeWay;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	public Date getRecordDate() {
+		return recordDate;
+	}
+
+	public void setRecordDate(Date recordDate) {
+		this.recordDate = recordDate;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getCardNo() {
+		return cardNo;
+	}
+
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
+	}
+
+	public String getDepartName() {
+		return departName;
+	}
+
+	public void setDepartName(String departName) {
+		this.departName = departName;
+	}
+
 	
 	
 }

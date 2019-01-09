@@ -101,7 +101,7 @@ public class ReferenceExchangeVO {
 			if (s.getPersonType() != null) {
 				this.personType = s.getPersonType().getName();
 			}
-			this.cardNo = s.getCardNo();
+			this.cardNo = s.getCardNoView();
 		} else {
 			this.name = d.getName();
 			if (d.getSex() != null)
@@ -112,15 +112,22 @@ public class ReferenceExchangeVO {
 			if (d.getNation() != null) {
 				this.nation = d.getNation().getName();
 			}
-			this.cardNo = d.getCardNo();
+			this.cardNo = d.getCardNoView();
 			if (d.getPersonType() != null) {
 				this.personType = d.getPersonType().getName();
 			}
 		}
 		this.id = d.getId();
 		this.sourceOrganName = d.getSourceOrganName();
-		this.status = String.valueOf(d.getStatus());
-		this.statusName = convertState(d.getStatus());
+		//如果已经提交流程，并且是起始节点，设置流程状态为99，不能编辑和删除
+		if(d.getFlowRecord()!=null&&d.getStatus()==ReferenceExchange.STATUS_EXCHANGE_STATE){
+			this.status = "99";
+		}else{
+			this.status = String.valueOf(d.getStatus());
+		}
+		if (d.getStatus()!=null) {
+			this.statusName = convertState(d.getStatus());
+		}
 	}
 	
 	public String convertState(int state) {

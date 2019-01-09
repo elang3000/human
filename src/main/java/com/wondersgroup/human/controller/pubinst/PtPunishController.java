@@ -40,6 +40,9 @@ import com.wondersgroup.human.service.pubinst.PtRewardAndPunishService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.ofc.PunishVO;
 import com.wondersgroup.human.vo.pubinst.PtPunishVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: RewardAndPunishController 
@@ -93,6 +96,8 @@ public class PtPunishController  extends GenericController{
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "查询人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/servantList")
 	public String servantList(){
 		return PUBINST_PUNISH_SERVANT_LIST;
@@ -104,6 +109,8 @@ public class PtPunishController  extends GenericController{
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "查询惩戒信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/punishList")
 	public String punishList(){
 		return PUBINST_PUNISH_PUNISH_LIST;
@@ -128,6 +135,8 @@ public class PtPunishController  extends GenericController{
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "查询惩戒信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/selectPunishServant")
 	public String selectPunishServant(){
 		return PUBINST_PUNISH_SELECT_SERVANT;
@@ -141,6 +150,8 @@ public class PtPunishController  extends GenericController{
 	 * @param page			页码
 	 * @return: Page<PunishVO>
 	 */
+	@Log(title = "查询惩戒人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/getPage")
 	public Page<PtPunishVO> getPage(PunishVO punishVO,Integer limit,Integer page){
@@ -181,6 +192,8 @@ public class PtPunishController  extends GenericController{
 	 * @param page 页码
 	 * @return: Page<PostVO>
 	 */
+	@Log(title = "查询处分信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PtPunishVO> pageList(String Id, Integer limit, Integer page) {
@@ -200,6 +213,8 @@ public class PtPunishController  extends GenericController{
 	 * @param temp		职务信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑处分信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PtRewardAndPunish temp){
@@ -232,6 +247,8 @@ public class PtPunishController  extends GenericController{
 	 * @param temp		培训人员
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除处分信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delPunish(String id){

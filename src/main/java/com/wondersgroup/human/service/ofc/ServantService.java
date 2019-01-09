@@ -16,6 +16,8 @@
 package com.wondersgroup.human.service.ofc;
 
 import java.util.List;
+import java.util.Map;
+
 import org.hibernate.criterion.DetachedCriteria;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.GenericService;
@@ -36,6 +38,8 @@ public interface ServantService extends GenericService<Servant>{
 	
 	public Page<ServantVO> getPage(DetachedCriteria detachedCriteria, Integer page, Integer limit);
 	
+	public Page<ServantVO> getPage(DetachedCriteria detachedCriteria, Integer page, Integer limit,String ids);
+	
 	/**
 	 * 
 	 * @Title: getAllActiveServant 
@@ -46,13 +50,32 @@ public interface ServantService extends GenericService<Servant>{
 	List<Servant> getAllActiveServant();
 
 	/** 
+	 * @param m 
 	 * @Title: queryServantInfoBySeniorCondation 
 	 * @Description: 综合查询
-	 * @param filter
 	 * @param page
 	 * @param limit
 	 * @return
 	 * @return: Page<ServantVO>
 	 */
-	Page<ServantVO> queryServantInfoBySeniorCondation(List<ServantParam> spList, Integer page, Integer limit);
+	Page<ServantVO> queryServantInfoBySeniorCondation(List<ServantParam> spList, Map<String, String> m, Integer page, Integer limit);
+	/**
+	 * 通过姓名和身份证号查询对应的servant
+	 * @param cardNo
+	 * @return
+	 */
+	public List<Servant> getServantByCardNo(String cardNo);
+
+	/** 
+	 * @Title: queryServantInfoBySeniorCondation 
+	 * @Description: TODO
+	 * @param pList
+	 * @param l
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<ServantVO>
+	 */
+	public Page<ServantVO> queryServantInfoBySeniorCondation(List<String> pList, List<String> l, Integer page,
+			Integer limit);
 }

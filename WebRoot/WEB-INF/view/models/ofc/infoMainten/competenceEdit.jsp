@@ -24,31 +24,31 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="code" labelName="专业技术任职资格名称 ：" inputName="code.id" codeTypeCode="GBT_8561_2001" inputVal="${competence.code.id}" valType="ID" widthPercent="0.5" isSaveShowName="true" inputShowName="name" allOrLast="last"/>
+										<smart:continuousSelect id="code" shortName="专业技术名称" labelName="专业技术任职资格名称 ：" inputName="code.id" codeTypeCode="GBT_8561_2001" inputVal="${competence.code.id}" valType="ID" widthPercent="0.5" isSaveShowName="true" inputShowName="name" allOrLast="last"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="lvl" labelName="专业技术任职资格级别 ：" inputName="lvl.id" codeTypeCode="GBT_12407_2008" inputVal="${competence.lvl.id}" valType="ID" widthPercent="0.5"/>
+										<smart:continuousSelect id="lvl" shortName="专业技术级别" labelName="专业技术任职资格级别 ：" inputName="lvl.id" codeTypeCode="GBT_12407_2008" inputVal="${competence.lvl.id}" valType="ID" widthPercent="0.333" initDidableKey="2,4"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true"  name="gainWay.id" labelName="获得专业技术任职资格途径：" display="block" url="dictquery/sub/code/DM010" initSelectedKey="${competence.gainWay.id}"></smart:singleSelect>
+										<smart:singleSelect isAddDefaltOption="true"  shortName="技术任职途径" name="gainWay.id" labelName="获得专业技术任职资格途径：" display="block" url="dictquery/sub/code/DM010" initSelectedKey="${competence.gainWay.id}"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:date labelName="获得专业技术任职资格日期：" display="block" name="gainDate" id="gainDate" value="${competence.gainDate}"></smart:date>
+										<smart:date shortName="资格获得日期" labelName="获得专业技术任职资格日期：" display="block" name="gainDate" id="gainDate" value="${competence.gainDate}"></smart:date>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="专业技术任职资格评委会或考试名称：" name="jury" value="${competence.jury}" ></smart:textInput>
+										<smart:textInput shortName="评委会或考试名" labelName="专业技术任职资格评委会或考试名称：" name="jury" value="${competence.jury}" ></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="专业技术任职资格审批单位：" name="approvalUnit" value="${competence.approvalUnit}" ></smart:textInput>
+										<smart:textInput shortName="专业审批单位" labelName="专业技术任职资格审批单位：" name="approvalUnit" value="${competence.approvalUnit}" ></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 							</smart:grid>

@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.ofc.Study;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofc.StudyService;
 import com.wondersgroup.human.vo.ofc.StudyVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: StudyController
@@ -100,6 +103,8 @@ public class StudyController extends GenericController {
 	 * @param temp 学习（培训、进修）信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑学习（培训、进修）信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Study temp) {
@@ -131,6 +136,8 @@ public class StudyController extends GenericController {
 	 * @param temp 学习（培训、进修）信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除学习（培训、进修）信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

@@ -36,7 +36,6 @@
 		<smart:fileUploadUtils uploadURL="company/importdraftNationalCompanyInfo" />
 		<smart:dateRender id="recordYear" type="year" />
 		form.on('submit(save)', function (data) {//表单保存
-		    debugger
 			var params=data.field;
 			var url=data.form.action;
 		    $.post(url,params,function(result){
@@ -47,7 +46,6 @@
 			
 		//手动验证是否填入年份
 		$("#myUploadAction").click(function(){
-		    debugger
 			$(this).attr("disabled","disabled");
 			$(this).addClass("layui-btn-disabled"); 
 		});

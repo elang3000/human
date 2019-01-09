@@ -1,0 +1,236 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="smart"
+	uri="http://smart.wondersgroup.com/page/component"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<smart:initHead title="事项申请--培训学时考核" />
+</head>
+<smart:body>
+	<smart:grid>
+		<smart:card>
+			<smart:cardHead>
+				<smart:breadcrumbNavMenu separator=">">
+					<smart:breadcrumbNavMenuItem iname="您现在的所在位置"></smart:breadcrumbNavMenuItem>
+					<smart:breadcrumbNavMenuItem iname="事项申请"></smart:breadcrumbNavMenuItem>
+					<smart:breadcrumbNavMenuItem iname="培训学时考核" cite="true"></smart:breadcrumbNavMenuItem>
+				</smart:breadcrumbNavMenu>
+			</smart:cardHead>
+			<smart:cardBody>
+				<smart:gridRow>
+					<smart:tabPanelParent filter="tab"
+						style="margin-left:10px;margin-right:10px;">
+						<smart:tabPanel>
+							<smart:tabPanelItem show="true" eId="" itemName="培训学时考核列表"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="ofcflow/trainServant/flow" show="false" eId="" itemName="流程审批"></smart:tabPanelItem>
+						</smart:tabPanel>
+					</smart:tabPanelParent>
+				</smart:gridRow>
+				
+				<smart:gridRow>
+					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
+						<smart:form>
+							<smart:gridColumn colPart="4">
+								<smart:textInput labelName="培训名称：" placeholder="培训名称" name="trainClassName"></smart:textInput>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:textInput labelName="开始时间：" placeholder="开始时间" name="startDate" id="startDate"></smart:textInput>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:textInput labelName="结束时间：" placeholder="结束时间" name="endDate" id="endDate"></smart:textInput>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="8" colOffset="4">
+								<smart:buttonGroup container="true">
+									<smart:button size="sm" method="search" title="查询"
+										theme="primary">
+										<smart:icon icon="search"></smart:icon>&nbsp;查询
+		  				 			</smart:button>
+									<smart:button size="sm" title="重置"
+										theme="primary" type="reset">
+										<smart:icon icon="history"></smart:icon>&nbsp;重置
+		   							</smart:button>
+		   							<shiro:hasPermission name="ADD_TRAIN_PLAN_BTN">
+			   							<smart:button size="sm" method="add" title="新增培训考核">
+											<smart:icon icon="plus">&nbsp;新增培训考核</smart:icon>
+										</smart:button>
+									</shiro:hasPermission>
+									<shiro:hasPermission name="EXPORT_TRAIN_BTN">
+									<smart:button theme="danger" size="sm" method="exportUnit"
+										title="导出（按单位）">
+										<smart:icon icon="gears">&nbsp;导出（按单位）</smart:icon>
+									</smart:button>
+									
+									<smart:button theme="danger" size="sm" method="exportPeople"
+										title="导出（按个人）">
+										<smart:icon icon="gears">&nbsp;导出（按个人）</smart:icon>
+									</smart:button>
+									</shiro:hasPermission>
+									
+								</smart:buttonGroup>
+							</smart:gridColumn>
+						</smart:form>
+					</smart:fieldSet>
+				</smart:gridRow>
+
+				<smart:gridRow colSpace="5">
+					<smart:gridColumn>
+						<smart:table id="navigationList" url="ofcflow/trainServant/pageList" sortField="name" sortType="asc" 
+							height="full-240" text="未找到用户数据！" page="true" doneCallBack="fixedCol">
+							<tr>
+								<smart:tableItem field="trainClassName" width=".12" sort="false">培训班名称</smart:tableItem>
+								<smart:tableItem field="studyType" width=".13" sort="false">培训类别</smart:tableItem>
+								<smart:tableItem field="hostOrgan" width=".13" sort="false">主办单位</smart:tableItem>
+								<smart:tableItem field="trainOrganName" width=".13" sort="false">培训机构名称</smart:tableItem>
+								<smart:tableItem field="days" width=".1" sort="false">培训时长（天）</smart:tableItem>
+								<smart:tableItem field="hours" width=".1" sort="false">培训学时（时）</smart:tableItem>
+								<smart:tableItem field="startDate" width=".12" sort="false">开始时间</smart:tableItem>
+								<smart:tableItem field="endDate" width=".12" sort="false">结束时间</smart:tableItem>
+								<smart:tableItem field="status" width=".15" sort="false">状态</smart:tableItem>
+								<smart:tableItem align="center" width=".12" fixed="right" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
+							</tr>
+							<script type="text/html" id="navListToolBar">
+										{{#  if(d.statusSign==1){ }}
+										<shiro:hasPermission name="EDIT_TRAIN_PLAN_BTN">
+										<a class="layui-btn layui-btn-xs layui-btn-default" lay-event="edit"  title="编辑">
+											<i class="fa fa-edit"></i>
+										</a>
+										</shiro:hasPermission>
+										<shiro:hasPermission name="REMOVE_TRAIN_PLAN_BTN">
+										<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="remove"  title="删除">
+											<i class="fa fa-trash"></i>
+										</a>
+										</shiro:hasPermission>
+ 										{{#  } }}
+									<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="view"  title="查看">
+										<i class="fa fa-eye"></i>
+									</a>
+							</script>
+						</smart:table>
+					</smart:gridColumn>
+				</smart:gridRow>
+			</smart:cardBody>
+		</smart:card>
+	</smart:grid>
+	<smart:scriptHead models="table,form,layer,element,laydate">
+		<smart:utils />
+		var startDate=laydate.render({
+	    	elem:'#startDate',
+	    	btns: ['clear', 'confirm'],
+	    	done:function(value,date){
+		    	    endDate.config.min={    	    		
+		    	    	year:date.year,
+		    	    	month:date.month-1,//关键
+		                date:date.date,
+		                hours:date.hours,
+		                minutes:date.minutes,
+		                seconds:date.seconds
+		    	    };
+	    	}
+    	});
+    	var endDate=laydate.render({
+	    	elem:'#endDate',
+	    	btns: ['clear', 'confirm'],
+	    	done:function(value,date){
+		    	    startDate.config.max={
+		    	    		year:date.year,
+		        	    	month:date.month-1,//关键
+		                    date:date.date,
+		                    hours:date.hours,
+		                    minutes:date.minutes,
+		                    seconds:date.seconds
+		    	    }
+	    	}
+    	});
+		<smart:tableScriptAction tableId="navigationList" checkbox="true"
+			sort="true" rowEdit="true">
+				edit : function(data) {
+					smart.show({
+					title : '编辑培训信息',
+					size : 'full',
+					url : 'ofcflow/trainServant/editTrain?id='+data.data.id,
+					scrollbar : false,
+					});
+				},
+				upload : function(data) {
+					smart.show({
+					title : '培训学时上报',
+					size : 'full',
+					url : 'ofcflow/trainServant/uploadTrain?id='+data.data.id,
+					scrollbar : false,
+					});
+				},
+				addUser : function(data) {
+					smart.show({
+					title : '培训学时人员添加',
+					size : 'full',
+					url : 'ofcflow/trainServant/addTrainPeople?id='+data.data.id,
+					scrollbar : false,
+					});
+				},
+				remove : function(data) {
+					smart.confirm({
+						title:'删除培训信息',
+						message:'确认删除培训信息？',
+						type:'POST',
+						url:'ofcflow/trainServant/remove',
+						params : {id : data.data.id},
+						callback : function() {
+							var params = smart.json($('#searchForm'));
+							table.reload('navigationList', {
+								where : params
+							});
+						}
+				});
+				},
+				view : function(data) {
+				smart.show({
+					title : '查看培训考核',
+					size : 'full',
+					url : "ofcflow/trainServant/trainView",
+					params:{id:data.data.id},
+					scrollbar : false
+				});
+				}
+			</smart:tableScriptAction>
+		<smart:buttonScriptAction>
+			search : function() {
+				var params = utils.json($('.layui-form'));
+				table.reload('navigationList', {
+					where : params,
+					page : {
+						curr : 1
+					}
+				});
+			},
+			add : function() {
+				smart.show({
+					title : '新增培训信息',
+					size : 'full',
+					url : "ofcflow/trainServant/editTrain",
+					scrollbar : false
+				});
+			},
+			exportUnit : function() {
+				smart.show({
+					title : '导出（按单位）',
+					size : 'lg',
+					url : "ofcflow/trainServant/pre1",
+					scrollbar : true
+				});
+			},
+			exportPeople : function() {
+				smart.show({
+					title : '导出（按人员）',
+					size : 'lg',
+					url : "ofcflow/trainServant/pre2",
+					scrollbar : true
+				});
+			},
+		 </smart:buttonScriptAction>
+	</smart:scriptHead>
+</smart:body>
+</html>

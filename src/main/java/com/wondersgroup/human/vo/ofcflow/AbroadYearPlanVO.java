@@ -32,11 +32,11 @@ public class AbroadYearPlanVO {
 	private String name;
 	private String startDate;
 	private String endDate;
+	private Integer approveSign;
 	private String state;
 	private String country;
 	private Integer day;
-	
-	
+	private Integer status;
 	
 	public String getId() {
 		return id;
@@ -94,7 +94,14 @@ public class AbroadYearPlanVO {
 		}
 		this.state = convertState(a.getState());
 		this.day = a.getDay();
+		if(a.getApproveStartDate()!=null){//如果审批时间已存在返回1 不存在返回0
+			this.approveSign = 1;
+		}else{
+			this.approveSign = 0;
+		}
+		this.status = a.getState();
 	}
+	
 	/** 
 	 * @Title: convertState 
 	 * @Description: TODO
@@ -108,5 +115,29 @@ public class AbroadYearPlanVO {
 		} else {
 			return "关闭";
 		}
-	} 
+	}
+	/**
+	 * @return the approveSign
+	 */
+	public Integer getApproveSign() {
+		return approveSign;
+	}
+	/**
+	 * @param approveSign the approveSign to set
+	 */
+	public void setApproveSign(Integer approveSign) {
+		this.approveSign = approveSign;
+	}
+	/**
+	 * @return the status
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 }

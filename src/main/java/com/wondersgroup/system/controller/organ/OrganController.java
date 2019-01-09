@@ -44,6 +44,7 @@ import com.wondersgroup.framework.organization.bo.OrganRelationType;
 import com.wondersgroup.framework.organization.bo.OrganRule;
 import com.wondersgroup.framework.organization.bo.OrganTree;
 import com.wondersgroup.framework.organization.bo.OrganTreeType;
+import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.organization.service.OrganNodeService;
 import com.wondersgroup.framework.organization.service.OrganNodeTypeService;
 import com.wondersgroup.framework.organization.service.OrganRelationService;
@@ -462,8 +463,21 @@ public class OrganController extends GenericController {
 	@RequestMapping("node/query")
 	@ResponseBody
 	public List<OrganNodeVO> queryAvailabledOrganNode(String organTreeId, String organNodeName) {
-		
-		return organizationService.queryAvailabledDepartmentOrganNode(organTreeId, organNodeName);
+		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		return organizationService.queryAvailabledDepartmentOrganNode(organTreeId, organNodeName, organNode);
+	}
+	/**
+	 * @Title: queryAllAvailabledOrganNode 
+	 * @Description: 根据组织树treeid加载所有单位
+	 * @param organTreeId
+	 * @param organNodeName
+	 * @return
+	 * @return: List<OrganNodeVO>
+	 */
+	@RequestMapping("node/queryAll")
+	@ResponseBody
+	public List<OrganNodeVO> queryAllAvailabledOrganNode(String organTreeId, String organNodeName,String organNodeType) {
+		return organizationService.queryAllAvailabledOrganNode(organTreeId, organNodeName,organNodeType);
 	}
 	
 	@RequestMapping("node/user/query/{securityUserId}")

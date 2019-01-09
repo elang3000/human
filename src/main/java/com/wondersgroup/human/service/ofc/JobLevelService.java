@@ -64,4 +64,12 @@ public interface JobLevelService extends GenericService<JobLevel>{
 	 * @see com.wondersgroup.framework.core.service.GenericService#getAllPost(com.wondersgroup.framework.core.bo.GenericEntity)
 	 */
 	public JobLevel getJobLevelByServantId(String id);
+	
+	/**
+	 * 
+	 * @Title: saveOfMaintain 
+	 * @Description: 信息维护里面的save操作。
+	 * @return: void
+	 */
+	void saveOfMaintain(JobLevel entity);
 }

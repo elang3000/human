@@ -15,12 +15,12 @@
 					</smart:gridRow>
 					
 					<smart:gridRow>
-						<table class="layui-table">
+						<table class="layui-table" lay-size="sm">
 							<tbody>
 								<tr>
-									<td style="width:20%"><b>名称</b></td>
-									<td style="width:40%"><b>调整前</b></td>
-									<td style="width:40%"><b>调整后</b></td>
+									<td style="width:30%"><b>名称</b></td>
+									<td style="width:35%"><b>调整前</b></td>
+									<td style="width:35%"><b>调整后</b></td>
 							    </tr>
 							    <tr>
 							    	<td>单位名称：</td>

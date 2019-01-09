@@ -48,6 +48,9 @@ import com.wondersgroup.human.bo.ofcflow.ProbationTimeLength;
 import com.wondersgroup.human.service.ofcflow.ProbationServantService;
 import com.wondersgroup.human.service.ofcflow.ProbationTimeLengthService;
 import com.wondersgroup.human.vo.ofcflow.ProbationServantVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: ProbationController 
@@ -176,6 +179,8 @@ public class ProbationServantController extends GenericController{
 	 * @return
 	 * @return: Page<ProbationServantVO>
 	 */
+	@Log(title = "查询试用期列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/probationServantList")
 	public Page<ProbationServantVO> probationServantList(Model model,String name,String isTimeOK,Integer limit,Integer page) {
@@ -210,6 +215,8 @@ public class ProbationServantController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "保存试用期时长信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/timeSave")
 	public AjaxResult timeSave(ProbationTimeLength temp) {
@@ -237,6 +244,8 @@ public class ProbationServantController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "保存试用期信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(ProbationServant temp) {
@@ -290,6 +299,8 @@ public class ProbationServantController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "审批试用期流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/operationFlow")
 	public AjaxResult operationFlow(ProbationServant temp, HttpServletRequest request) {
@@ -300,7 +311,7 @@ public class ProbationServantController extends GenericController{
 		try {
 			
 			
-			if(StringUtils.isBlank(r)||(!FlowRecord.PASS.equals(r)&&!FlowRecord.NOPASS.equals(r))){
+			if(StringUtils.isBlank(r)||(!FlowRecord.PASS.equals(r)&&!FlowRecord.NOPASS.equals(r)&&!FlowRecord.STOP.equals(r))){
 				throw new BusinessException("审批结果信息不正确！");
 			}
 			ProbationServant servant = probationServantService.get(temp.getId());

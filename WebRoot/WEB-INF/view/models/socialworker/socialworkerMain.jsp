@@ -57,7 +57,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="6">
-										<smart:infoShowerLabel infoname="身份证号" infovalue="${socialWorker.cardNo}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="身份证号" infovalue="${socialWorker.cardNoView}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="6">
 										<smart:infoShowerLabel infoname="政治面貌" infovalue="${socialWorker.politics.name}"></smart:infoShowerLabel>

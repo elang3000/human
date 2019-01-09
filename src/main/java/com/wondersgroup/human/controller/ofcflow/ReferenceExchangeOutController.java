@@ -170,7 +170,7 @@ public class ReferenceExchangeOutController extends GenericController{
 	@RequestMapping("/checkServant")
 	public AjaxResult checkServant(String name,String cardNo){
 		AjaxResult result = new AjaxResult(false);
-		result.setMessage("本单位中不存在该参公人员，无法发起调任申请！");
+		result.setMessage("系统中不存在该参公人员，无法发起调任申请！");
 		try {
 			DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
 			detachedCriteria.add(Restrictions.eq("name", name));
@@ -178,8 +178,8 @@ public class ReferenceExchangeOutController extends GenericController{
 			CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
 			detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
 			detachedCriteria.add(Restrictions.eq("removed", false));
-			OrganNode organ = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-			detachedCriteria.add(Restrictions.eq("departId", organ.getId()));//只查询自己单位的人员
+//			OrganNode organ = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+//			detachedCriteria.add(Restrictions.eq("departId", organ.getId()));//只查询自己单位的人员
 			List<CodeInfo> typeList = DictCacheProvider.getCodeInfoByCodeTypeAndParentCode(DictTypeCodeContant.CODE_TYPE_MEMBER_TYPE, "2");//人员类别为参照管理人员的CODE
 			List<String> personType = new ArrayList<>();
 			for(CodeInfo t:typeList){
@@ -215,7 +215,7 @@ public class ReferenceExchangeOutController extends GenericController{
 					map.put("code", "1");
 					result.setData(map);
 					result.setSuccess(true);
-					result.setMessage("本单位中存在该人员，请点击提交后录入信息发起参公交流调出流程！");
+					result.setMessage("系统中存在该人员，请点击提交后录入信息发起参公交流调出流程！");
 				}
 			}
 		} catch (Exception e) {
@@ -253,8 +253,8 @@ public class ReferenceExchangeOutController extends GenericController{
 			model.addAttribute("name", name);
 		}
 		if(StringUtils.isNotBlank(cardNo)){
-			hql.append( " and servant.cardNo like :cardNo");
-			queryParameteritem=new QueryParameter("cardNo", "%"+cardNo+"%");
+			hql.append( " and servant.cardNo = :cardNo");
+			queryParameteritem=new QueryParameter("cardNo", cardNo);
 			listqueryparameter.add(queryParameteritem);
 			model.addAttribute("cardNo", cardNo);
 		}

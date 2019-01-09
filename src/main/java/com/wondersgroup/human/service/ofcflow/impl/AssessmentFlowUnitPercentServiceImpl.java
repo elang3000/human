@@ -82,7 +82,7 @@ public class AssessmentFlowUnitPercentServiceImpl extends GenericServiceImpl<Ass
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());// 流程业务所在系统
 			flow.setBusId(percent.getId());// 流程业务ID
-			flow.setBusName(userOrg.getAllName() +assessmentFlowCollect.getYear()+ "年度考核信息");// 流程业务名称
+			flow.setBusName("年度考核");// 流程业务名称
 			flow.setBusType(FlowBusTypeConstant.FLOW_ASSESS_REWARD);// 流程业务类型
 			flow.setTargetOrganNode(userOrg);// 流程业务目标组织
 			flow.setTargetSecurityUser(user);// 流程业务目标人员

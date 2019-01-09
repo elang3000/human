@@ -36,7 +36,7 @@
 									<smart:gridColumn colPart="12">
 										<smart:singleSelect name="season" id="season" display="inline"
 											labelName="考核季度" isNotNull="true" verify="required"
-											data="[{'key':'','value':'请选择季度'},{'key':'1','value':'第一季度'},{'key':'2','value':'第二季度'},{'key':'3','value':'第三季度'},{'key':'4','value':'第四季度'}]"></smart:singleSelect>
+											data="[{'key':'','value':'请选择季度'},{'key':'1','value':'第一季度'},{'key':'2','value':'第二季度'},{'key':'3','value':'第三季度'}]"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 

@@ -1,10 +1,14 @@
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.company.NationalCompany;
 import com.wondersgroup.human.bo.pubinst.base.InstBaseAddressCommunication;
@@ -19,6 +23,8 @@ import com.wondersgroup.human.bo.pubinst.base.InstBaseAddressCommunication;
  */
 @Entity
 @Table(name = "C37")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtAddressCommunication extends InstBaseAddressCommunication<PtAddressCommunication>{
 
 	private static final long serialVersionUID = -7449547145363984250L;

@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.ExperienceService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.ExperienceVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: ExperienceController
@@ -100,6 +103,8 @@ public class ExperienceController extends GenericController {
 	 * @param temp 简历（工作经历）信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑简历信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Experience temp) {
@@ -131,6 +136,8 @@ public class ExperienceController extends GenericController {
 	 * @param temp 简历（工作经历）信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除简历信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

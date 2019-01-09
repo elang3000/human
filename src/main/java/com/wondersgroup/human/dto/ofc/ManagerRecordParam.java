@@ -30,6 +30,8 @@ public class ManagerRecordParam {
 	String cardNo;
 	Integer itemType;
 	String recordType;
+	String departId;
+	String year;
 	/**
 	 * @return the name
 	 */
@@ -90,6 +92,28 @@ public class ManagerRecordParam {
 	public void setRecordType(String recordType) {
 		this.recordType = recordType;
 	}
-	
-	
+	/**
+	 * @return the departId
+	 */
+	public String getDepartId() {
+		return departId;
+	}
+	/**
+	 * @param departId the departId to set
+	 */
+	public void setDepartId(String departId) {
+		this.departId = departId;
+	}
+	/**
+	 * @return the year
+	 */
+	public String getYear() {
+		return year;
+	}
+	/**
+	 * @param year the year to set
+	 */
+	public void setYear(String year) {
+		this.year = year;
+	}
 }

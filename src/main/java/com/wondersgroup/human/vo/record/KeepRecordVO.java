@@ -20,7 +20,7 @@ import com.wondersgroup.human.bo.record.HumanKeepRecord;
 
 /** 
  * @ClassName: KeepRecordVO 
- * @Description: TODO
+ * @Description: 备案vo
  * @author: lihao
  * @date: 2018年11月9日 上午11:37:45
  * @version [版本号, YYYY-MM-DD]
@@ -74,7 +74,7 @@ public class KeepRecordVO {
 	/**
 	 * @fieldName: recordName
 	 * @fieldType: java.lang.String
-	 * @Description: 记录类型名称。
+	 * @Description: 事项发生单位名称。
 	 */
 	private String organName;
 	
@@ -86,7 +86,7 @@ public class KeepRecordVO {
 		if(m.getServant()!=null&&m.getServant().getSex()!=null){
 			this.sex = m.getServant().getSex().getName();
 		}
-		this.cardNo = m.getServant().getCardNo();
+		this.cardNo = m.getServant().getCardNoView();
 		if(m.getRecordType()!=null){
 			this.recordType = m.getRecordType().getName();
 		}

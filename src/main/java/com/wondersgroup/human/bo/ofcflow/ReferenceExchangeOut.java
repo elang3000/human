@@ -20,6 +20,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.wondersgroup.framework.organization.bo.OrganNode;
@@ -35,7 +36,7 @@ import com.wondersgroup.framework.organization.bo.OrganNode;
  */
 @Entity
 @Table(name = "HUMAN_REFERENCE_EXCHANGE_OUT")
-public class ReferenceExchangeOut extends BaseEventOutMgr<ReferenceExchangeOut> {
+public class ReferenceExchangeOut extends BaseEventOut<ReferenceExchangeOut> {
 	
 	private static final long serialVersionUID = -7848542299926456057L;
 	
@@ -56,6 +57,18 @@ public class ReferenceExchangeOut extends BaseEventOutMgr<ReferenceExchangeOut> 
 	@Column(name = "STATUS")
 	private Integer status;
 	
+	@ManyToOne
+	@JoinColumn(name="BATCH")
+	private ReferenceExchangeOutBatch referenceExchangeOutBatch;
+	
+	/**
+	 * @fieldName: referenceExchange
+	 * @fieldType: com.wondersgroup.human.bo.ofcflow.ReferenceExchange
+	 * @Description: 转入情况信息
+	 */
+	@OneToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "referenceExchange")
+	private ReferenceExchange referenceExchange;
 	/**
 	 * 待发起参公交流调出流程
 	 */
@@ -90,4 +103,30 @@ public class ReferenceExchangeOut extends BaseEventOutMgr<ReferenceExchangeOut> 
 		
 		this.status = status;
 	}
+
+	
+	public ReferenceExchangeOutBatch getReferenceExchangeOutBatch() {
+		
+		return referenceExchangeOutBatch;
+	}
+
+	
+	public void setReferenceExchangeOutBatch(ReferenceExchangeOutBatch referenceExchangeOutBatch) {
+		
+		this.referenceExchangeOutBatch = referenceExchangeOutBatch;
+	}
+
+	
+	public ReferenceExchange getReferenceExchange() {
+		
+		return referenceExchange;
+	}
+
+	
+	public void setReferenceExchange(ReferenceExchange referenceExchange) {
+		
+		this.referenceExchange = referenceExchange;
+	}
+	
+	
 }

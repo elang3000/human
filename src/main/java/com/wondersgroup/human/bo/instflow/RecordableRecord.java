@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +31,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
@@ -49,6 +52,8 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
  */
 @Entity
 @Table(name = "HUMAN_INST_RECORDABLERECORD")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class RecordableRecord extends GenericEntity {
 	
 	
@@ -56,23 +61,23 @@ public class RecordableRecord extends GenericEntity {
 	private static final long serialVersionUID = 1L;
 	
 	// 待提交备案计划
-	@Transient
-	public final static Integer INST_INFO_RECORDABLE_STATE_POST = 0;
+	/*@Transient
+	public final static Integer INST_INFO_RECORDABLE_STATE_POST = 0;*/
 	// 待上级单位确定
-	@Transient
-	public final static Integer INST_INFO_RECORDABLE_STATE_LEADER = 1;
+	/*@Transient
+	public final static Integer INST_INFO_RECORDABLE_STATE_LEADER = 1;*/
 	
 	
 	/**
 	 * 权限代码map
 	 * key：权限代码，value：业务状态
 	 */
-	public final static Map<String,Integer> power = new HashMap<>();
+	/*public final static Map<String,Integer> power = new HashMap<>();
 	
 	static {
 			power.put("REPORT_INFO_RECORD_APPLY",INST_INFO_RECORDABLE_STATE_POST);
 			power.put("REPORT_UP_LEADER_RECORDABLE", INST_INFO_RECORDABLE_STATE_LEADER);
-	}
+	}*/
 	
 	/**
 	 * @fieldName: publicInstitution
@@ -114,8 +119,8 @@ public class RecordableRecord extends GenericEntity {
 	 * @fieldType: String
 	 * @Description: 审批意见
 	 */
-	@Column(name = "OPINION", length = 255)
-	private String opinion;
+	//@Column(name = "OPINION", length = 255)
+	//private String opinion;
 	
 	
 	/**
@@ -190,16 +195,6 @@ public class RecordableRecord extends GenericEntity {
 
 	public void setFlowRecord(FlowRecord flowRecord) {
 		this.flowRecord = flowRecord;
-	}
-
-
-	public String getOpinion() {
-		return opinion;
-	}
-
-
-	public void setOpinion(String opinion) {
-		this.opinion = opinion;
 	}
 
 

@@ -58,10 +58,12 @@
 														  theme="default">
 												<smart:icon icon="rocket"></smart:icon>&nbsp;批量考核
 											</smart:button>
-											<smart:button size="sm" method="complete"
-														  title="确认考核完成,并且不再修改" id="complete" theme="normal">
-												<smart:icon icon="flag"></smart:icon>&nbsp;考核完成
-											</smart:button>
+											<c:if test="${isFlow==1}">
+												<smart:button size="sm" method="complete"
+															  title="确认考核完成" id="complete" theme="normal">
+													<smart:icon icon="flag"></smart:icon>&nbsp;考核完成
+												</smart:button>
+											</c:if>
 										</smart:buttonGroup>
 									</smart:gridColumn>
 									</c:if>
@@ -86,15 +88,15 @@
 					<smart:gridColumn colPart="12" deviceType="md">
 						<smart:table id="navigationList"
 							url="ofcflow/assess/unitCheckPageList?assessCollectId=${assessCollectId }&orgId=${orgId }"
-							height="full-215" limits="10,100,300,1000" text="未找到有效数据！">
+							height="full-155" limits="10,100,300,1000" text="未找到有效数据！" >
 							<tr>
 								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
-								<smart:tableItem field="name" width="200" sort="true">姓名</smart:tableItem>
-								<smart:tableItem field="orgName" width="300" sort="true">单位</smart:tableItem>
-								<smart:tableItem field="cardNo" width="200" sort="true">身份证号</smart:tableItem>
-								<smart:tableItem field="result" width="200" sort="false">审核结果</smart:tableItem>
-								<smart:tableItem field="remarks" width="500" sort="false">备注</smart:tableItem>
-								<smart:tableItem align="center" width="200" fixed="right"
+								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
+								<smart:tableItem field="orgName" width=".1" sort="true">单位</smart:tableItem>
+								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
+								<smart:tableItem field="result" width=".2" sort="false">考核结论</smart:tableItem>
+								<smart:tableItem field="remarks" width=".25" sort="false">备注</smart:tableItem>
+								<smart:tableItem align="center"  width=".1" fixed="right"
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar">
@@ -103,8 +105,8 @@
 								</smart:tableToolBtn>
 								<c:if test="${isUnitAssess }">
 									<c:if test="${!isAllowAssess }">
-										<smart:tableToolBtn theme="warm" event="assess" title="审核">
-											<smart:icon icon="edit"></smart:icon>
+										<smart:tableToolBtn theme="warm" event="assess" title="考核">
+											<smart:icon icon="legal"></smart:icon>
 										</smart:tableToolBtn>
 									</c:if>
 								</c:if>
@@ -158,7 +160,7 @@
 		
 		$('#jobChange_searchForm #complete').on('click', function() {
 			smart.confirm({
-				title:'确认考核结果',
+				title:'确认考核结论',
 				message:'确认考核需要完成所有人的考核,${seasonAlertStr }继续吗?',
 				type:'POST',
 				url:'ofcflow/assess/completeAssess/${assessCollectId }',

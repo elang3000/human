@@ -23,7 +23,7 @@
 								</smart:gridRow>
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="是否考试录用人员：" name="isExamEmploy.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isExamEmploy.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="是否考试录用人员：" isNotNull="true" verify="required" name="isExamEmploy.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isExamEmploy.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:textInput labelName="录用考试准考证号：" name="admissionTicket" value="${employ.admissionTicket }"></smart:textInput>
@@ -51,23 +51,23 @@
 										<smart:date labelName="批准录用日期 ：" display="block" name="approveEmployDate" id="approveEmployDate" value="${employ.approveEmployDate}"></smart:date>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="录用部门：" name="employDept" value="${employ.employDept }"></smart:textInput>
+										<smart:textInput labelName="录用部门："  isNotNull="true" verify="required" name="employDept" value="${employ.employDept }"></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="录用职位：" name="employJob.id" display="block" url="dictquery/sub/code/GBT_12403_1990" isAddDefaltOption="true" initSelectedKey="${employ.employJob.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="录用职位："  isNotNull="true" verify="required" name="employJob.id" display="block" url="dictquery/sub/code/GBT_12403_1990" isAddDefaltOption="true" initSelectedKey="${employ.employJob.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:numberInput labelName="笔试（申论）成绩：" name="explainingScore" value="${employ.explainingScore }" type="text" display="block"></smart:numberInput>
+										<smart:numberInput labelName="申论成绩：" placeholder="笔试（申论）成绩" name="explainingScore" value="${employ.explainingScore }" type="text" display="block"></smart:numberInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:numberInput labelName="笔试（专业科目）成绩：" name="professionalSubjectScore" value="${employ.professionalSubjectScore }" type="text" display="block"></smart:numberInput>
+										<smart:numberInput labelName="专业成绩：" placeholder="笔试（专业科目）成绩"  name="professionalSubjectScore" value="${employ.professionalSubjectScore }" type="text" display="block"></smart:numberInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="录用时政治面貌：" name="politics.id" display="block" url="dictquery/sub/code/GBT_4762_1984" isAddDefaltOption="true" initSelectedKey="${employ.politics.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="政治面貌：" name="politics.id" display="block" url="dictquery/sub/code/GBT_4762_1984" isAddDefaltOption="true" initSelectedKey="${employ.politics.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:numberInput labelName="录用时基层工作时间：" name="basicWorkTime" value="${employ.basicWorkTime }" type="text" display="block"></smart:numberInput>
@@ -78,34 +78,34 @@
 								</smart:gridRow>
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="是否退役大学生士兵 ：" name="isRetiredCollegeStudentSoldier.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isRetiredCollegeStudentSoldier.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="退役大学生士兵 ："  name="isRetiredCollegeStudentSoldier.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isRetiredCollegeStudentSoldier.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="是否残疾人 ：" name="isdisabled.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isdisabled.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="残疾人 ：" name="isdisabled.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isdisabled.id }"></smart:singleSelect>
+									</smart:gridColumn>
+								</smart:gridRow>
+								<smart:gridRow>
+									<smart:gridColumn colPart="4">
+										<smart:singleSelect labelName="有海外留学经历：" name="isStudyAbroad.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isStudyAbroad.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:numberInput labelName="留学年限 ：" name="studyAbroadTime" value="${employ.studyAbroadTime }" type="text" display="block"></smart:numberInput>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
 								<smart:gridRow>
+									<smart:gridColumn colPart="4">
+										<smart:singleSelect labelName="有海外工作经历 ：" name="isWorkAbroad.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isWorkAbroad.id }"></smart:singleSelect>
+									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:numberInput labelName="海外工作年限 ：" name="workAbroadTime" value="${employ.workAbroadTime }" type="text" display="block"></smart:numberInput>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="是否有海外留学经历：" name="isStudyAbroad.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isStudyAbroad.id }"></smart:singleSelect>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="是否有海外工作经历 ：" name="isWorkAbroad.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isWorkAbroad.id }"></smart:singleSelect>
-									</smart:gridColumn>
-								</smart:gridRow>
-								
+								</smart:gridRow>			
 								<smart:gridRow>
 									<smart:gridColumn colPart="8">
 										<smart:continuousSelect labelName="来源 ：" inputName="shSource.id" codeTypeCode="0126" inputVal="${employ.shSource.id}" valType="ID" widthPercent="0.3333333"/>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="基层项目人员标识 ：" name="isBasicWork.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isBasicWork.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="基层人员标识 ：" name="isBasicWork.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${employ.isBasicWork.id }"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 								

@@ -31,6 +31,9 @@ import com.wondersgroup.human.service.company.NationalCompanyService;
 import com.wondersgroup.human.service.company.NcOutMgrService;
 import com.wondersgroup.human.vo.company.NationalCompanyVo;
 import com.wondersgroup.human.vo.company.NcOutMgrVo;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 
 /**
@@ -89,6 +92,8 @@ public class NationalCompanyController extends GenericController {
 		return VIEW_INSTITUTION_LIST;
 	}
 
+	@Log(title = "查询人员信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<NationalCompanyVo> pageList(NationalCompany nationalCompany,Integer limit,Integer page) throws Exception{

@@ -20,6 +20,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -68,6 +70,7 @@ public class DraftServantImportRecord extends GenericEntity {
 	 */
 	@Column(name = "IMPORT_DATE")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date importDate;
 	
 	/**

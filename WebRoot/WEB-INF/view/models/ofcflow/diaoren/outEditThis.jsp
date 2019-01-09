@@ -88,7 +88,7 @@
 						<smart:gridColumn colPart="3" colOffset="1">
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<img alt="照片" src="static/image/20170705135600.jpg">
+									<img style="width:150px;height:200px;min-width:150px;min-height:200px;" alt="照片" src="ftp/getImg?imgName=${s.photoPath}">
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:gridColumn>
@@ -154,8 +154,8 @@
 							<smart:singleSelect labelName="职级名称：" name="jobLevelCode.id"
 								display="block" url="dictquery/sub/code/GBT_12407_2008/1"
 								isAddDefaltOption="true" initSelectedKey="${d.jobLevelCode.id }"
-								verify="required" isNotNull="true" isSaveShowName="true"
-								inputShowName="jobLevelName" initCludeKey="[141,142,150,160]"></smart:singleSelect>
+								verify="required" isNotNull="true" isSaveShowName="true" id="jobLevelName"
+								inputShowName="jobLevelName" initIncludeKey="141,142,150,160"></smart:singleSelect>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="8">
 							<smart:textarea labelName="调出备注：" name="remark" display="block">${d.remark}</smart:textarea>

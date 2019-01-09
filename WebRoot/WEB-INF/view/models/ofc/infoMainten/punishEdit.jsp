@@ -38,10 +38,10 @@
 										<smart:textInput labelName="处分原始文件号：" name="punishNo" value="${punish.punishNo }" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="惩戒批准单位名称：" name="punishApprovalUnitName" value="${punish.punishApprovalUnitName }"></smart:textInput>
+										<smart:textInput labelName="惩戒批准单位名称：" shortName="批准单位" name="punishApprovalUnitName" value="${punish.punishApprovalUnitName }"></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="惩戒批准单位级别：" name="punishApprovalUnitLevel.id" display="block" url="dictquery/sub/code/DM141" isAddDefaltOption="true" initSelectedKey="${punish.punishApprovalUnitLevel.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="惩戒批准单位级别：" shortName="批准单位级别" name="punishApprovalUnitLevel.id" display="block" url="dictquery/sub/code/DM141" isAddDefaltOption="true" initSelectedKey="${punish.punishApprovalUnitLevel.id }"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
@@ -62,7 +62,7 @@
 										<smart:date labelName="惩戒解除日期：" display="block" name="punishRevokeDate" id="punishRevokeDate" value="${punish.punishRevokeDate}"></smart:date>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="是否监察机关直接给予惩戒：" name="punishIdentification.id" display="block" url="dictquery/sub/code/DM063" isAddDefaltOption="true" initSelectedKey="${punish.punishIdentification.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="是否监察机关直接给予惩戒：" shortName="监察机关直接给予惩戒" name="punishIdentification.id" display="block" url="dictquery/sub/code/DM063" isAddDefaltOption="true" initSelectedKey="${punish.punishIdentification.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect labelName="是否受处分：" name="punishmentIdentification.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${punish.punishmentIdentification.id }"></smart:singleSelect>

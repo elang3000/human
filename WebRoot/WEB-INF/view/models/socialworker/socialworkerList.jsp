@@ -128,7 +128,7 @@
 											</smart:gridRow>
 											<smart:gridRow colSpace="5">
 												<smart:gridColumn>
-													<smart:table id="navigationList_ofcList" url="socialworker/pageList" text="未找到用户数据！" height="full-320" page="true">
+													<smart:table id="navigationList_ofcList" url="socialworker/pageList" text="未找到用户数据！" height="full-250" page="true">
 														<tr>
 															<%-- <smart:tableItem isCheckbox="true">全选</smart:tableItem> --%>
 															<smart:tableItem field="name" width="120" sort="true">姓名</smart:tableItem>

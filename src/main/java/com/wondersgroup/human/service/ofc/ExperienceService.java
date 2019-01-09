@@ -36,5 +36,8 @@ import com.wondersgroup.human.vo.ofc.ExperienceVO;
 public interface ExperienceService extends GenericService<Experience>{
 
 	Page<ExperienceVO> getPage(List<Predicate> filter, Sorts sort, Integer page, Integer limit);
+	
+	//获取最新简历子集
+	public Experience getLatestExperienceByServantId(String id);
 
 }

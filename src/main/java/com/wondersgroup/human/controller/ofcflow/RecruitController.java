@@ -69,6 +69,9 @@ import com.wondersgroup.human.util.ExcelUtilsPOI;
 import com.wondersgroup.human.vo.ofcflow.RecruitEmployPlanVO;
 import com.wondersgroup.human.vo.ofcflow.RecruitPostVO;
 import com.wondersgroup.human.vo.ofcflow.RecruitYearPlanVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * 
@@ -195,7 +198,7 @@ public class RecruitController extends GenericController {
 	@RequestMapping("/planView")
 	public String planView(Model model,String id) {
 		RecruitEmployPlan r = recruitemployplanservice.load(id);
-		model.addAttribute("recruitemployplan",r);
+		model.addAttribute("d",r);
 		model.addAttribute("recruityearplan",r.getYearPlan());
 		if(r.getPlanState()>RecruitEmployPlan.RECRUIT_EMPLOY_PLAN_POST){
 			return RECRUIT_POST_PAGE;//招录计划和职位信息
@@ -229,7 +232,7 @@ public class RecruitController extends GenericController {
 		FlowRecord flow = flowRecordService.load(id);
 		String busType = flow.getBusType();
 		RecruitEmployPlan r = recruitemployplanservice.get(flow.getBusId());
-		model.addAttribute("recruitemployplan", r);
+		model.addAttribute("d", r);
 		model.addAttribute("recruityearplan", r.getYearPlan());
 		if("RecruitEmployPlan".equals(busType)){//招录计划 流程
 			if(RecruitEmployPlan.RECRUIT_EMPLOY_PLAN_STATE_POST==r.getPlanState()){//如果是待提交
@@ -287,6 +290,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: Page<RecruitYearPlan>
 	 */
+	@Log(title = "查询年度招录计划列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/year/yearplanlist")
 	public Page<RecruitYearPlanVO> year(RecruitYearPlan recruityearplan, Integer limit, Integer page) {
@@ -296,13 +301,11 @@ public class RecruitController extends GenericController {
 		sort.add("startDate", false);// 降序
 
 		if (recruityearplan.getStartDate() != null) {// 开始时间
-			Predicate p = new Predicate("startDate", Operator.BETWEEN, recruityearplan.getStartDate(),
-					recruityearplan.getStartDate(), "");
+			Predicate p = new Predicate("startDate", Operator.GTE, recruityearplan.getStartDate(), "");
 			filter.add(p);
 		}
 		if (recruityearplan.getEndDate() != null) {// 结束时间
-			Predicate p = new Predicate("endDate", Operator.BETWEEN, recruityearplan.getStartDate(),
-					recruityearplan.getEndDate(), "");
+			Predicate p = new Predicate("endDate", Operator.LTE, recruityearplan.getEndDate(), "");
 			filter.add(p);
 		}
 
@@ -318,12 +321,17 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "保存年度招录计划信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/saveYearPlan")
 	public AjaxResult saveYearPlan(RecruitYearPlan temp) {
 		AjaxResult result = new AjaxResult(true);
 		try {
 			if (StringUtils.isBlank(temp.getId())) {
+				if(temp.getState()==null){
+					temp.setState(0);
+				}
 				recruityearplanservice.save(temp);// 保存
 			} else {
 				RecruitYearPlan recruityearplan = recruityearplanservice.get(temp.getId());
@@ -348,6 +356,8 @@ public class RecruitController extends GenericController {
 	 * @return AjaxResult
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除年度招录计划信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/year/delete")
 	public AjaxResult deleteYearPlan(String id) {
@@ -487,10 +497,8 @@ public class RecruitController extends GenericController {
 			if(org!=null){
 				OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", org.getId());
 				if(orgFormation!=null){
-					plan.setAllowWeaveNum(orgFormation.getUnitPlanningTotal());//核定编制数
-					plan.setRealNum(orgFormation.getActualNumber());//实有人数
-					plan.setThisYearLackWeaveNum(orgFormation.getVacancyExcessNumber());//机构缺编数
-					plan.setChiefLackWeaveNum(orgFormation.getVacancyDivisionChiefLevelNumber());//处级实职缺编人数
+					BeanUtils.copyPropertiesIgnoreNull(orgFormation, plan);
+					plan.setId(null);
 				}
 			}
 			
@@ -511,7 +519,7 @@ public class RecruitController extends GenericController {
 			model.addAttribute("recruityearplan", recruityearplan);
 		}
 		
-		model.addAttribute("recruitemployplan", plan);
+		model.addAttribute("d", plan);
 		
 		return RECRUIT_EMPLOY_PLAN_PAGE;
 	}
@@ -524,6 +532,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "保存招录计划信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/employPlan/save")
 	public AjaxResult saveEmployPlan(RecruitEmployPlan recruitemployplan, HttpServletRequest request) {
@@ -534,6 +544,17 @@ public class RecruitController extends GenericController {
 //			if(isTrue){
 				if (StringUtils.isBlank(recruitemployplan.getId())) {
 					DictUtils.operationCodeInfo(recruitemployplan);//将CodeInfo中id为空的属性 设置为null
+					OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+					//查询当前单位编制情况
+					OrgInfo org = orgInfoService.findUniqueBy("organ.id", x.getId());
+					if(org!=null){
+						OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", org.getId());
+						if(orgFormation!=null){
+							BeanUtils.copyPropertiesIgnoreNull(orgFormation, recruitemployplan);
+							recruitemployplan.setId(null);
+							recruitemployplan.setCreater(null);
+						}
+					}
 					recruitemployplanservice.save(recruitemployplan);// 保存
 				} else {
 					RecruitEmployPlan employplan = recruitemployplanservice.load(recruitemployplan.getId());
@@ -565,6 +586,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "审批招录计划流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/operationPlan")
 	public AjaxResult operationPlan(RecruitEmployPlan temp, HttpServletRequest request) {
@@ -572,7 +595,7 @@ public class RecruitController extends GenericController {
 		String opinion = request.getParameter("opinion");//审批意见
 		String r = request.getParameter("result");//审批结果
 		try {
-			if(StringUtils.isBlank(r)||(!FlowRecord.PASS.equals(r)&&!FlowRecord.NOPASS.equals(r))){
+			if(StringUtils.isBlank(r)||(!FlowRecord.PASS.equals(r)&&!FlowRecord.NOPASS.equals(r)&&!FlowRecord.STOP.equals(r))){
 				throw new BusinessException("审批结果信息不正确！");
 			}
 			if (StringUtils.isBlank(temp.getId())) {
@@ -604,6 +627,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "审批招录计划职位流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/operationPost")
 	public AjaxResult operationPost(RecruitEmployPlan temp, HttpServletRequest request) {
@@ -611,7 +636,7 @@ public class RecruitController extends GenericController {
 		String opinion = request.getParameter("opinion");//审批意见
 		String r = request.getParameter("result");//审批结果
 		try {
-			if(StringUtils.isBlank(r)||(!FlowRecord.PASS.equals(r)&&!FlowRecord.NOPASS.equals(r))){
+			if(StringUtils.isBlank(r)||(!FlowRecord.PASS.equals(r)&&!FlowRecord.NOPASS.equals(r)&&!FlowRecord.STOP.equals(r))){
 				throw new BusinessException("审批结果信息不正确！");
 			}
 			RecruitEmployPlan employplan = recruitemployplanservice.get(temp.getId());
@@ -637,6 +662,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: Page<RecruitEmployPlan>
 	 */
+	@Log(title = "查询招录计划列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/employPlan/list")
 	public Page<RecruitEmployPlanVO>  EmployPlanList(RecruitEmployPlan recruitemployplan, Integer limit, Integer page) {
@@ -667,6 +694,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除招录计划信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/employPlan/delete")
 	public AjaxResult deleteEmployPlan(String id) {
@@ -691,7 +720,7 @@ public class RecruitController extends GenericController {
 			RecruitEmployPlan recruitemployplan = recruitemployplanservice.get(employPlanId);
 			
 			model.addAttribute("recruityearplan", recruitemployplan.getYearPlan());
-			model.addAttribute("recruitemployplan", recruitemployplan);
+			model.addAttribute("d", recruitemployplan);
 		}
 		return RECRUIT_POST_PAGE;
 	}
@@ -706,6 +735,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: Page<RecruitPostVO>
 	 */
+	@Log(title = "查询招录计划职位列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/employPlan/postlist")
 	public Page<RecruitPostVO>  EmployPlanPostList(RecruitPost recruitpost,String planId, Integer limit, Integer page) {
@@ -780,6 +811,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "保存招录计划职位信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/employPlan/savePost")
 	public AjaxResult savePost(Model model, RecruitPost temp, HttpServletRequest request) {
@@ -832,6 +865,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "审批招录计划流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/employPlan/confirm")
 	public AjaxResult employPlanConfirm(Model model, HttpServletRequest request,String id) {
@@ -875,6 +910,8 @@ public class RecruitController extends GenericController {
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除招录计划职位信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/employPlan/deletepost")
 	public AjaxResult deleteEmployPlanPost(String planId,String postId) {
@@ -943,6 +980,8 @@ public class RecruitController extends GenericController {
 	 * @param id
 	 * @return: void
 	 */
+	@Log(title = "导出年度招录计划信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.EXPORT,
+		     isSaveRequestData = true)
 	@RequestMapping("/exportPlan")
 	public void exportPlan(String id,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -979,8 +1018,8 @@ public class RecruitController extends GenericController {
 			}
 			params.put("listDataList", dataList);
 			String savePath = request.getSession().getServletContext().getRealPath("/");
-			String templet = savePath+"\\WEB-INF\\templates\\recruitEmployPlan.xls";//模板路径
-			String path = savePath+"\\WEB-INF\\templates\\"+planName+".xls";//生成excel文件路径，临时存放，下载成功之后会删除
+			String templet = savePath+"\\static\\templates\\recruitEmployPlan.xls";//模板路径
+			String path = savePath+"\\static\\templates\\"+planName+".xls";//生成excel文件路径，临时存放，下载成功之后会删除
 			ExcelUtilsPOI.replaceModel(params, templet,path, 1,null);//替换模板数据 生成excel到tomcat服务器
 		  	ExcelUtilsPOI.exceldown(path, "长宁区"+planName+"招录计划申报表.xls", request, response);
 			
@@ -994,6 +1033,8 @@ public class RecruitController extends GenericController {
 	 * @param id
 	 * @return: void
 	 */
+	@Log(title = "导出年度招录计划职位信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.EXPORT,
+		     isSaveRequestData = true)
 	@RequestMapping("/exportPost")
 	public void exportPost(String id,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -1054,8 +1095,8 @@ public class RecruitController extends GenericController {
 			}
 			params.put("listDataList", dataList);
 			String savePath = request.getSession().getServletContext().getRealPath("/");
-			String templet = savePath+"\\WEB-INF\\templates\\recruitEmployPost.xls";//模板路径
-			String path = savePath+"\\WEB-INF\\templates\\"+planName+"_Post.xls";//生成excel文件路径，临时存放，下载成功之后会删除
+			String templet = savePath+"\\static\\templates\\recruitEmployPost.xls";//模板路径
+			String path = savePath+"\\static\\templates\\"+planName+"_Post.xls";//生成excel文件路径，临时存放，下载成功之后会删除
 			ExcelUtilsPOI.replaceModel(params, templet,path, 1,"1");//替换模板数据 生成excel到tomcat服务器
 		  	ExcelUtilsPOI.exceldown(path, "长宁区"+planName+"招录计划职位申报表.xls", request, response);
 			

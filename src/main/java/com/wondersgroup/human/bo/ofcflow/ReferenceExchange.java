@@ -28,12 +28,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.organization.bo.OrganNode;
+import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.human.bo.ofc.Servant;
 
@@ -48,7 +50,7 @@ import com.wondersgroup.human.bo.ofc.Servant;
  */
 @Entity
 @Table(name = "HUMAN_REFERENCE_EXCHANGE")
-public class ReferenceExchange extends GenericEntity {
+public class ReferenceExchange extends BaseEventInto<ReferenceExchange> {
 	
 	private static final long serialVersionUID = -6827056387518135996L;
 	
@@ -63,6 +65,14 @@ public class ReferenceExchange extends GenericEntity {
 	public static final String AREA_OUTER = "2";
 	
 	// 人员基本信息
+	/**
+	 * @fieldName: photoPath
+	 * @fieldType: java.lang.String
+	 * @Description: 照片路径
+	 */
+	@Column(name = "PHOTO_PATH", length = 200)
+	private String photoPath;
+	
 	/**
 	 * @fieldName: servant
 	 * @fieldType: com.wondersgroup.human.bo.ofc.Servant
@@ -87,6 +97,14 @@ public class ReferenceExchange extends GenericEntity {
 	 */
 	@Column(name = "CARDNO")
 	private String cardNo;
+	
+	/**
+	 * @fieldName: cardNoView
+	 * @fieldType: java.lang.String
+	 * @Description: 公务员身份证号加密显示。
+	 */
+	@Transient
+	private String cardNoView;
 	
 	/**
 	 * @fieldName: politics
@@ -219,7 +237,7 @@ public class ReferenceExchange extends GenericEntity {
 	 */
 	@Column(name = "IS_LOW_TO_HIGH")
 	@org.hibernate.annotations.Type(type = "yes_no")
-	private Boolean isLowToHigh = false;
+	private Boolean isLowToHigh;
 	
 	/**
 	 * @fieldName: postCode
@@ -311,6 +329,15 @@ public class ReferenceExchange extends GenericEntity {
 	private String remark;
 	
 	/**
+	 * @fieldName: attribute
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 拟任职务属性,DM049 担任领导职务或非领导职务的情况。
+	 */
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "ATTRIBUTE")
+	private CodeInfo attribute;
+	
+	/**
 	 * @fieldName: 提出调动类型
 	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
 	 * @Description: 该人调动时是由工作需要组织调动，还是由个人申请调动的情况。DM039
@@ -318,6 +345,16 @@ public class ReferenceExchange extends GenericEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PROPOSETYPE")
 	private CodeInfo proposeType;
+	
+	// 参公交流转出信息
+	/**
+	 * @fieldName: referenceExchangeOut
+	 * @fieldType: com.wondersgroup.human.bo.ofcflow.ReferenceExchangeOut
+	 * @Description: 转出情况信息
+	 */
+	@OneToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "referenceExchangeOut")
+	private ReferenceExchangeOut referenceExchangeOut;
 	
 	/***************************************************************************
 	 * 流程相关属性
@@ -411,6 +448,13 @@ public class ReferenceExchange extends GenericEntity {
 		power.put("STATUS_EXCHANGE_OUTER_TRIAL_4", STATUS_EXCHANGE_TRIAL_4);
 		power.put("STATUS_EXCHANGE_OUTER_PRINT", STATUS_EXCHANGE_PRINT);
 	}
+	
+	/**
+	 * 批量Id
+	 */
+	@ManyToOne
+	@JoinColumn(name = "referenceExchangeBatch")
+	private ReferenceExchangeBatch referenceExchangeBatch;
 	
 	public Servant getServant() {
 		
@@ -721,5 +765,67 @@ public class ReferenceExchange extends GenericEntity {
 		
 		this.jobLevelCode = jobLevelCode;
 	}
+	
+	public String getPhotoPath() {
+		
+		return photoPath;
+	}
+	
+	public void setPhotoPath(String photoPath) {
+		
+		this.photoPath = photoPath;
+	}
+	
+	public String getCardNoView() {
+		
+		if (StringUtils.isBlank(this.getCardNo())) {
+			return "";
+		} else {
+			if (this.getCardNo().length() <= 4) {
+				return "XXXX";
+			} else {
+				this.cardNoView = StringUtils.substring(this.getCardNo(), 0, (this.getCardNo().length() - 4)) + "XXXX";
+				return cardNoView;
+			}
+		}
+	}
+	
+	public ReferenceExchangeBatch getReferenceExchangeBatch() {
+		
+		return referenceExchangeBatch;
+	}
+	
+	public void setReferenceExchangeBatch(ReferenceExchangeBatch referenceExchangeBatch) {
+		
+		this.referenceExchangeBatch = referenceExchangeBatch;
+	}
+	
+	public void setCardNoView(String cardNoView) {
+		
+		this.cardNoView = cardNoView;
+	}
+	
+	public CodeInfo getAttribute() {
+		
+		return attribute;
+	}
+	
+	public void setAttribute(CodeInfo attribute) {
+		
+		this.attribute = attribute;
+	}
+
+	
+	public ReferenceExchangeOut getReferenceExchangeOut() {
+		
+		return referenceExchangeOut;
+	}
+
+	
+	public void setReferenceExchangeOut(ReferenceExchangeOut referenceExchangeOut) {
+		
+		this.referenceExchangeOut = referenceExchangeOut;
+	}
+	
 	
 }

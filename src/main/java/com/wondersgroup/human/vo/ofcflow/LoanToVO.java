@@ -79,7 +79,7 @@ public class LoanToVO {
 		if (l.getServant() != null) {
 			this.name = l.getServant().getName();
 			this.sex = l.getServant().getSex().getName();
-			this.cardNo = l.getServant().getCardNo();
+			this.cardNo = l.getServant().getCardNoView();
 		}
 		this.sourceOrgan = l.getSourceOrgan() == null ? "" : l.getSourceOrgan().getName();
 		this.targetOrgan = l.getTargetOrgan();

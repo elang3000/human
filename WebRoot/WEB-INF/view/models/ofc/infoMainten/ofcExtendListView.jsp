@@ -58,7 +58,7 @@
 								<smart:tableItem field="endDate" width=".2" sort="false">试用终止日期</smart:tableItem>
 								<smart:tableItem field="conclusion" width=".2" sort="false">试用期满考核结论</smart:tableItem>
 								<smart:tableItem field="becomeDate" width=".2" sort="false">入职转正日期</smart:tableItem>
-								<smart:tableItem field="becomeNo" width=".2" sort="false">入入职转正批准文号</smart:tableItem>
+								<smart:tableItem field="becomeNo" width=".2" sort="false">入职转正批准文号</smart:tableItem>
 							</tr>
 						</smart:table>
 					</smart:accordionPanelItem>
@@ -173,6 +173,17 @@
 								<smart:tableItem field="name" width=".25" sort="false">姓名 </smart:tableItem>
 								<smart:tableItem field="sex" width=".25" sort="false">性别</smart:tableItem>
 								<smart:tableItem field="birthDate" width=".25" sort="false">出生日期</smart:tableItem>
+							</tr>
+						</smart:table>
+					</smart:accordionPanelItem>
+					
+					<smart:accordionPanelItem title="职务变动情况子集">
+						<smart:table id="jobChangeNavigationList" url="ofc/jobChange/pageList?servantId=${id}" height="full" doneCallBack="fixedCol" page="false" limit="10000" text="未找到用户数据！">
+							<tr>
+								<smart:tableItem field="formerUnitName" width=".25" sort="false">原单位名称 </smart:tableItem>
+								<smart:tableItem field="newUnitName" width=".25" sort="false">新单位名称 </smart:tableItem>
+								<smart:tableItem field="postChangeDate" width=".25" sort="false">职务变动日期</smart:tableItem>
+								<smart:tableItem field="postTenureChange" width=".25 " sort="false">职务变动类别</smart:tableItem>
 							</tr>
 						</smart:table>
 					</smart:accordionPanelItem>

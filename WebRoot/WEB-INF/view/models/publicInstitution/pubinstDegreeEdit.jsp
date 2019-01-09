@@ -42,7 +42,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="最高学历标识：" name="topFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${degree.topFlag.id }" ></smart:singleSelect>
+										<smart:singleSelect labelName="最高学历标识：" isNotNull="true" verify="required" name="topFlag.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${degree.topFlag.id }" ></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 							</smart:grid>

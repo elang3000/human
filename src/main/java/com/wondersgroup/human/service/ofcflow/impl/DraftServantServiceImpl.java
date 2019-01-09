@@ -148,7 +148,7 @@ public class DraftServantServiceImpl extends GenericServiceImpl<DraftServant> im
 	 * @return
 	 */
 	@Override
-	public void confirmLetter(DraftServant draft) {
+	public void updateConfirmLetter(DraftServant draft) {
 		//保存当前对象
 		this.update(draft);// 保存
 		//添加试用期人员

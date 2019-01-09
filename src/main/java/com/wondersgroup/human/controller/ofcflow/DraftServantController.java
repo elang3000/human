@@ -81,13 +81,12 @@ public class DraftServantController extends GenericController {
 	// 拟录用汇总
 	private final static String DRAFT_SERVANT_COLLECT_LIST = "models/ofcflow/draftServant/draftServantCollectList";
 	// 录用查看
-	private final static String DRAFT_SERVANT_STATUS_LIST = "models/ofcflow/draftServant/draftServantStatusList";
+	private final static String DRAFT_SERVANT_STATUS_LIST = "models/ofcflow/draftServant/draftServantUnitList";
 	
 	// 公务员录用导入
-//	private final static String DRAFT_SERVANT_IMPORT = "models/ofcflow/draftServant/draftServantImportForm";
-	private final static String DRAFT_SERVANT_IMPORT = "models/ofcflow/draftServant/draftServantImportFormNew";
+	private final static String DRAFT_SERVANT_IMPORT = "models/ofcflow/draftServant/draftServantImportForm";
 	// 拟录用名单列表
-	private final static String DRAFT_SERVANT_BEFORE_LIST = "models/ofcflow/draftServant/draftServantBeforeList";
+	private final static String DRAFT_SERVANT_BEFORE_LIST = "models/ofcflow/draftServant/draftServantImportDetailList";
 	// 录用详细信息查看
 	private final static String DRAFT_SERVANT_VIEW = "models/ofcflow/draftServant/draftServantView";
 	// 录用流程页面
@@ -241,8 +240,8 @@ public class DraftServantController extends GenericController {
 			model.addAttribute("name", name);
 		}
 		if(StringUtils.isNotBlank(cardNo)){
-			hql.append( " and cardNo like :cardNo");
-			queryParameteritem=new QueryParameter("cardNo", "%"+cardNo+"%");
+			hql.append( " and cardNo = :cardNo");
+			queryParameteritem=new QueryParameter("cardNo", cardNo);
 			listqueryparameter.add(queryParameteritem);
 			model.addAttribute("cardNo", cardNo);
 		}
@@ -317,7 +316,7 @@ public class DraftServantController extends GenericController {
 			DraftServant draft = draftServantService.get(temp.getId());
 			BeanUtils.copyPropertiesIgnoreNull(temp, draft);
 			draft.setIsElecLetter(DraftServant.ISELECLETTER_YES);
-			this.draftServantService.confirmLetter(draft);
+			this.draftServantService.updateConfirmLetter(draft);
 			result.setMessage("保存成功！");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -347,10 +346,12 @@ public class DraftServantController extends GenericController {
 		
 		List<QueryParameter> listqueryparameter=new ArrayList<>();
 		StringBuilder hql=new StringBuilder();
-		hql.append("from DraftServant where removed=:removed and publish=:publish");
+		hql.append("from DraftServant where removed=:removed and publish=:publish and importStatus=:importStatus ");
 		QueryParameter queryParameteritem=new QueryParameter("removed", false);
 		listqueryparameter.add(queryParameteritem);
 		queryParameteritem=new QueryParameter("publish", DraftServant.EMPLOY_PUBLISH);
+		listqueryparameter.add(queryParameteritem);
+		queryParameteritem=new QueryParameter("importStatus", CommonConst.YES);
 		listqueryparameter.add(queryParameteritem);
 		if(yearTip!=null){
 			hql.append( " and yearTip=:yearTip");
@@ -365,8 +366,8 @@ public class DraftServantController extends GenericController {
 			model.addAttribute("name", name);
 		}
 		if(StringUtils.isNotBlank(cardNo)){
-			hql.append( " and cardNo like :cardNo");
-			queryParameteritem=new QueryParameter("cardNo", "%"+cardNo+"%");
+			hql.append( " and cardNo = :cardNo");
+			queryParameteritem=new QueryParameter("cardNo", cardNo);
 			listqueryparameter.add(queryParameteritem);
 			model.addAttribute("cardNo", cardNo);
 		}
@@ -488,7 +489,7 @@ public class DraftServantController extends GenericController {
 				if(failStr.equals("")||failStr==null){
 					data.put("msg", "信息上传成功!");
 				}else{
-					data.put("msg",  "信息部分上传成功!由于用人部门和系统不匹配,未能成功上传记录如下:"+failStr);
+					data.put("msg",  "信息部分上传成功!由于用人部门和系统不匹配或者人员已经存在于系统,未能成功上传记录如下:"+failStr);
 				}
 				
 			}
@@ -513,6 +514,29 @@ public class DraftServantController extends GenericController {
 		AjaxResult result = new AjaxResult(true);
 		try {
 			draftServantImportRecordService.removeDraftServantImportRecord(id);
+			result.setMessage("删除成功！");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMessage("删除失败！");
+		}
+		return result;
+	}
+
+	/**
+	 * @Title: importDel
+	 * @Description: 删除拟录用汇总中人员
+	 * @param id	 拟录用人员id
+	 * @return
+	 * @return: AjaxResult
+	 */
+	@ResponseBody
+	@RequestMapping("/deleteDraftServant")
+	public AjaxResult deleteDraftServant(String id){
+		AjaxResult result = new AjaxResult(true);
+		try {
+			DraftServant draftServant = draftServantService.load(id);
+			draftServantService.delete(draftServant);
 			result.setMessage("删除成功！");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -556,16 +580,24 @@ public class DraftServantController extends GenericController {
 	 */
 	@ResponseBody
 	@RequestMapping("/draftServantBeforePage")
-	public Page<DraftServantVO> draftServantBeforePage(Model model,Integer yearTip,String name,String cardNo,String id,Integer limit,Integer page) {
+	public Page<DraftServantVO> draftServantBeforePage(Model model,Integer yearTip,String name,String cardNo,String id,Integer importStatus,Integer limit,Integer page) {
 		if (page == null || page == 0)
 			page = 1;
 		List<QueryParameter> listqueryparameter=new ArrayList<>();
 		StringBuilder hql=new StringBuilder();
-		hql.append("from DraftServant where removed=:removed and importRecordId=:importRecordId");
+		hql.append("from DraftServant where removed=:removed and importRecordId=:importRecordId and importStatus=:importStatus");
 		QueryParameter queryParameteritem=new QueryParameter("removed", false);
 		listqueryparameter.add(queryParameteritem);
 		queryParameteritem=new QueryParameter("importRecordId", id);
 		listqueryparameter.add(queryParameteritem);
+		if(importStatus!=null){
+			queryParameteritem=new QueryParameter("importStatus", importStatus);
+			listqueryparameter.add(queryParameteritem);
+			model.addAttribute("importStatus", importStatus);
+		}else{
+			queryParameteritem=new QueryParameter("importStatus", CommonConst.YES);
+			listqueryparameter.add(queryParameteritem);
+		}
 		if(yearTip!=null){
 			hql.append( " and yearTip=:yearTip");
 			queryParameteritem=new QueryParameter("yearTip", yearTip);
@@ -579,15 +611,14 @@ public class DraftServantController extends GenericController {
 			model.addAttribute("name", name);
 		}
 		if(StringUtils.isNotBlank(cardNo)){
-			hql.append( " and cardNo like :cardNo");
-			queryParameteritem=new QueryParameter("cardNo", "%"+cardNo+"%");
+			hql.append( " and cardNo = :cardNo");
+			queryParameteritem=new QueryParameter("cardNo", cardNo);
 			listqueryparameter.add(queryParameteritem);
 			model.addAttribute("cardNo", cardNo);
 		}
 		hql.append( " order by createTime desc");
 		
 		Page<DraftServantVO> pageInfo = draftServantService.findbyHQLforVO(hql.toString(), listqueryparameter, page, limit);
-		
 		return pageInfo;
 	}
 	

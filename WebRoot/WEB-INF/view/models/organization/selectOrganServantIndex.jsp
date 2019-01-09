@@ -46,7 +46,7 @@
 				</smart:gridRow>
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn>
-						<smart:table id="navigationList_ofcList" url="ofc/pageList?departId=${createOrganNodeId}" text="未找到用户数据！" page="true" height="full-180">
+						<smart:table id="navigationList_ofcList" url="ofc/pageList?departId=${createOrganNodeId}&type=1" text="未找到用户数据！" page="true" height="full-180">
 							<tr>
 								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
 								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>

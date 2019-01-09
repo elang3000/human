@@ -17,6 +17,8 @@ package com.wondersgroup.human.service.pubinst;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
@@ -46,6 +48,17 @@ public interface PublicInstitutionService extends GenericService<PublicInstituti
 	 * @return: Page<ServantVO>
 	 */
 	public Page<PublicInstitutionVO> getPage(List<Predicate> arg0, Sorts arg1, Integer arg2, Integer arg3);
+	/**
+	 * @Title: getPage 
+	 * @Description: 数据转换为VO的分页查询 DetachedCriteria
+	 * @param detachedCriteria
+	 * @param page
+	 * @param limit
+	 * @param ids
+	 * @return
+	 * @return: Page<PublicInstitutionVO>
+	 */
+	public Page<PublicInstitutionVO> getPage(DetachedCriteria detachedCriteria, Integer page, Integer limit,String ids);
 
 	/**
 	 * @Title: saveRegister 
@@ -56,4 +69,15 @@ public interface PublicInstitutionService extends GenericService<PublicInstituti
 	 * @return: void
 	 */
 	public void saveRegister(PublicInstitution temp, String opinion, String r, String planState, String mid);
+	
+	
+	/**
+	 * 通知人员人员信息
+	 * @param id 类型表中对应的id值
+	 * @param type  类型业务表
+	 * @param title 通知标题
+	 * @param content 通知内容
+	 * @return 是否通知到人
+	 */
+	public boolean getPublicQuLeadersToNotice(String id, String type, String title, String content);
 }

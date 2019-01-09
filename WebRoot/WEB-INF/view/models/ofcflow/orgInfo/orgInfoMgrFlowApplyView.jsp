@@ -54,7 +54,7 @@
 						</smart:gridColumn>
 							
 						<smart:gridColumn colPart="4">
-							<smart:infoShowerLabel infoname="性质级别" infovalue="${orgInfoMgrFlow.unitPropertyLevel.name}"></smart:infoShowerLabel>
+							<smart:infoShowerLabel infoname="性质类别" infovalue="${orgInfoMgrFlow.unitPropertyLevel.name}"></smart:infoShowerLabel>
 						</smart:gridColumn>
 					</smart:gridRow>
 					
@@ -130,9 +130,6 @@
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
 							<smart:infoShowerLabel infoname="拨款形式 " infovalue="${orgInfoMgrFlow.appropriation.name}"></smart:infoShowerLabel>
-						</smart:gridColumn>
-						<smart:gridColumn colPart="4">
-							<smart:infoShowerLabel infoname="机构类别" infovalue="${orgInfoMgrFlow.orgCategory.name}"></smart:infoShowerLabel>
 						</smart:gridColumn>
 					</smart:gridRow>
 					

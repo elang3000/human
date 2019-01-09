@@ -96,9 +96,9 @@ public class ExcelUtilsPOI {
 			        
 					//jsonData = "{success:true,msg:\"生成成功!\"}";
 			} catch (FileNotFoundException e) {
-				System.out.println("-------------->要下载的文件没有找到！");
+				//System.out.println("-------------->要下载的文件没有找到！");
 			} catch (IOException e) {
-				System.out.println("-------------->下载异常！");
+				//System.out.println("-------------->下载异常！");
 			}finally{
 				try {
 					if(myout!=null)
@@ -106,10 +106,10 @@ public class ExcelUtilsPOI {
 					if(buff!=null)
 						buff.close();
 					if(file.delete()){
-						System.out.println("-------------->文件删除成功！");
+						//System.out.println("-------------->文件删除成功！");
 					}
 				} catch (IOException e) {
-					System.out.println("-------------->关闭流异常！");
+					//System.out.println("-------------->关闭流异常！");
 				}
 			}
 		}
@@ -254,7 +254,7 @@ public class ExcelUtilsPOI {
                   if(cell==null || cell.getStringCellValue()==null){
                 	  continue;
                   }
-//                  System.out.println("行号："+z+"_________列号："+i+"______数据："+cell.getStringCellValue());
+//                  //System.out.println("行号："+z+"_________列号："+i+"______数据："+cell.getStringCellValue());
                   if(cell!=null){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                   }

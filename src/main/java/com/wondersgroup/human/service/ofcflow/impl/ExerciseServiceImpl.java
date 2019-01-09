@@ -81,6 +81,7 @@ public class ExerciseServiceImpl extends GenericServiceImpl<Exercise> implements
 		e.setFormerUnit(temp.getTargetOrgan());//所在单位
 		e.setStartDate(temp.getStartDate());//开始时间
 		e.setEndDate(temp.getEndDate());//结束时间
+		e.setFormerJob(temp.getExercisePost().getName());//担任职务
 		experienceService.save(e);
 		//备案管理
 		HumankeepRecordDTO dto2 = new HumankeepRecordDTO(temp.getServant().getId(),HumanKeepRecord.KEEP_GZDL);

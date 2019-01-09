@@ -24,7 +24,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true" name="category.id" labelName="学习（培训、进修）类别：" display="block" url="dictquery/sub/code/DM040" initSelectedKey="${study.category.id}"></smart:singleSelect>
+										<smart:singleSelect isAddDefaltOption="true" isNotNull="true" verify="required" name="category.id" labelName="学习（培训、进修）类别：" display="block" url="dictquery/sub/code/DM040" initSelectedKey="${study.category.id}"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:date labelName="起始日期：" display="block" name="startDate" id="startDate" value="${study.startDate}"></smart:date>
@@ -36,10 +36,10 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="主办单位名称：" name="hostUnitName" value="${study.hostUnitName}" ></smart:textInput>
+										<smart:textInput labelName="主办单位名称：" isNotNull="true" verify="required" name="hostUnitName" value="${study.hostUnitName}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="在学单位名称：" name="studyUnitName" value="${study.studyUnitName}" ></smart:textInput>
+										<smart:textInput labelName="在学单位名称："  name="studyUnitName" value="${study.studyUnitName}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:textInput labelName="学习（培训、进修）班名称：" name="studyClassName" value="${study.studyClassName}" ></smart:textInput>

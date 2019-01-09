@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +31,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
@@ -49,18 +52,25 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
  */
 @Entity
 @Table(name = "HUMAN_INST_INFORMATION_CHANGE")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class InformationChange extends GenericEntity {
 	
 	
 	private static final long serialVersionUID = 336136207656118588L;
 	
 	
-	// 待提交备案计划
+	// 待提交变动计划
 	@Transient
 	public final static Integer INST_INFO_INFORMATION_STATE_POST = 0;
+	
+	//上级单位初审
+	@Transient
+	public final static Integer INST_LEADER_INFORMATION_STATE_LEADER = 1;
+	
 	// 区人事管理部门审核
 	@Transient
-	public final static Integer INST_INFO_QU_INFORMATION_STATE = 1;
+	public final static Integer INST_INFO_QU_INFORMATION_STATE = 2;
 	
 	
 	/**
@@ -71,6 +81,7 @@ public class InformationChange extends GenericEntity {
 	
 	static {
 			power.put("REPORT_INFO_INFORMATION_ALTER_APPLY",INST_INFO_INFORMATION_STATE_POST);
+			power.put("REPORT__LEADER_INFORMATION_UP", INST_LEADER_INFORMATION_STATE_LEADER);
 			power.put("REPORT_QU_INFORMATION_ALTER", INST_INFO_QU_INFORMATION_STATE);
 	}
 	
@@ -84,21 +95,72 @@ public class InformationChange extends GenericEntity {
 	
 	
 	
-	/**
-	 * @fieldName: InformationChange
-	 * @fieldType: InfoChangePublicInstitution
-	 * @Description: 信息变动临时表
-	 */
-	@OneToOne
-	private InfoChangePublicInstitution infoChangePublicInstitution;
 	
 	/**
-	 * @fieldName: nowOrgan
-	 * @fieldType: OrganNode
-	 * @Description: 修改人员当前部门
+	 * @fieldName: inforPostName
+	 * @fieldType: java.lang.String
+	 * @Description: 现职级（自动填写） ,该人目前所任的职级。ZB148——2016/ZJDM《职级代码》
 	 */
-	@OneToOne
-	private OrganNode nowOrgan;
+	@Column(name = "inforcode", length = 120)//职级代码
+	private CodeInfo code;
+	
+	/**
+	 * @fieldName: 职级名称
+	 * @fieldType: java.lang.String
+	 * @Description: 该人的职位等级或级别等级名称。
+	 */
+	@Column(name = "inforname")
+	private String name;
+
+	
+	/**
+	 * @fieldName: 简历描述
+	 * @fieldType: java.lang.String
+	 * @Description: 
+	 */
+	@Column(name = "introduce")
+	private String introduce;
+
+	
+	/**
+	 * @fieldName: approvalDate
+	 * @fieldType: java.util.Date
+	 * @Description:  职级批准日期
+	 */
+	@Column(name = "INFORMATION_CHANGE_DATE")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	private Date  approvalDate;
+	
+	
+	/**
+	 * @fieldName: endDate
+	 * @fieldType: java.util.Date
+	 * @Description:  职级终止日期
+	 */
+	@Column(name = "INFORMATION_CHANGE_ENDDATE")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	private Date  endDate;
+	
+	/**
+	 * 
+	 * @fieldName: gradeSign
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 现行职级标识。
+	 */
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "currentidentification")
+	private CodeInfo currentIdentification;
+	
+	
+	/**
+	 * @fieldName: inforPostName
+	 * @fieldType: java.lang.String
+	 * @Description: 职级批准文号
+	 */
+	@Column(name = "approvalno", length = 120)
+	private String approvalNo;
 	
 	
 	/**
@@ -110,36 +172,6 @@ public class InformationChange extends GenericEntity {
 	private Integer planState;
 	
 	
-	
-	/**
-	 * @fieldName: remark
-	 * @fieldType: String
-	 * @Description: 备注
-	 */
-	@Column(name = "REMARK", length = 255)
-	private String remark;
-	
-	/**
-	 * @fieldName: opinion
-	 * @fieldType: String
-	 * @Description: 审批意见
-	 */
-	@Column(name = "OPINION", length = 255)
-	private String opinion;
-	
-	
-	/**
-	 * @fieldName: changeDate
-	 * @fieldType: java.util.Date
-	 * @Description:  修改日期
-	 */
-	@Column(name = "INFORMATION_CHANGE_DATE")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.DATE)
-	private Date  changeDate;
-	
-	
-	
 	/**
 	 * @fieldName: flowRecord
 	 * @fieldType: String
@@ -149,8 +181,17 @@ public class InformationChange extends GenericEntity {
 	@JoinColumn(name = "FLOWRECORD_ID")
 	private FlowRecord flowRecord;
 	
+	
+	/**
+	 * @fieldName: opinion
+	 * @fieldType: String
+	 * @Description: 审批意见
+	 */
+	@Column(name = "OPINION", length = 255)
+	private String opinion;
 
-
+	
+	
 	public PublicInstitution getPublicInstitution() {
 		return publicInstitution;
 	}
@@ -159,6 +200,32 @@ public class InformationChange extends GenericEntity {
 	public void setPublicInstitution(PublicInstitution publicInstitution) {
 		this.publicInstitution = publicInstitution;
 	}
+
+
+	
+
+
+	public Date getApprovalDate() {
+		return approvalDate;
+	}
+
+
+	public void setApprovalDate(Date approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+
+	
 
 
 	public Integer getPlanState() {
@@ -171,15 +238,6 @@ public class InformationChange extends GenericEntity {
 	}
 
 
-	public String getRemark() {
-		return remark;
-	}
-
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
 	public FlowRecord getFlowRecord() {
 		return flowRecord;
 	}
@@ -187,6 +245,16 @@ public class InformationChange extends GenericEntity {
 
 	public void setFlowRecord(FlowRecord flowRecord) {
 		this.flowRecord = flowRecord;
+	}
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+
+	public static Map<String, Integer> getPower() {
+		return power;
 	}
 
 
@@ -200,34 +268,69 @@ public class InformationChange extends GenericEntity {
 	}
 
 
-	public OrganNode getNowOrgan() {
-		return nowOrgan;
+	
+
+
+	public CodeInfo getCode() {
+		return code;
 	}
 
 
-	public void setNowOrgan(OrganNode nowOrgan) {
-		this.nowOrgan = nowOrgan;
+	public void setCode(CodeInfo code) {
+		this.code = code;
 	}
 
 
-	public Date getChangeDate() {
-		return changeDate;
+	public CodeInfo getCurrentIdentification() {
+		return currentIdentification;
 	}
 
 
-	public void setChangeDate(Date changeDate) {
-		this.changeDate = changeDate;
+	public void setCurrentIdentification(CodeInfo currentIdentification) {
+		this.currentIdentification = currentIdentification;
 	}
 
 
-	public InfoChangePublicInstitution getInfoChangePublicInstitution() {
-		return infoChangePublicInstitution;
+	public String getApprovalNo() {
+		return approvalNo;
 	}
 
 
-	public void setInfoChangePublicInstitution(InfoChangePublicInstitution infoChangePublicInstitution) {
-		this.infoChangePublicInstitution = infoChangePublicInstitution;
+	public void setApprovalNo(String approvalNo) {
+		this.approvalNo = approvalNo;
 	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getIntroduce() {
+		return introduce;
+	}
+
+
+	public void setIntroduce(String introduce) {
+		this.introduce = introduce;
+	}
+
+
+	
+	
+
+
+	
+
+	
+
+
+	
 	
 	
 

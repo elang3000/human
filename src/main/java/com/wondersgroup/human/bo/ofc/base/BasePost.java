@@ -131,7 +131,8 @@ public class BasePost<T> extends GenericEntity {
 	 */
 	@Column(name = "A02014", length = 2)
 	private Integer nextYears;
-	
+
+
 	/**
 	 * @fieldName: postName
 	 * @fieldType: java.lang.String

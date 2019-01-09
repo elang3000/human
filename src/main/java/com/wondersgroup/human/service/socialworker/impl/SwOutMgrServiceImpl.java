@@ -145,7 +145,7 @@ public class SwOutMgrServiceImpl extends GenericServiceImpl<SrOutMgr> implements
 				CodeInfo typePart = dictableService.findCodeInfoByAlias(DictTypeCodeContant.CODE_TYPE_PARTY, 
 						(String) listObj.get(i).get(5));
 				if (typePart != null) {
-					//System.out.println(typePart.getName());
+					////System.out.println(typePart.getName());
 					socialWorker.setPolitics(typePart);
 				}
 				

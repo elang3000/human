@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="smart" uri="http://smart.wondersgroup.com/page/component"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,12 +26,17 @@
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect labelName="是否编控：" name="isOpenControl.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${formationControl.isOpenControl.id }" verify="required" isNotNull="true"></smart:singleSelect>
-									</smart:gridColumn>
+									</smart:gridColumn> 
+									<c:if test="${isDisabledLowToHigh==false}">
+										<smart:gridColumn colPart="4">
+											<smart:singleSelect labelName="是否高职低，实职虚用：" name="isLowToHigh.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${formationControl.isLowToHigh.id }" verify="required" isNotNull="true"></smart:singleSelect>
+										</smart:gridColumn>
+									</c:if>
+									<c:if test="${isDisabledLowToHigh==true}">
+										<smart:textInput type="hidden" name="isLowToHigh.id" value="${formationControl.isLowToHigh.id }"></smart:textInput>
+									</c:if>	
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="是否高职低配：" name="isLowToHigh.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${formationControl.isLowToHigh.id }" verify="required" isNotNull="true"></smart:singleSelect>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="人员编制溢出规则：" name="overflowRule" value="${formationControl.overflowRule}"></smart:textInput>
+										<smart:textInput labelName="编制溢出规则：" name="overflowRule" value="${formationControl.overflowRule}"></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 							</smart:grid>

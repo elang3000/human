@@ -22,7 +22,7 @@
 												<smart:infoShowerLabel infoname="姓名" infovalue="${servant.name}"></smart:infoShowerLabel>
 											</smart:gridColumn>
 											<smart:gridColumn colPart="6">
-												<smart:infoShowerLabel infoname="身份证号" infovalue="${servant.cardNo}"></smart:infoShowerLabel>
+												<smart:infoShowerLabel infoname="身份证号" infovalue="${servant.cardNoView}"></smart:infoShowerLabel>
 											</smart:gridColumn>
 										</smart:gridRow>
 										<smart:gridRow>
@@ -61,7 +61,7 @@
 									<smart:gridColumn colPart="3" colOffset="1">
 										<smart:gridRow>
 											<smart:gridColumn colPart="12">
-												<img alt="照片" src="static/image/20170705135600.jpg">
+												<img style="width:150px;height:200px;min-width:150px;min-height:200px;" alt="照片" src="ftp/getImg?imgName=${servant.photoPath}">
 											</smart:gridColumn>
 										</smart:gridRow>
 									</smart:gridColumn>
@@ -71,25 +71,25 @@
 									<smart:title title="处分信息" style="margin-top: 5px;" color="blue" />
 								</smart:gridRow>
 								
-								<smart:gridRow>
+								<smart:gridRow>									
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="处分原始文件号" infovalue="${punishServant.punishFileName}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="处分名称" infovalue="${punishServant.punishCode.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="处分原因" infovalue="${punishServant.punishReason.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="处分批准日期" infovalue="${punishServant.punishApprovalDate}"></smart:infoShowerLabel>
-									</smart:gridColumn>
+										<smart:infoShowerLabel infoname="处分原始文件号" infovalue="${punishServant.punishFileName}"></smart:infoShowerLabel>
+									</smart:gridColumn>									
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="处分期限（年）" infovalue="${punishServant.punishYear}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="处分批准日期" infovalue="${punishServant.punishApprovalDate}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="处分名称" infovalue="${punishServant.punishCode.name}"></smart:infoShowerLabel>
-									</smart:gridColumn>
+										<smart:infoShowerLabel infoname="处分期限（月）" infovalue="${punishServant.punishYear}"></smart:infoShowerLabel>
+									</smart:gridColumn>									
 								</smart:gridRow>
 								
 								<smart:gridRow>
@@ -106,7 +106,7 @@
 					<smart:gridRow>
 					   <smart:gridColumn>
 					     <smart:buttonGroup container="true">
-								<smart:button theme="warm" size="sm" method="goBack" title="返回">
+								<smart:button theme="primary" size="sm" method="goBack" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>

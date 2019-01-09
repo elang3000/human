@@ -286,10 +286,23 @@ public class MainController extends GenericController {
 	@ResponseBody
 	public List<Map<String,Object>> queryModelDoingCounter() {
 		
+		SecurityGroup group = (SecurityGroup) SecurityUtils.getSession().getAttribute("group");
+		String targetOrganNodeId = null;
+		if (group != null) {
+			// 查询单位领导分组
+			if (StringUtils.equals(SecurityGroup.SECURITY_GROUP_TYPE_LEVEL, group.getType())) {
+				OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+				targetOrganNodeId = organNode.getId();
+			}
+			// 查询区级领导分组
+			if (StringUtils.equals(SecurityGroup.SECURITY_GROUP_TYPE_TOP, group.getType())) {
+				targetOrganNodeId = null;
+			}
+		} 
 		Map<String, Integer> all = flowRecordService.countWorkFLowBusinessNum(null, null,
-		        Calendar.getInstance().getTime());
+		        Calendar.getInstance().getTime(),targetOrganNodeId);
 		Map<String, Integer> done = flowRecordService.countWorkFLowBusinessNum(null, FlowRecord.DONE,
-		        Calendar.getInstance().getTime());
+		        Calendar.getInstance().getTime(),targetOrganNodeId);
 		
 		List<Map<String,Object>> result = new ArrayList<Map<String,Object>>();
 

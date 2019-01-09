@@ -65,7 +65,7 @@
 							    	<td>${orgInfoMgrFlow.unitSubsidiary.name}</td>
 							    </tr>
 							    <tr>
-							    	<td>性质级别：</td>
+							    	<td>性质类别：</td>
 							    	<td><label>${empty orgInfo.unitPropertyLevel ? '—':orgInfo.unitPropertyLevel.name}</label></td>
 							    	<td>${orgInfoMgrFlow.unitPropertyLevel.name}</td>
 							    </tr>
@@ -148,11 +148,6 @@
 							    	<td>拨款形式：</td>
 							    	<td><label>${empty orgInfo.appropriation ? '—':orgInfo.appropriation.name}</label></td>
 							    	<td>${orgInfoMgrFlow.appropriation.name }</td>
-							    </tr>
-							    <tr>
-							    	<td>机构类别：</td>
-							    	<td><label>${empty orgInfo.orgCategory ? '—':orgInfo.orgCategory.name}</label></td>
-							    	<td>${orgInfoMgrFlow.orgCategory.name}</td>
 							    </tr>
 							</tbody>
 						</table>

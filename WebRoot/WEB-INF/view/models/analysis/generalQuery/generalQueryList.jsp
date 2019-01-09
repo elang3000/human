@@ -19,6 +19,19 @@
 				</smart:breadcrumbNavMenu>
 			</smart:cardHead>
 			<smart:cardBody>
+			
+				<smart:gridRow>
+					<smart:tabPanelParent filter="tab"
+						style="margin-left:10px;margin-right:10px;">
+						<smart:tabPanel>
+							<smart:tabPanelItem show="true" eId="" itemName="公务员综合查询"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="" show="false" eId="" itemName="事业人员综合查询"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="" show="false" eId="" itemName="国企职工综合查询"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="" show="false" eId="" itemName="社工综合查询"></smart:tabPanelItem>
+						</smart:tabPanel>
+					</smart:tabPanelParent>
+				</smart:gridRow>
+				
 				<smart:form id="searchForm">
 				<div id = "query" class="layui-fluid">
 					<smart:gridRow>
@@ -94,7 +107,7 @@
 							<div class="layui-form-item">
 								<label class="layui-form-label">查询条件：</label>	
 									<div class="layui-input-block">
-									<select name="code1" mysign url="analysis/general/queryList" lay-filter="business" lay-search initselectedkey="3">
+									<select name="code1" mysign url="analysis/general/queryList/G" lay-filter="business" lay-search initselectedkey="3">
 									<option value="">请选择</option> 
  									</select>
 	 								</div>
@@ -169,15 +182,16 @@
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn>
 						<smart:table id="navigationList" url="analysis/general/query"
-							height="full-210" text="未找到用户数据！" page="true">
+							height="full-240" text="未找到用户数据！" page="true">
 							<tr>
-								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
-								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
-								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
+								<smart:tableItem field="name" width=".08" sort="true">姓名</smart:tableItem>
+								<smart:tableItem field="sex" width=".08" sort="true">性别</smart:tableItem>
+								<smart:tableItem field="cardNo" width=".16" sort="true">身份证号</smart:tableItem>
 								<smart:tableItem field="departName" width=".11" sort="false">单位部门</smart:tableItem>
-								<smart:tableItem field="postName" width=".13" sort="false">职务名称</smart:tableItem>
-								<smart:tableItem field="postAttributeName" width=".13" sort="false">职务属性</smart:tableItem>
-								<smart:tableItem field="jobLevel" width=".13" sort="false">职级名称</smart:tableItem>
+								<smart:tableItem field="postName" width=".12" sort="false">职务名称</smart:tableItem>
+								<smart:tableItem field="postAttributeName" width=".12" sort="false">职务属性</smart:tableItem>
+								<smart:tableItem field="jobLevel" width=".12" sort="false">职级名称</smart:tableItem>
+								<smart:tableItem field="isOnHold" width=".11" sort="false">人员状态</smart:tableItem>
 								<smart:tableItem align="center" fixed="right" width=".1" unresize="true"
 									toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
@@ -331,9 +345,9 @@
 				        	select = result2;
 						}
 					});
-					for(var l in select){
+					select.forEach(function(value,l){
 						i += '<option value="'+select[l].id+'">'+select[l].name+'</option>';
-					}
+					});
 				 	i += '</select></div></div>';
 				 	
 				 	j +='<div class="layui-form-item">'+
@@ -367,7 +381,7 @@
 						'<input type="hidden" name="code2" value=""> '+	
 						'<div class="layui-input-inline" style="width:165px"> '+	
 						'<select name="interest" lay-filter="continuous">  '+	
-						'<option value="3">请选择</option>'+ 
+						'<option value="">请选择</option>'+ 
 					$.ajax({ 
 				        type: "post", 
 				        url: 'dictquery/sub/code/'+url, 
@@ -376,9 +390,9 @@
 				        	select = result2;
 						}
 					});
-					for(var l in select){
+					select.forEach(function(value,l){
 						i += '<option value="'+select[l].id+'">'+select[l].name+'</option>';
-					}
+					});
 				 	i += '</select></div></div>';
 				 	
 				 	j +='<div class="layui-form-item">'+
@@ -394,7 +408,7 @@
 						'<input type="hidden" name="code2" value=""> '+	
 						'<div class="layui-input-inline" style="width:107px"> '+	
 						'<select lay-filter="continuous">  '+	
-						'<option value="3">请选择</option>'+ 
+						'<option value="">请选择</option>'+ 
 					$.ajax({ 
 				        type: "post", 
 				        url: 'dictquery/sub/code/'+url, 
@@ -403,9 +417,9 @@
 				        	select = result2;
 						}
 					});
-					for(var l in select){
+					select.forEach(function(value,l){
 						i += '<option value="'+select[l].id+'">'+select[l].name+'</option>';
-					}
+					});
 				 	i += '</select></div></div>';
 				 	
 				 	j +='<div class="layui-form-item">'+
@@ -428,7 +442,7 @@
 								'<label class="layui-form-label" style="width: 60px;text-align:left">操作符：</label>'+	
 									'<div class="layui-input-block" style="margin-left: 90px;">'+
 									'<select>'+
-									'<option value="3">请选择</option>'+
+									'<option value="">请选择</option>'+
 									'<option value="1"><</option>'+
 									'<option value="2"><=</option>'+
 									'<option value="3">=</option>'+

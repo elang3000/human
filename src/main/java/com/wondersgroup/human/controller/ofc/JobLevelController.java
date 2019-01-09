@@ -33,18 +33,18 @@ import com.wondersgroup.framework.core.exception.BusinessException;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.CodeInfoService;
 import com.wondersgroup.framework.dict.service.DictableService;
-import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.human.bo.ofc.JobLevel;
-import com.wondersgroup.human.bo.ofc.Probation;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.JobLevelService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofc.JobLevelVO;
-import com.wondersgroup.human.vo.ofc.ProbationVO;
 import com.wondersgroup.human.vo.organization.JudgePostResult;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: JobLevelController
@@ -118,6 +118,8 @@ public class JobLevelController extends GenericController {
 	 * @param temp 职级信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑职级信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(JobLevel temp) {
@@ -140,16 +142,11 @@ public class JobLevelController extends GenericController {
 				Servant servant = servantService.get(temp.getServant().getId());
 				if (temp.getCurrentIdentification().getId().equals(yesCodeInfo.getId())) {
 					JudgePostResult r = formationControlService.queryJudgePostNum(servant.getDepartId(),
-							lvlCode.getCode());
-					if (r.result == false) {
-						result.setSuccess(false);
-						result.setMessage("保存失败！原因：职务编制数不足，请联系相关人员！");
-						return result;
-					} else {
-						temp.setIsLowToHigh(r.isLowToHigh);
-					}
+							lvlCode.getCode(),temp.getIsLeader());
+					temp.setRealJobLevelCode(r.postLvlCode);
+					temp.setRealLeader(r.isLeader);
 				}
-				jobLevelService.save(temp);
+				jobLevelService.saveOfMaintain(temp);
 			}
 			result.setMessage("保存成功！");
 		} catch (BusinessException e) {
@@ -169,6 +166,8 @@ public class JobLevelController extends GenericController {
 	 * @param temp 职级信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除职级信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

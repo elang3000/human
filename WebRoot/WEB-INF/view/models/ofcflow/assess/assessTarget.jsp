@@ -57,7 +57,7 @@
 								<smart:tableItem field="orgName" width=".2" sort="true">单位名称</smart:tableItem>
 								<smart:tableItem field="draftOutstandingPercent" width=".2" sort="true">拟优秀比例</smart:tableItem>
 								<smart:tableItem field="draftOutstandingNumb" width=".2" sort="true">拟优秀人数</smart:tableItem>
-								<smart:tableItem field="outstandingNumb" width=".2" sort="true">指定优秀人数</smart:tableItem>
+								<smart:tableItem field="outstandingNumb" width=".2" sort="true">指定拟优秀人数</smart:tableItem>
 
 								<smart:tableItem align="center" width=".2" 
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>

@@ -114,8 +114,31 @@ public class DraftServantVO {
 	 * 人员类型
 	 */
 	private Integer servantType;
-	
-	
+
+
+	/**
+	 * 确认电子介绍信
+	 */
+	private Integer isElecLetter;
+
+	//录用状态描述
+	private String importStatusStr;
+
+
+	public String getIsElecLetterStr() {
+		if(isElecLetter!=null&&isElecLetter==1){
+			return "已经确认";
+		}
+		return "暂未确认";
+	}
+
+	public void setIsElecLetter(Integer isElecLetter) {
+		this.isElecLetter = isElecLetter;
+	}
+
+	public Integer getIsElecLetter() {
+		return isElecLetter;
+	}
 	
 	public String getServantType() {
 		return ServantTypeEnum.getServantTypeEnumString(servantType);
@@ -130,11 +153,14 @@ public class DraftServantVO {
 	}
 	
 	public DraftServantVO(DraftServant draftServant) {
-		this.cardNo = draftServant.getCardNo();
+		this.cardNo = draftServant.getCardNoView();
 		if (draftServant.getDraftDeptName() != null) {
 			this.draftDeptName = draftServant.getDraftDeptName();
 		} else {
 			this.draftDeptName = "";
+		}
+		if(draftServant.getIsElecLetter()!=null){
+			this.isElecLetter = draftServant.getIsElecLetter();
 		}
 		if (draftServant.getDraftUnitName() != null) {
 			this.draftUnitName = draftServant.getDraftUnitName();
@@ -171,6 +197,7 @@ public class DraftServantVO {
 		} else {
 			this.state = "已汇总";
 		}
+		this.importStatusStr=draftServant.getImportStatusStr();
 		this.aptitudeTestScore = draftServant.getAptitudeTestScore();
 		this.publicSubjectTestScore = draftServant.getPublicSubjectTestScore();
 		this.professionalSubjectScore = draftServant.getProfessionalSubjectScore();
@@ -350,5 +377,12 @@ public class DraftServantVO {
 		
 		this.employSituation = employSituation;
 	}
-	
+
+    public String getImportStatusStr() {
+        return importStatusStr;
+    }
+
+    public void setImportStatusStr(String importStatusStr) {
+        this.importStatusStr = importStatusStr;
+    }
 }

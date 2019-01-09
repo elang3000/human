@@ -18,11 +18,16 @@ package com.wondersgroup.human.service.ofcflow.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
+import com.wondersgroup.framework.announcement.event.SystemAnnouncementEvent;
+import com.wondersgroup.framework.announcement.util.AnnouncementManger;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
@@ -59,6 +64,8 @@ public class RecruitEmployPlanServiceImpl  extends GenericServiceImpl<RecruitEmp
 	private WorkflowService workflowService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private MessageSource messageSource;
 	
 	/**
 	 * (non Javadoc) 
@@ -139,7 +146,7 @@ public class RecruitEmployPlanServiceImpl  extends GenericServiceImpl<RecruitEmp
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
-			flow.setBusName(userOrg.getName()+"招录计划");//流程业务名称
+			flow.setBusName("录用计划上报");//流程业务名称
 			flow.setBusType("RecruitEmployPlan");//流程业务类型
 			flow.setTargetOrganNode(userOrg);//流程业务目标组织
 			flow.setTargetSecurityUser(user);;//流程业务目标人员
@@ -162,9 +169,18 @@ public class RecruitEmployPlanServiceImpl  extends GenericServiceImpl<RecruitEmp
 				temp.setEndEmployNum(temp.getEmployNum());
 			}
 		}
-		if(RecruitEmployPlan.RECRUIT_EMPLOY_PLAN_CONFIRM == temp.getPlanState()&&FlowRecord.PASS.equals(r)){//招录计划最后环节
-			temp.setPlanState(RecruitEmployPlan.RECRUIT_EMPLOY_PLAN_POST);//待职位上报
+		if(flow==null){
 			temp.setFlowRecord(null);//修改当前业务的流程节点
+			if(FlowRecord.PASS.equals(r)){//流程最后环节
+				temp.setPlanState(RecruitEmployPlan.RECRUIT_EMPLOY_PLAN_POST);//待职位上报
+			}else if(FlowRecord.STOP.equals(r)){//流程被中止
+				temp.setPlanState(FlowRecord.BUS_STOP);
+				
+				String title = messageSource.getMessage("stopFlowTitle", new Object[]{"录用计划上报"}, Locale.CHINESE);
+				String content = messageSource.getMessage("stopFlowContent", new Object[]{"录用计划上报"}, Locale.CHINESE);
+				AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "","录用计划上报")));
+			}
+			
 		}else{
 			temp.setPlanState(RecruitEmployPlan.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
@@ -190,7 +206,7 @@ public class RecruitEmployPlanServiceImpl  extends GenericServiceImpl<RecruitEmp
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
 			flow.setBusId(temp.getId());//流程业务ID
-			flow.setBusName(userOrg.getName()+"招录计划职位信息");//流程业务名称
+			flow.setBusName("录用计划职位上报");//流程业务名称
 			flow.setBusType("RecruitPost");//流程业务类型
 			flow.setTargetOrganNode(userOrg);//流程业务目标组织
 			flow.setTargetSecurityUser(user);;//流程业务目标人员
@@ -201,9 +217,18 @@ public class RecruitEmployPlanServiceImpl  extends GenericServiceImpl<RecruitEmp
 			flow.setResult(r);
 			flow = workflowService.completeWorkItem(flow);//提交下个节点
 		}
-		if(RecruitEmployPlan.RECRUIT_EMPLOY_PLAN_POST_FIRST_TRIAL_4 == temp.getPlanState()&&FlowRecord.PASS.equals(r)){//招录计划职位信息最后环节
-			temp.setPlanState(RecruitEmployPlan.RECRUIT_EMPLOY_PLAN_POST_PASS);//职位审批通过
+		if(flow==null){
 			temp.setFlowRecord(null);//修改当前业务的流程节点
+			if(FlowRecord.PASS.equals(r)){//流程最后环节
+				temp.setPlanState(RecruitEmployPlan.RECRUIT_EMPLOY_PLAN_POST_PASS);//职位审批通过
+			}else if(FlowRecord.STOP.equals(r)){//流程被中止
+				temp.setPlanState(FlowRecord.BUS_STOP);
+				
+				String title = messageSource.getMessage("stopFlowTitle", new Object[]{"录用计划职位上报"}, Locale.CHINESE);
+				String content = messageSource.getMessage("stopFlowContent", new Object[]{"录用计划职位上报"}, Locale.CHINESE);
+				AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, temp.getCreater(), title, content, "","录用计划职位上报")));
+			}
+			
 		}else{
 			temp.setPlanState(RecruitEmployPlan.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点

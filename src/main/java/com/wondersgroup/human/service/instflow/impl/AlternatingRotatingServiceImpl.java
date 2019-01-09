@@ -15,12 +15,21 @@
  */
 package com.wondersgroup.human.service.instflow.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wondersgroup.common.contant.CommonConst;
+import com.wondersgroup.common.contant.DictTypeCodeContant;
+import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
@@ -33,15 +42,22 @@ import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
 import com.wondersgroup.human.bo.instflow.AlternatingRotation;
+import com.wondersgroup.human.bo.instflow.InformationChange;
+import com.wondersgroup.human.bo.instflow.MemberInfoRegister;
 import com.wondersgroup.human.bo.pubinst.PtAppointDismissDuty;
 import com.wondersgroup.human.bo.pubinst.PtExperience;
 import com.wondersgroup.human.bo.pubinst.PtPost;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.instflow.AlternatingRotationQueryParam;
+import com.wondersgroup.human.dto.instflow.InfoRegisterQueryParam;
 import com.wondersgroup.human.repository.instflow.AlternatingRotationRepository;
 import com.wondersgroup.human.service.instflow.AlternatingRotationService;
 import com.wondersgroup.human.service.pubinst.PtAppointDismissDutyService;
 import com.wondersgroup.human.service.pubinst.PtExperienceService;
 import com.wondersgroup.human.service.pubinst.PtPostService;
+import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
+import com.wondersgroup.human.vo.instflow.AlternatingRotationVO;
+import com.wondersgroup.human.vo.instflow.MemberInfoRegisterVO;
 
 /** 
  * @ClassName: AlternatingRotatingServiceImpl 
@@ -78,6 +94,9 @@ public class AlternatingRotatingServiceImpl  extends GenericServiceImpl<Alternat
 	
 	@Autowired
 	private PtExperienceService ptExperienceService;
+	
+	@Autowired
+	private PublicInstitutionService publicInstitutionService;
 	
 
 	@Override
@@ -123,10 +142,29 @@ public class AlternatingRotatingServiceImpl  extends GenericServiceImpl<Alternat
 			temp.setPlanState(null);
 			temp.setFlowRecord(null);//修改当前业务的流程节点
 			
+			//如果是外区交流进来的改为正式入库人员
+			PublicInstitution publicInstitution = temp.getPublicInstitution();
+			//修改任职状态   在职
+			CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", "DM200");//在职CODE
+			publicInstitution.setIsOnHold(isOnHold);
+			
+			//交流到那个单位
+			OrganNode alterRotaOrgan = temp.getAlterRotaOrgan();
+			publicInstitution.setDepartId(alterRotaOrgan.getId());
+			publicInstitution.setDepartName(alterRotaOrgan.getName());
+			
+			publicInstitutionService.merge(publicInstitution);
+			temp.setPublicInstitution(publicInstitution);
+			
+			merge(temp);
+			
 			//新增简历  职务信息
 			addPostInfo(temp);
 			
-			merge(temp);
+			String title = "轮岗交流";
+			String content = publicInstitution.getName() + "进行了轮岗交流 ,请进行人员信息维护";
+			//发通知
+			publicInstitutionService.getPublicQuLeadersToNotice(temp.getId(), AlternatingRotation.class.getSimpleName(), title, content);
 		}else{
 			temp.setPlanState(AlternatingRotation.power.get(flow.getOperationCode()));//实际有权限的操作节点
 			temp.setFlowRecord(flow);//修改当前业务的流程节点
@@ -151,8 +189,12 @@ public class AlternatingRotatingServiceImpl  extends GenericServiceImpl<Alternat
 	    post.setAttribute(alter.getAttribute()); //职务属性
 	    post.setPostCode(alter.getPostCode()); //职务名称
 	    post.setPostName(alter.getPostCode().getName());
-	    CodeInfo nowPostSign = dictableService.getCodeInfoByCode("1", "DM215");//在职CODE
-		post.setNowPostSign(nowPostSign); //现任职务
+	    //CodeInfo nowPostSign = dictableService.getCodeInfoByCode("1", "DM215");//在职CODE
+	    //post.setNowPostSign(nowPostSign); //现任职务
+	    CodeInfo inOfficeCode = dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
+	    post.setTenureName(publicInstitution.getDepartName());
+	    post.setTenureStatus(inOfficeCode);
+		
 		post.setApprovalDate(alter.getAlterrotaDate());//任职日期
 	    
 	    postService.save(post);
@@ -210,6 +252,38 @@ public class AlternatingRotatingServiceImpl  extends GenericServiceImpl<Alternat
 			return true;
 		}
 		return false;
+	}
+	
+	
+	@Override
+	public Page<AlternatingRotationVO> pageList(AlternatingRotationQueryParam param, Integer page, Integer limit) {
+		
+		OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());// 当前登录所在单位
+
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(AlternatingRotation.class);
+		DetachedCriteria s = detachedcriteria.createAlias("publicInstitution", "p");
+		if (StringUtils.isNotBlank(param.getName())) {// 姓名
+			s.add(Restrictions.like("p.name", param.getName(), MatchMode.ANYWHERE));
+		}
+		if (StringUtils.isNotBlank(param.getCardNo())) {// 身份证
+			s.add(Restrictions.eq("p.cardNo", param.getCardNo()));
+		}
+		if (x != null && x.getCode().equals(CommonConst.HR_ROOT_ORGAN_CODE)) {
+			detachedcriteria.add(Restrictions.eq("lastOperator", SecurityUtils.getUserId()));
+		} else {
+			detachedcriteria.add(Restrictions.eq("creater", SecurityUtils.getUserId()));
+		}
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		detachedcriteria.addOrder(Order.desc("createTime"));
+		Page<AlternatingRotation> registerPage = this.findByCriteria(detachedcriteria, page, limit);
+		List<AlternatingRotationVO> voList = new ArrayList<>();
+		for (AlternatingRotation rs : registerPage.getResult()) {
+			AlternatingRotationVO vo = new AlternatingRotationVO(rs);
+			voList.add(vo);
+		}
+		Page<AlternatingRotationVO> result = new Page<>(registerPage.getStart(), registerPage.getCurrentPageSize(),
+				registerPage.getTotalSize(), registerPage.getPageSize(), voList);
+		return result;
 	}
 
 	

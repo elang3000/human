@@ -95,7 +95,7 @@ public class LoginController extends GenericController {
 		        + appCode;
 		//http://103.36.136.173:8480/oauth/oauth/authorize?response_type=code&scope=read,write&client_id=ywxt&redirect_uri=http://localhost:8080/OauthDemo/authorization_code_callback?state=8fc002aa-8d15-4400-aca3-cf1ca39ed3ac
 		//http://103.36.136.173:8480/oauth/oauth/authorize?response_type=code&scope=read,write&client_id=ywxt&redirect_uri=http://localhost:8080/human/oauth/client/authorization/code/callback?state=human
-		System.out.println("----------location----------" + location);
+		////System.out.println("----------location----------" + location);
 		
 		//request.setAttribute("returnUrl", location);
 		//this.getResponse().setCharacterEncoding("UTF-8");

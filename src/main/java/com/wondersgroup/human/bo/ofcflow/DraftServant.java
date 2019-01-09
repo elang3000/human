@@ -15,20 +15,14 @@
 
 package com.wondersgroup.human.bo.ofcflow;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
-import com.wondersgroup.framework.util.DateUtils;
+import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.organization.OrgInfo;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @ClassName: DraftServant
@@ -143,6 +137,7 @@ public class DraftServant extends GenericEntity {
 	 */
 	@Column(name = "BIRTH_DATE")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date birthDate;
 	
 	/**
@@ -204,6 +199,7 @@ public class DraftServant extends GenericEntity {
 	 */
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "ATTEND_DATE")
+	@Temporal(TemporalType.DATE)
 	private Date attendDate;
 	
 	/**
@@ -428,7 +424,15 @@ public class DraftServant extends GenericEntity {
 	 */
 	@Column(name = "STATUS")
 	private Integer status;
-	
+
+	//导入状态 0未导入 1导入成功
+	@Column(name="IMPORTSTATUS")
+	private Integer importStatus;
+
+	//导入状态描述
+	@Column(name="IMPORTSTATUSSTR")
+	private String importStatusStr;
+
 	// ---------------------录用信息----------------------
 	/**
 	 * @fieldName: employSituation
@@ -489,6 +493,7 @@ public class DraftServant extends GenericEntity {
 	 */
 	@Column(name = "DEPT_OPINION_DATE")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date deptOpinionDate;
 	
 	/**
@@ -498,6 +503,7 @@ public class DraftServant extends GenericEntity {
 	 */
 	@Column(name = "UNIT_OPINION_DATE")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date unitOpinionDate;
 	
 	/**
@@ -528,27 +534,50 @@ public class DraftServant extends GenericEntity {
 	@ManyToOne
 	@JoinColumn(name = "DEGREE")
 	private CodeInfo degree;
-	
+
+	//本科毕业院校
+	@Column(name="UNDERGRADUATE_NAME")
+	private String undergraduateName;
+
 	/**
 	 * 本科毕业时间
 	 */
 	@Column(name = "UNDER_GRADUATE_TIME")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date undergraduateTime;
-	
+
+
+
+
+
+	//硕士毕业院校
+	@Column(name="MASTER_GRADUATE_NAME")
+	private String mastergraduateName;
+
+
 	/**
 	 * 硕士毕业时间
 	 */
 	@Column(name = "MASTER_GRADUATE_TIME")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date mastergraduateTime;
-	
+
+
+	//博士毕业院校
+	@Column(name = "DOCTOR_GRADUATE_NAME")
+	private String doctorgraduateName;
+
+
 	/**
 	 * 博士毕业时间
 	 */
 	@Column(name = "DOCTOR_GRADUATE_TIME")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date doctorgraduateTime;
+
 	
 	/**
 	 * 考生身份
@@ -562,6 +591,7 @@ public class DraftServant extends GenericEntity {
 	 */
 	@Column(name = "PROBATION_START_TIME")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date probationStartTime;
 	
 	/**
@@ -569,8 +599,119 @@ public class DraftServant extends GenericEntity {
 	 */
 	@Column(name = "IS_ELEC_LETTER")
 	private Integer isElecLetter;
-	
 
+	/**
+	 * @fieldName: cardNoView
+	 * @fieldType: java.lang.String
+	 * @Description: 公务员身份证号加密显示。
+	 */
+	@Transient
+	private String cardNoView;
+
+
+	//电话号码
+	@Column(name = "PHONE_NUMBER")
+	private String phoneNumber;
+
+	//注册单位
+	@ManyToOne
+	@JoinColumn(name = "REGISTER")
+	private CodeInfo register;
+
+
+	//户籍地址
+	@Column(name = "RESIDENCE_PLACE", length = 80)
+	private String residencePlace;
+
+	//是否加入上海户籍
+	@ManyToOne
+	@JoinColumn(name = "IS_JOIN_RESIDENCE")
+	private CodeInfo isJoinResidence;
+
+	//通讯地址
+	@Column(name = "HOME_ADDRESS", length = 120)
+	private String homeAddress;
+
+	//是否大学生村官
+	@ManyToOne
+	@JoinColumn(name = "COLLEGE_VILLAGE_OFFICER")
+	private CodeInfo collegeVillageOfficer;
+
+	//是否应届
+	@ManyToOne
+	@JoinColumn(name = "IS_GRADUATING")
+	private CodeInfo isGraduating;
+
+	//是否持有上海居住证
+	@ManyToOne
+	@JoinColumn(name = "IS_RESIDENCE_PERMIT")
+	private CodeInfo isResidencePermit;
+
+
+	/**
+	 * @fieldName:教育类别
+	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
+	 * @Description: 取得学历学习的方式。DM024
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "A08020")
+	private CodeInfo eductionalType;
+
+	public String getUndergraduateName() {
+		return undergraduateName;
+	}
+
+	public void setUndergraduateName(String undergraduateName) {
+		this.undergraduateName = undergraduateName;
+	}
+
+	public String getMastergraduateName() {
+		return mastergraduateName;
+	}
+
+	public void setMastergraduateName(String mastergraduateName) {
+		this.mastergraduateName = mastergraduateName;
+	}
+
+	public String getDoctorgraduateName() {
+		return doctorgraduateName;
+	}
+
+	public void setDoctorgraduateName(String doctorgraduateName) {
+		this.doctorgraduateName = doctorgraduateName;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public CodeInfo getRegister() {
+		return register;
+	}
+
+	public void setRegister(CodeInfo register) {
+		this.register = register;
+	}
+
+	public String getResidencePlace() {
+		return residencePlace;
+	}
+
+	public void setResidencePlace(String residencePlace) {
+		this.residencePlace = residencePlace;
+	}
+
+	public String getHomeAddress() {
+		return homeAddress;
+	}
+
+	public void setHomeAddress(String homeAddress) {
+		this.homeAddress = homeAddress;
+	}
 
 	/**
 	 * 
@@ -590,7 +731,21 @@ public class DraftServant extends GenericEntity {
 			}
 		}
 	}
-	
+
+	public String getCardNoView() {
+
+		if (StringUtils.isBlank(this.getCardNo())) {
+			return "";
+		} else {
+			if (this.getCardNo().length() <= 4) {
+				return "XXXX";
+			} else {
+				this.cardNoView = StringUtils.substring(this.getCardNo(), 0, (this.getCardNo().length() - 4)) + "XXXX";
+				return cardNoView;
+			}
+		}
+	}
+
 	public Integer getIsElecLetter() {
 		return isElecLetter;
 	}
@@ -1163,7 +1318,61 @@ public class DraftServant extends GenericEntity {
 	public void setExamineeStatus(String examineeStatus) {
 		this.examineeStatus = examineeStatus;
 	}
-	
-	
-	
+
+
+	public Integer getImportStatus() {
+		return importStatus;
+	}
+
+	public void setImportStatus(Integer importStatus) {
+		this.importStatus = importStatus;
+	}
+
+	public String getImportStatusStr() {
+		return importStatusStr;
+	}
+
+	public void setImportStatusStr(String importStatusStr) {
+		this.importStatusStr = importStatusStr;
+	}
+
+	public CodeInfo getCollegeVillageOfficer() {
+		return collegeVillageOfficer;
+	}
+
+	public void setCollegeVillageOfficer(CodeInfo collegeVillageOfficer) {
+		this.collegeVillageOfficer = collegeVillageOfficer;
+	}
+
+	public CodeInfo getIsGraduating() {
+		return isGraduating;
+	}
+
+	public void setIsGraduating(CodeInfo isGraduating) {
+		this.isGraduating = isGraduating;
+	}
+
+	public CodeInfo getIsResidencePermit() {
+		return isResidencePermit;
+	}
+
+	public void setIsResidencePermit(CodeInfo isResidencePermit) {
+		this.isResidencePermit = isResidencePermit;
+	}
+
+	public CodeInfo getIsJoinResidence() {
+		return isJoinResidence;
+	}
+
+	public void setIsJoinResidence(CodeInfo isJoinResidence) {
+		this.isJoinResidence = isJoinResidence;
+	}
+
+	public CodeInfo getEductionalType() {
+		return eductionalType;
+	}
+
+	public void setEductionalType(CodeInfo eductionalType) {
+		this.eductionalType = eductionalType;
+	}
 }

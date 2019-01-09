@@ -167,6 +167,11 @@ img {
 												<i class="fa fa-edit"></i>
 											</a>
 										</shiro:hasPermission>
+										<shiro:hasPermission name="ASSIST_ORGAN_NODE">
+											<a class="layui-btn layui-btn-xs layui-btn-normal" style="" lay-event="assist"  title="添加主管单位">
+												<i class="fa fa-bank"></i>
+											</a>
+										</shiro:hasPermission>
 										<shiro:hasPermission name="ENABLE_SECURITY_USER">
 											{{#  if(d.status !== 1){ }}
 												<a class="layui-btn layui-btn-xs layui-btn-warm" style="" lay-event="start"  title="启用">
@@ -262,6 +267,17 @@ img {
 							title : '编辑用户',
 							size : 'full',
 							url : 'security/user/info/edit',
+							params :{
+								id : obj.data.id
+							},
+							scrollbar : false
+						});
+					},
+					assist:function(obj) {
+						smart.show({
+							title : '添加主管单位',
+							size : 'full',
+							url : 'security/user/assist/index',
 							params :{
 								id : obj.data.id
 							},

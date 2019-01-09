@@ -24,11 +24,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.ofc.Servant;
 
 /**
@@ -46,13 +48,79 @@ public class BaseEventIntoMgr<T> extends GenericEntity {
 	private static final long serialVersionUID = 6228280994777281146L;
 	
 	/**
+	 * @fieldName: allowWeaveNum
+	 * @fieldType: Integer
+	 * @Description: 核定编制数
+	 */
+	@Column(name = "ALLOW_WEAVE_NUM")
+	private Integer allowWeaveNum;
+	
+	/**
+	 * @fieldName: realNum
+	 * @fieldType: Integer
+	 * @Description: 实有人数
+	 */
+	@Column(name = "REAL_NUM")
+	private Integer realNum;
+	
+	/**
+	 * @fieldName: thisYearLackWeaveNum
+	 * @fieldType: Integer
+	 * @Description: 机构缺编数
+	 */
+	@Column(name = "THIS_YEAR_LACK_WEAVE_NUM")
+	private Integer thisYearLackWeaveNum;
+	
+	/**
+	 * @fieldName: chiefLackWeaveNum
+	 * @fieldType: Integer
+	 * @Description: 处级实职缺编人数
+	 */
+	@Column(name = "CHIEF_LACK_WEAVE_NUM")
+	private Integer chiefLackWeaveNum;
+	
+	/**
+	 * @fieldName: 缺（超）编 科级及相当者人数
+	 * @fieldType: java.lang.Integer
+	 * @Description: 缺（超）编 单位内科级以及与科级相当职级的人员总数。
+	 */
+	@Column(name = "CHIEFLEVEL_NUMBER", length = 2)
+	private Integer vacancySectionChiefLevelNumber;
+	
+	/**
+	 * @fieldName: 缺（超）编 科级及相当者人数（非领导）
+	 * @fieldType: java.lang.Integer
+	 * @Description: 缺（超）编 单位内科级以及与科级相当职级的人员总数（非领导）。
+	 */
+	@Column(name = "SECTIONCHIEF_LEVEL_NUMBER", length = 2)
+	private Integer vacancyNonLeaderSectionChiefLevelNumber;
+	
+	/**
+	 * 正科未调入人员
+	 */
+	@Column(name = "NOT_INTO_SECTION_CHIEF_NUM")
+	private Integer notIntoSectionChiefNum;
+	
+	/**
+	 * 副科未调入人员
+	 */
+	@Column(name = "NOT_INTO_DEPUTY_SECTION_CHIEF_NUM")
+	private Integer notIntoDeputySectionChiefNum;
+	
+	/**
+	 * 供给关系尚未调入人员
+	 */
+	@Column(name = "NOT_INTO_NUM")
+	private Integer notIntoNum;
+	
+	/**
 	 * @fieldName: isLowToHigh
 	 * @fieldType: java.lang.Boolean
 	 * @Description: 职务是否高职低配。
 	 */
 	@Column(name = "IS_LOW_TO_HIGH")
 	@org.hibernate.annotations.Type(type = "yes_no")
-	private Boolean isLowToHigh = false;
+	private Boolean isLowToHigh;
 	
 	/**
 	 * @fieldName: 职级名称
@@ -72,6 +140,14 @@ public class BaseEventIntoMgr<T> extends GenericEntity {
 	private CodeInfo jobLevelCode;
 	
 	// 人员基本信息
+	/**
+	 * @fieldName: photoPath
+	 * @fieldType: java.lang.String
+	 * @Description: 照片路径
+	 */
+	@Column(name = "PHOTO_PATH", length = 200)
+	private String photoPath;
+	
 	/**
 	 * @fieldName: servant
 	 * @fieldType: com.wondersgroup.human.bo.ofc.Servant
@@ -96,6 +172,14 @@ public class BaseEventIntoMgr<T> extends GenericEntity {
 	 */
 	@Column(name = "CARDNO")
 	private String cardNo;
+	
+	/**
+	 * @fieldName: cardNoView
+	 * @fieldType: java.lang.String
+	 * @Description: 公务员身份证号加密显示。
+	 */
+	@Transient
+	private String cardNoView;
 	
 	/**
 	 * @fieldName: politics
@@ -1024,4 +1108,117 @@ public class BaseEventIntoMgr<T> extends GenericEntity {
 		this.jobLevelCode = jobLevelCode;
 	}
 	
+	public String getPhotoPath() {
+		
+		return photoPath;
+	}
+	
+	public void setPhotoPath(String photoPath) {
+		
+		this.photoPath = photoPath;
+	}
+	
+	public String getCardNoView() {
+		
+		if (StringUtils.isBlank(this.getCardNo())) {
+			return "";
+		} else {
+			if (this.getCardNo().length() <= 4) {
+				return "XXXX";
+			} else {
+				this.cardNoView = StringUtils.substring(this.getCardNo(), 0, (this.getCardNo().length() - 4)) + "XXXX";
+				return cardNoView;
+			}
+		}
+	}
+	
+	public Integer getAllowWeaveNum() {
+		
+		return allowWeaveNum;
+	}
+	
+	public void setAllowWeaveNum(Integer allowWeaveNum) {
+		
+		this.allowWeaveNum = allowWeaveNum;
+	}
+	
+	public Integer getRealNum() {
+		
+		return realNum;
+	}
+	
+	public void setRealNum(Integer realNum) {
+		
+		this.realNum = realNum;
+	}
+	
+	public Integer getThisYearLackWeaveNum() {
+		
+		return thisYearLackWeaveNum;
+	}
+	
+	public void setThisYearLackWeaveNum(Integer thisYearLackWeaveNum) {
+		
+		this.thisYearLackWeaveNum = thisYearLackWeaveNum;
+	}
+	
+	public Integer getChiefLackWeaveNum() {
+		
+		return chiefLackWeaveNum;
+	}
+	
+	public void setChiefLackWeaveNum(Integer chiefLackWeaveNum) {
+		
+		this.chiefLackWeaveNum = chiefLackWeaveNum;
+	}
+	
+	public Integer getVacancySectionChiefLevelNumber() {
+		
+		return vacancySectionChiefLevelNumber;
+	}
+	
+	public void setVacancySectionChiefLevelNumber(Integer vacancySectionChiefLevelNumber) {
+		
+		this.vacancySectionChiefLevelNumber = vacancySectionChiefLevelNumber;
+	}
+	
+	public Integer getVacancyNonLeaderSectionChiefLevelNumber() {
+		
+		return vacancyNonLeaderSectionChiefLevelNumber;
+	}
+	
+	public void setVacancyNonLeaderSectionChiefLevelNumber(Integer vacancyNonLeaderSectionChiefLevelNumber) {
+		
+		this.vacancyNonLeaderSectionChiefLevelNumber = vacancyNonLeaderSectionChiefLevelNumber;
+	}
+	
+	public Integer getNotIntoSectionChiefNum() {
+		
+		return notIntoSectionChiefNum;
+	}
+	
+	public void setNotIntoSectionChiefNum(Integer notIntoSectionChiefNum) {
+		
+		this.notIntoSectionChiefNum = notIntoSectionChiefNum;
+	}
+	
+	public Integer getNotIntoDeputySectionChiefNum() {
+		
+		return notIntoDeputySectionChiefNum;
+	}
+	
+	public void setNotIntoDeputySectionChiefNum(Integer notIntoDeputySectionChiefNum) {
+		
+		this.notIntoDeputySectionChiefNum = notIntoDeputySectionChiefNum;
+	}
+	
+	public Integer getNotIntoNum() {
+		
+		return notIntoNum;
+	}
+	
+	public void setNotIntoNum(Integer notIntoNum) {
+		
+		this.notIntoNum = notIntoNum;
+	}
 }

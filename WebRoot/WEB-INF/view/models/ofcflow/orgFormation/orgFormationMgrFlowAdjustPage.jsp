@@ -26,13 +26,15 @@
 					</smart:gridRow>
 					
 					<smart:gridRow>
-						<table class="layui-table">
-							<tbody>
+						<table class="layui-table" lay-size="sm">
+							<thead>
 								<tr>
-									<td style="width:20%"><b>名称</b></td>
-									<td style="width:40%"><b>调整前</b></td>
-									<td style="width:40%"><b>调整后</b></td>
+									<td style="width:30%"><b>名称</b></td>
+									<td style="width:35%"><b>调整前</b></td>
+									<td style="width:35%"><b>调整后</b></td>
 							    </tr>
+							</thead>
+							<tbody>
 							    <tr>
 							    	<td>批准编制日期：</td>
 							    	<td><label>${empty orgFormation.approveDate ? '—':orgFormation.approveDate}</label></td>
@@ -61,27 +63,6 @@
 							    	</td>
 							    </tr>
 							    <tr>
-							    	<td>行政编制数：</td>
-							    	<td><label>${empty orgFormation.adminWeaveNumber ? '—':orgFormation.adminWeaveNumber}</label></td>
-							    	<td>
-							    		<smart:numberInput id="adminWeaveNumber" name="adminWeaveNumber" value="${orgFormationMgrFlow.adminWeaveNumber}" display="inline" min="0" type="text"></smart:numberInput>
-							    	</td>
-							    </tr>
-							    <tr>
-							    	<td>事业编制数：</td>
-							    	<td><label>${empty orgFormation.institutionWeaveNumber ? '—':orgFormation.institutionWeaveNumber}</label></td>
-							    	<td>
-							    		<smart:numberInput id="institutionWeaveNumber" name="institutionWeaveNumber" value="${orgFormationMgrFlow.institutionWeaveNumber}" display="inline" min="0" type="text"></smart:numberInput>
-							    	</td>
-							    </tr>
-							    <tr>
-							    	<td>参照公务员法管理事业编制数：</td>
-							    	<td><label>${empty orgFormation.causeWeaveNumber ? '—':orgFormation.causeWeaveNumber}</label></td>
-							    	<td>
-							    		<smart:numberInput id="causeWeaveNumber" name="causeWeaveNumber" value="${orgFormationMgrFlow.causeWeaveNumber}" display="inline" min="0" type="text"></smart:numberInput>
-							    	</td>
-							    </tr>
-							    <tr>
 							    	<td>实有人数：</td>
 							    	<td><label>${empty orgFormation.actualNumber ? '—':orgFormation.actualNumber}</label></td>
 							    	<td>
@@ -97,65 +78,73 @@
 							    </tr>
 							    <tr>
 							    	<td>（定编）处级职数：</td>
-							    	<td><label>${empty orgFormation.approveDivisionChiefLevelNumber ? '—':orgFormation.approveDivisionChiefLevelNumber}</label></td>
+							    	<td><label>${orgFormation.approveChuNum}</label></td>
 							    	<td>
-							    		<smart:numberInput id="approveDivisionChiefLevelNumber" name="approveDivisionChiefLevelNumber" value="${orgFormationMgrFlow.approveDivisionChiefLevelNumber}" display="inline" min="0" type="text"></smart:numberInput>
+							    		<smart:numberInput id="approveChuNum" name="approveChuNum" value="${orgFormationMgrFlow.approveChuNum}" display="inline" min="0" type="text"></smart:numberInput>
 							    	</td>
 							    </tr>
 							    <tr>
 							    	<td>（实有）处级职数：</td>
-							    	<td><label>${empty orgFormation.divisionChiefLevelNumber ? '—':orgFormation.divisionChiefLevelNumber}</label></td>
+							    	<td><label>${orgFormation.realChuNum}</label></td>
 							    	<td>
-							    		<smart:numberInput id="divisionChiefLevelNumber" name="divisionChiefLevelNumber" value="${orgFormationMgrFlow.divisionChiefLevelNumber}" display="inline" min="0" type="text"></smart:numberInput>
+							    		<smart:numberInput id="realChuNum" name="realChuNum" value="${orgFormationMgrFlow.realChuNum}" display="inline" min="0" type="text"></smart:numberInput>
 							    	</td>
 							    </tr>
 							    <tr>
-							    	<td>（空缺）处级职数：</td>
-							    	<td><label>${empty orgFormation.vacancyDivisionChiefLevelNumber ? '—':orgFormation.vacancyDivisionChiefLevelNumber}</label></td>
+							    	<td>（定编）乡科级正职（领导）职数：</td>
+							    	<td><label>${orgFormation.approvePlusKeLeaderNum}</label></td>
 							    	<td>
-							    		<smart:numberInput id="vacancyDivisionChiefLevelNumber" name="vacancyDivisionChiefLevelNumber" value="${orgFormationMgrFlow.vacancyDivisionChiefLevelNumber}" display="inline" type="text"></smart:numberInput>
+							    		<smart:numberInput id="approvePlusKeLeaderNum" name="approvePlusKeLeaderNum" value="${orgFormationMgrFlow.approvePlusKeLeaderNum}" display="inline" min="0" type="text"></smart:numberInput>
 							    	</td>
 							    </tr>
 							    <tr>
-							    	<td>（定编）科级（领导）职数：</td>
-							    	<td><label>${empty orgFormation.approveSectionChiefLevelNumber ? '—':orgFormation.approveSectionChiefLevelNumber}</label></td>
+							    	<td>（实有）乡科级正职（领导）职数：</td>
+							    	<td><label>${orgFormation.realPlusKeLeaderNum}</label></td>
 							    	<td>
-							    		<smart:numberInput id="approveSectionChiefLevelNumber" name="approveSectionChiefLevelNumber" value="${orgFormationMgrFlow.approveSectionChiefLevelNumber}" display="inline" min="0" type="text"></smart:numberInput>
+							    		<smart:numberInput id="realPlusKeLeaderNum" name="realPlusKeLeaderNum" value="${orgFormationMgrFlow.realPlusKeLeaderNum}" display="inline" min="0" type="text"></smart:numberInput>
 							    	</td>
 							    </tr>
 							    <tr>
-							    	<td>（实有）科级（领导）职数：</td>
-							    	<td><label>${empty orgFormation.sectionChiefLevelNumber ? '—':orgFormation.sectionChiefLevelNumber}</label></td>
+							    	<td>（定编）乡科级正职（非领导）职数：</td>
+							    	<td><label>${orgFormation.approvePlusKeNoLeaderNum}</label></td>
 							    	<td>
-							    		<smart:numberInput id="sectionChiefLevelNumber" name="sectionChiefLevelNumber" value="${orgFormationMgrFlow.sectionChiefLevelNumber}" display="inline" min="0" type="text"></smart:numberInput>
+							    		<smart:numberInput id="approvePlusKeNoLeaderNum" name="approvePlusKeNoLeaderNum" value="${orgFormationMgrFlow.approvePlusKeNoLeaderNum}" display="inline" min="0" type="text"></smart:numberInput>
 							    	</td>
 							    </tr>
 							    <tr>
-							    	<td>（空缺）科级（领导）职数：</td>
-							    	<td><label>${empty orgFormation.vacancySectionChiefLevelNumber ? '—':orgFormation.vacancySectionChiefLevelNumber}</label></td>
+							    	<td>（实有）乡科级正职（非领导）职数：</td>
+							    	<td><label>${orgFormation.realPlusKeNoLeaderNum}</label></td>
 							    	<td>
-							    		<smart:numberInput id="vacancySectionChiefLevelNumber" name="vacancySectionChiefLevelNumber" value="${orgFormationMgrFlow.vacancySectionChiefLevelNumber}" display="inline" type="text"></smart:numberInput>
+							    		<smart:numberInput id="realPlusKeNoLeaderNum" name="realPlusKeNoLeaderNum" value="${orgFormationMgrFlow.realPlusKeNoLeaderNum}" display="inline" min="0" type="text"></smart:numberInput>
+							    	</td>
+							    </tr>
+							    
+							    <tr>
+							    	<td>（定编）乡科级副职（领导）职数：</td>
+							    	<td><label>${orgFormation.approveMinusKeLeaderNum}</label></td>
+							    	<td>
+							    		<smart:numberInput id="approveMinusKeLeaderNum" name="approveMinusKeLeaderNum" value="${orgFormationMgrFlow.approveMinusKeLeaderNum}" display="inline" min="0" type="text"></smart:numberInput>
 							    	</td>
 							    </tr>
 							    <tr>
-							    	<td>（定编）科级（非领导）职数：</td>
-							    	<td><label>${empty orgFormation.approveNonLeaderSectionChiefLevelNumber ? '—':orgFormation.approveNonLeaderSectionChiefLevelNumber}</label></td>
+							    	<td>（实有）乡科级副职（领导）职数：</td>
+							    	<td><label>${orgFormation.realMinusKeLeaderNum}</label></td>
 							    	<td>
-							    		<smart:numberInput id="approveNonLeaderSectionChiefLevelNumber" name="approveNonLeaderSectionChiefLevelNumber" value="${orgFormationMgrFlow.approveNonLeaderSectionChiefLevelNumber}" display="inline" min="0" type="text"></smart:numberInput>
+							    		<smart:numberInput id="realMinusKeLeaderNum" name="realMinusKeLeaderNum" value="${orgFormationMgrFlow.realMinusKeLeaderNum}" display="inline" min="0" type="text"></smart:numberInput>
 							    	</td>
 							    </tr>
 							    <tr>
-							    	<td>（实有）科级（非领导）职数：</td>
-							    	<td><label>${empty orgFormation.nonLeaderSectionChiefLevelNumber ? '—':orgFormation.nonLeaderSectionChiefLevelNumber}</label></td>
+							    	<td>（定编）乡科级副职（非领导）职数：</td>
+							    	<td><label>${orgFormation.approveMinusKeNoLeaderNum}</label></td>
 							    	<td>
-							    		<smart:numberInput id="nonLeaderSectionChiefLevelNumber" name="nonLeaderSectionChiefLevelNumber" value="${orgFormationMgrFlow.nonLeaderSectionChiefLevelNumber}" display="inline" min="0" type="text"></smart:numberInput>
+							    		<smart:numberInput id="approveMinusKeNoLeaderNum" name="approveMinusKeNoLeaderNum" value="${orgFormationMgrFlow.approveMinusKeNoLeaderNum}" display="inline" min="0" type="text"></smart:numberInput>
 							    	</td>
 							    </tr>
 							    <tr>
-							    	<td>（空缺）科级（非领导）职数：</td>
-							    	<td><label>${empty orgFormation.vacancyNonLeaderSectionChiefLevelNumber ? '—':orgFormation.vacancyNonLeaderSectionChiefLevelNumber}</label></td>
+							    	<td>（实有）乡科级副职（非领导）职数：</td>
+							    	<td><label>${orgFormation.realMinusKeNoLeaderNum}</label></td>
 							    	<td>
-							    		<smart:numberInput id="vacancyNonLeaderSectionChiefLevelNumber" name="vacancyNonLeaderSectionChiefLevelNumber" value="${orgFormationMgrFlow.vacancyNonLeaderSectionChiefLevelNumber}" display="inline" type="text"></smart:numberInput>
+							    		<smart:numberInput id="realMinusKeNoLeaderNum" name="realMinusKeNoLeaderNum" value="${orgFormationMgrFlow.realMinusKeNoLeaderNum}" display="inline" min="0" type="text"></smart:numberInput>
 							    	</td>
 							    </tr>
 							</tbody>
@@ -212,6 +201,7 @@
 		                result.message, 
 		                {icon: 1,closeBtn: 1 },
 		                function () {
+		                	parent.layui.table.reload('navigationList');
 							parent.layui.table.reload('orgForamtionMgrFlowList');
 		                	var index=parent.layer.getFrameIndex(window.name);
 							parent.layer.close(index);

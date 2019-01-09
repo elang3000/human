@@ -127,7 +127,7 @@
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="8">
-									<smart:textarea labelName="审批意见:" display="block"
+									<smart:textarea labelName="审批意见:" display="block" id="opinion"
 										name="opinion" placeholder="审批意见"></smart:textarea>
 								</smart:gridColumn>
 							</smart:gridRow>
@@ -188,6 +188,13 @@
 			},
 			noPass : function() {
 				$("#result").val("0");//审批不通过
+				if(!$("#opinion").val()){
+					smart.message({
+					message : "请输入审批不通过意见！",
+					type : 'W' //S保存  I问号  W感叹号 E错误
+					});
+					return;
+				}
 				smart.confirm({
 					title:'确认审批不通过',
 					message:'确认审批不通过吗？',

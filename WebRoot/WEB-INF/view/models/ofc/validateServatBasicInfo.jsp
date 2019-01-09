@@ -46,7 +46,7 @@
 								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
 								<smart:tableItem field="name" width="100" sort="true">姓名</smart:tableItem>
 								<smart:tableItem field="sexName" width="100"  sort="true">性别</smart:tableItem>
-								<smart:tableItem field="idNumber" width="160"  sort="true">身份证号</smart:tableItem>
+								<smart:tableItem field="idNumberStr" width="160"  sort="true">身份证号</smart:tableItem>
 								<smart:tableItem field="departName" width="160" sort="false">单位部门</smart:tableItem>
 								<smart:tableItem field="nationName" width="100" sort="false">民族</smart:tableItem>
 								<smart:tableItem field="years" width="100" sort="false">年龄</smart:tableItem>
@@ -117,7 +117,12 @@
 		<smart:initLinkSelect id="organNodeIdTag" name="organNodeId" tips="请选择所属单位部门"  url="system/organ/node/query" params="{organTreeId:'${organTreeId}'}" /> 
 		<smart:tableScriptAction tableId="navigationList" checkbox="true" sort="true" rowEdit="true">
 			ann : function(data) {
-				window.location.href='ofc/main?id='+data.data.id;
+				smart.show({
+					title : '信息维护',
+					url : 'ofc/main?id=' + data.data.id,
+					size : 'full',
+					scrollbar : false
+				});
 			}
 		</smart:tableScriptAction>
 		var buttonInvokeMethod = {

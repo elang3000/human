@@ -15,12 +15,16 @@
 
 package com.wondersgroup.human.bo.ofc;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.human.bo.ofc.base.BaseEmploy;
@@ -36,6 +40,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseEmploy;
  */
 @Entity
 @Table(name = "A03")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Employ extends BaseEmploy<Employ> {
 	
 	private static final long serialVersionUID = 7253487601845963934L;

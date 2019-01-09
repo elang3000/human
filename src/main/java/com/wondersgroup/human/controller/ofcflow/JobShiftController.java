@@ -1,6 +1,22 @@
 
 package com.wondersgroup.human.controller.ofcflow;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.wondersgroup.common.contant.FlowBusTypeConstant;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
@@ -13,6 +29,7 @@ import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.SecurityUtils;
+import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.human.bo.ofc.Post;
@@ -25,20 +42,6 @@ import com.wondersgroup.human.service.ofcflow.JobShiftDeposeService;
 import com.wondersgroup.human.service.ofcflow.JobShiftService;
 import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.vo.ofc.PostVO;
-import com.wondersgroup.human.vo.ofc.ServantVO;
-import com.wondersgroup.human.vo.organization.JudgePostResult;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -139,7 +142,8 @@ public class JobShiftController extends GenericController {
         OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
         String orgId = orgNode.getId();
         Page<Map> formRecordData = this.jobShiftService.getFormRecordData(orgId, jobChangeType, name, page, limit);
-        return  formRecordData;
+        formRecordData.getResult().forEach(map->map.put("CARDNO",getCardNoView((String)map.get("CARDNO"))));
+		return  formRecordData;
     }
 
 	/**
@@ -164,9 +168,10 @@ public class JobShiftController extends GenericController {
 			model.addAttribute("jobShiftDepose", jobShiftDepose);
 			model.addAttribute("servant", jobShiftDepose.getServant());
 			model.addAttribute("post", jobShiftDepose.getPost());
+			model.addAttribute("head", "免职");
 			return JOBCHANGE_DEPOSE_PAGE;
 		}else{
-			JobShift jobShift = this.jobShiftService.load(id);
+			JobShift jobShift = this.jobShiftService.get(id);
 			model.addAttribute("jobShift", jobShift);
 			model.addAttribute("servant", jobShift.getServant());
 			model.addAttribute("post", jobShift.getPrePost());
@@ -179,16 +184,19 @@ public class JobShiftController extends GenericController {
 					}
 			);
 			if(codeStrs.contains(postTenureChangeCode)){
+				model.addAttribute("head", "升职");
 				return JOBCHANGE_PROMOTE_PAGE;
 			}
 			//职务变动代码 降职
 			CodeInfo demoteCode = dictableService.getCodeInfoByCode("5", "DM006");
 			if(demoteCode.getId().equals(postTenureChangeCode)){
+				model.addAttribute("head", "降职");
 				return JOBCHANGE_DEMOTE_PAGE;
 			}
 			//职务变动代码 轮岗
 			CodeInfo shiftCode = dictableService.getCodeInfoByCode("6", "DM006");
 			if(shiftCode.getId().equals(postTenureChangeCode)){
+				model.addAttribute("head", "轮岗");
 				model.addAttribute("isShift", true);
 				return JOBCHANGE_DEMOTE_PAGE;
 			}
@@ -279,10 +287,21 @@ public class JobShiftController extends GenericController {
 	@RequestMapping(value = "/promote/{servantId}/post/{postId}", method = {RequestMethod.GET})
 	public String jobChangePromote(@PathVariable(value = "servantId") String servantId,
 	        @PathVariable(value = "postId") String postId, Model model) {
+
 		Servant servant = servantService.get(servantId);
 		Post post = postService.get(postId);
 		model.addAttribute("servant", servant);
 		model.addAttribute("post", post);
+		Set<String> jobLevelSet = new HashSet<>(Arrays.asList("141","142","150","160"));
+		try {
+			jobLevelSet.remove(servant.getNowJobLevel().getCode());
+		} catch (Exception e) {
+			throw new BusinessException("现职级为空,请配置职级!");
+		}
+
+		String j = Arrays.toString(jobLevelSet.toArray());
+		j = j.replace(" ", "");
+		model.addAttribute("jobLevelArray", j.substring(1,j.length()-1));
 		return JOBCHANGE_PROMOTE_PAGE;
 	}
 	
@@ -326,7 +345,7 @@ public class JobShiftController extends GenericController {
 	@ResponseBody
 	@RequestMapping(value = "/operatePromoteFlow")
 	public AjaxResult jobChangePromoteSave(JobShift jobShift, String opinion, String result) {
-	
+		DictUtils.operationCodeInfo(jobShift);//将CodeInfo中id为空的属性 设置为null
 		AjaxResult ajaxResult = new AjaxResult(true);
 		String examineFilePath = jobShift.getExamineFilePath();
 		String personInfoFilePath = jobShift.getPersonInfoFilePath();
@@ -334,22 +353,6 @@ public class JobShiftController extends GenericController {
 			jobShift = this.jobShiftService.get(jobShift.getId());
 		}
 		try {
-			
-			OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-			String orgId = orgNode.getId();
-			//新职位
-			CodeInfo newPost = codeInfoService.load(jobShift.getNewPostCode().getId());
-			//旧职位
-			CodeInfo formerPost = codeInfoService.load(jobShift.getFormerPostCode().getId());
-			//编控，校验职位编制数是否足够，判断数据能否保存，如果超编，抛出异常
-			JudgePostResult queryJudgePostNum = formationControlService.queryJudgePostNum(orgId, newPost.getCode());
-			//锁定职位调入编控
-			formationControlService.executeLockPostIntoNum(orgId, newPost.getCode(), queryJudgePostNum.isLowToHigh);
-			//锁定职位调出编控
-			formationControlService.executeLockPostOutNum(orgId, formerPost.getCode(), queryJudgePostNum.isLowToHigh);
-			//保存是否高职低配到业务表
-			jobShift.setLowToHigh(queryJudgePostNum.isLowToHigh);
-			
 			// 判断是否上传了人员信息任免表
 			if (jobShift.getAppointSheetFilePath() == null || jobShift.getAppointSheetFilePath().equals("")
 			        || jobShift.getAppointSheetFilePath().equals("[]")) { throw new BusinessException("请上传人员信息任免表!"); }
@@ -403,6 +406,11 @@ public class JobShiftController extends GenericController {
 		model.addAttribute("post", post);
 		model.addAttribute("isShift", false);
 		model.addAttribute("head", "降职");
+		Set<String> jobLevelSet = new HashSet<>(Arrays.asList("141","142","150","160"));
+		jobLevelSet.remove(servant.getNowJobLevel().getCode());
+		String j = Arrays.toString(jobLevelSet.toArray());
+		j = j.replace(" ", "");
+		model.addAttribute("jobLevelArray", j.substring(1,j.length()-1));
 		return JOBCHANGE_DEMOTE_PAGE;
 	}
 	
@@ -441,35 +449,18 @@ public class JobShiftController extends GenericController {
 	@ResponseBody
 	@RequestMapping(value = "/operateDemoteFlow")
 	public AjaxResult jobChangeDemoteSave(JobShift jobShift, String opinion, String result,boolean isShift) {
-		
+
 		AjaxResult ajaxResult = new AjaxResult(true);
 		if (!StringUtils.isBlank(jobShift.getId())) {
 			JobShift jobShiftDB = this.jobShiftService.get(jobShift.getId());
 			BeanUtils.copyPropertiesIgnoreNull(jobShift, jobShiftDB);
+			DictUtils.operationCodeInfo(jobShift);//将CodeInfo中id为空的属性 设置为null
 			jobShift = jobShiftDB;
+		}else{
+			DictUtils.operationCodeInfo(jobShift);//将CodeInfo中id为空的属性 设置为null
 		}
+
 		try {
-			
-			
-			//YYDTODO 操作流程前要进行 超编判断,超编则不允许变动,并且返回提示.如果没有超编,则占用编制,继续以下代码
-			//YYDTODO 假如流程取消,则让出编制
-			OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-			String orgId = orgNode.getId();
-			
-			
-			
-			//新职位
-			CodeInfo newPost = codeInfoService.load(jobShift.getNewPostCode().getId());
-			//旧职位
-			CodeInfo formerPost = codeInfoService.load(jobShift.getFormerPostCode().getId());
-			//编控，校验职位编制数是否足够，判断数据能否保存，如果超编，抛出异常
-			JudgePostResult queryJudgePostNum = formationControlService.queryJudgePostNum(orgId, newPost.getCode());
-			//锁定职位调入编控
-			formationControlService.executeLockPostIntoNum(orgId, newPost.getCode(), queryJudgePostNum.isLowToHigh);
-			//锁定职位调出编控
-			formationControlService.executeLockPostOutNum(orgId, formerPost.getCode(), queryJudgePostNum.isLowToHigh);
-			
-			
 			if (StringUtils.isBlank(result) || (!FlowRecord.PASS.equals(result)
 			        && !FlowRecord.NOPASS.equals(result))) { throw new BusinessException("审批结果信息不正确！"); }
 			// 审批职务变动降职
@@ -494,11 +485,15 @@ public class JobShiftController extends GenericController {
 	})
 	public String jobChangeDepose(@PathVariable(value = "servantId") String servantId,
 	        @PathVariable(value = "postId") String postId, Model model) {
-		
 		Servant servant = servantService.get(servantId);
 		Post post = postService.get(postId);
 		model.addAttribute("servant", servant);
 		model.addAttribute("post", post);
+		Set<String> jobLevelSet = new HashSet<>(Arrays.asList("141","142","150","160"));
+		jobLevelSet.remove(servant.getNowJobLevel().getCode());
+		String j = Arrays.toString(jobLevelSet.toArray());
+		j = j.replace(" ", "");
+		model.addAttribute("jobLevelArray", j.substring(1,j.length()-1));
 		return JOBCHANGE_DEPOSE_PAGE;
 	}
 	
@@ -543,22 +538,13 @@ public class JobShiftController extends GenericController {
 		if (!StringUtils.isBlank(jobShiftDepose.getId())) {
 			JobShiftDepose jobShiftDB = this.jobShiftDeposeService.get(jobShiftDepose.getId());
 			BeanUtils.copyPropertiesIgnoreNull(jobShiftDepose, jobShiftDB);
+			DictUtils.operationCodeInfo(jobShiftDepose);//将CodeInfo中id为空的属性 设置为null
 			jobShiftDepose = jobShiftDB;
+		}else{
+			DictUtils.operationCodeInfo(jobShiftDepose);//将CodeInfo中id为空的属性 设置为null
 		}
+
 		try {
-			
-			
-			//YYDTODO 操作流程前要进行 超编判断,超编则不允许变动,并且返回提示.如果没有超编,则占用编制,继续以下代码
-			//YYDTODO 假如流程取消,则让出编制
-			OrganNode orgNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-			String orgId = orgNode.getId();
-			Post prePost = postService.load(jobShiftDepose.getPost().getId());
-			//旧职位
-			CodeInfo formerPost = codeInfoService.load(prePost.getPostCode().getId());
-			//YYDTODO 锁定职位调出编控
-//			formationControlService.executeLockPostOutNum(orgId, formerPost.getCode(), jobShiftDepose.getPost().getIsLowToHigh());
-			
-			
 			if (StringUtils.isBlank(result) || (!FlowRecord.PASS.equals(result)
 			        && !FlowRecord.NOPASS.equals(result))) { throw new BusinessException("审批结果信息不正确！"); }
 			// 审批职务变动降职
@@ -591,6 +577,11 @@ public class JobShiftController extends GenericController {
 		model.addAttribute("isShift", true);
 		model.addAttribute("head", "轮岗");
 		// 和降职使用同一个页面
+		Set<String> jobLevelSet = new HashSet<>(Arrays.asList("141","142","150","160"));
+		jobLevelSet.remove(servant.getNowJobLevel().getCode());
+		String j = Arrays.toString(jobLevelSet.toArray());
+		j = j.replace(" ", "");
+		model.addAttribute("jobLevelArray", j.substring(1,j.length()-1));
 		return JOBCHANGE_DEMOTE_PAGE;
 	}
 	
@@ -609,6 +600,20 @@ public class JobShiftController extends GenericController {
 		model.addAttribute("servant", servant);
 		model.addAttribute("servantId", servantId);
 		return JOBCHANGE_DETIAL_PAGE;
+	}
+
+
+	public static String getCardNoView(String cardNo) {
+
+		if (com.wondersgroup.framework.util.StringUtils.isBlank(cardNo)) {
+			return "";
+		} else {
+			if (cardNo.length() <= 4) {
+				return "XXXX";
+			} else {
+				return com.wondersgroup.framework.util.StringUtils.substring(cardNo, 0, (cardNo.length() - 4)) + "XXXX";
+			}
+		}
 	}
 	
 }

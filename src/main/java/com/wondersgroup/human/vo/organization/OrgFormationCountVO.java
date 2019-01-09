@@ -137,7 +137,7 @@ public class OrgFormationCountVO {
 		this.actualNumber = orgFormation.getActualNumber();
 		this.divisionChiefLevelNumber = orgFormation.getDivisionChiefLevelNumber();
 		this.sectionChiefLevelNumber = orgFormation.getSectionChiefLevelNumber();
-		this.nonLeaderSectionChiefLevelNumber=orgFormation.getNonLeaderSectionChiefLevelNumber();
+//		this.nonLeaderSectionChiefLevelNumber=orgFormation.getNonLeaderSectionChiefLevelNumber();
 		this.notIntoNum=orgFormation.getNotIntoNum();
 		if(orgFormation.getOrgInfo()!=null)
 			this.unitBasicSimpleName=orgFormation.getOrgInfo().getUnitBasicName();

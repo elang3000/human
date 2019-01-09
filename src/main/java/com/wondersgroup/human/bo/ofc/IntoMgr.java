@@ -15,11 +15,15 @@
  */
 package com.wondersgroup.human.bo.ofc;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.ofc.base.BaseIntoMgr;
 
@@ -34,6 +38,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseIntoMgr;
  */
 @Entity
 @Table(name = "A29")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class IntoMgr extends BaseIntoMgr<IntoMgr>{
 
 	/**

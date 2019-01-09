@@ -89,7 +89,7 @@ public class DeathVO {
 		if (d.getServant().getSex() != null) {
 			this.sex = d.getServant().getSex().getName();
 		}
-		this.cardNo = d.getServant().getCardNo();
+		this.cardNo = d.getServant().getCardNoView();
 		this.departName = d.getServant().getDepartName();
 		if (d.getDeathDate() != null) {
 			this.deathDate = sdf.format(d.getDeathDate());

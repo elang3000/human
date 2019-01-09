@@ -43,6 +43,9 @@ import com.wondersgroup.human.bo.ofcflow.LoanTo;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.LoanToService;
 import com.wondersgroup.human.vo.ofcflow.LoanToVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: LoanToController 
@@ -133,6 +136,8 @@ public class LoanToController extends GenericController{
 	 * @return
 	 * @return: Page<LoanToVO>
 	 */
+	@Log(title = "查询借调列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/infoList")
 	public Page<LoanToVO> infoList(String name,String targetOrgan,Integer limit,Integer page) {
@@ -164,6 +169,8 @@ public class LoanToController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "保存借调信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(LoanTo temp){
@@ -206,6 +213,8 @@ public class LoanToController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "备案借调信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/operationFlow")
 	public AjaxResult operationFlow(LoanTo temp, HttpServletRequest request) {
@@ -246,6 +255,8 @@ public class LoanToController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除借调信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id){

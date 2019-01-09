@@ -18,15 +18,21 @@ package com.wondersgroup.human.bo.ofcflow;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.wondersgroup.framework.core.bo.GenericEntity;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
@@ -43,7 +49,10 @@ import com.wondersgroup.human.bo.ofc.Servant;
  * @see       [相关类/方法] 
  * @since     [产品/模块版本]
  */
-@Entity(name = "HUMAN_DEATH")
+@Entity
+@Table(name = "HUMAN_DEATH")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DeathServant extends GenericEntity {
 
 	private static final long serialVersionUID = 2612452347986069583L;

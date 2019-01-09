@@ -39,8 +39,7 @@
 												}
 											});
 										});
-									};
-									
+									};		
 									function getZTreeObj(){
 										return $.fn.zTree.getZTreeObj("treeArea");
 									}
@@ -67,9 +66,9 @@
 									<tr>
 										<smart:tableItem field="orgInfo" width=".2">编控单位</smart:tableItem>
 										<smart:tableItem field="isOpenControl" width=".2">是否进行编控</smart:tableItem>
-										<smart:tableItem field="isLowToHigh" width=".2">是否高职低配</smart:tableItem>
-										<smart:tableItem field="overflowNum" width=".2">编制溢出人数</smart:tableItem>
-										<smart:tableItem field="overflowRule" width=".2">编制溢出规则</smart:tableItem>
+										<smart:tableItem field="isLowToHigh" width=".3">是否高职低配，实职虚用</smart:tableItem>
+										<smart:tableItem field="overflowNum" width=".15">编制溢出人数</smart:tableItem>
+										<smart:tableItem field="overflowRule" width=".15">编制溢出规则</smart:tableItem>
 									</tr>
 								</smart:table>
 							</smart:gridColumn>

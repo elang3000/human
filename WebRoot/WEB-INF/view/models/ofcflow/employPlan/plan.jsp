@@ -24,6 +24,10 @@
 					<smart:fromTokenTag/>
 					<smart:gridRow>
 						<smart:gridRow>
+							<smart:title title="用人机构编制信息" style="margin-top: 5px;" color="blue" />
+						</smart:gridRow>
+						<%@include file="../zhuanRenB/formation.jsp" %>
+						<smart:gridRow>
 							<smart:title title="新增组织招录计划" style="margin-top: 5px;"
 								color="blue" />
 						</smart:gridRow>
@@ -31,73 +35,57 @@
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="年度计划" infovalue="${recruityearplan.name}"></smart:infoShowerLabel>
 								<smart:textInput type="hidden" id="planState" name="planState" value="0"></smart:textInput>
-								<smart:textInput type="hidden" id="id" name="id"  value="${recruitemployplan.id}" ></smart:textInput>
+								<smart:textInput type="hidden" id="id" name="id"  value="${d.id}" ></smart:textInput>
 								<smart:textInput type="hidden" name="yearPlan.id"  value="${recruityearplan.id}" ></smart:textInput>
-								<smart:textInput type="hidden" name="employOrgan.id"  value="${recruitemployplan.employOrgan.id}" ></smart:textInput>
-								<smart:textInput type="hidden" name="recruitOrgan.id"  value="${recruitemployplan.recruitOrgan.id}" ></smart:textInput>
-								<smart:textInput type="hidden" name="allowWeaveNum"  value="${recruitemployplan.allowWeaveNum}" ></smart:textInput>
-								<smart:textInput type="hidden" name="realNum"  value="${recruitemployplan.realNum}" ></smart:textInput>
-								<smart:textInput type="hidden" name="thisYearLackWeaveNum"  value="${recruitemployplan.thisYearLackWeaveNum}" ></smart:textInput>
-								<smart:textInput type="hidden" name="chiefLackWeaveNum"  value="${recruitemployplan.chiefLackWeaveNum}" ></smart:textInput>
+								<smart:textInput type="hidden" name="employOrgan.id"  value="${d.employOrgan.id}" ></smart:textInput>
+								<smart:textInput type="hidden" name="recruitOrgan.id"  value="${d.recruitOrgan.id}" ></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="起止时间" infovalue="${recruityearplan.startDate}至${recruityearplan.endDate}"></smart:infoShowerLabel>
 							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="招录机构" infovalue="${recruitemployplan.recruitOrgan.name}"></smart:infoShowerLabel>
-							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="用人机构" infovalue="${recruitemployplan.employOrgan.name}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="招录机构" infovalue="${d.recruitOrgan.name}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构编制数" infovalue="${recruitemployplan.allowWeaveNum}"></smart:infoShowerLabel>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构实有人数" infovalue="${recruitemployplan.realNum}"></smart:infoShowerLabel>
-							</smart:gridColumn>
-						</smart:gridRow>
-						<smart:gridRow>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="机构缺编数" infovalue="${recruitemployplan.thisYearLackWeaveNum}"></smart:infoShowerLabel>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="处级实职缺编人数" infovalue="${recruitemployplan.chiefLackWeaveNum}"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="用人机构" infovalue="${d.employOrgan.name}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
 								<smart:singleSelect display="block"
-									labelName="编制类型:" initSelectedKey="${recruitemployplan.recuritType.id}"   name="recuritType.id"  url="dictquery/sub/id/EMPLOY_TYPE/null"></smart:singleSelect>
+									labelName="编制类型:" initSelectedKey="${d.recuritType.id}"   name="recuritType.id"  url="dictquery/sub/id/EMPLOY_TYPE/null"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:numberInput display="block" isNotNull="true" verify="required" name="planEmployNum" max="500" min="1" value="${recruitemployplan.planEmployNum}" type="text" labelName="计划招录人数:" placeholder="计划招录人数"></smart:numberInput>
+								<smart:numberInput display="block" isNotNull="true" verify="required" name="planEmployNum" max="500" min="1" value="${d.planEmployNum}" type="text" labelName="计划招录人数:" placeholder="计划招录人数"></smart:numberInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:numberInput display="block" name="planCutNum"  value="${recruitemployplan.planCutNum}" max="500" min="0" type="text" labelName="机构计划减员人数:" placeholder="机构计划减员人数"></smart:numberInput>
-							</smart:gridColumn>
-						</smart:gridRow>
-						<smart:gridRow>
-							<smart:gridColumn colPart="4">
-								<smart:singleSelect display="block" initSelectedKey="${recruitemployplan.personType.id}" labelName="人员类别:" name="personType.id" url="dictquery/sub/code/DM199/1"></smart:singleSelect>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="联系人:" value="${recruitemployplan.contacter}" name="contacter" placeholder=" 联系人"></smart:textInput>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="联系电话:" value="${recruitemployplan.contactPhone}" name="contactPhone" placeholder="联系电话"></smart:textInput>
+								<smart:numberInput shortName="计划减员人数" display="block" name="planCutNum"  value="${d.planCutNum}" max="500" min="0" type="text" labelName="机构计划减员人数:" placeholder="机构计划减员人数"></smart:numberInput>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="通讯地址:"  value="${recruitemployplan.contactAddress}" name="contactAddress" placeholder="通讯地址"></smart:textInput>
+								<smart:singleSelect display="block" initSelectedKey="${d.personType.id}" labelName="人员类别:" name="personType.id" url="dictquery/sub/code/DM199/1"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="咨询电话:" value="${recruitemployplan.consultPhone}" name="consultPhone" placeholder="咨询电话"></smart:textInput>
+								<smart:textInput labelName="联系人:" value="${d.contacter}" name="contacter" placeholder=" 联系人"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="备注:" value="${recruitemployplan.remark}" name="remark" placeholder="备注"></smart:textInput>
+								<smart:textInput labelName="联系电话:" value="${d.contactPhone}" name="contactPhone" placeholder="联系电话"></smart:textInput>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="4">
+								<smart:textInput labelName="通讯地址:"  value="${d.contactAddress}" name="contactAddress" placeholder="通讯地址"></smart:textInput>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:textInput labelName="咨询电话:" value="${d.consultPhone}" name="consultPhone" placeholder="咨询电话"></smart:textInput>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="8">
+								<smart:textarea name="remark" labelName="备注" display="block">${d.remark}</smart:textarea>
 							</smart:gridColumn>
 						</smart:gridRow>
 					</smart:gridRow>
@@ -113,7 +101,7 @@
 									theme="default">
 									<smart:icon icon="plus">&nbsp;暂存</smart:icon>
 								</smart:button>
-								<smart:button theme="warm" size="sm" method="goBack" title="返回">
+								<smart:button theme="primary" size="sm" method="goBack" title="返回">
 									<smart:icon icon="reply">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>

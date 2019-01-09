@@ -27,7 +27,7 @@
 										<smart:singleSelect isAddDefaltOption="true"  name="registrationCode.id" labelName="公务员登记标识：" display="block" url="dictquery/sub/code/DM084" initSelectedKey="${registration.registrationCode.id}"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect isAddDefaltOption="true"  name="manageCode.id" labelName="列入公务员法实施范围管理类别标识：" display="block" url="dictquery/sub/code/DM085" initSelectedKey="${registration.manageCode.id}"></smart:singleSelect>
+										<smart:singleSelect isAddDefaltOption="true"  name="manageCode.id" labelName="列入公务员法实施范围管理类别标识：" shortName="公务员法标识" display="block" url="dictquery/sub/code/DM085" initSelectedKey="${registration.manageCode.id}"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:date labelName="公务员登记日期：" display="block" name="registrationDate" id="registrationDate" value="${registration.registrationDate}"></smart:date>

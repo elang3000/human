@@ -16,7 +16,7 @@
 						<smart:textInput type="hidden" name="reportCode" value="${reportCode}"></smart:textInput>
 						<smart:gridRow>
 							<smart:gridColumn colPart="5" colOffset="3">
-								<smart:linkSelect labelName="填报单位：" id="organNodeIdTag" display="block" />
+								<smart:linkSelect isNotNull="true" labelName="填报单位：" id="organNodeIdTag" display="block" />
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>

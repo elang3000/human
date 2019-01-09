@@ -19,8 +19,8 @@
 				</smart:breadcrumbNavMenu>
 			</smart:cardHead>
 			<smart:cardBody>
-				<smart:gridRow>
-					<smart:form id="editForm">
+				<smart:form id="editForm">
+					<smart:gridRow>
 						<smart:textInput name="id" value="${p.id}" type="hidden"></smart:textInput>
 						<smart:textInput name="result" id="result" type="hidden"></smart:textInput>
 						<smart:textInput name="draftServant.id" value="${d.id}" type="hidden"></smart:textInput>
@@ -58,18 +58,18 @@
 								<smart:infoShowerLabel infoname="政治面貌" infovalue="${d.politics.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否退役士兵" infovalue="${d.isRetiredSoldier.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="退役士兵" infoname="是否退役士兵" infovalue="${d.isRetiredSoldier.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否退役大学生士兵" infovalue="${d.isRetiredCollegeStudentSoldier.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="退役大学生士兵 " infoname="是否退役大学生士兵" infovalue="${d.isRetiredCollegeStudentSoldier.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否残疾人" infovalue="${d.isdisabled.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="残疾人 " infoname="是否残疾人" infovalue="${d.isdisabled.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否有海外留学经历" infovalue="${d.isStudyAbroad.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="海外留学经历" infoname="是否有海外留学经历" infovalue="${d.isStudyAbroad.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -77,7 +77,7 @@
 								<smart:infoShowerLabel infoname="留学年限" infovalue="${d.studyAbroadTime }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否有海外工作经历" infovalue="${d.isWorkAbroad.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="海外工作经历" infoname="是否有海外工作经历" infovalue="${d.isWorkAbroad.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="海外工作年限" infovalue="${d.workAbroadTime }"></smart:infoShowerLabel>
@@ -104,24 +104,24 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="录用考试准考证号" infovalue="${d.ticketId }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="录用准考证" infoname="录用考试准考证号" infovalue="${d.ticketId }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="专业能力测试成绩" infovalue="${d.aptitudeTestScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="专业能力成绩" infoname="专业能力测试成绩" infovalue="${d.aptitudeTestScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="公共科目笔试成绩" infovalue="${d.publicSubjectTestScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="公科笔试成绩" infoname="公共科目笔试成绩" infovalue="${d.publicSubjectTestScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="笔试（行政职业能力测试）成绩" infovalue="${d.writtenExamTestScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="笔试（行政职业能力测试）成绩" shortName="行政职能成绩" infovalue="${d.writtenExamTestScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="笔试（申论）成绩" infovalue="${d.explainingScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="申论成绩" infoname="笔试（申论）成绩" infovalue="${d.explainingScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="笔试（专业科目）成绩" infovalue="${d.professionalSubjectScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="专业科目成绩" infoname="笔试（专业科目）成绩" infovalue="${d.professionalSubjectScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -162,12 +162,12 @@
 								<smart:infoShowerLabel infoname="免基层实习" infovalue="${d.isBasePractice.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="所在单位意见时间" infovalue="${d.deptOpinionDate }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="所在单位意见时间" shortName="单位意见时间" infovalue="${d.deptOpinionDate }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="上级主管单位意见时间" infovalue="${d.unitOpinionDate }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="上级主管单位意见时间" shortName="上级意见时间" infovalue="${d.unitOpinionDate }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="录用标识" infovalue="${d.employResult.name }"></smart:infoShowerLabel>
@@ -183,7 +183,7 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="录用鉴定（评语）" infovalue="${d.employComment }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="录用鉴定（评语）" shortName="录用评语" infovalue="${d.employComment }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<c:if test="${'1' eq p.isDelay}">
@@ -223,12 +223,16 @@
 								<smart:gridColumn colPart="4">
 									<smart:infoShowerLabel infoname="入职转正日期" infovalue="${p.formalDate}"></smart:infoShowerLabel>
 								</smart:gridColumn>
-								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="入职转正批准文号" infovalue="${p.formalNumber}"></smart:infoShowerLabel>
-								</smart:gridColumn>
-								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="试用期满考核结论" infovalue="${p.checkResult.name}"></smart:infoShowerLabel>
-								</smart:gridColumn>
+								<c:if test="${p.status==2}">
+									<smart:gridColumn colPart="4">
+										<smart:textInput labelName="公务员登记号" isNotNull="true" verify="required" value="${p.formalNumber}" name="formalNumber"></smart:textInput>
+									</smart:gridColumn>
+								</c:if>
+								<c:if test="${p.status>2}">
+									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="公务员登记号" infovalue="${p.formalNumber}"></smart:infoShowerLabel>
+									</smart:gridColumn>
+								</c:if>
 							</smart:gridRow>
 						</c:if>
 						<c:if test="${p.probationStatus.code==2}">
@@ -264,45 +268,49 @@
 						</c:if>
 						<c:if test="${isFlow}">
 							<smart:gridRow>
-								<smart:gridColumn colPart="4">
-									<smart:textInput labelName="审批意见:" name="opinion" id="opinion" placeholder="审批意见"></smart:textInput>
+								<smart:gridColumn colPart="12">
+									<smart:textarea name="opinion" id="opinion" labelName="审批意见" display="block"></smart:textarea>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</c:if>
-					</smart:form>
-				</smart:gridRow>
-				<smart:gridRow>
-					<smart:line color="blue" />
-					<smart:gridColumn colPart="4" deviceType="md" colOffset="4">
-						<smart:buttonGroup container="true">
-							<c:if test="${isFlow}">
-								<c:if test="${p.probationStatus.code==1||p.probationStatus.code==2}">
-									<smart:button method="pass" size="sm" title="审批通过"
-										theme="normal">
-										<smart:icon icon="check">&nbsp;审批通过</smart:icon>
-									</smart:button>
-									<smart:button method="noPass" size="sm" title="审批不通过"
-										theme="danger">
-										<smart:icon icon="refresh">&nbsp;审批不通过</smart:icon>
-									</smart:button>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:line color="blue" />
+						<smart:gridColumn colPart="4" deviceType="md" colOffset="4">
+							<smart:buttonGroup container="true">
+								<c:if test="${isFlow}">
+									<c:if test="${p.probationStatus.code==1||p.probationStatus.code==2}">
+										<smart:button id="pass" other="lay-submit" size="sm" title="审批通过"
+											theme="normal">
+											<smart:icon icon="check">&nbsp;审批通过</smart:icon>
+										</smart:button>
+										<smart:button method="noPass" size="sm" title="审批驳回"
+											theme="warm">
+											<smart:icon icon="refresh">&nbsp;审批驳回</smart:icon>
+										</smart:button>
+										<smart:button method="stopPass" size="sm" title="审批不通过"
+											theme="danger">
+											<smart:icon icon="minus-circle">&nbsp;审批不通过</smart:icon>
+										</smart:button>
+									</c:if>
+									<c:if test="${p.probationStatus.code==3||p.probationStatus.code==4}">
+										<smart:button method="pass" size="sm" title="确认"
+											theme="normal">
+											<smart:icon icon="check">&nbsp;确认</smart:icon>
+										</smart:button>
+									</c:if>
 								</c:if>
-								<c:if test="${p.probationStatus.code==3||p.probationStatus.code==4}">
-									<smart:button method="pass" size="sm" title="确认"
-										theme="normal">
-										<smart:icon icon="check">&nbsp;确认</smart:icon>
-									</smart:button>
-								</c:if>
-							</c:if>
-							<smart:button theme="warm" size="sm" method="back" title="返回">
-								<smart:icon icon="reply">&nbsp;返回</smart:icon>
-							</smart:button>
-						</smart:buttonGroup>
-					</smart:gridColumn>
-				</smart:gridRow>
+								<smart:button theme="primary" size="sm" method="back" title="返回">
+									<smart:icon icon="reply">&nbsp;返回</smart:icon>
+								</smart:button>
+							</smart:buttonGroup>
+						</smart:gridColumn>
+					</smart:gridRow>
+				</smart:form>
 			</smart:cardBody>
 		</smart:card>
 	</smart:grid>
-	<smart:scriptHead models="element,upload">
+	<smart:scriptHead models="element,upload,form">
 		<smart:fileUploadUtils/>
 		<smart:buttonScriptAction>
 			pass : function() {
@@ -320,13 +328,38 @@
 				});
 			},
 			noPass : function() {
-				$("#result").val("0");//审批不通过
+				$("#result").val("0");//审批驳回
 				if(!$("#opinion").val()){
-					$("#opinion").val("不同意");
+					smart.message({
+						message : "请输入审批驳回意见！",
+						type : 'W' //S保存  I问号  W感叹号 E错误
+					});
+					return;
+				}
+				smart.confirm({
+					title:'确认审批驳回',
+					message:'确认审批驳回至上一办理人员？',
+					url:'ofcflow/probation/operationFlow',
+					params : smart.json("#editForm"),
+					callback : function(){
+						parent.layui.table.reload('navigationList');
+						var index=parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+					}
+				});
+			},
+			stopPass : function() {
+				$("#result").val("-1");//审批不通过
+				if(!$("#opinion").val()){
+					smart.message({
+						message : "请输入审批不通过意见！",
+						type : 'W' //S保存  I问号  W感叹号 E错误
+					});
+					return;
 				}
 				smart.confirm({
 					title:'确认审批不通过',
-					message:'确认审批不通过吗？',
+					message:'确认审批不通过，结束业务办理？',
 					url:'ofcflow/probation/operationFlow',
 					params : smart.json("#editForm"),
 					callback : function(){
@@ -341,6 +374,20 @@
 				parent.layer.close(index);
 			}
 		 </smart:buttonScriptAction>
+		 form.on('submit(pass)', function (data) {//表单保存
+				$("#result").val("1");//审批通过
+				smart.confirm({
+					title:'确认审批通过',
+					message:'确认审批通过吗？',
+					url:'ofcflow/probation/operationFlow',
+					params : smart.json("#editForm"),
+					callback : function(){
+						parent.layui.table.reload('navigationList');
+						var index=parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+					}
+				});
+			});
 	</smart:scriptHead>
 </smart:body>
 </html>

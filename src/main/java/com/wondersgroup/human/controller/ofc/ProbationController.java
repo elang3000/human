@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.ProbationService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.ProbationVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: EmployController
@@ -100,6 +103,8 @@ public class ProbationController extends GenericController {
 	 * @param temp 试用信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑试用信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Probation temp) {
@@ -131,6 +136,8 @@ public class ProbationController extends GenericController {
 	 * @param temp 试用信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除试用信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

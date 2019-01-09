@@ -31,7 +31,43 @@
 					</c:if>
 					<smart:textInput type="hidden" name="result" id="result"></smart:textInput>
 					<smart:gridRow>
-						<smart:title title="公务员基本信息" style="margin-top: 5px;" color="blue" />
+						<smart:title title="机构编制信息" style="margin-top: 5px;" color="blue" />
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="机构编制数" infovalue="${d.allowWeaveNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="机构实有人数" infovalue="${d.realNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="机构缺编数" infovalue="${d.thisYearLackWeaveNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="处级实职缺编人数" shortName="处级实职缺编数" infovalue="${d.chiefLackWeaveNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级(领导)实职缺编人数" infovalue="${d.vacancySectionChiefLevelNumber}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级(非领导)实职缺编人数" infovalue="${d.vacancyNonLeaderSectionChiefLevelNumber}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级领导未调入数 " infovalue="${d.notIntoSectionChiefNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级非领导未调入数" infovalue="${d.notIntoDeputySectionChiefNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="尚未调入人数" infovalue="${d.notIntoNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:title title="人员基本信息" style="margin-top: 5px;" color="blue" />
 					</smart:gridRow>
 					<smart:gridRow>
 						<smart:gridColumn colPart="8">
@@ -79,7 +115,7 @@
 						<smart:gridColumn colPart="3" colOffset="1">
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<img alt="照片" src="static/image/20170705135600.jpg">
+									<img style="width:150px;height:200px;min-width:150px;min-height:200px;" alt="照片" src="ftp/getImg?imgName=${s.photoPath}">
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:gridColumn>
@@ -180,8 +216,8 @@
 					<c:if test="${isFlow}">
 						<c:if test="${d.status<6 }">
 							<smart:gridRow>
-								<smart:gridColumn colPart="4">
-									<smart:textInput labelName="审批意见:" name="opinion" placeholder="审批意见"></smart:textInput>
+								<smart:gridColumn colPart="12">
+									<smart:textarea name="opinion" id="opinion" labelName="审批意见" display="block"></smart:textarea>
 								</smart:gridColumn>
 							</smart:gridRow>
 						</c:if>
@@ -201,13 +237,13 @@
 										</smart:button>
 									</c:if>
 									<c:if test="${d.status==6 }">
-										<smart:button method="pass" size="sm" title="同意"
+										<smart:button id="confirm" other="lay-submit" size="sm" title="同意"
 												theme="normal">
 											<smart:icon icon="check">&nbsp;同意</smart:icon>
 										</smart:button>
 									</c:if>
 									<c:if test="${d.status==7 }">
-										<smart:button method="pass" size="sm" title="确认"
+										<smart:button id="save" other="lay-submit" size="sm" title="确认"
 												theme="normal">
 											<smart:icon icon="check">&nbsp;确认</smart:icon>
 										</smart:button>
@@ -254,6 +290,13 @@
 			},
 			noPass : function() {
 				$("#result").val("0");//审批不通过
+				if(!$("#opinion").val()){
+					smart.message({
+						message : "请输入审批不通过意见！",
+						type : 'W' //S保存  I问号  W感叹号 E错误
+					});
+					return;
+				}
 				smart.confirm({
 					title:'确认审批不通过',
 					message:'确认审批不通过吗？',
@@ -288,6 +331,44 @@
 				parent.layer.close(index);
 			}
 		</smart:buttonScriptAction>
+		form.on('submit(save)', function (data) {//表单保存
+			$("#result").val("1");//审批通过
+				smart.confirm({
+					title:'确认审批通过',
+					message:'确认审批通过吗？',
+					<c:if test="${d.areaType eq '1' }">
+						url:'ofcflow/exchange/operationFlow',
+					</c:if>
+					<c:if test="${d.areaType eq '2' }">
+						url:'ofcflow/exchange/operationFlowOuter',
+					</c:if>
+					params : smart.json("#editForm"),
+					callback : function(){
+						parent.layui.table.reload('navigationList');
+						var index=parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+					}
+				});
+		});
+		form.on('submit(confirm)', function (data) {//表单保存
+			$("#result").val("1");//审批通过
+				smart.confirm({
+					title:'确认审批通过',
+					message:'确认审批通过吗？',
+					<c:if test="${d.areaType eq '1' }">
+						url:'ofcflow/exchange/operationFlow',
+					</c:if>
+					<c:if test="${d.areaType eq '2' }">
+						url:'ofcflow/exchange/operationFlowOuter',
+					</c:if>
+					params : smart.json("#editForm"),
+					callback : function(){
+						parent.layui.table.reload('navigationList');
+						var index=parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+					}
+				});
+		});
 	</smart:scriptHead>
 </smart:body>
 </html>

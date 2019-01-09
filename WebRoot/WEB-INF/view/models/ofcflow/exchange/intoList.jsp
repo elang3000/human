@@ -67,14 +67,14 @@
 							height="full-210" text="未获取到数据！">
 							<tr>
 								<smart:tableItem field="name" width=".1" sort="true">姓名</smart:tableItem>
-								<smart:tableItem field="cardNo" width=".2" sort="false">身份证号</smart:tableItem>
+								<smart:tableItem field="cardNo" width=".15" sort="false">身份证号</smart:tableItem>
 								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
 								<smart:tableItem field="birthDate" width=".1" sort="true">出生日期</smart:tableItem>
 								<smart:tableItem field="nation" width=".1" sort="true">民族</smart:tableItem>
 								<smart:tableItem field="personType" width=".1" sort="false">人员类别</smart:tableItem>
 								<smart:tableItem field="sourceOrganName" width=".1" sort="false">原工作单位</smart:tableItem>
 								<smart:tableItem field="statusName" width=".1" sort="false">状态</smart:tableItem>
-								<smart:tableItem align="center" fixed="right" width=".1" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
+								<smart:tableItem align="center" fixed="right" width=".15" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<script type="text/html" id="navListToolBar">
 										{{#  if(d.status=="0"){ }}

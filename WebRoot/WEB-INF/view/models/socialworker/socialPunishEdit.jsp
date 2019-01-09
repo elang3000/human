@@ -22,11 +22,11 @@
 									</smart:gridColumn>
 								</smart:gridRow>
 								
-								<smart:gridRow>
+								 <%-- <smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="category" labelName="奖惩类别：" inputName="category.id" codeTypeCode="DM019" inputVal="${punish.category.id}" valType="ID" widthPercent="0.3333" verify="required" isNotNull="true"/>
+										<smart:continuousSelect id="category" labelName="奖惩类别：" inputName="category.id" codeTypeCode="DM019" inputVal="${punish.category.id}" valType="ID" widthPercent="0.5" verify="required" isNotNull="true"/>
 									</smart:gridColumn>
-								</smart:gridRow>
+								</smart:gridRow>  --%>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
@@ -60,13 +60,13 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:date labelName="解除日期：" display="block" name="punishRevokeDate" id="punishApprovalDate" value="${punish.punishRevokeDate}"></smart:date>
+										<smart:date labelName="解除日期：" display="block" name="punishRevokeDate" id="punishRevokeDate" value="${punish.punishRevokeDate}" verify="required" isNotNull="true"></smart:date>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect labelName="处分标志：" name="punishIdentification.id" display="block" url="dictquery/sub/code/DM063" isAddDefaltOption="true" initSelectedKey="${punish.punishIdentification.id }"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="是否受处分：" name="punishmentIdentification.id" display="block" url="dictquery/sub/code/0132" isAddDefaltOption="true" initSelectedKey="${punish.punishmentIdentification.id }"></smart:singleSelect>
+										<smart:singleSelect labelName="是否受处分：" name="punishmentIdentification.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${punish.punishmentIdentification.id }"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow>
 							</smart:grid>

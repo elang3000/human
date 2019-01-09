@@ -18,6 +18,7 @@ package com.wondersgroup.human.bo.ofc;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,9 +28,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.ofc.base.BaseServant;
 
 /**
@@ -42,6 +46,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseServant;
  * @since     [产品/模块版本]
  */
 @Entity(name = "A01")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Servant extends BaseServant<Servant> {
 	
 	private static final long serialVersionUID = -3546598474369158295L;
@@ -324,6 +330,14 @@ public class Servant extends BaseServant<Servant> {
 	
 	@Transient
 	private String graduateDateStr;
+	
+	/**
+	 * @fieldName: cardNoView
+	 * @fieldType: java.lang.String
+	 * @Description: 公务员身份证号加密显示。
+	 */
+	@Transient
+	private String cardNoView;
 	
 	public String getGrowPlaceName() {
 		
@@ -638,29 +652,38 @@ public class Servant extends BaseServant<Servant> {
 		
 		this.departId = departId;
 	}
-
 	
 	public CodeInfo getTopEducationCode() {
 		
 		return topEducationCode;
 	}
-
 	
 	public void setTopEducationCode(CodeInfo topEducationCode) {
 		
 		this.topEducationCode = topEducationCode;
 	}
-
 	
 	public CodeInfo getTopDegreeCode() {
 		
 		return topDegreeCode;
 	}
-
 	
 	public void setTopDegreeCode(CodeInfo topDegreeCode) {
 		
 		this.topDegreeCode = topDegreeCode;
 	}
 	
+	public String getCardNoView() {
+		
+		if (StringUtils.isBlank(this.getCardNo())) {
+			return "";
+		} else {
+			if (this.getCardNo().length() <= 4) {
+				return "XXXX";
+			} else {
+				this.cardNoView = StringUtils.substring(this.getCardNo(), 0, (this.getCardNo().length() - 4)) + "XXXX";
+				return cardNoView;
+			}
+		}
+	}
 }

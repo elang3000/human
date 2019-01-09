@@ -2,32 +2,41 @@ package com.wondersgroup.human.controller.ofcflow;
 
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.exception.BusinessException;
+import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.util.BeanUtils;
-import com.wondersgroup.framework.util.EventManager;
 import com.wondersgroup.framework.util.SecurityUtils;
 import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.DeathServant;
-import com.wondersgroup.human.bo.record.HumanKeepRecord;
+import com.wondersgroup.human.bo.organization.FormationControl;
 import com.wondersgroup.human.dto.ofcflow.DeathServantQueryParam;
-import com.wondersgroup.human.dto.record.HumankeepRecordDTO;
-import com.wondersgroup.human.event.record.ServantHumamKeepRecordEvent;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.DeathServantService;
+import com.wondersgroup.human.vo.ofc.ServantVO;
 import com.wondersgroup.human.vo.ofcflow.DeathVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * 死亡流程控制类
@@ -53,21 +62,24 @@ public class DeathController extends GenericController {
 	
 	@Autowired
 	private FlowRecordService flowRecordService;
+	
+	@Autowired
+	private DictableService dictableService;
 
 	// 页面路径--人员列表
-	private final String DEATH_INDEX = "models/ofcflow/death/index";
+	private final String DEATH_INDEX = "models/ofcflow/death/servantList";
 
 	// 页面路径--死亡人员填写
 	private final String DEATH = "models/ofcflow/death/death";
 	
 	// 页面路径--死亡人员流程页面
-	private final String DEATH_EMPLOYPLAN_FLOW = "models/ofcflow/death/flow";
+	private final String DEATH_EMPLOYPLAN_FLOW = "models/ofcflow/employPlan/flow";
 	
 	// 页面路径--死亡人员流程页面
 	private final String DEATH_FLOW = "models/ofcflow/death/deathFlow";
 	
 	// 页面路径--死亡人员流程页面
-	private final String DEATH_LIST = "models/ofcflow/death/deathList";
+	private final String DEATH_LIST = "models/ofcflow/death/index";
 
 	// 页面路径--死亡人员流程页面
 	private final String DEATH_DETAIL = "models/ofcflow/death/deathDetail";
@@ -81,7 +93,7 @@ public class DeathController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
-	@RequestMapping("/index")
+	@RequestMapping("/servantList")
 	public String index(Model model) {
 		OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
 		model.addAttribute("oragn", x);
@@ -96,6 +108,8 @@ public class DeathController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "新增死亡信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.INSERT,
+		     isSaveRequestData = true)
 	@RequestMapping("/death")
 	public String death(String servantId, Model model) {
 
@@ -111,6 +125,8 @@ public class DeathController extends GenericController {
 	 * @param temp死亡信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "审批死亡流程", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/operationFlow")
 	public AjaxResult operationFlow(DeathServant temp, HttpServletRequest request) {
@@ -176,11 +192,11 @@ public class DeathController extends GenericController {
 	 * 死亡人员列表
 	 * 
 	 * @Title: deathList
-	 * @Description: 死亡人员列表
+	 * @Description: 死亡人员列表页面
 	 * @return
 	 * @return: String
 	 */
-	@RequestMapping("/list")
+	@RequestMapping("/index")
 	public String deathList() {
 		return DEATH_LIST;
 	}
@@ -193,6 +209,8 @@ public class DeathController extends GenericController {
 	 * @param page页码
 	 * @return: Page<DeathVO>
 	 */
+	@Log(title = "查询死亡列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<DeathVO> pageList(DeathServantQueryParam param, Integer limit, Integer page) {
@@ -208,6 +226,8 @@ public class DeathController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "查看死亡详情", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/deathDetail")
 	public String DeathDetail(String id, Model model) {
 		DeathServant d = deathServantService.get(id);
@@ -238,5 +258,50 @@ public class DeathController extends GenericController {
 			result.setMessage("发起失败！");
 		}
 		return result;
+	}
+	
+	/**
+	 * @Title: getServantList
+	 * @Description: 死亡选择人员列表
+	 * @return: Page<ServantVO>
+	 */
+	@Log(title = "查询人员列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
+	@ResponseBody
+	@RequestMapping("/getServantList")
+	public Page<ServantVO> pageListWithCheckBox(Servant servant, Integer limit, Integer page) {
+		OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
+		detachedCriteria.add(Restrictions.eq("departId", x.getId()));//登录人单位
+		
+		if (StringUtils.isNotBlank(servant.getName())) {
+			detachedCriteria.add(Restrictions.like("name", servant.getName(), MatchMode.ANYWHERE));
+		}
+		if (StringUtils.isNotBlank(servant.getCardNo())) {// 身份证
+			detachedCriteria.add(Restrictions.eq("cardNo", servant.getCardNo()));
+		}
+		if (servant.getSex() != null && StringUtils.isNotBlank(servant.getSex().getId())) {// 性别
+			detachedCriteria.add(Restrictions.eq("sex.id", servant.getSex().getId()));
+		}
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
+		detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
+		detachedCriteria.addOrder(Order.desc("reportDate"));
+		detachedCriteria.add(Restrictions.eq("removed", false));
+		
+		CodeInfo director =dictableService.getCodeInfoByCode(FormationControl.DIRECTOR, "GBT_12407_2008");//正处
+		CodeInfo deputyDirector =dictableService.getCodeInfoByCode(FormationControl.DEPUTY_DIRECTOR, "GBT_12407_2008");//副处
+		detachedCriteria.add(Restrictions.not(Restrictions.in("nowJobLevel", director,deputyDirector)));//不能处理处级人员的数据
+		
+		DetachedCriteria dc = DetachedCriteria.forClass(DeathServant.class);
+		//添加DeathServant实体的查询条件
+		dc.add(Restrictions.eq("removed", false));
+		//设置这个表的查询结果。注意servant.id为实体映射文件中对应的字段，不是数据库中的列名
+		dc.setProjection(Property.forName("servant.id"));
+		//关联两个实体的关系
+		detachedCriteria.add(Property.forName("id").notIn(dc));
+		
+		Page<ServantVO> pageInfo = servantService.getPage(detachedCriteria,page,limit);
+		return pageInfo;
 	}
 }

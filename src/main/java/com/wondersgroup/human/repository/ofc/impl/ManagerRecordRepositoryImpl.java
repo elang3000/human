@@ -102,36 +102,33 @@ public class ManagerRecordRepositoryImpl extends GenericRepositoryImpl<ManagerRe
 
 		//进
 		sql.append("left join  ");
-		sql.append("(select departId,count(ir.item_type) as aaa from b01 b11 ");//开始
-		sql.append("join a01 a1 on b11.organid = a1.departId ");
-		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("(select b11.organid as org,count(ir.item_type) as aaa from b01 b11 ");//开始
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.ORGAN_ID = b11.organid ");
 		sql.append("where ir.removed = 'N' and ir.item_type = 0 "); //0-进
 		if(year!=null){
 			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
 		}
-		sql.append("group by departId) A on A.departId = b1.organid ");//结束
+		sql.append("group by b11.organid) A on A.org = b1.organid ");//结束
 		
 		//出
 		sql.append("left join  ");
-		sql.append("(select departId,count(ir.item_type) as bbb from b01 b11 ");//开始
-		sql.append("join a01 a1 on b11.organid = a1.departId ");
-		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("(select b11.organid as org,count(ir.item_type) as bbb from b01 b11 ");//开始
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.ORGAN_ID = b11.organid ");
 		sql.append("where ir.removed = 'N' and ir.item_type = 1 "); //0-出
 		if(year!=null){
 			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
 		}
-		sql.append("group by departId) B on B.departId = b1.organid ");//结束
+		sql.append("group by b11.organid) B on B.org = b1.organid ");//结束
 		
 		//管理
 		sql.append("left join  ");
-		sql.append("(select departId,count(ir.item_type) as ccc from b01 b11 ");//开始
-		sql.append("join a01 a1 on b11.organid = a1.departId ");
-		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("(select b11.organid as org,count(ir.item_type) as ccc from b01 b11 ");//开始
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.ORGAN_ID = b11.organid ");
 		sql.append("where ir.removed = 'N' and ir.item_type = 2 "); //0-管理
 		if(year!=null){
 			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
 		}
-		sql.append("group by departId) C on C.departId = b1.organid ");//结束
+		sql.append("group by b11.organid) C on C.org = b1.organid ");//结束
 		
 		
 		sql.append("where removed = 'N' ");
@@ -175,37 +172,33 @@ public class ManagerRecordRepositoryImpl extends GenericRepositoryImpl<ManagerRe
 
 		//进
 		sql.append("left join  ");
-		sql.append("(select departId,count(ir.item_type) as aaa from b01 b11 ");//开始
-		sql.append("join a01 a1 on b11.organid = a1.departId ");
-		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("(select b11.organid as org,count(ir.item_type) as aaa from b01 b11 ");//开始
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.ORGAN_ID = b11.organid ");
 		sql.append("where ir.removed = 'N' and ir.item_type = 0 "); //0-进
 		if(year!=null){
 			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
 		}
-		sql.append("group by departId) A on A.departId = b1.organid ");//结束
+		sql.append("group by b11.organid) A on A.org = b1.organid ");//结束
 		
 		//出
 		sql.append("left join  ");
-		sql.append("(select departId,count(ir.item_type) as bbb from b01 b11 ");//开始
-		sql.append("join a01 a1 on b11.organid = a1.departId ");
-		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("(select b11.organid as org,count(ir.item_type) as bbb from b01 b11 ");//开始
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.ORGAN_ID = b11.organid ");
 		sql.append("where ir.removed = 'N' and ir.item_type = 1 "); //0-出
 		if(year!=null){
 			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
 		}
-		sql.append("group by departId) B on B.departId = b1.organid ");//结束
+		sql.append("group by b11.organid) B on B.org = b1.organid ");//结束
 		
 		//管理
 		sql.append("left join  ");
-		sql.append("(select departId,count(ir.item_type) as ccc from b01 b11 ");//开始
-		sql.append("join a01 a1 on b11.organid = a1.departId ");
-		sql.append("join HUMAN_ITEM_RECORD ir on ir.servant_id = a1.id ");
+		sql.append("(select b11.organid as org,count(ir.item_type) as ccc from b01 b11 ");//开始
+		sql.append("join HUMAN_ITEM_RECORD ir on ir.ORGAN_ID = b11.organid ");
 		sql.append("where ir.removed = 'N' and ir.item_type = 2 "); //0-管理
 		if(year!=null){
 			sql.append("and ir.RECORD_TIME between :start and :end ");//时间
 		}
-		sql.append("group by departId) C on C.departId = b1.organid ");//结束
-		
+		sql.append("group by b11.organid) C on C.org = b1.organid ");//结束
 		
 		sql.append("where removed = 'N' ");
 		sql.append("and organid = :departId ");

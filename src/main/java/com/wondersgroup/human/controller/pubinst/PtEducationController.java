@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.service.pubinst.PtEducationService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PtEducationVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: EducationController
@@ -83,6 +86,8 @@ public class PtEducationController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<PostVO>
 	 */
+	@Log(title = "查询信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<PtEducationVO> pageList(String Id, Integer limit, Integer page) {
@@ -100,6 +105,8 @@ public class PtEducationController extends GenericController {
 	 * @param temp 学历信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑学历信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(PtEducation temp) {
@@ -132,6 +139,8 @@ public class PtEducationController extends GenericController {
 	 * @param temp 学历信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除学历信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

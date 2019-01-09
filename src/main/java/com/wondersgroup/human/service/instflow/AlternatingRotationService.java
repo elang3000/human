@@ -15,9 +15,14 @@
  */
 package com.wondersgroup.human.service.instflow;
 
+import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.instflow.AlternatingRotation;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.instflow.AlternatingRotationQueryParam;
+import com.wondersgroup.human.dto.instflow.InfoRegisterQueryParam;
+import com.wondersgroup.human.vo.instflow.AlternatingRotationVO;
+import com.wondersgroup.human.vo.instflow.MemberInfoRegisterVO;
 
 /** 
  * @ClassName: AlternatingRotationService 
@@ -54,7 +59,15 @@ public interface AlternatingRotationService extends GenericService<AlternatingRo
 	 */
 	public boolean operationAlterFlag(PublicInstitution publicInstitution);
 	
-	
+	/** 
+	 * @Title: pageList 
+	 * @param resignVO
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<ResignVO>
+	 */
+	Page<AlternatingRotationVO> pageList(AlternatingRotationQueryParam param, Integer page, Integer limit);
 	
 	
 }

@@ -15,8 +15,6 @@
 
 package com.wondersgroup.system.controller.security;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -24,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -33,21 +30,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 import com.wondersgroup.framework.organization.bo.OrganNode;
+import com.wondersgroup.framework.organization.bo.OrganNodeType;
 import com.wondersgroup.framework.organization.bo.OrganTree;
 import com.wondersgroup.framework.organization.service.DepartmentService;
 import com.wondersgroup.framework.organization.service.OrganNodeService;
+import com.wondersgroup.framework.organization.service.OrganNodeTypeService;
+import com.wondersgroup.framework.organization.service.OrganizationService;
 import com.wondersgroup.framework.organization.service.PositionService;
+import com.wondersgroup.framework.organization.vo.OrganNodeVO;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.dto.UserDTO;
 import com.wondersgroup.framework.security.service.UserService;
-import com.wondersgroup.framework.security.vo.ResourceVO;
 import com.wondersgroup.framework.security.vo.UserQueryVO;
 import com.wondersgroup.framework.security.vo.UserVO;
 import com.wondersgroup.framework.shiro.session.SessionManager;
@@ -76,6 +82,8 @@ public class SecurityUserController extends GenericController {
 	
 	private final static String SECURITY_USER_ONLINE_VIEW = "security/user/querySecurityOnlineView";
 	
+	private final static String SECURITY_USER_ASSIST_ORGANNODE = "security/user/querySecurityUserAssistView";
+	
 	@Value("#{system['default.security.user.password']}")
 	private String defaultPassword;
 	
@@ -92,25 +100,34 @@ public class SecurityUserController extends GenericController {
 	OrganNodeService organNodeService;
 	
 	@Autowired
+	OrganizationService organizationService;
+	
+	@Autowired
+	OrganNodeTypeService organNodeTypeService;
+	
+	@Autowired
 	SessionManager sessionManager;
 	
 	@RequestMapping("/online")
 	public String querySecurityUserOnline() {
+		
 		return SECURITY_USER_ONLINE_VIEW;
 	}
 	
 	@RequestMapping("/online/page")
 	public Page<UserVO> querySecurityUserOnline(String loginName, Integer limit, Integer page) {
+		
 		List<UserVO> reuslt = new ArrayList<UserVO>();
 		SessionDAO sessionDAO = sessionManager.getSessionDAO();
 		Collection<?> sessions = sessionDAO.getActiveSessions();
-		for (Object session : sessions) {
-/*			if (session instanceOf(Session.class)) {
-				
-			}
-			logger.debug("SESSION:" + session.getHost());*/
-		}
-		return new Page<UserVO>(page, limit, sessions.size(),limit, reuslt);
+		/*
+		 * for (Object session : sessions) {
+		 * if (session instanceOf(Session.class)) {
+		 * }
+		 * logger.debug("SESSION:" + session.getHost());
+		 * }
+		 */
+		return new Page<UserVO>(page, limit, sessions.size(), limit, reuslt);
 	}
 	
 	@RequestMapping("/info/edit")
@@ -138,6 +155,8 @@ public class SecurityUserController extends GenericController {
 		return SECURITY_USER_INFO_EDIT_VIEW;
 	}
 	
+	@Log(title = "编辑用户信息", businessType = BusinessType.UPDATE, operatorType = OperatorType.MANAGE,
+	     isSaveRequestData = true)
 	@RequestMapping("/info/edit/save")
 	@ResponseBody
 	public AjaxResult saveSecurityUserInfo(Model model, UserDTO dto) {
@@ -188,6 +207,8 @@ public class SecurityUserController extends GenericController {
 		}
 	}
 	
+	@Log(title = "重置用户密码", businessType = BusinessType.UPDATE, operatorType = OperatorType.MANAGE,
+	     isSaveRequestData = true)
 	@RequestMapping("/password/reset")
 	@ResponseBody
 	public AjaxResult resetSecurityUserPassword(Model model, String id) {
@@ -214,6 +235,8 @@ public class SecurityUserController extends GenericController {
 		}
 	}
 	
+	@Log(title = "启用系统用户", businessType = BusinessType.UPDATE, operatorType = OperatorType.MANAGE,
+	     isSaveRequestData = true)
 	@RequestMapping("/status/start")
 	@ResponseBody
 	public AjaxResult startSecurityUser(Model model, String id) {
@@ -223,7 +246,8 @@ public class SecurityUserController extends GenericController {
 			if (user != null) {
 				user.setLastOperateTime(Calendar.getInstance().getTime());
 				user.setLastOperator(SecurityUtils.getPrincipal().getId());
-				userService.activateUser(user);
+				user.setStatus(SecurityUser.NORMAL);
+				userService.update(user);
 				return new AjaxResult(true, AjaxResult.MESSAGE_SUCCESS_TYPE,
 				        getMessage("security.user.start.success", new String[] {
 				                user.getName()
@@ -239,6 +263,8 @@ public class SecurityUserController extends GenericController {
 		}
 	}
 	
+	@Log(title = "停用系统用户", businessType = BusinessType.UPDATE, operatorType = OperatorType.MANAGE,
+	     isSaveRequestData = true)
 	@RequestMapping("/status/stop")
 	@ResponseBody
 	public AjaxResult stopSecurityUser(Model model, String id) {
@@ -248,7 +274,8 @@ public class SecurityUserController extends GenericController {
 			if (user != null) {
 				user.setLastOperateTime(Calendar.getInstance().getTime());
 				user.setLastOperator(SecurityUtils.getPrincipal().getId());
-				userService.forbidUser(user);
+				user.setStatus(SecurityUser.FORBIDDEN);
+				userService.update(user);
 				return new AjaxResult(true, AjaxResult.MESSAGE_SUCCESS_TYPE,
 				        getMessage("security.user.start.success", new String[] {
 				                user.getName()
@@ -264,6 +291,8 @@ public class SecurityUserController extends GenericController {
 		}
 	}
 	
+	@Log(title = "删除系统用户", businessType = BusinessType.DELETE, operatorType = OperatorType.MANAGE,
+	     isSaveRequestData = true)
 	@RequestMapping("/status/remove")
 	@ResponseBody
 	public AjaxResult removeSecurityUser(Model model, String id) {
@@ -293,6 +322,8 @@ public class SecurityUserController extends GenericController {
 		return SECURITY_USER_QUERY_VIEW;
 	}
 	
+	@Log(title = "系统用户查询", businessType = BusinessType.QUERY, operatorType = OperatorType.MANAGE,
+	     isSaveRequestData = true)
 	@RequestMapping("/query")
 	@ResponseBody
 	public Page<UserVO> querySecurityUserDetail(Model model, UserQueryVO queryVo) {
@@ -323,7 +354,7 @@ public class SecurityUserController extends GenericController {
 		detachedCriteria.add(Restrictions.eq("status", SecurityUser.NORMAL));
 		List<SecurityUser> securityUsers = userService.findByCriteria(detachedCriteria);
 		List<UserVO> userResult = new ArrayList<UserVO>();
-		for (SecurityUser securityUser: securityUsers) {
+		for (SecurityUser securityUser : securityUsers) {
 			UserVO vo = new UserVO();
 			vo.setId(securityUser.getId());
 			vo.setLoginName(securityUser.getLoginName());
@@ -394,5 +425,65 @@ public class SecurityUserController extends GenericController {
 		}
 		return new Page<UserVO>(page.getStart(), page.getCurrentPageSize(), page.getTotalSize(), page.getPageSize(),
 		        convertResult);
+	}
+	
+	@Log(title = "主管单位查询", businessType = BusinessType.QUERY, operatorType = OperatorType.MANAGE,
+	     isSaveRequestData = true)
+	@RequestMapping("/assist/node/page")
+	@ResponseBody
+	public Page<OrganNodeVO> queryOrganNode(String securityUserId, String organTreeId, String organNodeTypeId,
+	        String code, String name, Integer page, Integer limit) {
+		
+		List<String> organNodeTypeCode = new ArrayList<String>();
+		if (StringUtils.isNotBlank(organNodeTypeId)) {
+			OrganNodeType organNodeType = organNodeTypeService.get(organNodeTypeId);
+			organNodeTypeCode.add(organNodeType.getCode());
+		} else {
+			organNodeTypeCode.add(CommonConst.ORGAN_TYPE_D_CLASS_CODE);
+			organNodeTypeCode.add(CommonConst.ORGAN_TYPE_UNIT_CODE);
+			organNodeTypeCode.add(CommonConst.ORGAN_TYPE_ENTERPRISE_CODE);
+		}
+		Page<OrganNodeVO> result = organizationService.queryOrganNodeByType(organTreeId, name, organNodeTypeCode, page,
+		        limit);
+		SecurityUser securityUser = userService.loadWithLazy(securityUserId, "assistOrganNodes");
+		List<String> assistOrganNodeIds = new ArrayList<String>();
+		for (OrganNode organNode : securityUser.getAssistOrganNodes()) {
+			assistOrganNodeIds.add(organNode.getId());
+		}
+		for (OrganNodeVO vo : result.getResult()) {
+			if (assistOrganNodeIds.contains(vo.getId())) {
+				vo.setIsChecked(true);
+			}
+		}
+		return result;
+	}
+	
+	@RequestMapping("/assist/index")
+	public String assistOrganNodeView(String id, Model model) {
+		
+		model.addAttribute("securityUserId", id);
+		return SECURITY_USER_ASSIST_ORGANNODE;
+	}
+	
+	@RequestMapping("/assist/add/{securityUserId}")
+	@ResponseBody
+	public AjaxResult addAssistOrganNode(@PathVariable(required = true) String securityUserId,
+	        @RequestBody List<String> organNodeIds) {
+		
+		SecurityUser securityUser = userService.loadWithLazy(securityUserId, "assistOrganNodes");
+		List<OrganNode> assistOrganNodes = organNodeService.findAll(organNodeIds);
+		userService.refreshAssistOrganNodeForSecurityUser(securityUser, assistOrganNodes, Boolean.TRUE);
+		return new AjaxResult(true, AjaxResult.MESSAGE_SUCCESS_TYPE, getMessage("system.success"));
+	}
+	
+	@RequestMapping("/assist/cancel/{securityUserId}")
+	@ResponseBody
+	public AjaxResult cancelAssistOrganNode(@PathVariable(required = true) String securityUserId,
+	        @RequestBody List<String> organNodeIds) {
+		
+		SecurityUser securityUser = userService.loadWithLazy(securityUserId, "assistOrganNodes");
+		List<OrganNode> assistOrganNodes = organNodeService.findAll(organNodeIds);
+		userService.refreshAssistOrganNodeForSecurityUser(securityUser, assistOrganNodes, Boolean.FALSE);
+		return new AjaxResult(true, AjaxResult.MESSAGE_SUCCESS_TYPE, getMessage("system.success"));
 	}
 }

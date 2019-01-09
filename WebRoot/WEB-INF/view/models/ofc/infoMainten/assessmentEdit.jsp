@@ -45,25 +45,30 @@
 										<smart:textInput labelName="考核组织名称：" name="organizationName" value="${assessment.organizationName}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="考核组织成员姓名：" name="allParticipantName" value="${assessment.allParticipantName}" ></smart:textInput>
+										<smart:textInput labelName="考核组织成员姓名：" shortName="组织成员姓名" name="allParticipantName" value="${assessment.allParticipantName}" ></smart:textInput>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
+								<smart:gridColumn colPart="12">
+										<smart:continuousSelect id="uncommittedReason" labelName="未参加年度考核原因：" shortName="未参加原因" inputName="uncommittedReason.id" codeTypeCode="DM057" inputVal="${assessment.uncommittedReason.id}" valType="ID" widthPercent="0.5" />
+									</smart:gridColumn>
+								</smart:gridRow>
+								<smart:gridRow>
+									<smart:gridColumn colPart="12">
+										<smart:continuousSelect id="conclusionCategory" labelName="考核结论类别：" inputName="conclusionCategory.id" codeTypeCode="DM018" inputVal="${assessment.conclusionCategory.id}" valType="ID" widthPercent="0.5"/>
+									</smart:gridColumn>
+								</smart:gridRow>
+								
+								<smart:gridRow>
+									<smart:gridColumn colPart="12">
+										<smart:textarea labelName="参加考核不定等次的原因：" shortName="不定等次原因" name="uncertainLvlReason"  display="block">${assessment.uncertainLvlReason}</smart:textarea>
+									</smart:gridColumn>
+
+								</smart:gridRow>
+								<smart:gridRow>
+									<smart:gridColumn colPart="12">
 										<smart:textarea labelName="考核意见：" name="opinion"  display="block">${assessment.opinion}</smart:textarea>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="8">
-										<smart:continuousSelect id="conclusionCategory" labelName="考核结论类别：" inputName="conclusionCategory.id" codeTypeCode="DM018" inputVal="${assessment.conclusionCategory.id}" valType="ID" widthPercent="0.33333"/>
-									</smart:gridColumn>
-								</smart:gridRow>
-								
-								<smart:gridRow>
-									<smart:gridColumn colPart="4">
-										<smart:textarea labelName="参加考核不定等次的原因：" name="uncertainLvlReason"  display="block">${assessment.uncertainLvlReason}</smart:textarea>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="8">
-										<smart:continuousSelect id="uncommittedReason" labelName="未参加年度考核原因：" inputName="uncommittedReason.id" codeTypeCode="DM057" inputVal="${assessment.uncommittedReason.id}" valType="ID" widthPercent="0.33333"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 								

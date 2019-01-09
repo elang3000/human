@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +17,6 @@ import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.exception.BusinessException;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
-import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
@@ -22,10 +25,10 @@ import com.wondersgroup.framework.resource.bo.AppNode;
 import com.wondersgroup.framework.security.bo.SecurityUser;
 import com.wondersgroup.framework.security.service.UserService;
 import com.wondersgroup.framework.util.SecurityUtils;
-import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.framework.workflow.service.WorkflowService;
 import com.wondersgroup.human.bo.instflow.RecordableRecord;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.instflow.RecordableRecordQuery;
 import com.wondersgroup.human.repository.instflow.RecordableRecordRepository;
 import com.wondersgroup.human.repository.pubinst.PublicInstitutionRepository;
 import com.wondersgroup.human.service.instflow.RecordableRecordService;
@@ -136,7 +139,7 @@ public class RecordableRecordServiceImpl extends GenericServiceImpl<RecordableRe
 			saveOrUpdate(temp);// 保存业务数据
 		}
 
-		FlowRecord flow = null;
+	/*	FlowRecord flow = null;
 		if (StringUtils.isNotBlank(planState) && RecordableRecord.INST_INFO_RECORDABLE_STATE_POST == Integer.parseInt(planState)) {// 提交环节，先生成流程数据
 			// 保存业务流程主表信息
 			// registerExist = saveBusinessInfo(temp, opinion);
@@ -184,7 +187,13 @@ public class RecordableRecordServiceImpl extends GenericServiceImpl<RecordableRe
 			temp.setPlanState(null);//实际有权限的操作节点
 			temp.setFlowRecord(null);//修改当前业务的流程节点
 		}
+*/
+		String title = "事业单位人员离退备案通知!!";
+		String content ="请查看"+temp.getPublicInstitution().getName()+"("+temp.getPublicInstitution().getCardNo() + ")+的备案信息";
 
+		//通知人员信息登记
+		publicInstitutionService.getPublicQuLeadersToNotice(temp.getId(), RecordableRecord.class.getSimpleName(), title, content);
+		
 		recordableRecordRepository.merge(temp);
 
 	}
@@ -195,10 +204,8 @@ public class RecordableRecordServiceImpl extends GenericServiceImpl<RecordableRe
      * @param publicInstitution  主表
      * @param temp 离职表信息
      */
-	private void updateInstState(PublicInstitution publicInstitution, RecordableRecord temp) {
+/*	private void updateInstState(PublicInstitution publicInstitution, RecordableRecord temp) {
 		CodeInfo codeInfo = temp.getRecodeWay();
-		//CodeInfo isOnHold = dictableService.getCodeInfoByCode(codeInfo.getCode(), "DM200");//辞退CODE
-		//publicInstitution.setIsOnHold(isOnHold);
 		publicInstitutionService.merge(publicInstitution);
 		if ("1".equals(codeInfo.getCode()) || "2".equals(codeInfo.getCode())) { //类型1
 			//   辞退						//辞职
@@ -219,13 +226,12 @@ public class RecordableRecordServiceImpl extends GenericServiceImpl<RecordableRe
 			
 		}
 		
-	}
+	}*/
 
 	// 保存流程主表信息
 	private RecordableRecord saveBusinessInfo(PublicInstitution temp, String opinion) {
 		RecordableRecord record = new RecordableRecord();
 		record.setPublicInstitution(temp);
-		record.setOpinion(opinion);
 		recordableRecordService.save(record);
 		return record;
 	}
@@ -237,6 +243,45 @@ public class RecordableRecordServiceImpl extends GenericServiceImpl<RecordableRe
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Page<RecordableRecordVO> pageList(RecordableRecordQuery record, Integer page, Integer limit) {
+		OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());// 当前登录所在单位
+
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(RecordableRecord.class);
+		DetachedCriteria s = detachedcriteria.createAlias("publicInstitution", "p");
+		
+		if(StringUtils.isNotBlank(record.getName())){
+			s.add(Restrictions.like("p.name", record.getName(), MatchMode.ANYWHERE));
+		}
+		
+		if(StringUtils.isNotBlank(record.getCardNo())){
+			s.add(Restrictions.eq("p.cardNo", record.getCardNo()));
+		}
+		
+		if(StringUtils.isNotBlank(record.getIsOnHold())){
+			detachedcriteria.add(Restrictions.like("isOnHold", record.getIsOnHold(),MatchMode.ANYWHERE));//状态查询
+		}
+		
+		
+		
+		if (x != null && x.getCode().equals(CommonConst.HR_ROOT_ORGAN_CODE)) {
+			detachedcriteria.add(Restrictions.eq("lastOperator", SecurityUtils.getUserId()));
+		} else {
+			detachedcriteria.add(Restrictions.eq("creater", SecurityUtils.getUserId()));
+		}
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		detachedcriteria.addOrder(Order.desc("createTime"));
+		Page<RecordableRecord> recordPage = this.findByCriteria(detachedcriteria, page, limit);
+		List<RecordableRecordVO> voList = new ArrayList<>();
+		for (RecordableRecord rs : recordPage.getResult()) {
+			RecordableRecordVO vo = new RecordableRecordVO(rs);
+			voList.add(vo);
+		}
+		Page<RecordableRecordVO> infoPage = new Page<>(recordPage.getStart(), recordPage.getCurrentPageSize(), recordPage.getTotalSize(), recordPage.getPageSize(), voList);
+		
+		return infoPage;
 	}
 
 }

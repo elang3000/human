@@ -1,6 +1,5 @@
 package com.wondersgroup.human.service.instflow;
 
-import java.util.Date;
 import java.util.List;
 
 import com.wondersgroup.framework.core.bo.Page;
@@ -9,6 +8,7 @@ import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.instflow.InformationChange;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.instflow.InformationChangesQuery;
 import com.wondersgroup.human.vo.instflow.InformationChangesVO;
 
 public interface InformationChangeService extends GenericService<InformationChange>{
@@ -24,6 +24,8 @@ public interface InformationChangeService extends GenericService<InformationChan
 	//审批人员登记
 	public void saveRegister(InformationChange temp, String opinion, String r, String planState);
 
+	
+	Page<InformationChangesVO> pageList(InformationChangesQuery infor, Integer page, Integer limit);
 
 
 	/**

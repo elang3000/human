@@ -65,7 +65,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post> implements PostSer
 	 * @param arg2 页码
 	 * @param arg3 页大小
 	 * @return
-	 * @see com.wondersgroup.human.service.ofc.ServantService#getPage(java.util.List,
+	 * @see com.wondersgroup.human.service.ofc.ServantService(java.util.List,
 	 *      com.wondersgroup.framework.core.bo.Sorts, java.lang.Integer, java.lang.Integer)
 	 */
 	public Page<PostVO> getPage(List<Predicate> arg0, Sorts arg1, Integer arg2, Integer arg3) {
@@ -87,13 +87,21 @@ public class PostServiceImpl extends GenericServiceImpl<Post> implements PostSer
 		// 若最高职务标识为1，则需要更新公务员中最高职务属性显示
 		CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
 		CodeInfo noCodeInfo = dictableService.getCodeInfoByCode("0", DictTypeCodeContant.CODE_TYPE_YESNO);
+		
+		// 在任
+		CodeInfo inOfficeCode = dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
+		// 不在任
+		CodeInfo noInOfficeCode = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
+		
 		Servant servant = servantService.get(entity.getServant().getId());
 		
 		if (entity.getHighestPostSign().getId().equals(yesCodeInfo.getId())) {
 			// 重置该公务员下其他所有现任最高职务标识设为0
 			this.executeRestAllTopPostFlag(entity.getServant().getId());
 		} else if (entity.getHighestPostSign().getId().equals(noCodeInfo.getId())) {
-			if(entity.getNowPostSign().getId().equals(yesCodeInfo.getId())&&StringUtils.isNotBlank(servant.getNowPostName()) && servant.getNowPostName().equals(entity.getPostName())){
+			if (entity.getTenureStatus().getId().equals(inOfficeCode.getId())
+					&& StringUtils.isNotBlank(servant.getNowPostName())
+					&& servant.getNowPostName().equals(entity.getPostName())) {
 				servant.setNowPostName(null);
 				servant.setNowPostCode(null);
 				servant.setNowPostAttribute(null);
@@ -101,18 +109,20 @@ public class PostServiceImpl extends GenericServiceImpl<Post> implements PostSer
 			}
 		}
 		
-		if (entity.getNowPostSign().getId().equals(yesCodeInfo.getId())) {
-			//如果既是现任职务，又是最高职务，则输出到A01的NowPost字段。现任最高职务。
-			if (entity.getHighestPostSign().getId().equals(yesCodeInfo.getId())){
+		if (entity.getTenureStatus().getId().equals(inOfficeCode.getId())) {
+			// 如果既是在任职务，又是最高职务，则输出到A01的NowPost字段。现任最高职务。
+			if (entity.getHighestPostSign().getId().equals(yesCodeInfo.getId())) {
 				// 修改公务员A01表中现任最高职务的输出显示
 				servant.setNowPostName(entity.getPostName());
 				servant.setNowPostCode(entity.getPostCode());
 				servant.setNowPostAttribute(entity.getAttribute());
 				servantService.update(servant);
 			}
-		} else if (entity.getNowPostSign().getId().equals(noCodeInfo.getId())) {
+		} else if (entity.getTenureStatus().getId().equals(noInOfficeCode.getId())) {
 			// 如果该职务和公务员最高现任职务名称一致，选择否后，公务员信息表中现任最高职务设置为null
-			if (entity.getHighestPostSign().getId().equals(yesCodeInfo.getId())&&StringUtils.isNotBlank(servant.getNowPostName()) && servant.getNowPostName().equals(entity.getPostName())) {
+			if (entity.getHighestPostSign().getId().equals(yesCodeInfo.getId())
+					&& StringUtils.isNotBlank(servant.getNowPostName())
+					&& servant.getNowPostName().equals(entity.getPostName())) {
 				servant.setNowPostName(null);
 				servant.setNowPostCode(null);
 				servant.setNowPostAttribute(null);
@@ -133,10 +143,13 @@ public class PostServiceImpl extends GenericServiceImpl<Post> implements PostSer
 	@Override
 	public void delete(Post entity) {
 		
-		// 如果删除的是现任最高职位的标识，更新公务员信息表中最高职位字段
+		// 是
 		CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
-		// 如果删除的是现任最高职位的标识，更新公务员信息表中现任最高职位字段
-		if (entity.getNowPostSign().getId().equals(yesCodeInfo.getId())&&entity.getHighestPostSign().getId().equals(yesCodeInfo.getId())) {
+		// 在任
+		CodeInfo inOfficeCode = dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
+		// 如果删除的是在任最高职位的标识，更新公务员信息表中现任最高职位字段
+		if (entity.getTenureStatus().getId().equals(inOfficeCode.getId())
+				&& entity.getHighestPostSign().getId().equals(yesCodeInfo.getId())) {
 			Servant servant = servantService.get(entity.getServant().getId());
 			servant.setNowPostName(null);
 			servant.setNowPostCode(null);
@@ -145,13 +158,14 @@ public class PostServiceImpl extends GenericServiceImpl<Post> implements PostSer
 		}
 		super.delete(entity);
 	}
-
-	/** 
-	 * @see com.wondersgroup.human.service.ofc.PostService#getAllPost(java.lang.String) 
+	
+	/**
+	 * @see com.wondersgroup.human.service.ofc.PostService#getAllPost(java.lang.String)
 	 */
 	@Override
 	public List<Post> getAllPost(String id) {
-		CodeInfo tenureCode = dictableService.getCodeInfoByCode("2", "DM007");
+		//在任
+		CodeInfo tenureCode = dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
 		
 		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(Post.class);
 		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");

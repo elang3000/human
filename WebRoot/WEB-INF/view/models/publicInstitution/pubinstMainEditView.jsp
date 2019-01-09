@@ -97,10 +97,10 @@
 								</smart:gridRow>
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="个人身份有效证件名称" infovalue="${servant.cardType.name}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="有效证件类型" infovalue="${servant.cardType.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="个人身份有效证件号码" infovalue="${servant.cardTypeNo}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="有效证件号码" infovalue="${servant.cardTypeNo}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										
@@ -169,7 +169,7 @@
 										<smart:infoShowerLabel infoname="基层工作单位" infovalue="${servant.grassRootUnit}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="基层工作经历时间（年）" infovalue="${servant.grassRootYear}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="基础工作年限" infovalue="${servant.grassRootYear}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="从事专业" infovalue="${servant.doingSpecialty.name}"></smart:infoShowerLabel>

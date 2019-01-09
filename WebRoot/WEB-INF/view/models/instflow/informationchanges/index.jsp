@@ -34,18 +34,9 @@
 												</smart:gridColumn>
 												<smart:gridColumn colPart="4">
 													<smart:textInput labelName="身份证号：" autocomplete="off" placeholder="输入身份证号" name="cardNo"></smart:textInput>
+													<smart:textInput type="hidden" name="conditionquery" value="1"></smart:textInput>
 												</smart:gridColumn>
 												<smart:gridColumn colPart="4">
-													<smart:singleSelect labelName="性别：" display="block" name="sex.id" url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true">
-													</smart:singleSelect>
-												</smart:gridColumn>
-											</smart:gridRow>
-											<smart:gridRow>
-											   <smart:gridColumn colPart="4">
-													<smart:singleSelect labelName="任职状态：" display="block" name="isOnHold.id" url="dictquery/sub/code/DM200" isAddDefaltOption="true">
-													</smart:singleSelect>
-												</smart:gridColumn>
-												<smart:gridColumn colPart="8">
 													<smart:buttonGroup container="true" align="right">
 													<smart:button size="sm" method="search_ofcList" title="查询"
 															theme="primary" other="search_btn">
@@ -55,6 +46,7 @@
 															theme="primary" type="reset">
 															<smart:icon icon="history"></smart:icon>&nbsp;重置
 							   						</smart:button>
+							   						
 													</smart:buttonGroup>
 												</smart:gridColumn>
 											</smart:gridRow>
@@ -63,7 +55,7 @@
 								</smart:gridRow>
 								<smart:gridRow colSpace="5" >
 									<smart:gridColumn >
-										<smart:table id="navigationList_ofcList" url="publicInstitution/pageList" height="300" text="未找到用户数据！" page="true">
+										<smart:table id="navigationList_ofcList" url="publicInstitution/pageAllList" height="300" text="未找到用户数据！" page="true">
 											<tr>
 <%-- 												<smart:tableItem isCheckbox="true">全选</smart:tableItem>
  --%>												<smart:tableItem field="name" width="100" sort="true">姓名</smart:tableItem>
@@ -108,6 +100,7 @@
 				});
 			}
 		</smart:tableScriptAction>
+		
 		<smart:buttonScriptAction>
 			search_ofcList : function() {
 				var params = utils.json($('#searchForm_ofcList'));

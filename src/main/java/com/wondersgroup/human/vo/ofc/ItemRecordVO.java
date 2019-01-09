@@ -16,12 +16,11 @@
 package com.wondersgroup.human.vo.ofc;
 
 import java.text.SimpleDateFormat;
-
 import com.wondersgroup.human.bo.ofc.ManagerRecord;
 
 /**
  * @ClassName: ItemRecordVO
- * @Description: TODO
+ * @Description: 进出管
  * @author: lihao
  * @date: 2018年6月8日上午11:35:31 
  * @version [版本号, YYYY-MM-DD] 
@@ -29,7 +28,7 @@ import com.wondersgroup.human.bo.ofc.ManagerRecord;
  * @since     [产品/模块版本]
  */
 public class ItemRecordVO {
-
+	
 	/**
 	 * @fieldName: id
 	 * @fieldType: java.lang.String
@@ -79,6 +78,13 @@ public class ItemRecordVO {
 	 */
 	private String recordTime;
 	
+	/**
+	 * @fieldName: departName
+	 * @fieldType: java.lang.String
+	 * @Description: 事项发生单位。
+	 */
+	private String departName;
+	
 	public ItemRecordVO(ManagerRecord m){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
@@ -87,7 +93,7 @@ public class ItemRecordVO {
 		if(m.getServant()!=null&&m.getServant().getSex()!=null){
 			this.sex = m.getServant().getSex().getName();
 		}
-		this.cardNo = m.getServant().getCardNo();
+		this.cardNo = m.getServant().getCardNoView();
 		if(m.getRecordType()!=null){
 			this.recordType = m.getRecordType().getName();
 		}
@@ -95,6 +101,8 @@ public class ItemRecordVO {
 			this.recordTime  = sdf.format(m.getRecordTime()); 
 		}
 		this.itemType = convertState(m.getItemType());
+		
+		this.departName = m.getOrganName();
 	}
 	
 	public String convertState(int state) {
@@ -210,5 +218,19 @@ public class ItemRecordVO {
 	 */
 	public void setItemType(String itemType) {
 		this.itemType = itemType;
+	}
+
+	/**
+	 * @return the departName
+	 */
+	public String getDepartName() {
+		return departName;
+	}
+
+	/**
+	 * @param departName the departName to set
+	 */
+	public void setDepartName(String departName) {
+		this.departName = departName;
 	}
 }

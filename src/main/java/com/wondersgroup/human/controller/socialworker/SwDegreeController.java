@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.socialworker.SrDegree;
 import com.wondersgroup.human.service.socialworker.SocialWorkerService;
 import com.wondersgroup.human.service.socialworker.SwDegreeService;
 import com.wondersgroup.human.vo.socialworker.SwDegreeVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: DegreeController
@@ -83,6 +86,8 @@ public class SwDegreeController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<DegreeVO>
 	 */
+	@Log(title = "查询学位信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<SwDegreeVO> pageList(String Id, Integer limit, Integer page) {
@@ -100,6 +105,8 @@ public class SwDegreeController extends GenericController {
 	 * @param temp 学位信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑学位信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(SrDegree temp) {
@@ -131,6 +138,8 @@ public class SwDegreeController extends GenericController {
 	 * @param temp 学位信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除学位信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

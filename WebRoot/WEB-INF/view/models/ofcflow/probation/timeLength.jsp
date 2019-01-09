@@ -21,7 +21,7 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="12">
-								<smart:numberInput isNotNull="true" verify="required" name="probationDate" display="block" min="0" value="${probationDate}" labelName="试用时长(月)"></smart:numberInput>
+								<smart:numberInput isNotNull="true" verify="required" name="probationDate" isInt="true" display="block" min="0" value="${probationDate}" labelName="试用时长(月)"></smart:numberInput>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -38,7 +38,7 @@
 									theme="normal">
 									<smart:icon icon="plus">&nbsp;提交</smart:icon>
 								</smart:button>
-								<smart:button theme="warm" size="sm" method="goBack" title="返回">
+								<smart:button theme="primary" size="sm" method="goBack" title="返回">
 									<smart:icon icon="pencil">&nbsp;返回</smart:icon>
 								</smart:button>
 							</smart:buttonGroup>

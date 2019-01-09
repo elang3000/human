@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<smart:initHead title="长宁区人事管理信息系统--事项申请" />
+<smart:initHead title="长宁区人事管理信息系统--录用详情查看" />
 </head>
 <smart:body>
 	<smart:grid>
@@ -30,12 +30,27 @@
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="身份证号"
-									infovalue="${d.cardNo }"></smart:infoShowerLabel>
+									infovalue="${d.cardNoView }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="性别" infovalue="${d.sex.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="电话号码" infovalue="${d.phoneNumber }"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="户籍地址"
+													   infovalue="${d.residencePlace }"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="通讯地址" infovalue="${d.homeAddress}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
+
+
+
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="出生日期" infovalue="${d.birthDate }"></smart:infoShowerLabel>
@@ -49,32 +64,56 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="学历" infovalue="${d.degree.name }"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="是否应届毕业生"
+													   infovalue="${d.isGraduating.name }"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel shortName="大学生村官" infoname="是否大学生村官、“三支一扶”人员、优秀村（居）干部" infovalue="${d.collegeVillageOfficer.name}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
+
+						<smart:gridRow>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel shortName="持有上海居住证" infoname="持有《上海市居住证》一年以上（仍在有效期内），且积分达到标准分值120分" infovalue="${d.isResidencePermit.name}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel shortName="加入上海户籍" infoname="是否加入上海户籍"
+													   infovalue="${d.isJoinResidence.name }"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel shortName="残疾人 " infoname="是否残疾人" infovalue="${d.isdisabled.name }"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="民族" infovalue="${d.nation.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="政治面貌" infovalue="${d.politics.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否退役士兵" infovalue="${d.isRetiredSoldier.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="退役士兵" infoname="是否退役士兵" infovalue="${d.isRetiredSoldier.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否退役大学生士兵" infovalue="${d.isRetiredCollegeStudentSoldier.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="退役大学生士兵 " infoname="是否退役大学生士兵" infovalue="${d.isRetiredCollegeStudentSoldier.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
+
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否残疾人" infovalue="${d.isdisabled.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="海外留学经历" infoname="是否有海外留学经历" infovalue="${d.isStudyAbroad.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否有海外留学经历" infovalue="${d.isStudyAbroad.name }"></smart:infoShowerLabel>
-							</smart:gridColumn>
-						</smart:gridRow>
-						<smart:gridRow>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="留学年限" infovalue="${d.studyAbroadTime }"></smart:infoShowerLabel>
 							</smart:gridColumn>
+						</smart:gridRow>
+						<smart:gridRow>
+
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="是否有海外工作经历" infovalue="${d.isWorkAbroad.name }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="海外工作经历" infoname="是否有海外工作经历" infovalue="${d.isWorkAbroad.name }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="海外工作年限" infovalue="${d.workAbroadTime }"></smart:infoShowerLabel>
@@ -101,24 +140,24 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="录用考试准考证号" infovalue="${d.ticketId }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="录用准考证" infoname="录用考试准考证号" infovalue="${d.ticketId }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="专业能力测试成绩" infovalue="${d.aptitudeTestScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="专业能力成绩" infoname="专业能力测试成绩" infovalue="${d.aptitudeTestScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="公共科目笔试成绩" infovalue="${d.publicSubjectTestScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="公科笔试成绩" infoname="公共科目笔试成绩" infovalue="${d.publicSubjectTestScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="笔试（行政职业能力测试）成绩" infovalue="${d.writtenExamTestScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel infoname="笔试（行政职业能力测试）成绩" shortName="行政职能成绩" infovalue="${d.writtenExamTestScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="笔试（申论）成绩" infovalue="${d.explainingScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="申论成绩" infoname="笔试（申论）成绩" infovalue="${d.explainingScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:infoShowerLabel infoname="笔试（专业科目）成绩" infovalue="${d.professionalSubjectScore }"></smart:infoShowerLabel>
+								<smart:infoShowerLabel shortName="专业科目成绩" infoname="笔试（专业科目）成绩" infovalue="${d.professionalSubjectScore }"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
@@ -199,12 +238,12 @@
 									<smart:infoShowerLabel infoname="免基层实习" infovalue="${d.isBasePractice.name }"></smart:infoShowerLabel>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="所在单位意见时间" infovalue="${d.deptOpinionDate }"></smart:infoShowerLabel>
+									<smart:infoShowerLabel infoname="所在单位意见时间" shortName="单位意见时间" infovalue="${d.deptOpinionDate }"></smart:infoShowerLabel>
 								</smart:gridColumn>
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="上级主管单位意见时间" infovalue="${d.unitOpinionDate }"></smart:infoShowerLabel>
+									<smart:infoShowerLabel infoname="上级主管单位意见时间" shortName="上级意见时间"  infovalue="${d.unitOpinionDate }"></smart:infoShowerLabel>
 								</smart:gridColumn>
 <%-- 								<smart:gridColumn colPart="4">
 									<smart:infoShowerLabel infoname="录用标识" infovalue="${d.employResult.name }"></smart:infoShowerLabel>
@@ -215,7 +254,7 @@
 							</smart:gridRow>
 							<smart:gridRow>
 								<smart:gridColumn colPart="4">
-									<smart:infoShowerLabel infoname="录用鉴定（评语）" infovalue="${d.employComment }"></smart:infoShowerLabel>
+									<smart:infoShowerLabel infoname="录用鉴定（评语）" shortName="录用评语" infovalue="${d.employComment }"></smart:infoShowerLabel>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="4">
 									<smart:infoShowerLabel infoname="备注" infovalue="${d.remark }"></smart:infoShowerLabel>

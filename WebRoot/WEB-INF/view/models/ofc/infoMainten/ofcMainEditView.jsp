@@ -86,25 +86,21 @@
 								</smart:gridRow>
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="户籍所在地" infovalue="${servant.residencePlace}"></smart:infoShowerLabel>
+									</smart:gridColumn>
+									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="婚姻状况" infovalue="${servant.marriage.name}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="健康状况" infovalue="${servant.health.name}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="健康状况描述" infovalue="${servant.healthDescribe}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 								</smart:gridRow>
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="个人身份有效证件名称" infovalue="${servant.cardType.name}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="有效证件类型" infovalue="${servant.cardType.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="个人身份有效证件号码" infovalue="${servant.cardTypeNo}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="有效证件号码" infovalue="${servant.cardTypeNo}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										
-										<smart:infoShowerLabel infoname="公民身份证号" infovalue="${servant.cardNo}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="公民身份证号" infovalue="${servant.cardNoView}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 								</smart:gridRow>
 								<smart:gridRow>
@@ -118,7 +114,15 @@
 										<smart:infoShowerLabel infoname="第三党派" infovalue="${servant.thirdParty.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 								</smart:gridRow>
-								<smart:title title="" style="margin-top: 5px;" color="blue" />
+								<smart:title title="个人情况" style="margin-top: 5px;" color="blue" />
+								<smart:gridRow>
+									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="健康状况" infovalue="${servant.health.name}"></smart:infoShowerLabel>
+									</smart:gridColumn>
+									<smart:gridColumn colPart="8">
+										<smart:infoShowerLabel infoname="健康状况描述" infovalue="${servant.healthDescribe}"></smart:infoShowerLabel>
+									</smart:gridColumn>
+								</smart:gridRow>	
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="办公电话" infovalue="${servant.officePhone}"></smart:infoShowerLabel>
@@ -126,57 +130,36 @@
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="住宅电话" infovalue="${servant.homePhone}"></smart:infoShowerLabel>
 									</smart:gridColumn>
+								</smart:gridRow>
+								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="移动电话" infovalue="${servant.mobilePhone}"></smart:infoShowerLabel>
 									</smart:gridColumn>
-								</smart:gridRow>
-								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="秘书电话" infovalue="${servant.secretaryPhone}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="电子邮箱" infovalue="${servant.email}"></smart:infoShowerLabel>
 									</smart:gridColumn>
+								</smart:gridRow>
+								<smart:gridRow>
+									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="邮政编码" infovalue="${servant.addressPost}"></smart:infoShowerLabel>
+									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="家庭住址" infovalue="${servant.homeAddress}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 								</smart:gridRow>
 								<smart:gridRow>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="户籍所在地" infovalue="${servant.residencePlace}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="住址邮政编码" infovalue="${servant.addressPost}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="参加工作日期" infovalue="${servant.attendDate}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-									
-								</smart:gridRow>
-								<smart:gridRow>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="连续工龄" infovalue="${servant.workYear}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
+									<smart:gridColumn colPart="12">
 										<smart:infoShowerLabel infoname="专长" infovalue="${servant.expertise}"></smart:infoShowerLabel>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
+								</smart:gridRow>
+								<smart:gridRow>
+									<smart:gridColumn colPart="12">
 										<smart:infoShowerLabel infoname="爱好" infovalue="${servant.interested}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 								</smart:gridRow>
-								<smart:gridRow>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="基层工作单位" infovalue="${servant.grassRootUnit}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="基层工作经历时间（年）" infovalue="${servant.grassRootYear}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="从事专业" infovalue="${servant.doingSpecialty.name}"></smart:infoShowerLabel>
-									</smart:gridColumn>
-								</smart:gridRow>
-								
-								<smart:title title="" style="margin-top: 5px;" color="blue" />
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="最高学历" infovalue="${servant.topEducation}"></smart:infoShowerLabel>
@@ -189,17 +172,39 @@
 									</smart:gridColumn>
 								</smart:gridRow>
 								<smart:gridRow>
+									<smart:gridColumn colPart="12">
+										<smart:infoShowerLabel infoname="从事专业" infovalue="${servant.doingSpecialty.name}"></smart:infoShowerLabel>
+									</smart:gridColumn>
+								</smart:gridRow>
+								<smart:title title="工作情况" style="margin-top: 5px;" color="blue" />
+								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="现任最高职务名称" infovalue="${servant.nowPostCode.name}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="参加工作日期" infovalue="${servant.attendDate}"></smart:infoShowerLabel>
+									</smart:gridColumn>
+									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="连续工龄" infovalue="${servant.workYear}"></smart:infoShowerLabel>
+									</smart:gridColumn>
+								</smart:gridRow>
+								<smart:gridRow>
+									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="基层工作单位" infovalue="${servant.grassRootUnit}"></smart:infoShowerLabel>
+									</smart:gridColumn>
+									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="基础工作年限" infovalue="${servant.grassRootYear}"></smart:infoShowerLabel>
+									</smart:gridColumn>
+								</smart:gridRow>
+								<smart:gridRow>
+									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel shortName="现任最高职务" infoname="现任最高职务名称" infovalue="${servant.nowPostCode.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="职务属性" infovalue="${servant.nowPostAttribute.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="职级名称" infovalue="${servant.nowJobLevel.name}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="职务名称" infovalue="${servant.nowJobLevel.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 								</smart:gridRow>
-								
+								<smart:title title="管理信息" style="margin-top: 5px;" color="blue" />
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="管理类别" infovalue="${servant.levelManage.name}"></smart:infoShowerLabel>
@@ -207,23 +212,23 @@
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="人员类别" infovalue="${servant.personType.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="参照公务员法管理标识" infovalue="${servant.servantLaw.name}"></smart:infoShowerLabel>
-									</smart:gridColumn>
 								</smart:gridRow>
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="离岗退养标识" infovalue="${servant.isLeavePost.name}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="参公管理标识" infovalue="${servant.servantLaw.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="公务员登记号" infovalue="${servant.registerNo}"></smart:infoShowerLabel>
+										<smart:infoShowerLabel infoname="离岗退养标识" infovalue="${servant.isLeavePost.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
+<%-- 									<smart:gridColumn colPart="4">
+										<smart:infoShowerLabel infoname="公务员登记号" infovalue="${servant.registerNo}"></smart:infoShowerLabel>
+									</smart:gridColumn> --%>
 								</smart:gridRow>
 								
 								<div class="layui-col-md12">
 									<div class="layui-form-item">
-										<label class="layui-form-label formLabel">个人基本情况备注：</label>
+										<label class="layui-form-label formLabel">备注：</label>
 										<div class="layui-inline">
 							                <div class="layui-form-mid">
 							                	${servant.personRemark}

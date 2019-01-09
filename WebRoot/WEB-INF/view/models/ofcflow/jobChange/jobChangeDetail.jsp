@@ -91,7 +91,7 @@
 							<smart:gridColumn colPart="3" colOffset="1">
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<img alt="照片" src="static/image/20170705135600.jpg">
+										<img style="width:150px;height:200px;min-width:150px;min-height:200px;" alt="照片" src="ftp/getImg?imgName=${servant.photoPath}">
 									</smart:gridColumn>
 								</smart:gridRow>
 							</smart:gridColumn>
@@ -115,17 +115,17 @@
 						<smart:gridRow>
 							<smart:gridColumn colPart="8">
 								<smart:gridColumn colPart="6">
-									<smart:infoShowerLabel infoname="个人身份有效证件名称"
+									<smart:infoShowerLabel infoname="有效证件类型"
 										infovalue="${servant.cardType.name}"></smart:infoShowerLabel>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="6">
-									<smart:infoShowerLabel infoname="个人身份有效证件号码"
+									<smart:infoShowerLabel infoname="有效证件号码"
 										infovalue="${servant.cardTypeNo}"></smart:infoShowerLabel>
 								</smart:gridColumn>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:infoShowerLabel infoname="公民身份证号"
-									infovalue="${servant.cardNo}"></smart:infoShowerLabel>
+									infovalue="${servant.cardNoView}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>

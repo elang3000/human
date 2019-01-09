@@ -102,7 +102,7 @@ public class AssessmentFlowController extends GenericController {
 	// 流程 上报考核人名单 审核考核人名单页面
 	private static final String ASSESS_FLOW_HUMANPICK_PAGE = "models/ofcflow/assess/flow/assessFlowHumanPick";
 	
-	// 区人事汇总,重新分配页面
+	//暂时没用了 ###########################  区人事汇总,重新分配页面
 	private static final String ASSESS_FLOW_REPICK_PAGE = "models/ofcflow/assess/flow/assessFlowRepick";
 	
 	// 区人事汇总完成 查看页面
@@ -250,7 +250,6 @@ public class AssessmentFlowController extends GenericController {
 	/**
 	 * @Title: assessStart
 	 * @Description: 区人事发起考核页面
-	 * @param assessType
 	 * @param model
 	 * @return
 	 * @return: String
@@ -427,7 +426,7 @@ public class AssessmentFlowController extends GenericController {
 	public String unitCheckIndexPage(
 			@PathVariable(value = "assessCollectId", required = true) String assessCollectId,
 			@PathVariable(name = "orgId", required = false) String orgId,
-			Model model){
+			Model model,Integer isFlow){
 		//是否是单位登录
 		boolean isUnitAssess=false;
 		OrganNode org=null;
@@ -448,6 +447,7 @@ public class AssessmentFlowController extends GenericController {
 		//假如是季度考核
 		if(assessmentFlowCollect.getAssessmentType()==AssessmentFlowCollect.ASSESSSEASON){
 			isAllowAssess=this.assessmentDetailService.isConfirmAssess(org, assessCollectId);
+			isFlow=1;
 		}else if(assessmentFlowCollect.getAssessmentType()==AssessmentFlowCollect.ASSESSYEAR){
 			isAllowAssess=this.assessmentDetailService.isConfirmAssess(org, assessCollectId)&&percnet.getStatus()==CommonConst.YES;
 		}
@@ -458,6 +458,7 @@ public class AssessmentFlowController extends GenericController {
 		model.addAttribute("isUnitAssess",isUnitAssess);
 		model.addAttribute("seasonAlertStr",assessmentFlowCollect.getAssessmentType()==2?"季度考核完成将不能修改,":"");
 		model.addAttribute("orgId",orgId);
+		model.addAttribute("isFlow",isFlow);
 		model.addAttribute("assessmentFlowCollect",assessmentFlowCollect);
 		List<AssessmentDetail> currentUnitDetails = assessmentDetailService.getCurrentUnitDetails(org,assessCollectId);
 		model.addAttribute("allSize", currentUnitDetails.size());
@@ -498,7 +499,14 @@ public class AssessmentFlowController extends GenericController {
 	@RequestMapping("/unitCheckPage")
 	public String unitCheckPage(String id, Model model,Boolean view){
 		AssessmentDetail detail = this.assessmentDetailService.get(id);
-
+		OrganNode org = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		List<AssessmentFlowCollect> currentSeasonCollects=assessmentFlowCollectService.getCurrentYearSeasonCollect(detail.getAssessmentFlowCollect().getYear());
+		for(AssessmentFlowCollect assessmentFlowCollect:currentSeasonCollects){
+			if(this.assessmentDetailService.isConfirmAssess(org, assessmentFlowCollect.getId())){
+				//是否有已经完成的季度考核
+				model.addAttribute("isSeasonDown", true);
+			}
+		}
 		model.addAttribute("detail", detail);
 		model.addAttribute("servant", detail.getServant());
 		if(detail.getResult()!=null){
@@ -574,14 +582,20 @@ public class AssessmentFlowController extends GenericController {
 			    }
 
 				    
-				//4 本年季度考核是否全部优秀
-				boolean isCurrentSeasonFine=false;
-				isCurrentSeasonFine=assessmentService.isCurrentYearSeasonFine(servant,dbDetail.getAssessmentFlowCollect().getYear());
-				if(!isCurrentSeasonFine){
-					throw new BusinessException("当前人员季度考核没有全部优秀,考核结果不能指定为优秀!");
+				//4 此单位是否有季度考核
+				if(detail.getVoteNumb()==null){
+					boolean isCurrentSeasonFine=false;
+					isCurrentSeasonFine=assessmentService.isCurrentYearSeasonFine(servant,dbDetail.getAssessmentFlowCollect().getYear());
+					if(!isCurrentSeasonFine){
+						throw new BusinessException("当前人员季度考核没有一次优秀,考核结果不能指定为优秀!");
+					}
 				}
+
 					
 
+			}
+			if(detail.getVoteNumb()!=null){
+				dbDetail.setVoteNumb(detail.getVoteNumb());
 			}
 			dbDetail.setResult(detail.getResult());
 			dbDetail.setRemarks(detail.getRemarks());
@@ -830,8 +844,9 @@ public class AssessmentFlowController extends GenericController {
 		model.addAllAttributes(maps);
 		return ASSESS_FLOW_HUMANPICK_PAGE;
 	}
-	
-	@RequestMapping("/assessFlowRepick/{assessCollectId}/{orgId}")
+
+
+/*	@RequestMapping("/assessFlowRepick/{assessCollectId}/{orgId}")
 	public String assessFlowRepick(
 			@PathVariable(value = "assessCollectId", required = true) String assessCollectId,
 			@PathVariable(name = "orgId", required = true) String orgId,
@@ -842,7 +857,7 @@ public class AssessmentFlowController extends GenericController {
 		model.addAttribute("assessmentFlowCollect",assessmentFlowCollect);
 		
 		return ASSESS_FLOW_REPICK_PAGE;
-	}
+	}*/
 	
 	@RequestMapping("/exportSummaryExcel")
 	public void exportSummaryExcel(Model model,HttpServletRequest request,HttpServletResponse response,String collectId){
@@ -870,8 +885,8 @@ public class AssessmentFlowController extends GenericController {
 		}
 		params.put("listDataList", dataList);
 		String savePath = request.getSession().getServletContext().getRealPath("/");
-		String templet = savePath+"\\WEB-INF\\templates\\ndkh.xls";//模板路径
-		String path = savePath+"\\WEB-INF\\templates\\"+111+".xls";//生成excel文件路径，临时存放，下载成功之后会删除
+		String templet = savePath+"\\static\\templates\\ndkh.xls";//模板路径
+		String path = savePath+"\\static\\templates\\"+111+".xls";//生成excel文件路径，临时存放，下载成功之后会删除
 		ExcelUtilsPOI.replaceModel(params, templet,path, 1,null);//替换模板数据 生成excel到tomcat服务器
 	  	ExcelUtilsPOI.exceldown(path, "长宁区"+collect.getYear()+"年度考核人员统计表.xls", request, response);
 		

@@ -14,13 +14,11 @@
 	<smart:grid>
 		<smart:card>
 			<smart:cardHead>
-				<smart:gridRow>
-					<smart:breadcrumbNavMenu separator=">">
-						<smart:breadcrumbNavMenuItem iname="您现在的所在位置"></smart:breadcrumbNavMenuItem>
-						<smart:breadcrumbNavMenuItem iname="事项申请"></smart:breadcrumbNavMenuItem>
-						<smart:breadcrumbNavMenuItem iname="处分备案" cite="true"></smart:breadcrumbNavMenuItem>
-					</smart:breadcrumbNavMenu>
-				</smart:gridRow>
+				<smart:breadcrumbNavMenu separator=">">
+					<smart:breadcrumbNavMenuItem iname="您现在的所在位置"></smart:breadcrumbNavMenuItem>
+					<smart:breadcrumbNavMenuItem iname="事项申请"></smart:breadcrumbNavMenuItem>
+					<smart:breadcrumbNavMenuItem iname="处分备案" cite="true"></smart:breadcrumbNavMenuItem>
+				</smart:breadcrumbNavMenu>
 			</smart:cardHead>
 			<smart:cardBody>
 				<smart:gridRow>
@@ -37,13 +35,13 @@
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="姓名：" placeholder="请输入姓名" name="name"></smart:textInput>
+								<smart:textInput labelName="姓名：" placeholder="姓名" name="name"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="身份证：" placeholder="请输入身份证" name="cardNo"></smart:textInput>
+								<smart:textInput labelName="身份证：" placeholder="身份证" name="cardNo"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="处分原始文件号：" placeholder="请输入处分原始文件号" name="punishFileName"></smart:textInput>
+								<smart:textInput labelName="处分原始文件号：" placeholder="处分原始文件号" name="punishFileName"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 								<smart:singleSelect labelName="处分原因：" name="punishReason.id" display="block" url="dictquery/sub/code/DM021_PUNISH" isAddDefaltOption="true"></smart:singleSelect>
@@ -74,21 +72,22 @@
 						<smart:table id="navigationList" url="ofcflow/punish/pageList" 
 							height="full-240" text="未找到用户数据！" page="true" doneCallBack="fixedCol">
 							<tr>
-								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
 								<smart:tableItem field="name" width=".1" sort="false">姓名</smart:tableItem>
 								<smart:tableItem field="cardNo" width=".15" sort="false">身份证</smart:tableItem>
 								<smart:tableItem field="punishCode" width=".2" sort="false">处分名称</smart:tableItem>
 								<smart:tableItem field="punishReason" width=".15" sort="false">处分原因</smart:tableItem>
 								<smart:tableItem field="punishFileName" width=".15" sort="false">处分文件号</smart:tableItem>
 								<smart:tableItem field="punishApprovalDate" width=".15" sort="false">处分批准时间</smart:tableItem>
-								<smart:tableItem field="punishYear" width=".15" sort="false">处分期限（年）</smart:tableItem>
+								<smart:tableItem field="punishApprovalEndDate" width=".15" sort="false">处分结束时间</smart:tableItem>
+								<smart:tableItem field="punishYear" width=".15" sort="false">处分期限（月）</smart:tableItem>
+								<smart:tableItem field="sign" width=".1" sort="false">处分状态</smart:tableItem>
 								<smart:tableItem field="status" width=".15" sort="false">状态</smart:tableItem>
 								<smart:tableItem align="center" width=".15" fixed="right" unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<script type="text/html" id="navListToolBar">
 									{{#  if(d.statusSign==1){ }}
 										<shiro:hasPermission name="EDIT_PUNISH_SERVANT_BTN">
-										<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit"  title="编辑">
+										<a class="layui-btn layui-btn-xs layui-btn-default" lay-event="edit"  title="编辑">
 											<i class="fa fa-edit"></i>
 										</a>
 										</shiro:hasPermission>

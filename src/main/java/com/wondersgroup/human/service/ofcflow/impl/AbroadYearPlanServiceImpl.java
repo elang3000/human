@@ -47,10 +47,10 @@ public class AbroadYearPlanServiceImpl extends GenericServiceImpl<AbroadYearPlan
 	public Page<AbroadYearPlanVO> pageList(AbroadYearPlan abroadYearPlan, Integer page, Integer limit) {
 		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(AbroadYearPlan.class);
 		if (abroadYearPlan.getStartDate()!=null) {// 开始时间
-			detachedcriteria.add(Restrictions.le("startDate", abroadYearPlan.getStartDate()));
+			detachedcriteria.add(Restrictions.ge("startDate", abroadYearPlan.getStartDate()));
 		}
 		if (abroadYearPlan.getEndDate()!=null) {// 结束时间
-			detachedcriteria.add(Restrictions.ge("endDate", abroadYearPlan.getEndDate()));
+			detachedcriteria.add(Restrictions.le("endDate", abroadYearPlan.getEndDate()));
 		}
 		detachedcriteria.add(Restrictions.eq("removed", false));
 		//创建时间倒叙

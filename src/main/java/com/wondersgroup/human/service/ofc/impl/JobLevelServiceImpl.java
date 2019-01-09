@@ -27,6 +27,7 @@ import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
+import com.wondersgroup.framework.core.exception.BusinessException;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.CodeInfoService;
@@ -139,9 +140,8 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 		CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
 		if (entity.getCurrentIdentification().getId().equals(yesCodeInfo.getId())) {
 			// 如果是现行职级，那么就入职级编制数
-			CodeInfo postLvlCode = codeInfoService.get(entity.getCode().getId());
-			formationControlService.executeIntoPost(servant.getDepartId(), postLvlCode.getCode(),
-					entity.getIsLowToHigh());
+			formationControlService.executeIntoPost(servant.getDepartId(), entity.getRealJobLevelCode(),
+					entity.getRealLeader());
 		}
 		updateServantByPostLvl(entity);
 		return super.save(entity);
@@ -152,17 +152,13 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 		
 		// 如果删除的是现行标识的职级，更新公务员信息表中职级字段
 		CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO);
-		if (entity.getCurrentIdentification().getId().equals(yesCodeInfo.getId())) {
-			Servant servant = servantService.get(entity.getServant().getId());
-			servant.setNowJobLevel(null);
-			servantService.update(servant);
-		}
+		CodeInfo noCodeInfo = dictableService.getCodeInfoByCode("0", DictTypeCodeContant.CODE_TYPE_YESNO);
 		if (entity.getCurrentIdentification().getId().equals(yesCodeInfo.getId())) {
 			// 如果是现行职级，那么就出职级编制数
-			CodeInfo postlvlCode = codeInfoService.get(entity.getCurrentIdentification().getId());
-			formationControlService.executeOutPost(entity.getServant().getDepartId(), postlvlCode.getCode(),
-					entity.getIsLowToHigh());
+			formationControlService.executeOutPost(entity.getServant().getDepartId(), entity.getRealJobLevelCode(),
+					entity.getRealLeader());
 		}
+		entity.setCurrentIdentification(noCodeInfo);
 		super.delete(entity);
 	}
 
@@ -186,7 +182,27 @@ public class JobLevelServiceImpl extends GenericServiceImpl<JobLevel> implements
 		if(list.size()>0){
 			return list.get(0);
 		}else{
-			return null;
+			throw new BusinessException("当前人员没有现行职级!");
 		}
+	}
+
+	@Override
+	public void saveOfMaintain(JobLevel entity) {
+		
+		// 首先查询该人员的现行职级，如果有，做退出编制处理，然后在调用save方法
+		DetachedCriteria detachedcriteria = DetachedCriteria.forClass(JobLevel.class);
+		DetachedCriteria s = detachedcriteria.createAlias("servant", "s");
+		s.add(Restrictions.eq("s.id", entity.getServant().getId()));
+		detachedcriteria.add(Restrictions.eq("removed", false));
+		detachedcriteria.add(Restrictions.eq("currentIdentification", dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_YESNO)));
+		
+		List<JobLevel> list = this.findByCriteria(detachedcriteria);
+		if(list.size()>0){
+			JobLevel nowJobLevel = list.get(0);
+			// 出职级编制数
+			formationControlService.executeOutPost(nowJobLevel.getServant().getDepartId(), nowJobLevel.getRealJobLevelCode(),
+					nowJobLevel.getIsLeader());
+		}
+		this.save(entity);
 	}
 }

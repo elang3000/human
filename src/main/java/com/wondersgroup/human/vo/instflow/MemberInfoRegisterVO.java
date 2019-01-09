@@ -15,116 +15,130 @@
 
 package com.wondersgroup.human.vo.instflow;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.wondersgroup.human.bo.instflow.MemberInfoRegister;
-import com.wondersgroup.human.bo.ofcflow.RecruitEmployPlan;
 
 /**
  * @ClassName: RecruitEmployPlanVO
  * @Description:人员录入登记VO
- * @author: wangzhanfei
- * @date: 2018年5月30日 上午10:57:27
+ * @author: luoyongfu
+ * @date: 2018年12月26日 上午10:57:27
  * @version [版本号, YYYY-MM-DD]
  * @see       [相关类/方法]
  * @since     [产品/模块版本]
  */
 public class MemberInfoRegisterVO {
 	
+	/**
+	 * @fieldName: id
+	 * @fieldType: java.lang.String
+	 * @Description: id
+	 */
 	private String id;
-	
+	/**
+	 * @fieldName: name
+	 * @fieldType: java.lang.String
+	 * @Description: 姓名 ,在公安户籍管理部门登记注册、人事档案中记载的、正在使用的该人姓名全称。
+	 */
 	private String name;
-	
-	private String employOrgan;
-	
-	
-	private String remark;
-	
-	private String planState;
-	
 
-	public MemberInfoRegisterVO() {
-		
-	}
+	/**
+	 * @fieldName: sex
+	 * @fieldType: java.lang.String
+	 * @Description: 性别。
+	 */
+	private String sex;
+
+	/**
+	 * @fieldName: cardNo
+	 * @fieldType: java.lang.String
+	 * @Description: 公民身份证号 ,公安机关对（公民）居民给出的唯一的、终身不变的法定号码。
+	 */
+	private String cardNo;
+
+	/**
+	 * @fieldName: departName
+	 * @fieldType: java.lang.String
+	 * @Description: 人事关系所在单位名称 ,该人人事关系所在的单位名称。
+	 */
+	private String departName;
 	
-	public MemberInfoRegisterVO(MemberInfoRegister member) {
-		this.id = member.getId();
-		if (StringUtils.isNotBlank(member.getRemark())) {
-			this.remark = member.getRemark();
+	
+	/**
+	 * @fieldName: status
+	 * @fieldType: String
+	 * @Description: 状态
+	 */
+	private String status;
+	
+	public MemberInfoRegisterVO(MemberInfoRegister r){
+		this.id = r.getId();
+		this.name = r.getPublicInstitution().getName();
+		if (r.getPublicInstitution().getSex() != null) {
+			this.sex = r.getPublicInstitution().getSex().getName();
 		}
-		this.employOrgan = member.getEmployOrgan().getName();
-		this.planState = convertState(member.getPlanState());
+		this.cardNo = r.getPublicInstitution().getCardNoView();
+		this.departName = r.getPublicInstitution().getDepartName();
+		this.status = convertState(r.getPlanState());
 	}
 	
-	public String convertState(int state) {
-		
-		if (state == 0) {
-			return "待提交招录计划";
-		} else if (state == 1) {
+	public String convertState(Integer state) {
+		if (state == null) {
+			return "流程办结";
+		}else if (state == 1) {
 			return "待上级单位初审";
 		} else if (state == 2) {
-			return "待区人事主管部门一级初审";
-		} else if (state == 3) {
-			return "待区人事主管部门二级初审";
-		} else if (state == 4) {
-			return "待区人事主管部门三级初审";
-		} else if (state == 5) {
-			return "待区人事主管部门四级初审";
-		} else if (state == 6) {
-			return "待区编办终审";
-		} else if (state == 7) {
-			return "待区人事主管部门确认";
-		} else if (state == 8) {
-			return "区人事主管部门确认通过，待上报职位";
-		} else if (state == 9) {
-			return "职位上报，待上级单位审核";
-		} else if (state == 10) {
-			return "职位上报，待区人事主管部门一级审核";
-		} else if (state == 11) {
-			return "职位上报，待区人事主管部门二级审核";
-		} else if (state == 12) {
-			return "职位上报，待区人事主管部门三级审核";
-		} else if (state == 13) {
-			return "职位上报，待区人事主管部门四级审核";
-		} else if (state == 14) {
-			return "职位上报，区人事主管部门审核通过";
+			return "待区人事主管部门";
 		} else {
 			return "";
 		}
 	}
-	
+
 	public String getId() {
-		
 		return id;
 	}
-	
+
 	public void setId(String id) {
-		
 		this.id = id;
 	}
 
-	public String getEmployOrgan() {
-		return employOrgan;
+	public String getName() {
+		return name;
 	}
 
-	public void setEmployOrgan(String employOrgan) {
-		this.employOrgan = employOrgan;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getRemark() {
-		return remark;
+	public String getSex() {
+		return sex;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
-	public String getPlanState() {
-		return planState;
+	public String getCardNo() {
+		return cardNo;
 	}
 
-	public void setPlanState(String planState) {
-		this.planState = planState;
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
+	}
+
+	public String getDepartName() {
+		return departName;
+	}
+
+	public void setDepartName(String departName) {
+		this.departName = departName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

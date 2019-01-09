@@ -47,7 +47,7 @@
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn colPart="12" deviceType="md">
 						<smart:table  id="navigationList" url="ofc/pageList?departId=${orgId}"
-							height="full-215" 
+							height="full-155"
 							text="未找到有效数据！">
 							<tr>
 								<smart:tableItem field="name" width=".2" sort="true">姓名</smart:tableItem>
@@ -58,7 +58,7 @@
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar  id="navListToolBar">
-									<smart:tableToolBtn theme="warm" event="edit" title="编辑">
+									<smart:tableToolBtn theme="warm" event="edit" title="发起职务变动">
 										<smart:icon icon="edit"></smart:icon>
 									</smart:tableToolBtn>
 							</smart:tableToolBar>

@@ -1,10 +1,14 @@
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.pubinst.base.InstBaseServant;
 import com.wondersgroup.human.bo.pubinst.base.InstBaseTongue;
@@ -22,6 +26,8 @@ import com.wondersgroup.human.bo.pubinst.base.InstBaseTongue;
  */
 @Entity
 @Table(name = "C10")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtTongue extends InstBaseTongue<PtTongue> {
 
 	private static final long serialVersionUID = -6983749840985548362L;

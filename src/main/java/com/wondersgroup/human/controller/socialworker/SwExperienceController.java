@@ -36,6 +36,9 @@ import com.wondersgroup.human.bo.socialworker.SrExperience;
 import com.wondersgroup.human.service.socialworker.SocialWorkerService;
 import com.wondersgroup.human.service.socialworker.SwExperienceService;
 import com.wondersgroup.human.vo.socialworker.SwExperienceVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: ExperienceController
@@ -83,6 +86,8 @@ public class SwExperienceController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<ExperienceVO>
 	 */
+	@Log(title = "查询简历信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<SwExperienceVO> pageListSw(String Id, Integer limit, Integer page) {
@@ -100,6 +105,8 @@ public class SwExperienceController extends GenericController {
 	 * @param temp 简历（工作经历）信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑简历信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult saveSw(SrExperience temp) {
@@ -131,6 +138,8 @@ public class SwExperienceController extends GenericController {
 	 * @param temp 简历（工作经历）信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除简历信息", operatorType = OperatorType.MANAGE, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult deleteSw(String id) {

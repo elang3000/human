@@ -125,7 +125,8 @@
 										<smart:singleSelect labelName="最高职务标识：" name="highestPostSign.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${post.highestPostSign.id}" verify="required" isNotNull="true"></smart:singleSelect>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="现任职务标识：" name="nowPostSign.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${post.nowPostSign.id}" verify="required" isNotNull="true"></smart:singleSelect>
+										<%-- <smart:singleSelect labelName="现任职务标识：" name="nowPostSign.id" display="block" url="dictquery/sub/code/DM215" isAddDefaltOption="true" initSelectedKey="${post.nowPostSign.id}" verify="required" isNotNull="true"></smart:singleSelect> --%>
+										<smart:singleSelect labelName="现任职务标识：" name="tenureStatus.id" display="block" url="dictquery/sub/code/DM007" isAddDefaltOption="true" initSelectedKey="${post.tenureStatus.id}" verify="required" isNotNull="true"></smart:singleSelect>
 									</smart:gridColumn>
 								</smart:gridRow> 
 								<%-- <smart:gridRow>

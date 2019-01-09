@@ -34,6 +34,51 @@
 					<smart:textInput type="hidden" name="cardNo" value="${s.cardNo}"></smart:textInput>
 					<smart:textInput type="hidden" name="sourceType" value="${sourceType}"></smart:textInput>
 					<smart:textInput type="hidden" name="result" id="result"></smart:textInput>
+					<smart:textInput type="hidden" name="allowWeaveNum"  value="${d.allowWeaveNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="realNum"  value="${d.realNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="thisYearLackWeaveNum"  value="${d.thisYearLackWeaveNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="chiefLackWeaveNum"  value="${d.chiefLackWeaveNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="vacancySectionChiefLevelNumber"  value="${d.vacancySectionChiefLevelNumber}" ></smart:textInput>
+					<smart:textInput type="hidden" name="vacancyNonLeaderSectionChiefLevelNumber"  value="${d.vacancyNonLeaderSectionChiefLevelNumber}" ></smart:textInput>
+					<smart:textInput type="hidden" name="notIntoSectionChiefNum"  value="${d.notIntoSectionChiefNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="notIntoDeputySectionChiefNum"  value="${d.notIntoDeputySectionChiefNum}" ></smart:textInput>
+					<smart:textInput type="hidden" name="notIntoNum"  value="${d.notIntoNum}" ></smart:textInput>
+					<smart:gridRow>
+						<smart:title title="机构编制信息" style="margin-top: 5px;" color="blue" />
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="机构编制数" infovalue="${d.allowWeaveNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="机构实有人数" infovalue="${d.realNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="机构缺编数" infovalue="${d.thisYearLackWeaveNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="处级实职缺编人数" shortName="处级实职缺编数" infovalue="${d.chiefLackWeaveNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级(领导)实职缺编人数" infovalue="${d.vacancySectionChiefLevelNumber}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级(非领导)实职缺编人数" infovalue="${d.vacancyNonLeaderSectionChiefLevelNumber}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
+					<smart:gridRow>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级领导未调入数 " infovalue="${d.notIntoSectionChiefNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="科级非领导未调入数" infovalue="${d.notIntoDeputySectionChiefNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+						<smart:gridColumn colPart="4">
+							<smart:infoShowerLabel infoname="尚未调入人数" infovalue="${d.notIntoNum}"></smart:infoShowerLabel>
+						</smart:gridColumn>
+					</smart:gridRow>
 					<smart:gridRow>
 						<smart:title title="人员基本信息" style="margin-top: 5px;" color="blue" />
 					</smart:gridRow>
@@ -83,7 +128,7 @@
 						<smart:gridColumn colPart="3" colOffset="1">
 							<smart:gridRow>
 								<smart:gridColumn colPart="12">
-									<img alt="照片" src="static/image/20170705135600.jpg">
+									<img style="width:150px;height:200px;min-width:150px;min-height:200px;" alt="照片" src="ftp/getImg?imgName=${s.photoPath}">
 								</smart:gridColumn>
 							</smart:gridRow>
 						</smart:gridColumn>
@@ -110,30 +155,22 @@
 					</smart:gridRow>
 					<smart:gridRow>
 						<smart:gridColumn colPart="4">
-							<smart:date labelName="进入本单位日期：" display="block" name="enterTheUnitDate" id="enterTheUnitDate" value="${d.enterTheUnitDate}"></smart:date>
-						</smart:gridColumn>
-						<smart:gridColumn colPart="4">
-							<smart:numberInput min="0" labelName="进入本单位时基层工作经历时间（月）:" name="intoBasicWorkTime" value="${d.intoBasicWorkTime}"  display="block" type="text"></smart:numberInput>
-						</smart:gridColumn>
-						<smart:gridColumn colPart="4">
 							<smart:singleSelect isNotNull="true" verify="required"
 								name="personType.id" labelName="调任后人员类别：" display="block"
 								initSelectedKey="${d.personType.id}"
 								url="dictquery/sub/code/DM199/1"></smart:singleSelect>
 						</smart:gridColumn>
-					</smart:gridRow>
-					<smart:gridRow>
 						<smart:gridColumn colPart="4">
 							<smart:singleSelect initSelectedKey="${d.enterTheUnitChangeType.id}" name="enterTheUnitChangeType.id"
-								labelName="进入本单位变动类别：" isNotNull="true" verify="required" url="dictquery/sub/code/GBT_12405_2008/10"
+								labelName="进入本单位变动类别：" shortName="变动类别" isNotNull="true" verify="required" url="dictquery/sub/code/GBT_12405_2008/10"
 								display="block" isAddDefaltOption="true"></smart:singleSelect>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="4">
 							<smart:singleSelect labelName="职级名称：" name="jobLevelCode.id"
 								display="block" url="dictquery/sub/code/GBT_12407_2008/1"
 								isAddDefaltOption="true" initSelectedKey="${d.jobLevelCode.id }"
-								verify="required" isNotNull="true" isSaveShowName="true"
-								inputShowName="jobLevelName" initCludeKey="[141,142,150,160]"></smart:singleSelect>
+								verify="required" isNotNull="true" isSaveShowName="true" id="jobLevelName"
+								inputShowName="jobLevelName" initIncludeKey="141,142,150,160"></smart:singleSelect>
 						</smart:gridColumn>
 					</smart:gridRow>
 					<smart:gridRow>
@@ -182,7 +219,6 @@
 		</smart:buttonScriptAction>
 		<smart:dateRender id="enterLocalRegionDate" />
 		<smart:dateRender id="enterTheSystemDate" />
-		<smart:dateRender id="enterTheUnitDate" />
 		<smart:dateRender id="selectionDate" />
 		<smart:dateRender id="employDate" />
 		form.on('submit(save)', function (data) {//表单保存

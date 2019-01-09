@@ -17,6 +17,7 @@ package com.wondersgroup.human.bo.pubinst;
 
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +26,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
 
@@ -39,6 +43,8 @@ import com.wondersgroup.framework.core.bo.GenericEntity;
  */
 @Entity
 @Table(name = "PUBLIC_TRAIN_HOURS_RECORD")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtTrainingHours extends GenericEntity {
 	
 	private static final long serialVersionUID = 5316335517696256577L;

@@ -17,6 +17,7 @@ package com.wondersgroup.human.vo.ofc;
 
 import java.text.SimpleDateFormat;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wondersgroup.human.bo.ofc.Servant;
 
 /**
@@ -133,6 +134,17 @@ public class ServantVO {
 	 */
 	private String health;
 	
+	/**
+	 * @Description: 照片。
+	 */
+	private String photoPath;
+	
+	/**
+	 * @Description: 列表复选框回显。
+	 */
+	@JsonProperty(value = "LAY_CHECKED")
+	private Boolean LAY_CHECKED;
+	
 	public ServantVO() {
 		
 	}
@@ -149,7 +161,7 @@ public class ServantVO {
 		if (s.getSex() != null) {
 			this.sex = s.getSex().getName();
 		}
-		this.cardNo = s.getCardNo();
+		this.cardNo = s.getCardNoView();
 		this.departName = s.getDepartName();
 		this.departId = s.getDepartId();
 		if (s.getNowJobLevel() != null) {
@@ -173,6 +185,7 @@ public class ServantVO {
 		}
 		this.birthPlaceName = s.getBirthPlaceName();
 		this.nativePlaceName = s.getNativePlaceName();
+		this.photoPath = s.getPhotoPath();
 		if (s.getPersonType() != null) {
 			this.personType = s.getPersonType().getName();
 		}
@@ -351,4 +364,23 @@ public class ServantVO {
 		this.health = health;
 	}
 	
+	public String getPhotoPath() {
+		
+		return photoPath;
+	}
+	
+	public void setPhotoPath(String photoPath) {
+		
+		this.photoPath = photoPath;
+	}
+	
+	public Boolean getLAY_CHECKED() {
+		
+		return LAY_CHECKED;
+	}
+	
+	public void setLAY_CHECKED(Boolean lAY_CHECKED) {
+		
+		LAY_CHECKED = lAY_CHECKED;
+	}
 }

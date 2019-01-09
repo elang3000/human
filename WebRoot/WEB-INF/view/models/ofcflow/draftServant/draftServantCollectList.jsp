@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="smart"
 	uri="http://smart.wondersgroup.com/page/component"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <!DOCTYPE html >
 <html>
 <head>
@@ -63,15 +64,11 @@
 									title="查询">
 									<smart:icon icon="search"></smart:icon>
 								</smart:button>
-									<smart:button size="sm" method="add" title="汇总上报提交">
-										<smart:icon icon="plus">&nbsp;汇总上报提交</smart:icon>
-									</smart:button>
-<%-- 									<smart:button  theme="warm" size="sm" method="batchCancel" title="批量取消">
-										<smart:icon icon="reply">&nbsp;批量取消</smart:icon>
-									</smart:button> --%>
-<%-- 									<smart:button  theme="danger" size="sm" method="add" title="录用总结上报">
-										<smart:icon icon="check">&nbsp;录用总结上报</smart:icon>
-									</smart:button> --%>
+									<shiro:hasPermission name="DRAFTSERVANT_SUMMARY_BTN">
+										<smart:button size="sm" method="add" title="汇总上报提交">
+											<smart:icon icon="plus">&nbsp;汇总上报提交</smart:icon>
+										</smart:button>
+									</shiro:hasPermission>
 								</smart:buttonGroup>
 							</smart:gridColumn>
 							</smart:gridRow>
@@ -81,15 +78,15 @@
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn colPart="12" deviceType="md">
 						<smart:table id="navigationList" url="ofcflow/draftServantSummary/collectPage"
-							height="full-215" text="未获取到数据！" limits="10,50,100,1000">
+							height="full-255" text="未获取到数据！" limits="10,50,100,1000">
 							<tr>
 								<smart:tableItem isCheckbox="true">全选</smart:tableItem>
 								<smart:tableItem field="name" width="150" sort="false">姓名</smart:tableItem>
 								<smart:tableItem field="cardNo" width="200" sort="false">身份证</smart:tableItem>
+								<smart:tableItem field="sex" width="150" sort="false">性别</smart:tableItem>
 								<smart:tableItem field="draftUnitName" width="150" sort="true">录用单位</smart:tableItem>
 								<smart:tableItem field="draftDeptName" width="150" sort="true">录用部门</smart:tableItem>
 								<smart:tableItem field="yearTip" width="150" sort="true">年度</smart:tableItem>
-								<smart:tableItem field="sex" width="150" sort="false">性别</smart:tableItem>
 								<smart:tableItem field="servantType" width="118" sort="true">人员类型</smart:tableItem>
 								<smart:tableItem field="employComment" width="200" sort="false">录用鉴定评语</smart:tableItem>
 								<smart:tableItem field="employSituation" width="80" sort="false">录用情况</smart:tableItem>
@@ -100,15 +97,15 @@
 								<smart:tableToolBtn theme="warm" event="edit" title="编辑">
 									<smart:icon icon="edit"></smart:icon>
 								</smart:tableToolBtn>
-<%-- 								<smart:tableToolBtn theme="danger" event="cancel" title="取消汇总">
+								<smart:tableToolBtn theme="danger" event="remove" title="删除">
 									<smart:icon icon="trash"></smart:icon>
-								</smart:tableToolBtn> --%>
+								</smart:tableToolBtn>
 							</smart:tableToolBar>
 						</smart:table>
 					</smart:gridColumn>
 				</smart:gridRow>
 			</smart:cardBody>
-		</smart:card> 
+		</smart:card>
 	</smart:grid>
 	<smart:scriptHead models="table,form,layer,element,laydate">
 		<smart:utils />
@@ -125,6 +122,23 @@
 						size : 'full',
 						url : "ofcflow/draftServant/employInfoEditPage?id="+data.data.id,
 						scrollbar : false
+					});
+				},
+				remove : function(data) {
+					smart.confirm({
+					title:'删除人员',
+						message:'确认删除人员？',
+						type:'POST',
+						url:'ofcflow/draftServant/deleteDraftServant',
+						params : {
+							id : data.data.id
+						},
+						callback : function() {
+							var params = smart.json($('#searchForm'));
+							table.reload('navigationList', {
+								where : params
+							});
+						}
 					});
 				},
 				cancel:function(data){
@@ -161,7 +175,7 @@
 							message : "请选择汇总上报数据！"
 							,type : 'W' //S保存  I问号  W感叹号 E错误
 						});
-			    	}else{ 
+			    	}else{
 						for(var i=1;i<employSituationArr.length;i++){
 							if(employSituationArr[0]!=employSituationArr[i]){
 								smart.message({
@@ -171,13 +185,25 @@
 								return;
 							}
 						}
-			    		smart.show({
-							title : '汇总上报',
-							size : 'full',
-							url : "ofcflow/draftServantSummary/draftServantReport",
-							params:{"ids":ids.join(",")},
-							scrollbar : false
-						});
+
+
+			$.post("ofcflow/draftServantSummary/draftServantReportValidate", {"ids":ids.join(",")},
+                function(result){
+                    if(result.success){
+                        smart.show({
+                            title : '汇总上报',
+                            size : 'full',
+                            url : "ofcflow/draftServantSummary/draftServantReport",
+                            params:{"ids":ids.join(",")},
+                            scrollbar : false
+                        });
+                    }else{
+                        layer.alert(
+                        result.message,
+                        {icon: 0,closeBtn:0 });
+                    }
+			});
+
 					}
 				},
 				batchCancel: function(data) {
@@ -207,7 +233,7 @@
 		 </smart:buttonScriptAction>
  		 //复选框选中监听,将选中的id 设置到缓存数组,或者删除缓存数组
         table.on('checkbox(navigationList)', function (obj) {
-           table_data.splice(0,table_data.length);//清空数组 
+           table_data.splice(0,table_data.length);//清空数组
            var checkStatus = table.checkStatus('navigationList').data;
            for(var i=0;i<checkStatus.length;i++){
                  var da=checkStatus[i];
@@ -215,7 +241,7 @@
            }
            ids=table_data;
         });
-	    
+
 		$(".layui-tab-title li").removeClass("layui-this");
 		$(".layui-tab-title li:eq("+tabNum+")").addClass("layui-this");
 	</smart:scriptHead>

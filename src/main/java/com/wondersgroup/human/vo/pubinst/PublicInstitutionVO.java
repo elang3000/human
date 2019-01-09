@@ -92,7 +92,8 @@ public class PublicInstitutionVO {
 		if(p.getSex()!=null){
 			this.sex=p.getSex().getName();
 		}
-		this.cardNo=p.getCardNo();
+		//this.cardNo=p.getCardNo();
+		this.cardNo = p.getCardNoView();//身份证加密
 		this.departName=p.getDepartName();
 		this.postName = p.getNowPostName();
 		if(p.getIsOnHold()!=null){

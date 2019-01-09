@@ -50,7 +50,7 @@
 				<smart:gridRow colSpace="5">
 					<smart:gridColumn colPart="12" deviceType="md">
 						<smart:table id="navigationList"
-							url="analysis/specialCount/mag/list" height="full-155" 
+							url="analysis/specialCount/mag/list" height="full-145" 
 							text="未找到有效数据！">
 							<tr>
 								<smart:tableItem field="departName" width=".21">单位</smart:tableItem>
@@ -61,7 +61,10 @@
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar">
-								<smart:tableToolBtn theme="default" event="view" title="查看">
+								<smart:tableToolBtn theme="normal" event="view" title="查看">
+									<smart:icon icon="bar-chart"></smart:icon>
+								</smart:tableToolBtn>
+								<smart:tableToolBtn theme="warm" event="detail" title="详情">
 									<smart:icon icon="eye"></smart:icon>
 								</smart:tableToolBtn>
 							</smart:tableToolBar>
@@ -82,6 +85,15 @@
 		            title : '单位详情查看',
 		            size : 'full',
 		            url : 'analysis/specialCount/mag/view?departId='+data.data.departId+'&year='+year+'&departName='+data.data.departName,
+		            scrollbar : false
+	            });
+            },
+            detail : function(data) {
+            	var year = $('#year').val();
+	            smart.show({
+		            title : '单位详情查看',
+		            size : 'full',
+		            url : 'ofc/managerRecord/managerRecordList?departId='+data.data.departId+'&year='+year,
 		            scrollbar : false
 	            });
             }

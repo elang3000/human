@@ -64,7 +64,7 @@
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
 							<smart:tableToolBar id="navListToolBar">
-								<smart:tableToolBtn theme="default" event="view" title="查看">
+								<smart:tableToolBtn theme="warm" event="view" title="查看">
 									<smart:icon icon="eye"></smart:icon>
 								</smart:tableToolBtn>
 							</smart:tableToolBar>

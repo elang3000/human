@@ -31,10 +31,10 @@
 						<smart:gridRow>
 						    <smart:gridColumn colPart="4">
 						        <smart:textInput type="hidden" id="planState" name="planState" value="0"></smart:textInput>
-								<smart:textInput labelName="姓名:" value="${recruitemployplan.name}" name="name" placeholder="姓名"></smart:textInput>
+								<smart:textInput isNotNull="true" verify="required" labelName="姓名:" value="${recruitemployplan.name}" name="name" placeholder="姓名"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect labelName="性别：" display="block" name="sex.id" url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true">
+								<smart:singleSelect isNotNull="true" verify="required" labelName="性别：" display="block" name="sex.id" url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true">
 								</smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
@@ -58,7 +58,7 @@
 								<smart:singleSelect labelName="婚姻状况：" name="marriage.id" initSelectedKey="${servant.marriage.id}" display="block" url="dictquery/sub/code/GBT_2261_2_2003" isAddDefaltOption="true"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
-								<smart:textInput labelName="身份证:" value="${recruitemployplan.name}" name="cardNo" placeholder="身份证"></smart:textInput>
+								<smart:textInput isNotNull="true" verify="required" labelName="身份证:" value="${recruitemployplan.name}" name="cardNo" placeholder="身份证"></smart:textInput>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="4">
 							    <smart:singleSelect labelName="人员进入方式:" name="intoWay.id" initSelectedKey="${servant.marriage.id}" display="block" url="dictquery/sub/code/SY100" isAddDefaltOption="true"></smart:singleSelect>
@@ -88,10 +88,10 @@
 										theme="normal">
 										<smart:icon icon="check">&nbsp;提交</smart:icon>
 									</smart:button>
-									<smart:button id="save" other="lay-submit" size="sm" title="暂存"
+									<%-- <smart:button id="save" other="lay-submit" size="sm" title="暂存"
 										theme="default">
 										<smart:icon icon="plus">&nbsp;暂存</smart:icon>
-									</smart:button>
+									</smart:button> --%>
 									<smart:button theme="warm" size="sm" method="goBack" title="返回">
 										<smart:icon icon="reply">&nbsp;返回</smart:icon>
 									</smart:button>
@@ -122,6 +122,8 @@
 		
 		<smart:buttonScriptAction>
 			goBack : function(data) {
+				var index=parent.layer.getFrameIndex(window.name);
+				parent.layer.close(index);
 				window.location.href='instflow/inforegister/index';
 			}
 		 </smart:buttonScriptAction>

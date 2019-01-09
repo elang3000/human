@@ -30,7 +30,7 @@
 								<smart:textInput labelName="单位名称："  display="inline"
 									placeholder="请输入单位名称" name="unitName"></smart:textInput>
 							</smart:gridColumn>
-							<smart:gridColumn colPart="3" >
+							<smart:gridColumn colPart="5" >
 								<smart:buttonGroup container="true">
 									<smart:button size="sm" method="search" title="查询"
 										theme="primary">
@@ -68,12 +68,12 @@
 								<smart:tableItem align="center" width=".2" fixed="right"
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
-							<!-- 年度考核完成 可以修改考核结果,入口关闭 -->
 							<script type="text/html" id="navListToolBar">
 									<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="view"  title="查看详情">
 											<i class="fa fa-eye"></i>
-										</a>	
+										</a>
 
+									<!-- 年度考核完成 可以修改考核结果,入口关闭 -->
 									{{#  if(d.flowStatus=="1123123"){ }}
 										<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit"  title="编辑年度考核结果">
 											<i class="fa fa-edit"></i>

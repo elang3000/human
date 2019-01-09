@@ -80,6 +80,9 @@ public class LoanToServiceImpl extends GenericServiceImpl<LoanTo> implements Loa
 		e.setServant(temp.getServant());//人员信息
 		e.setFormerUnit(temp.getTargetOrgan());//所在单位
 		e.setStartDate(temp.getStartDate());//开始时间
+		if(temp.getEndDate()!=null){
+			e.setEndDate(temp.getEndDate());//结束时间
+		}
 		experienceService.save(e);
 		//备案管理
 		HumankeepRecordDTO dto2 = new HumankeepRecordDTO(temp.getServant().getId(),HumanKeepRecord.KEEP_JD);

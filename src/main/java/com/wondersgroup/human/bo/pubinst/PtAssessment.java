@@ -15,11 +15,15 @@
 
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.ofc.base.BaseAssessment;
 
@@ -36,6 +40,8 @@ import com.wondersgroup.human.bo.ofc.base.BaseAssessment;
  */
 @Entity
 @Table(name = "C15")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtAssessment extends BaseAssessment<PtAssessment> {
 	
 	private static final long serialVersionUID = -6678568230621176606L;

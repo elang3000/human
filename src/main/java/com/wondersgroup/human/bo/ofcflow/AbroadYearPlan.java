@@ -16,12 +16,17 @@
 package com.wondersgroup.human.bo.ofcflow;
 
 import java.util.Date;
+
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.wondersgroup.framework.core.bo.GenericEntity;
 
@@ -36,6 +41,8 @@ import com.wondersgroup.framework.core.bo.GenericEntity;
  */
 @Entity
 @Table(name = "HUMAN_ABROAD_YEAR_PLAN")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AbroadYearPlan extends GenericEntity {
 
 	private static final long serialVersionUID = 5628793259105657724L;
@@ -66,7 +73,7 @@ public class AbroadYearPlan extends GenericEntity {
 	/**
 	 * @fieldName: country
 	 * @fieldType: String
-	 * @Description: 出访国家
+	 * @Description: 出访国家（境）
 	 *
 	 */
 	@Column(name="COUNTRY",length=255)

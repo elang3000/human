@@ -35,6 +35,9 @@ import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.human.bo.organization.OrgInfoHistory;
 import com.wondersgroup.human.service.organization.OrgInfoHistoryService;
 import com.wondersgroup.human.vo.organization.OrgInfoHistoryVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: OrgInfoHistoryController
@@ -81,6 +84,8 @@ public class OrgInfoHistoryController extends GenericController {
 	 * @param page 页码
 	 * @return: Page<ServantVO>
 	 */
+	@Log(title = "查询行政机构调整历史信息列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/pageList")
 	public Page<OrgInfoHistoryVO> pageList(OrgInfoHistory orgInfoHistory, Integer limit, Integer page, String organId) {
@@ -119,6 +124,8 @@ public class OrgInfoHistoryController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
+	@Log(title = "查询机构历史信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@RequestMapping("/view")
 	public String view(Model model, String id) {
 		

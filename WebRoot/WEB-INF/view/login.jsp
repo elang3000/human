@@ -15,10 +15,10 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<link rel="shortcut icon" type="image/x-icon" href="static/image/favicon.ico"  media="screen"/>
-<link rel="stylesheet" href="layui/css/layui.css" media="all"/>
-<link href="layadmin/style/admin.css" rel="stylesheet" />
-<link href="layadmin/style/login.css" rel="stylesheet" media="all"/>
+<link rel="shortcut icon" type="image/x-icon" href="static/image/favicon.ico"/>
+<link rel="stylesheet" href="layui/css/layui.css""/>
+<link href="layadmin/style/admin.css" rel="stylesheet"/>
+<link href="layadmin/style/login.css" rel="stylesheet"/>
 <style type="text/css">
 .bg {
 	background-image:url(static/image/login-bg.png);

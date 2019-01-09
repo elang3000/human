@@ -101,7 +101,7 @@ public class SwEducationServiceImpl extends GenericServiceImpl<SrEducation> impl
 			this.executeRestAllTopEducationFlag(entity.getSocialWorker().getId());
 			//修改公务员A01表中最高学历和毕业时间输出显示
 			SocialWorker social = socialWorkerService.get(entity.getSocialWorker().getId());
-			social.setTopEducation(entity.getCode().getId());
+			social.setTopEducation(entity.getName());
 			social.setGraduateDate(entity.getGraduateDate());
 			socialWorkerService.update(social);
 		}else if(entity.getTopFlag().getId().equals(noCodeInfo.getId())){

@@ -43,6 +43,9 @@ import com.wondersgroup.human.bo.ofcflow.Exercise;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.service.ofcflow.ExerciseService;
 import com.wondersgroup.human.vo.ofcflow.ExerciseVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: ExerciseController 
@@ -133,6 +136,8 @@ public class ExerciseController extends GenericController{
 	 * @return
 	 * @return: Page<ExerciseVO>
 	 */
+	@Log(title = "查询挂职锻炼列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/infoList")
 	public Page<ExerciseVO> infoList(String name,String targetOrgan,Integer limit,Integer page) {
@@ -164,6 +169,8 @@ public class ExerciseController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑挂职锻炼信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Exercise temp){
@@ -206,6 +213,8 @@ public class ExerciseController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "备案挂职锻炼信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.APPROVAL,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/operationFlow")
 	public AjaxResult operationFlow(Exercise temp, HttpServletRequest request) {
@@ -246,6 +255,8 @@ public class ExerciseController extends GenericController{
 	 * @return
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除挂职锻炼信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id){

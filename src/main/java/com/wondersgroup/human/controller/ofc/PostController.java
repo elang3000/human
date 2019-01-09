@@ -37,6 +37,9 @@ import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.PostService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.PostVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: PostController 
@@ -76,7 +79,7 @@ public class PostController extends GenericController{
 	
 	/**
 	 * @Title: pageList 
-	 * @Description: 在职人员信息列表
+	 * @Description: 人员职务信息列表
 	 * @param servantId			人员id
 	 * @param limit			页大小
 	 * @param page			页码
@@ -97,6 +100,8 @@ public class PostController extends GenericController{
 	 * @param temp		职务信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑职务信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Post temp){
@@ -127,6 +132,8 @@ public class PostController extends GenericController{
 	 * @param temp		职务信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除职务信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id){

@@ -15,7 +15,7 @@
 					<smart:fromTokenTag/>
 					<smart:gridRow>
 						<smart:gridColumn colPart="3" >
-							<smart:singleSelect labelName="年度招录计划：" display="block" isNotNull="true" verify="required" id="myida" name="yearPlanId" url="ofcflow/recruit/year/find"></smart:singleSelect>
+							<smart:singleSelect labelName="年度招录计划：" isSearch="true" display="block" isNotNull="true" verify="required" id="myida" name="yearPlanId" url="ofcflow/recruit/year/find"></smart:singleSelect>
 						</smart:gridColumn>
 						<smart:gridColumn colPart="3">
 							<smart:textInput labelName="招录机关：" otherAttr="readonly"

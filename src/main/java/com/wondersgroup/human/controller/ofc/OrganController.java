@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wondersgroup.common.contant.CommonConst;
+import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.organization.bo.OrganNode;
+import com.wondersgroup.framework.organization.service.OrganNodeService;
 import com.wondersgroup.framework.organization.service.OrganizationService;
 import com.wondersgroup.framework.organization.vo.OrganNodeVO;
 import com.wondersgroup.framework.util.StringUtils;
@@ -33,6 +35,9 @@ public class OrganController extends GenericController {
 	
 	@Autowired
 	private OrganizationService organizationService;
+	
+	@Autowired
+	private OrganNodeService organNodeService;
 	
 	/**
 	 * @Title: orgRelations
@@ -78,5 +83,19 @@ public class OrganController extends GenericController {
 		organNodeTypeCode.add(CommonConst.ORGAN_TYPE_D_CLASS_CODE);
 		organNodeTypeCode.add(CommonConst.ORGAN_TYPE_UNIT_CODE);
 		return organizationService.queryOrganNodeByType(organTreeId, name, organNodeTypeCode, page, limit);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/queryOrganType")
+	public AjaxResult queryOrganType(String organId){
+		AjaxResult result = new AjaxResult(true);
+		OrganNode organNode = organNodeService.get(organId);
+		if(organNode == null){
+			result.setSuccess(false);
+			result.setMessage("节点ID无效，ID："+organId);
+			return result;
+		}
+		result.setData(organNode.getOrganNodeType().getCode());
+		return result;
 	}
 }

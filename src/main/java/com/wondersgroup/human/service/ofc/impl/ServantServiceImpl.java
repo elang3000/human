@@ -16,10 +16,13 @@ package com.wondersgroup.human.service.ofc.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
@@ -62,6 +65,25 @@ public class ServantServiceImpl extends GenericServiceImpl<Servant> implements S
 				servantPage.getTotalSize(), servantPage.getPageSize(), voList);
 		return page;
 	}
+	
+	public Page<ServantVO> getPage(DetachedCriteria detachedCriteria, Integer pageNo, Integer limit,String ids){
+		Page<Servant> servantPage = servantRepository.findByCriteria(detachedCriteria, pageNo, limit);
+		List<ServantVO> voList = new ArrayList<>();
+		String[] id = ids.split(",");
+		for (Servant s : servantPage.getResult()) {
+			ServantVO vo = new ServantVO(s);
+			for(String ant:id){
+				if(ant.equals(s.getId())){
+					vo.setLAY_CHECKED(true);
+					break;
+				}
+			}
+			voList.add(vo);
+		}
+		Page<ServantVO> page = new Page<>(servantPage.getStart(), servantPage.getCurrentPageSize(),
+				servantPage.getTotalSize(), servantPage.getPageSize(), voList);
+		return page;
+	}
 
 	/**
 	 * (non Javadoc) 
@@ -86,8 +108,36 @@ public class ServantServiceImpl extends GenericServiceImpl<Servant> implements S
 	 * @see com.wondersgroup.human.service.ofc.ServantService#queryServantInfoBySeniorCondation(java.util.Map, java.lang.Integer, java.lang.Integer) 
 	 */
 	@Override
-	public Page<ServantVO> queryServantInfoBySeniorCondation(List<ServantParam> spList, Integer page,
+	public Page<ServantVO> queryServantInfoBySeniorCondation(List<ServantParam> spList, Map<String, String> m,Integer page,
 			Integer limit) {
-		return servantRepository.queryServantInfoBySeniorCondation(spList, page, limit);
+		return servantRepository.queryServantInfoBySeniorCondation(spList,m, page, limit);
+	}
+
+	/**
+	 * 通过姓名和身份证号查询对应的servant
+	 *
+	 * @param cardNo
+	 * @return
+	 */
+	@Override
+	public List<Servant> getServantByCardNo(String cardNo) {
+
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Servant.class);
+		detachedCriteria.add(Restrictions.eq("cardNo", cardNo));
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
+		detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
+		detachedCriteria.add(Restrictions.eq("removed", false));
+		List<Servant> allActiveServant = servantRepository.findByCriteria(detachedCriteria);
+		return allActiveServant;
+
+	}
+
+	/** 
+	 * @see com.wondersgroup.human.service.ofc.ServantService#queryServantInfoBySeniorCondation(java.util.List, java.util.List, java.lang.Integer, java.lang.Integer) 
+	 */
+	@Override
+	public Page<ServantVO> queryServantInfoBySeniorCondation(List<String> pList, List<String> l, Integer page,
+			Integer limit) {
+		return servantRepository.queryServantInfoBySeniorCondation(pList,l, page, limit);
 	}
 }

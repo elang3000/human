@@ -373,7 +373,7 @@
 					<smart:accordionPanelItem title="处分信息">
 						<smart:table id="punishNavigationList" url="socialWorker/punish/pageList?Id=${id}" height="full" page="false" limit="10000" text="未找到用户数据！">
 							<tr>
-								<smart:tableItem field="category" width=".2" sort="false">人员受奖惩类别 </smart:tableItem>
+								
 								<smart:tableItem field="punishNo" width=".2" sort="false">受处分决定原始文件</smart:tableItem>
 								<smart:tableItem field="punishName" width=".2" sort="false">受惩戒名称</smart:tableItem>
 								<smart:tableItem field="punishApprovalUnitName" width=".2" sort="false">惩戒批准单位名称</smart:tableItem>

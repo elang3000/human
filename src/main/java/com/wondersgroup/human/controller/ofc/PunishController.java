@@ -33,13 +33,14 @@ import com.wondersgroup.framework.core.dao.support.Predicate.Operator;
 import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.framework.utils.DictUtils;
-import com.wondersgroup.human.bo.ofc.Post;
-import com.wondersgroup.human.bo.ofc.Probation;
 import com.wondersgroup.human.bo.ofc.RewardAndPunish;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.RewardAndPunishService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.PunishVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: RewardAndPunishController 
@@ -141,6 +142,8 @@ public class PunishController  extends GenericController{
 	 * @param page			页码
 	 * @return: Page<PunishVO>
 	 */
+	@Log(title = "查询惩戒信息列表", operatorType = OperatorType.BUSINESS, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/getPage")
 	public Page<PunishVO> getPage(PunishVO punishVO,Integer limit,Integer page){
@@ -200,6 +203,8 @@ public class PunishController  extends GenericController{
 	 * @param temp		职务信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑处分信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(RewardAndPunish temp){
@@ -232,6 +237,8 @@ public class PunishController  extends GenericController{
 	 * @param temp		培训人员
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除处分信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delPunish(String id){

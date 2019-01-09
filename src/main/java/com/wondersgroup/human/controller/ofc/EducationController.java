@@ -32,12 +32,13 @@ import com.wondersgroup.framework.util.BeanUtils;
 import com.wondersgroup.framework.util.StringUtils;
 import com.wondersgroup.framework.utils.DictUtils;
 import com.wondersgroup.human.bo.ofc.Education;
-import com.wondersgroup.human.bo.ofc.JobLevel;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.service.ofc.EducationService;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.EducationVO;
-import com.wondersgroup.human.vo.ofc.JobLevelVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: EducationController
@@ -66,7 +67,7 @@ public class EducationController extends GenericController {
 	@RequestMapping("/edit")
 	public String educationEdit(String servantId, String educationId, Model model) {
 		
-		if (StringUtils.isNoneBlank(educationId)) {
+		if (StringUtils.isNotBlank(educationId)) {
 			Education education = educationService.get(educationId);
 			model.addAttribute("education", education);
 			model.addAttribute("servant", education.getServant());
@@ -102,6 +103,8 @@ public class EducationController extends GenericController {
 	 * @param temp 学历信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "编辑学历信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.UPDATE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(Education temp) {
@@ -134,6 +137,8 @@ public class EducationController extends GenericController {
 	 * @param temp 学历信息
 	 * @return: AjaxResult
 	 */
+	@Log(title = "删除学历信息", operatorType = OperatorType.BUSINESS, businessType = BusinessType.DELETE,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(String id) {

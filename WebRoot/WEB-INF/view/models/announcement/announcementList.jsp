@@ -21,7 +21,7 @@
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
 						<smart:form id="searchForm">
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect labelName="消息状态：" name="state" data="[{'key':'0','value':'未读'},{'key':'1','value':'已读'}]" isAddDefaltOption="true"></smart:singleSelect>
+								<smart:singleSelect display="block" labelName="消息状态：" name="state" data="[{'key':'0','value':'未读'},{'key':'1','value':'已读'}]" isAddDefaltOption="true"></smart:singleSelect>
 							</smart:gridColumn>
 							<smart:gridColumn colPart="2" colOffset="5">
 								<smart:buttonGroup container="true">
@@ -45,8 +45,9 @@
 							text="未找到有效数据！">
 							<tr>
 								<smart:tableItem field="title" width=".5" sort="true">消息标题</smart:tableItem>
-								<smart:tableItem field="state" width=".2" sort="true">消息状态</smart:tableItem>
-								<smart:tableItem field="createTime" width=".2" sort="true">消息日期</smart:tableItem>
+								<smart:tableItem field="state" width=".1" sort="true">消息状态</smart:tableItem>
+								<smart:tableItem field="createTime" width=".1" sort="true">消息日期</smart:tableItem>
+								<smart:tableItem field="businessName" width=".2" sort="true">业务类型</smart:tableItem>
 								<smart:tableItem align="center"  fixed="right"
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>

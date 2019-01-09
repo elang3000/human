@@ -30,7 +30,18 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports) {
 		// 主题配置
 		theme : {
 			// 配色方案，如果用户未设置主题，第一个将作为默认
-			color : [{
+			color : [
+			{
+				main : '#28333E',
+				logo : '#AA3130',
+				selected : '#AA3130',
+				alias : '时尚红'
+			}, {
+				main : '#20222A',
+				logo : '#F78400',
+				selected : '#F78400',
+				alias : '橙色'
+			}, {
 				main : '#344058',
 				logo : '#1E9FFF',
 				selected : '#1E9FFF',
@@ -56,16 +67,6 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports) {
 				logo : '#2F9688',
 				selected : '#5FB878',
 				alias : '墨绿'
-			}, {
-				main : '#20222A',
-				logo : '#F78400',
-				selected : '#F78400',
-				alias : '橙色'
-			}, {
-				main : '#28333E',
-				logo : '#AA3130',
-				selected : '#AA3130',
-				alias : '时尚红'
 			}, {
 				main : '#24262F',
 				logo : '#3A3D49',

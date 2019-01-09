@@ -1,10 +1,14 @@
 package com.wondersgroup.human.bo.pubinst;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.human.bo.pubinst.base.InstBaseWithdrawalSoldier;
 
@@ -20,6 +24,8 @@ import com.wondersgroup.human.bo.pubinst.base.InstBaseWithdrawalSoldier;
  */
 @Entity
 @Table(name = "C26")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PtWithdrawalSoldier extends InstBaseWithdrawalSoldier<PtWithdrawalSoldier>{
 
 	private static final long serialVersionUID = -5551962827736508114L;

@@ -24,7 +24,7 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="12">
-										<smart:continuousSelect id="enterTheUnitChangeType" labelName="进入类别：" inputName="enterTheUnitChangeType.id" codeTypeCode="GBT_12405_2008" inputVal="${intoMgr.enterTheUnitChangeType.id}" valType="ID" widthPercent="0.3333"/>
+										<smart:continuousSelect id="enterTheUnitChangeType"  labelName="进入类别：" isNotNull="true" verify="required"  inputName="enterTheUnitChangeType.id" codeTypeCode="GBT_12405_2008" inputVal="${intoMgr.enterTheUnitChangeType.id}" valType="ID" widthPercent="0.3333"/>
 									</smart:gridColumn>
 								</smart:gridRow>
 								
@@ -36,10 +36,10 @@
 								
 								<smart:gridRow>
 									<smart:gridColumn colPart="4">
-										<smart:date labelName="进入日期：" display="block" name="enterTheUnitDate" id="enterTheUnitDate" value="${intoMgr.enterTheUnitDate}"></smart:date>
+										<smart:date labelName="进入日期：" isNotNull="true" verify="required" display="block" name="enterTheUnitDate" id="enterTheUnitDate" value="${intoMgr.enterTheUnitDate}"></smart:date>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
-										<smart:textInput labelName="前工作单位名称：" name="formerUnitName" value="${intoMgr.formerUnitName}" ></smart:textInput>
+										<smart:textInput labelName="前工作单位名称：" isNotNull="true" verify="required" name="formerUnitName" value="${intoMgr.formerUnitName}" ></smart:textInput>
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:textInput labelName="前单位职务名称：" name="formerUnitJobName" value="${intoMgr.formerUnitJobName}" ></smart:textInput>
