@@ -122,10 +122,14 @@ public class JobShiftBatchController extends GenericController {
 
 
 
-	// 职务变动-降职页面
+	// 职务变动-批量 降职页面
 	private final static String JOBCHANGE_BATCH_DEMOTE_ADD_PAGE = "models/ofcflow/jobChange/batch/jobChangeBatchDemoteAdd";
+	// 职务变动-批量 降职页面
+	private final static String JOBCHANGE_BATCH_DEMOTE_EDIT_PAGE = "models/ofcflow/jobChange/batch/jobChangeBatchDemoteEdit";
+
+
 	// 职务变动-降职页面
-	private final static String JOBCHANGE_BATCH_DEMOTE_PAGE = "models/ofcflow/jobChange/batch/jobChangeBatchDemote";
+	private final static String JOBCHANGE_DEMOTE_EDIT_PAGE = "models/ofcflow/jobChange/batch/jobChangeDemoteEdit";
 	// 降职流程审批页面
 	private final static String JOBCHANGE_BATCH_DEMOTE_FLOW_PAGE = "models/ofcflow/jobChange/batch/flow/jobChangeDemoteFlow";
 	// 职务变动-免职页面
@@ -191,8 +195,8 @@ public class JobShiftBatchController extends GenericController {
 	/**
 	 * 主页数据
 	 * @param page
-	 * @param limit
 	 * @return
+	 * @param limit
 	 */
 	@RequestMapping("/humanIndexData")
     @ResponseBody
@@ -238,10 +242,13 @@ public class JobShiftBatchController extends GenericController {
 	 * @param jobChangeType
 	 * @return
 	 */
-    @RequestMapping("/addJobShiftCollect")
+    @RequestMapping("/addJobShiftCollectPage")
     public String addJobShiftCollect(Model model,String jobChangeType){
     	JobShiftCollect collect=new JobShiftCollect();
     	collect.setCollectType(jobChangeType);
+		//查询当前单位编制情况
+		OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		OrgInfo org = orgInfoService.findUniqueBy("organ.id", x.getId());
     	//假如是免职
     	 if(jobChangeType.equals(FlowBusTypeConstant.FLOW_JOBSHIFT_DEPOSE)){
     		return JOBCHANGE_BATCH_DEMOTE_ADD_PAGE;
@@ -249,11 +256,16 @@ public class JobShiftBatchController extends GenericController {
     	}else if(jobChangeType.equals(FlowBusTypeConstant.FLOW_JOBSHIFT_SHIFT)){
     		return JOBCHANGE_BATCH_SHIFT_PAGE;
     	}else if(jobChangeType.equals(FlowBusTypeConstant.FLOW_JOBSHIFT_DEMOTE)){
-    		return JOBCHANGE_BATCH_SHIFT_PAGE;
+			 if(org!=null){
+				 OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", org.getId());
+				 if(orgFormation!=null){
+					 BeanUtils.copyPropertiesIgnoreNull(orgFormation, collect);
+					 collect.setId(null);
+				 }
+			 }
+			 model.addAttribute("d", collect);
+    		return JOBCHANGE_BATCH_DEMOTE_ADD_PAGE;
     	}else if(jobChangeType.equals(FlowBusTypeConstant.FLOW_JOBSHIFT_PROMOTEB)){
-    		//查询当前单位编制情况
-    		OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-    		OrgInfo org = orgInfoService.findUniqueBy("organ.id", x.getId());
     		if(org!=null){
     			OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", org.getId());
     			if(orgFormation!=null){
@@ -595,8 +607,8 @@ public class JobShiftBatchController extends GenericController {
 	 * @return
 	 * @return: String
 	 */
-	@RequestMapping(value = {"/promote/{id}","/promote/{id}/{isStep13}"}, method = {RequestMethod.GET})
-	public String jobChangePromote(@PathVariable(value = "id") String id, Model model,@PathVariable(value = "isStep13", required = false) Integer isStep13 ) {
+	@RequestMapping(value = {"/promoteEditPage/{id}","/promoteEditPage/{id}/{isStep13}"}, method = {RequestMethod.GET})
+	public String gotoJobChangePromoteEdit(@PathVariable(value = "id") String id, Model model,@PathVariable(value = "isStep13", required = false) Integer isStep13 ) {
 
 		JobShiftB jobShiftB = jobShiftBService.get(id);
 		model.addAttribute("servant", jobShiftB.getServant());
@@ -639,7 +651,7 @@ public class JobShiftBatchController extends GenericController {
 	}
 
 	/**
-	 * @Title: demoteFlowPage
+	 * @Title: promoteFlowPage
 	 * @Description: 晋升流程审批页面
 	 * @param id
 	 * @param model
@@ -664,35 +676,21 @@ public class JobShiftBatchController extends GenericController {
 		//跳转到流程审批页面
 		return JOBCHANGE_BATCH_PROMOTE_FLOW_PAGE;
 	}
-	
-	
-	
+
+
 	/**
-	 * @Title: jobChangeIndex
-	 * @Description: 职务变动--降职
+	 * 修改降职汇总表单
 	 * @return
-	 * @return: String
 	 */
-	@RequestMapping(value = "/demote/{servantId}/post/{postId}", method = {
-	        RequestMethod.GET
-	})
-	public String jobChangeDemote(@PathVariable(value = "servantId") String servantId,
-	        @PathVariable(value = "postId") String postId, Model model) {
-		
-		Servant servant = servantService.get(servantId);
-		Post post = postService.get(postId);
-		model.addAttribute("servant", servant);
-		model.addAttribute("post", post);
-		model.addAttribute("isShift", false);
-		model.addAttribute("head", "降职");
-		Set<String> jobLevelSet = new HashSet<>(Arrays.asList("141","142","150","160"));
-		jobLevelSet.remove(servant.getNowJobLevel().getCode());
-		String j = Arrays.toString(jobLevelSet.toArray());
-		j = j.replace(" ", "");
-		model.addAttribute("jobLevelArray", j.substring(1,j.length()-1));
-		return JOBCHANGE_BATCH_DEMOTE_PAGE;
+	@RequestMapping("/demoteCollectEdit")
+	public String demoteCollectEdit(String id,Model model){
+		JobShiftCollect jobShiftCollect = jobShiftCollectService.get(id);
+		model.addAttribute("d", jobShiftCollect);
+		return JOBCHANGE_BATCH_DEMOTE_EDIT_PAGE;
 	}
-	
+
+
+
 	/**
 	 * @Title: demoteFlowPage
 	 * @Description: 降职流程审批页面
@@ -714,8 +712,31 @@ public class JobShiftBatchController extends GenericController {
 		model.addAttribute("servant", servant);
 		model.addAttribute("jobShift", jobShift);
 		model.addAttribute("isShift", flow.getBusType().equals(FlowBusTypeConstant.FLOW_JOBSHIFT_SHIFT));
-		if (flow.getOperationCode().equals(JobShift.JOBSHIFT_DEMOTE_STEP1)) { return JOBCHANGE_BATCH_DEMOTE_PAGE; }
+		if (flow.getOperationCode().equals(JobShift.JOBSHIFT_DEMOTE_STEP1)) { return JOBCHANGE_BATCH_DEMOTE_FLOW_PAGE; }
 		return JOBCHANGE_BATCH_DEMOTE_FLOW_PAGE;
+	}
+
+	/**
+	 * @Title: jobChangeIndex
+	 * @Description: 职务变动--晋升修改表单页面
+	 * @return
+	 * @return: String
+	 */
+	@RequestMapping(value = {"/demoteEditPage/{id}"}, method = {RequestMethod.GET})
+	public String gotoJobChangeDemoteEdit(@PathVariable(value = "id") String id, Model model) {
+
+		JobShiftB jobShiftB = jobShiftBService.get(id);
+		model.addAttribute("servant", jobShiftB.getServant());
+		JobLevel jobLevel = jobLevelService.getJobLevelByServantId(jobShiftB.getServant().getId());
+		Set<String> jobLevelSet = new HashSet<>(Arrays.asList("141","142","150","160"));
+//		jobLevelSet.remove(jobShiftB.getServant().getNowJobLevel().getCode());
+		jobShiftB.getServant().getNowJobLevel().getCode();
+		String j = Arrays.toString(jobLevelSet.toArray());
+		j = j.replace(" ", "");
+		model.addAttribute("jobLevelArray", j.substring(1,j.length()-1));
+		model.addAttribute("jobLevel", jobLevel);
+		model.addAttribute("jobShift", jobShiftB);
+		return JOBCHANGE_DEMOTE_EDIT_PAGE;
 	}
 	
 	/**
@@ -727,28 +748,49 @@ public class JobShiftBatchController extends GenericController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/operateDemoteFlow")
-	public AjaxResult jobChangeDemoteSave(JobShiftB jobShift, String opinion, String result,boolean isShift) {
-
+	public AjaxResult jobChangeDemoteSave(JobShiftCollect temp, String opinion, String result,boolean isShift) {
+		DictUtils.operationCodeInfo(temp);//将CodeInfo中id为空的属性 设置为null
 		AjaxResult ajaxResult = new AjaxResult(true);
-		if (!StringUtils.isBlank(jobShift.getId())) {
-			JobShiftB jobShiftDB = this.jobShiftBService.get(jobShift.getId());
-			BeanUtils.copyPropertiesIgnoreNull(jobShift, jobShiftDB);
-			DictUtils.operationCodeInfo(jobShift);//将CodeInfo中id为空的属性 设置为null
-			jobShift = jobShiftDB;
-		}else{
-			DictUtils.operationCodeInfo(jobShift);//将CodeInfo中id为空的属性 设置为null
-		}
-
 		try {
-			if (StringUtils.isBlank(result) || (!FlowRecord.PASS.equals(result)
-			        && !FlowRecord.NOPASS.equals(result))) { throw new BusinessException("审批结果信息不正确！"); }
-			// 审批职务变动降职
-			jobShiftBService.updateDemoteFlow(jobShift, opinion, result, isShift);
+			if(StringUtils.isNotBlank(temp.getId())){
+				//更新
+				JobShiftCollect jobShiftCollect = jobShiftCollectService.get(temp.getId());
+				//编控，校验编制数是否足够，判断数据能否保存，如果超编，抛出异常
+				BeanUtils.copyPropertiesIgnoreNull(temp, jobShiftCollect);
+				DictUtils.operationCodeInfo(jobShiftCollect);//将CodeInfo中id为空的属性 设置为null
+				if (StringUtils.isBlank(result) || (!FlowRecord.PASS.equals(result)
+						&& !FlowRecord.NOPASS.equals(result)&& !FlowRecord.STOP.equals(result))) { throw new BusinessException("审批结果信息不正确！"); }
+				// 审批职务变动晋升
+				jobShiftCollectService.updateDemoteFlowB(jobShiftCollect, opinion, result);
+				ajaxResult.setMessage("保存成功！");
+			}else{//新增
+				DictUtils.operationCodeInfo(temp);//将CodeInfo中id为空的属性 设置为null
+				OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+				if(x==null||StringUtils.isBlank(x.getId())){
+					throw new BusinessException("单位信息不能为空！");
+				}
+				OrgInfo org = orgInfoService.findUniqueBy("organ.id", x.getId());
+				if(org!=null){
+					OrgFormation orgFormation = orgFormationService.findUniqueBy("orgInfo.id", org.getId());
+					if(orgFormation!=null){
+						BeanUtils.copyPropertiesIgnoreNull(orgFormation, temp);
+						temp.setId(null);
+						temp.setCreater(null);
+					}
+				}
+				temp.setStatus(JobShiftCollect.JOBSHIFT_TOBESUBMIT);
+				jobShiftCollectService.save(temp);
+			}
+			ajaxResult.setData(temp.getId());
 			ajaxResult.setMessage("保存成功！");
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			ajaxResult.setSuccess(false);
+			ajaxResult.setMessage(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setSuccess(false);
-			ajaxResult.setMessage("保存失败！");
+			ajaxResult.setMessage("保存失败！"+e.getMessage());
 		}
 		return ajaxResult;
 	}
@@ -861,7 +903,7 @@ public class JobShiftBatchController extends GenericController {
 		String j = Arrays.toString(jobLevelSet.toArray());
 		j = j.replace(" ", "");
 		model.addAttribute("jobLevelArray", j.substring(1,j.length()-1));
-		return JOBCHANGE_BATCH_DEMOTE_PAGE;
+		return JOBCHANGE_BATCH_DEMOTE_FLOW_PAGE;
 	}
 	
 

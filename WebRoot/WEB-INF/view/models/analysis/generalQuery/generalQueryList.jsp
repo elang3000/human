@@ -24,10 +24,11 @@
 					<smart:tabPanelParent filter="tab"
 						style="margin-left:10px;margin-right:10px;">
 						<smart:tabPanel>
+							<smart:tabPanelItem turnurl="analysis/general/peopleQueryList" show="false" eId="" itemName="人员综合查询"></smart:tabPanelItem>
 							<smart:tabPanelItem show="true" eId="" itemName="公务员综合查询"></smart:tabPanelItem>
-							<smart:tabPanelItem turnurl="" show="false" eId="" itemName="事业人员综合查询"></smart:tabPanelItem>
-							<smart:tabPanelItem turnurl="" show="false" eId="" itemName="国企职工综合查询"></smart:tabPanelItem>
-							<smart:tabPanelItem turnurl="" show="false" eId="" itemName="社工综合查询"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="business/personel/businessQueryList" show="false" eId="" itemName="事业人员综合查询"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="business/nation/nationalCompanyQueryList" show="false" eId="" itemName="国企职工综合查询"></smart:tabPanelItem>
+							<smart:tabPanelItem turnurl="business/social/socialworkerqueryList" show="false" eId="" itemName="社工综合查询"></smart:tabPanelItem>
 						</smart:tabPanel>
 					</smart:tabPanelParent>
 				</smart:gridRow>
@@ -97,7 +98,7 @@
 				</smart:gridRow>
 				</div>
 				
-				<div class="layui-layer layui-layer-iframe" id="advancedQuery" style="display:none;z-index: 19891015; width: 100%;height:100%;top: 0px;">
+				<div class="layui-layer layui-layer-iframe" id="advancedQuery" style="display:none;z-index: 19891015; width: 100%;height:100%;top: 0px;overflow-y: scroll;">
 				<div id = "" class="layui-fluid">
 					<fieldset class="layui-elem-field" style="border-color:rgb(30, 159, 255);margin-top:1em;padding-left:2em;padding-right:2em;">
 					<legend>高级查询条件</legend>

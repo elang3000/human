@@ -40,7 +40,7 @@
 			
 				<smart:gridRow>
 					<smart:fieldSet title="条件查询" style="margin-top: 5px;" color="blue">
-						<smart:form id="jobChange_searchForm" action="ofcflow/jobchangeB/addJobShiftCollect">
+						<smart:form id="jobChange_searchForm" action="ofcflow/jobchangeB/addJobShiftCollectPage">
 								<smart:gridColumn colPart="5">
 									<smart:singleSelect name="jobChangeType" id="servantType" display="inline" labelName="职务变动类型" shortName="变动类型"
 											isNotNull="true" verify="required"	data="[{'key':'','value':'请选择..'},{'key':'JOBSHIFT_PROMOTEB','value':'晋升'},{'key':'JOBSHIFT_DEPOSE','value':'免职'},{'key':'JOBSHIFT_DEMOTE','value':'降职'},{'key':'JOBSHIFT_SHIFT','value':'轮岗'}]"></smart:singleSelect>
@@ -79,17 +79,27 @@
 								<smart:tableItem align="CENTER" width=".1" fixed="right"
 									unresize="true" toolbar="navListToolBar">操作</smart:tableItem>
 							</tr>
-							<smart:tableToolBar  id="navListToolBar">
-									<smart:tableToolBtn theme="warm" event="view" title="查看">
-										<smart:icon icon="eye"></smart:icon>
-									</smart:tableToolBtn>
-								<%--	<smart:tableToolBtn theme="normal" event="edit" title="编辑">
-										<smart:icon icon="pencil"></smart:icon>
-									</smart:tableToolBtn>--%>
-									<%--<smart:tableToolBtn theme="danger" event="del" title="删除">
-										<smart:icon icon="trash"></smart:icon>
-									</smart:tableToolBtn>--%>
-							</smart:tableToolBar>
+
+
+							<script type="text/html" id="navListToolBar">
+										<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="view"  title="查看">
+											<i class="fa fa-eye"></i>
+										</a>
+
+
+										{{#  if(d.status=="0"){ }}
+										<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit"  title="编辑">
+											<i class="fa fa-pencil"></i>
+										</a>
+										{{#  } }}
+
+										{{#  if(d.status=="0"){ }}
+										<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="unitCheck"  title="删除">
+											<i class="fa fa-trash"></i>
+										</a>
+										{{#  } }}
+							</script>
+
 						</smart:table>
 					</smart:gridColumn>
 				</smart:gridRow>
@@ -106,6 +116,14 @@
 						title : '职务变动详情',
 						size : 'full',
 						url : 'ofcflow/jobchangeB/jobchangePromoteView?id='+data.data.id,
+						scrollbar : false
+					});
+				},
+				edit : function(data) {
+					smart.show({
+						title : '职务变动修改',
+						size : 'full',
+						url : 'ofcflow/jobchangeB/demoteCollectEdit?id='+data.data.id,
 						scrollbar : false
 					});
 				}

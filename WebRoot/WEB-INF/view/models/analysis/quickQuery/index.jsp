@@ -6,7 +6,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<smart:initHead title="查询统计与分析--综合查询" />
+<style>
+	.quickTitle{
+		width : 120px;
+		text-align: right;
+	}
+	.quickTable td{
+		padding-left : 5px
+	}
+</style>
+<smart:initHead title="查询统计与分析--快捷查询" />
 </head>
 <smart:body>
 	<smart:grid>
@@ -25,120 +34,89 @@
 						<smart:gridRow>
 							<smart:fieldSet title="查询条件" color="blue">
 								<smart:accordionPanel id="panel" isAccordion="true">
-									<smart:accordionPanelItem title="快捷查询" isShow="false">
-										<div class="layui-block">
-											<label class="layui-form-label">1.学历</label>
-											<div class="layui-input-block">
-												<input type="hidden" name="qucikA"> <input
-													type="checkbox" name="qucikA" title="本科" value="1"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikA" title="专科" value="2" lay-skin="primary">
-												<input type="checkbox" name="qucikA" title="硕士" value="3"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikA" title="博士" value="4" lay-skin="primary">
-												<input type="checkbox" name="qucikA" title="其他" value="5"
-													lay-skin="primary">
-											</div>
-										</div>
-
-										<div class="layui-block">
-											<label class="layui-form-label">2.年龄</label>
-											<div class="layui-input-block">
-												<input type="hidden" name="qucikB"> <input
-													type="checkbox" name="qucikB" title="35" value="1"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikB" title="35~45" value="2" lay-skin="primary">
-												<input type="checkbox" name="qucikB" title="45~55" value="3"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikB" title="55以上" value="4" lay-skin="primary">
-											</div>
-										</div>
-
-										<div class="layui-block">
-											<label class="layui-form-label">3.性别</label>
-											<div class="layui-input-block">
-												<input type="hidden" name="qucikC"> <input
-													type="checkbox" name="qucikC" title="男" value="1"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikC" title="女" value="2" lay-skin="primary">
-											</div>
-										</div>
-
-										<div class="layui-block">
-											<label class="layui-form-label">4.党派</label>
-											<div class="layui-input-block">
-												<input type="hidden" name="qucikD"> <input
-													type="checkbox" name="qucikD" title="中共" value="1"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikD" title="共青团" value="2" lay-skin="primary">
-												<input type="checkbox" name="qucikD" title="民族党派" value="3"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikD" title="群众" value="4" lay-skin="primary">
-											</div>
-										</div>
-
-										<div class="layui-block">
-											<label class="layui-form-label">5.民族</label>
-											<div class="layui-input-block">
-												<input type="hidden" name="qucikE"> <input
-													type="checkbox" name="qucikE" title="汉" value="1"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikE" title="少数民族" value="2" lay-skin="primary">
-											</div>
-										</div>
-
-										<div class="layui-block">
-											<label class="layui-form-label">6.专业</label>
-											<div class="layui-input-block">
-												<input type="hidden" name="qucikF"> <input
-													type="checkbox" name="qucikF" title="文史类" value="1"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikF" title="理工" value="2" lay-skin="primary">
-												<input type="checkbox" name="qucikF" title="法学" value="3"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikF" title="管理学" value="4" lay-skin="primary">
-												<input type="checkbox" name="qucikF" title="经济学" value="5"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikF" title="其它" value="6" lay-skin="primary">
-											</div>
-										</div>
-
-										<div class="layui-block">
-											<label class="layui-form-label">7.学校种类</label>
-											<div class="layui-input-block">
-												<input type="hidden" name="qucikG"> <input
-													type="checkbox" name="qucikG" title="双一流" value="1"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikG" title="985" value="2" lay-skin="primary">
-												<input type="checkbox" name="qucikG" title="211" value="3"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikG" title="其它" value="4" lay-skin="primary">
-											</div>
-										</div>
-
-										<div class="layui-block">
-											<label class="layui-form-label">8.职务层次</label>
-											<div class="layui-input-block">
-												<input type="hidden" name="qucikH"> <input
-													type="checkbox" name="qucikH" title="正科" value="1"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikH" title="主任科员" value="2" lay-skin="primary">
-												<input type="checkbox" name="qucikH" title="副科" value="3"
-													lay-skin="primary"> <input type="checkbox"
-													name="qucikH" title="副主任科员" value="4" lay-skin="primary">
-											</div>
-										</div>
-										
-										<div class="layui-block">
-											<label class="layui-form-label">9.人员状态</label>
-											<div class="layui-input-block">
+									<smart:accordionPanelItem title="快捷条件" isShow="false">
+									
+										<table class="quickTable">
+											<tr>
+												<td class="quickTitle">学历：</td>
+												<input type="hidden" name="qucikA"> 
+												<td><input type="checkbox" name="qucikA" title="本科" value="1"lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikA" title="专科" value="2" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikA" title="硕士" value="3" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikA" title="博士" value="4" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikA" title="其他" value="5" lay-skin="primary"></td>
+											</tr>
+											
+											<tr>
+												<td class="quickTitle">年龄：</td>
+												<input type="hidden" name="qucikB"> 
+												<td><input type="checkbox" name="qucikB" title="35" value="1" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikB" title="35~45" value="2" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikB" title="45~55" value="3" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikB" title="55以上" value="4" lay-skin="primary"></td>
+											</tr>
+											
+											<tr>
+												<td class="quickTitle">性别：</td>
+												<input type="hidden" name="qucikC"> 
+												<td><input type="checkbox" name="qucikC" title="男" value="1" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikC" title="女" value="2" lay-skin="primary"></td>
+											</tr>
+											
+											<tr>
+												<td class="quickTitle">党派：</td>
+												<input type="hidden" name="qucikD"> 
+												<td><input type="checkbox" name="qucikD" title="中共" value="1" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikD" title="共青团" value="2" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikD" title="民族党派" value="3" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikD" title="群众" value="4" lay-skin="primary"></td>
+											</tr>
+											
+											<tr>
+												<td class="quickTitle">民族：</td>
+												<input type="hidden" name="qucikE"> 
+												<td><input type="checkbox" name="qucikE" title="汉" value="1" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikE" title="少数民族" value="2" lay-skin="primary"></td>
+											</tr>
+											
+											<tr>
+												<td class="quickTitle">专业：</td>
+												<input type="hidden" name="qucikF"> 
+												<td><input type="checkbox" name="qucikF" title="文史类" value="1" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikF" title="理工类" value="2" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikF" title="法学" value="3" lay-skin="primary"></td> 
+												<!-- <td><input type="checkbox" name="qucikF" title="管理学" value="4" lay-skin="primary"></td> -->
+												<td><input type="checkbox" name="qucikF" title="经济学" value="5" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikF" title="其它" value="6" lay-skin="primary"></td>
+											</tr>
+											
+											<tr>
+												<td class="quickTitle">学校种类：</td>
+												<input type="hidden" name="qucikG"> 
+												<td><input type="checkbox" name="qucikG" title="双一流" value="1" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikG" title="985" value="2" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikG" title="211" value="3" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikG" title="其它" value="4" lay-skin="primary"></td>
+											</tr>
+											
+											<tr>
+												<td class="quickTitle">职务层次：</td>
+												<input type="hidden" name="qucikH"> 
+												<td><input type="checkbox" name="qucikH" title="正科" value="1" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikH" title="主任科员" value="2" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikH" title="副科" value="3" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikH" title="副主任科员" value="4" lay-skin="primary"></td>
+											</tr>
+											
+											<tr>
+												<td class="quickTitle">人员状态：</td>
 												<input type="hidden" name="qucikI"> 
-												<input type="checkbox" name="qucikI" title="现职" value="1" lay-skin="primary"> 
-												<input type="checkbox" name="qucikI" title="调出" value="2" lay-skin="primary">
-												<input type="checkbox" name="qucikI" title="试用期" value="3" lay-skin="primary"> 
-												<input type="checkbox" name="qucikI" title="其他" value="4" lay-skin="primary">
-											</div>
-										</div>
+												<td><input type="checkbox" name="qucikI" title="现职" value="1" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikI" title="调出" value="2" lay-skin="primary"></td>
+												<td><input type="checkbox" name="qucikI" title="试用期" value="3" lay-skin="primary"></td> 
+												<td><input type="checkbox" name="qucikI" title="其他" value="4" lay-skin="primary"></td>
+											</tr>
+										</table>
 									</smart:accordionPanelItem>
 								</smart:accordionPanel>
 
@@ -180,9 +158,9 @@
 							url="analysis/qucikQuery/queryList" height="full-190"
 							text="未找到用户数据！" page="true">
 							<tr>
-								<smart:tableItem field="name" width=".08" sort="true">姓名</smart:tableItem>
-								<smart:tableItem field="sex" width=".08" sort="true">性别</smart:tableItem>
-								<smart:tableItem field="cardNo" width=".16" sort="true">身份证号</smart:tableItem>
+								<smart:tableItem field="name" width=".08" sort="false">姓名</smart:tableItem>
+								<smart:tableItem field="sex" width=".08" sort="false">性别</smart:tableItem>
+								<smart:tableItem field="cardNo" width=".16" sort="false">身份证号</smart:tableItem>
 								<smart:tableItem field="departName" width=".11" sort="false">单位部门</smart:tableItem>
 								<smart:tableItem field="postName" width=".12" sort="false">职务名称</smart:tableItem>
 								<smart:tableItem field="postAttributeName" width=".12"

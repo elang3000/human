@@ -93,7 +93,11 @@ public class JobShiftBVO {
 				this.personType = s.getPersonType().getName();
 			}
 			this.cardNo = s.getCardNoView();
-			this.formerJobLevelName = jobLevel.getName()+"("+jobLevel.getIsLeaderStr()+")";
+			if(jobLevel.getName()!=null){
+				this.formerJobLevelName = jobLevel.getName()+"("+jobLevel.getIsLeaderStr()+")";
+			}else{
+				this.formerJobLevelName = "<font style='color:red'>无原职级</font>";
+			}
 			this.formerPostName = d.getFormerPostName();
 			this.newPostName = d.getNewPostName();
 			if (d.getNewJobLevel() != null) {

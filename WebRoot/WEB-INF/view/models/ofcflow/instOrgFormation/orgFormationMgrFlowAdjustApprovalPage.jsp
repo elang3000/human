@@ -511,7 +511,7 @@
 					}
 				});
 			},
-			noPass : function() {
+			stopPass : function() {
 				$("#result").val("-1");//审批不通过
 				if(!$("#opinion").val()){
 					smart.message({

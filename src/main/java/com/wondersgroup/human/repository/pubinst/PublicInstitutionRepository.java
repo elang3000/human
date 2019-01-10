@@ -15,8 +15,14 @@
  */
 package com.wondersgroup.human.repository.pubinst;
 
+import java.util.List;
+import java.util.Map;
+
+import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.GenericRepository;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.businesspersonel.BusinessParam;
+import com.wondersgroup.human.vo.pubinst.PublicInstitutionVO;
 
 /** 
  * @ClassName: ServantDao 
@@ -28,5 +34,19 @@ import com.wondersgroup.human.bo.pubinst.PublicInstitution;
  * @since     [产品/模块版本] 
  */
 public interface PublicInstitutionRepository extends GenericRepository<PublicInstitution>{
+	
+	Map<String, Integer> statistBusinesstTopEducation(List<String> organNodeIds,String isHold);
+	
+	/**
+	 * 事业单位综合查询
+	 * @param spList
+	 * @param m
+	 * @param page
+	 * @param limit
+	 * @return
+	 */
+	Page<PublicInstitutionVO> queryBusinesstInfoBySeniorCondation(List<BusinessParam> spList, Map<String, String> m, Integer page, Integer limit);
+
+	
 	
 }

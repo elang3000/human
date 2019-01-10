@@ -41,25 +41,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 													<smart:form id="searchForm_ofcList" clazz="searchForm">
 														<smart:gridRow>
 															<smart:gridColumn colPart="4">
-																<smart:linkSelect labelName="所属区域：" id="organTreeIdTag" display="block" />
-															</smart:gridColumn>
-															<smart:gridColumn colPart="4">
-																<smart:linkSelect labelName="所属单位：" id="organNodeIdTag" display="block" />
+																<smart:singleSelect labelName="所属单位：" name="organNodeId" display="block" isSearch="true"
+																url="system/organ/node/query?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517&organNodeType=d_class" isAddDefaltOption="true"></smart:singleSelect> 
 															</smart:gridColumn>
 															<smart:gridColumn colPart="4">
 																<smart:textInput labelName="姓名：" autocomplete="off" placeholder="输入姓名" name="name"></smart:textInput>
 															</smart:gridColumn>
-															
-														</smart:gridRow>
-														<smart:gridRow>
 															<smart:gridColumn colPart="4">
 																<smart:textInput labelName="身份证号：" autocomplete="off" placeholder="输入身份证号" name="cardNo"></smart:textInput>
 															</smart:gridColumn>
+														</smart:gridRow>
+														<smart:gridRow>
 															<smart:gridColumn colPart="4">
 																<smart:singleSelect labelName="性别：" display="block" name="sex.id" url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true">
 																</smart:singleSelect>
 															</smart:gridColumn>
-															<smart:gridColumn colPart="4">
+															<smart:gridColumn colPart="8">
 																<smart:buttonGroup container="true" align="right">
 																	<smart:button size="sm" method="search_ofcList" title="查询"
 																		theme="primary" other="search_btn">
@@ -108,24 +105,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 													<smart:form id="searchForm_ofcOldList" clazz="searchForm" >
 														<smart:gridRow>
 															<smart:gridColumn colPart="4">
-																<smart:linkSelect labelName="所属区域：" id="organTreeIdTagOld" display="block" />
-															</smart:gridColumn>
-															<smart:gridColumn colPart="4">
-																<smart:linkSelect labelName="所属单位：" id="organNodeIdTagOld" display="block" />
+																<smart:singleSelect labelName="所属单位：" name="organNodeId" display="block" isSearch="true"
+																url="system/organ/node/query?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517&organNodeType=d_class" isAddDefaltOption="true"></smart:singleSelect> 
 															</smart:gridColumn>
 															<smart:gridColumn colPart="4">
 																<smart:textInput labelName="姓名：" autocomplete="off" placeholder="输入姓名" name="name"></smart:textInput>
 															</smart:gridColumn>
-														</smart:gridRow>
-														<smart:gridRow>
 															<smart:gridColumn colPart="4">
 																<smart:textInput labelName="身份证号：" autocomplete="off" placeholder="输入身份证号" name="cardNo"></smart:textInput>
 															</smart:gridColumn>
+														</smart:gridRow>
+														<smart:gridRow>
 															<smart:gridColumn colPart="4">
 																<smart:singleSelect labelName="性别：" display="block" name="sex.id" url="dictquery/sub/code/GBT_2261_1_2003" isAddDefaltOption="true">
 																</smart:singleSelect>
 															</smart:gridColumn>
-															<smart:gridColumn colPart="4">
+															<smart:gridColumn colPart="8">
 																<smart:buttonGroup container="true" align="right">
 																	<smart:button size="sm" method="search_ofcOldList" title="查询"
 																		theme="primary" other="search_btn">
@@ -177,22 +172,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</smart:card>
 	</smart:grid>
 	<smart:scriptHead models="table,form,layer,element,linkSelect">
-		var linkOrganNodeSelect = function(value) {
-			var params = {};
-			params.organTreeId = value;
-			organNodeIdTag.refresh(params);
-		}
-		<smart:initLinkSelect id="organTreeIdTag" name="organTreeId" tips="请选择所属区域" url="system/organ/tree/query" linkFunction="linkOrganNodeSelect" />
-		<smart:initLinkSelect id="organNodeIdTag" name="organNodeId" tips="请选择所属单位" url="system/organ/node/query" />
-		
-		var linkOrganNodeSelectOld = function(value) {
-			var params = {};
-			params.organTreeId = value;
-			organNodeIdTagOld.refresh(params);
-		}
-		<smart:initLinkSelect id="organTreeIdTagOld" name="organTreeIdOld" tips="请选择所属区域" url="system/organ/tree/query" linkFunction="linkOrganNodeSelectOld" />
-		<smart:initLinkSelect id="organNodeIdTagOld" name="organNodeIdOld" tips="请选择所属单位" url="system/organ/node/query" />
-		
 		<smart:utils />
 		<smart:tableScriptAction tableId="navigationList_ofcList" checkbox="true"
 			sort="false" rowEdit="true">

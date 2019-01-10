@@ -25,10 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.dict.bo.CodeType;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.human.dto.analysis.QuickQueryParam;
 import com.wondersgroup.human.service.ofc.ServantService;
 import com.wondersgroup.human.vo.ofc.ServantVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /** 
  * @ClassName: QuickQueryController 
@@ -74,6 +78,8 @@ public class QuickQueryController {
 	 * @param page页码
 	 * @return: 
 	 */
+	@Log(title = "查询快捷查询列表", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/queryList")
 	public Page<ServantVO> queryList(QuickQueryParam param,Integer limit,Integer page) {
@@ -82,7 +88,8 @@ public class QuickQueryController {
 		CodeInfo code2 = null;
 		CodeInfo code3 = null;
 		CodeInfo code4 = null;
-		CodeInfo code5 = null;
+
+		CodeType codeType = null;
 		List<String> pList = new ArrayList<>();//存放sql
 		List<String> l = new ArrayList<String>();//存放表名
 		
@@ -232,23 +239,34 @@ public class QuickQueryController {
 		}
 		
 		//专业
-		/**
-		 * TODO
-		 * */
 		
 		if(StringUtils.isNotBlank(param.getQucikF())){
 			String sqlStr = "";
+			codeType = dictableService.getCodeType("GBT_16835_1997");//专业类codeType
 			for(String s:param.getQucikF().split(",")){
 				String sql = "";
 				switch (s) {
-				case "1"://汉
+				case "1"://文史类 code  01哲学类 05文学  06历史学
+					sql = "(a08.A08027 in (select id from cf_code_info where (code like '01%' or code like '05%' or code like '06%') and length(code) = 6 and type_id = '"+codeType.getId()+"'))";
 					break;
-				default://少数民族
+				case "2"://理工类 code 07理学  08工学
+					sql = "(a08.A08027 in (select id from cf_code_info where (code like '07%' or code like '08%') and length(code) = 6 and type_id = '"+codeType.getId()+"'))";
+					break;
+				case "3"://法学 code 03法学
+					sql = "(a08.A08027 in (select id from cf_code_info where code like '03%' and length(code) = 6 and type_id = '"+codeType.getId()+"'))";
+					break;
+				case "4"://管理学 code
+					break;
+				case "5"://经济学 code 02经济学
+					sql = "(a08.A08027 in (select id from cf_code_info where code like '02%' and length(code) = 6 and type_id = '"+codeType.getId()+"'))";
+					break;
+				default://其它
+					sql = "(a08.A08027 not in (select id from cf_code_info where (code like '01%' or code like '02%' or code like '03%' or code like '05%' or code like '06%' or code like '07%' or code like '08%') and length(code) = 6 and type_id = '"+codeType.getId()+"'))";
 					break;
 				}
 				sqlStr  += sql + " or ";
 			}
-			
+			l.add("a08");//添加a08表
 			pList.add(sqlStr.substring(0, sqlStr.length()-4));
 		}
 		
@@ -332,7 +350,7 @@ public class QuickQueryController {
 					code1 = dictableService.getCodeInfoByCode("1", "DM200");// 现职codeInfo
 					code2 = dictableService.getCodeInfoByCode("3", "DM200");// 调出codeInfo
 					code3 = dictableService.getCodeInfoByCode("6", "DM200");// 试用期codeInfo
-					sql = "(a1.A01063 != '"+code1.getId()+"' and a1.A01063 !='"+code2.getId()+"' and a1.A01063 !='"+code3.getId()+"')";
+					sql = "(a1.A01063 not in ('"+code1.getId()+"','"+code2.getId()+"','"+code3.getId()+"'))";
 					break;
 				}
 				sqlStr  += sql + " or ";

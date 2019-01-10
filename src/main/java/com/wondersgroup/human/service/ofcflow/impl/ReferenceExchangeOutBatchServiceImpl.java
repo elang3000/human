@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -38,6 +40,9 @@ import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.common.contant.DictTypeCodeContant;
 import com.wondersgroup.common.utils.FtpTool;
 import com.wondersgroup.config.ReadProperties;
+import com.wondersgroup.framework.announcement.dto.AnnouncementEventData;
+import com.wondersgroup.framework.announcement.event.SystemAnnouncementEvent;
+import com.wondersgroup.framework.announcement.util.AnnouncementManger;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.support.QueryParameter;
 import com.wondersgroup.framework.core.exception.BusinessException;
@@ -60,6 +65,7 @@ import com.wondersgroup.human.bo.ofc.OutMgr;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.bo.ofcflow.Material;
 import com.wondersgroup.human.bo.ofcflow.ReferenceExchange;
+import com.wondersgroup.human.bo.ofcflow.ReferenceExchangeBatch;
 import com.wondersgroup.human.bo.ofcflow.ReferenceExchangeOut;
 import com.wondersgroup.human.bo.ofcflow.ReferenceExchangeOutBatch;
 import com.wondersgroup.human.bo.ofcflow.ZhuanRenTLBOut;
@@ -129,6 +135,12 @@ public class ReferenceExchangeOutBatchServiceImpl extends GenericServiceImpl<Ref
 	
 	@Autowired
 	private MaterialService materialService;
+	
+	/**
+	 * 读取message.properties配置文件数据
+	 */
+	@Autowired
+	private MessageSource messageSource;
 	
 	/**
 	 * (non Javadoc)
@@ -282,6 +294,7 @@ public class ReferenceExchangeOutBatchServiceImpl extends GenericServiceImpl<Ref
 			updateServant(temp);
 			temp.setStatus(ReferenceExchangeOutBatch.STATUS_EXCHANGE_OUT_FINISH);
 			temp.setFlowRecord(null);// 修改当前业务的流程节点
+			
 		} else {
 			temp.setStatus(ReferenceExchangeOutBatch.power.get(flow.getOperationCode()));// 实际有权限的操作节点
 			temp.setFlowRecord(flow);// 修改当前业务的流程节点
@@ -458,6 +471,36 @@ public class ReferenceExchangeOutBatchServiceImpl extends GenericServiceImpl<Ref
 		List<ReferenceExchangeOut> list = referenceExchangeOutService.findByCriteria(criteria);
 		
 		return list;
+	}
+	
+	/**
+	 * @Title: sendNotice
+	 * @Description: 给该批次下所有人员发送通知
+	 * @param temp
+	 * @return: void
+	 */
+	private void sendNotice(ReferenceExchangeBatch temp) {
+		
+		DetachedCriteria d = DetachedCriteria.forClass(ReferenceExchangeOut.class);
+		d.add(Restrictions.eq("referenceExchangeOutBatch.id", temp.getId()));
+		d.add(Restrictions.eq("removed", false));
+		List<ReferenceExchangeOut> list = referenceExchangeOutService.findByCriteria(d);
+		for (ReferenceExchangeOut z : list) {
+			String name = z.getServant().getName();// 外区参公交流人员
+			// 发送通知
+			if (ReferenceExchangeBatch.AREA_THIS.equals(temp.getAreaType())) {// 本区参公交流人员
+				Servant tempS = servantService.get(z.getServant().getId());
+				name = tempS.getName();
+			}
+			String title = messageSource.getMessage("exchangeTitle", new Object[] {
+			        name
+			}, Locale.CHINESE);
+			String content = messageSource.getMessage("exchangeContent", new Object[] {
+			        name
+			}, Locale.CHINESE);
+			AnnouncementManger.send(
+			        new SystemAnnouncementEvent(new AnnouncementEventData(true, z.getCreater(), title, content, "","参公交流转出")));
+		}
 	}
 	
 }

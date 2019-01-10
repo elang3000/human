@@ -109,8 +109,12 @@ public class NationalCompanyController extends GenericController {
 			Predicate p = new Predicate("name", Operator.EQ, name, "");
 			filter.add(p);
 		}
+		if(StringUtils.isNotBlank(nationalCompany.getDepartName())){//单位部门
+			Predicate p = new Predicate("departName", Operator.LIKE,nationalCompany.getDepartName() ,"");
+			filter.add(p);
+		}
 		if(StringUtils.isNotBlank(nationalCompany.getCardNo())){//身份证
-			Predicate p = new Predicate("cardNo", Operator.LIKE,nationalCompany.getCardNo(), "");
+			Predicate p = new Predicate("cardNo", Operator.EQ,nationalCompany.getCardNo(), "");
 			filter.add(p);
 		}
 		if(nationalCompany.getSex()!=null&&StringUtils.isNotBlank(nationalCompany.getSex().getId())){//性别

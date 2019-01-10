@@ -413,7 +413,12 @@ public class JobShiftBServiceImpl extends GenericServiceImpl<JobShiftB>
 			Page<JobShiftB> temppage = this.findByHQL(hql.toString(), listqueryparameter, page, limit);
 			List<JobShiftBVO> voList=new ArrayList<>();
 			for(JobShiftB jobShiftB:temppage.getResult()){
-				JobLevel jobLevel = jobLevelService.getJobLevelByServantId(jobShiftB.getServant().getId());
+				JobLevel jobLevel = new JobLevel();
+				try {
+					jobLevel=jobLevelService.getJobLevelByServantId(jobShiftB.getServant().getId());
+				}catch (Exception e){
+
+				}
 				JobShiftBVO shiftVO=new JobShiftBVO(jobShiftB,jobLevel);
 				voList.add(shiftVO);
 			}

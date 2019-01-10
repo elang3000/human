@@ -29,7 +29,9 @@
 							<smart:gridColumn colPart="12">
 								<ul class="steps">					
 									<c:forEach items="${seqs}" var="seq">
-										<li data-step="${seq.index}" onmousedown="displayStepDetails(this,'${busId}','${seq.code}')" class="<c:if test="${seq.complete}">complete</c:if> <c:if test="${seq.active}">active</c:if>">
+										<li data-step="${seq.index}" onmousedown="displayStepDetails(this,'${busId}','${seq.code}')" class="
+										<c:if test="${seq.complete}">complete</c:if>
+										<c:if test="${seq.active}">active</c:if>">
 											<span class="step">${seq.index}</span>
 											<span class="title">${seq.name}</span>
 										</li>
@@ -65,7 +67,7 @@
 			   										</div>
 					 							</li>	
 				 							</c:if>
-				 							<c:if test="${record.busState == 1}">
+				 							<c:if test="${record.busState == 1 || record.busState == -1}">
 					 							<li class="layui-timeline-item">
 			    									<i class="layui-icon layui-timeline-axis">&#xe63f;</i>
 			   										<div class="layui-timeline-content layui-text">
@@ -169,6 +171,7 @@
 	</smart:scriptHead>
 	<script type="text/javascript">
 		function displayStepDetails(object,busId,code) {
+			
 			var top = object.offsetHeight + (object.scrollHeight / 2),
 			left = object.offsetLeft + (object.scrollWidth / 2);
 			if (code == 'START' || code == 'END') {

@@ -38,7 +38,7 @@
 								<smart:gridColumn colPart="4">
 									<smart:singleSelect labelName="转出人员单位：" name="sourceOrgan.id"
 								isSearch="true" display="block" isAddDefaltOption="true"
-								url="system/organ/node/queryAll?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517"></smart:singleSelect>
+								url="system/organ/node/queryAll?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517&organNodeType=d_class"></smart:singleSelect>
 								</smart:gridColumn>
 								<smart:gridColumn colPart="3">
 									<smart:buttonGroup container="true">

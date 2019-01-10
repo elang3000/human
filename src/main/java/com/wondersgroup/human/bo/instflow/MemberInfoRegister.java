@@ -27,6 +27,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wondersgroup.framework.core.bo.GenericEntity;
+import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.workflow.bo.FlowRecord;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
@@ -133,6 +134,43 @@ public class MemberInfoRegister extends GenericEntity {
 	@OneToOne(fetch = FetchType.LAZY, optional = true)
 	@JoinColumn(name = "FLOWRECORD_ID")
 	private FlowRecord flowRecord;
+	
+	
+	/**
+	 * @fieldName: inforPostName
+	 * @fieldType: java.lang.String
+	 * @Description: 现职级（自动填写） ,该人目前所任的职级。ZB148——2016/ZJDM《职级代码》
+	 */
+	@Column(name = "inforpost", length = 120)//职级代码
+	private CodeInfo inforPost;
+	
+	/**
+	 * @fieldName: 职级名称
+	 * @fieldType: java.lang.String
+	 * @Description: 该人的职位等级或级别等级名称。
+	 */
+	@Column(name = "inforpostname")
+	private String inforPostName;
+
+
+	public CodeInfo getInforPost() {
+		return inforPost;
+	}
+
+
+	public void setInforPost(CodeInfo inforPost) {
+		this.inforPost = inforPost;
+	}
+
+
+	public String getInforPostName() {
+		return inforPostName;
+	}
+
+
+	public void setInforPostName(String inforPostName) {
+		this.inforPostName = inforPostName;
+	}
 
 
 	public PublicInstitution getPublicInstitution() {

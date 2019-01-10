@@ -26,7 +26,7 @@
 									<smart:gridColumn colPart="12">
 										<smart:gridRow>
 											<smart:gridColumn colPart="12">
-										<smart:continuousSelect labelName="职级名称：" inputName="code.id" codeTypeCode="GBT_12407_2008" inputVal="${jobLevel.code.id}" valType="ID" verify="required" isNotNull="true" widthPercent="0.5" isSaveShowName="true" inputShowName="name" allOrLast="last"/>
+										<smart:continuousSelect labelName="职级名称：" inputName="code.id" codeTypeCode="GBT_12407_2008/9" inputVal="${jobLevel.code.id}" valType="ID" verify="required" isNotNull="true" widthPercent="0.5" isSaveShowName="true" inputShowName="name" allOrLast="last"/>
 											</smart:gridColumn>
 										</smart:gridRow>
 									</smart:gridColumn>

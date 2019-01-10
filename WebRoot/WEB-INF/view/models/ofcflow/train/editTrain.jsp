@@ -55,7 +55,7 @@
 									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect labelName="主办单位：" name="hostOrgan.id" isSearch="true" display="block" 
-										url="system/organ/node/queryAll?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517"
+										url="system/organ/node/queryAll?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517&organNodeType=d_class"
 										isAddDefaltOption="true" isNotNull="true" verify="required" initSelectedKey="${train.hostOrgan.id }">
 										</smart:singleSelect>
 									</smart:gridColumn>

@@ -1,7 +1,7 @@
 /**   
  * Copyright © 2018 . All rights reserved.万达信息股份有限公司
  * 
- * 文件名: ServantServiceImpl.java 
+ * 文件名: PublicInstitutionServiceImpl.java 
  * 工程名: human
  * 包名: com.wondersgroup.human.service.impl 
  * 描述: 人员信息维护服务接口实现类
@@ -17,8 +17,11 @@ package com.wondersgroup.human.service.pubinst.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,7 @@ import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.exception.BusinessException;
 import com.wondersgroup.framework.core.service.impl.GenericServiceImpl;
 import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.dict.service.CodeInfoService;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
@@ -48,11 +52,13 @@ import com.wondersgroup.human.bo.instflow.InformationChange;
 import com.wondersgroup.human.bo.instflow.MemberInfoRegister;
 import com.wondersgroup.human.bo.instflow.RecordableRecord;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.businesspersonel.BusinessParam;
 import com.wondersgroup.human.repository.pubinst.PublicInstitutionRepository;
 import com.wondersgroup.human.service.instflow.AlternatingRotationService;
 import com.wondersgroup.human.service.instflow.InformationChangeService;
 import com.wondersgroup.human.service.instflow.MemberInfoRegisterService;
 import com.wondersgroup.human.service.instflow.RecordableRecordService;
+import com.wondersgroup.human.service.organization.FormationControlService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.pubinst.PublicInstitutionVO;
 
@@ -96,6 +102,13 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 	@Autowired
 	private RecordableRecordService recordableRecordService;
 	
+	@Autowired
+	private CodeInfoService codeInfoService;
+	
+	
+	@Autowired
+	private FormationControlService formationControlService;
+	
 
 	/**
 	 * (non Javadoc) 
@@ -126,6 +139,8 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 		OrganNode userOrg = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());//当前登录所在单位
 		AppNode appNode = (AppNode)SecurityUtils.getSession().getAttribute("appNode");
 		String id = temp.getId();
+		//当前单位
+		OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
 		if(StringUtils.isBlank(id)){
 			
 			CodeInfo typemember = dictableService.getCodeInfoByCode("4", DictTypeCodeContant.CODE_TYPE_MEMBER_TYPE);
@@ -136,8 +151,7 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 			CodeInfo isOnHold = dictableService.getCodeInfoByCode("5", "DM200");//在职CODE
 			temp.setIsOnHold(isOnHold);
 			
-			//当前单位
-			OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+			
             if (x == null) {
             	throw new BusinessException("当前单位不存在！");
 			}
@@ -150,8 +164,12 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 		MemberInfoRegister registerExist = null;
 		FlowRecord flow = null;
 		if(StringUtils.isNotBlank(planState) && MemberInfoRegister.INST_INFO_REGISTER_STATE_POST == Integer.parseInt(planState)){//提交环节，先生成流程数据
+			
 			//保存业务流程主表信息
 			registerExist = saveBusinessInfo(temp, opinion);
+			
+			//验编制职数   不通过会抛出异常   无需判断
+			saveFormationControl(registerExist.getInforPost());
 			
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());//流程业务所在系统
@@ -186,6 +204,10 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 			temp.setIsOnHold(isOnHold);
 			merge(temp);
 			
+			//正式占编占职
+			realIntoInstFormationControl(x, temp.getNowJobLevel());
+			
+			//TODO 职级已经填写    这里需要生成职级职级子集
 			String title = "事业单位人员信息登记信息维护通知";
 			String content = "请完善" + registerExist.getPublicInstitution().getName() + "(" + registerExist.getPublicInstitution().getCardNo() + ")的职务信息、职级信息、学历信息、学位信息、考核信息、家庭信息";
 			//通知人员信息登记
@@ -195,6 +217,40 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 			registerExist.setFlowRecord(flow);//修改当前业务的流程节点
 		}
 		memberInfoRegisterService.merge(registerExist);
+	}
+	
+	
+	/**
+	 * 正式入编
+	 * @param x
+	 * @param nowJobLevel
+	 */
+	private void realIntoInstFormationControl(OrganNode x, CodeInfo nowJobLevel) {
+		//解锁  编制职数
+		formationControlService.executeUnlockIntoInstFormationNum(x.getId());; //解锁定入编   -1
+		formationControlService.executeUnlockInstPostIntoNum(x.getId(), nowJobLevel.getCode()); //解锁职数
+		
+		//正式占编占职
+		formationControlService.executeIntoInstFormation(x.getId());
+		formationControlService.executeIntoInstPost(x.getId(), nowJobLevel.getCode());
+	}
+
+	@Override
+	public boolean saveFormationControl(CodeInfo nowJobLevel) {
+		boolean flag = false;
+		OrganNode x = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
+		//编制控制
+		boolean numFlag = formationControlService.queryJudgeInstFormationNum(x.getId());
+		if (numFlag) {
+			//控制数据判断
+			boolean postFlag = formationControlService.queryJudgeInstPostNum(x.getId(), nowJobLevel.getCode());
+			if (postFlag) { //占编占职
+				formationControlService.executeLockIntoInstFormationNum(x.getId()); //编
+				formationControlService.executeLockInstPostIntoNum(x.getId(), nowJobLevel.getCode()); //占职
+				flag = true;
+			}
+		}
+		return flag;
 	}
 
 	/**
@@ -207,7 +263,24 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 		MemberInfoRegister member = new MemberInfoRegister();
 		member.setPublicInstitution(temp);
 		member.setOpinion(opinion);
+		
+		if (temp.getNowJobLevel() != null) {
+			CodeInfo nowJobLevel = codeInfoService.load(temp.getNowJobLevel().getId());
+			String postName = "";
+			if (nowJobLevel != null) {
+				CodeInfo parent = nowJobLevel.getParent();
+				if (parent != null) {
+					postName = parent.getName() + " " + nowJobLevel.getName();
+				}else {
+					postName = nowJobLevel.getName();
+				}
+			}
+			member.setInforPost(nowJobLevel);
+			member.setInforPostName(postName);
+		}
+		
 		memberInfoRegisterService.save(member);
+		
 		return member;
 	}
 
@@ -244,6 +317,44 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 		return false;
 	}
 
+	
+	/********************************************事业单位综合查询************************************************************************/
+	
+	//查询所有在职人员
+	@Override
+	public List<PublicInstitution> getAllActiveBusiness() {
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(PublicInstitution.class);
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
+		detachedCriteria.add(Restrictions.eq("removed", false));
+		detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
+		detachedCriteria.add(Restrictions.eq("creater", "SYSTEM"));
+		detachedCriteria.add(Restrictions.isNotNull("departId"));
+		List<PublicInstitution> allActiveServant = publicInstitutionRepository.findByCriteria(detachedCriteria);
+		return allActiveServant;
+	}
+
+	
+	@Override
+	public Page<PublicInstitutionVO> queryBusinessInfoBySeniorCondation(List<BusinessParam> spList,
+			Map<String, String> m, Integer page, Integer limit) {
+		return publicInstitutionRepository.queryBusinesstInfoBySeniorCondation(spList, m, page, limit);
+	}
+
+	
+	/**
+	 * 通过姓名和身份证查询对应的PublicInstitution
+	 */
+	@Override
+	public List<PublicInstitution> getBusinessByCardNo(String cardNo) {
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(PublicInstitution.class);
+		detachedCriteria.add(Restrictions.eq("cardNo", cardNo));
+		CodeInfo isOnHold = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_HUMAN_STATUS);// 在职CODE
+		detachedCriteria.add(Restrictions.eq("isOnHold.id", isOnHold.getId()));
+		detachedCriteria.add(Restrictions.eq("removed", false));
+		List<PublicInstitution> allActiveServant = publicInstitutionRepository.findByCriteria(detachedCriteria);
+		return allActiveServant;
+	}
+
 
 
 	/** (non Javadoc) 
@@ -268,5 +379,7 @@ public class PublicInstitutionServiceImpl extends GenericServiceImpl<PublicInsti
 				servantPage.getTotalSize(), servantPage.getPageSize(), voList);
 		return page;
 	}
+
+	
 
 }

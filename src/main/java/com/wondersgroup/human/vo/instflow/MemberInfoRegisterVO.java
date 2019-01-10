@@ -63,12 +63,21 @@ public class MemberInfoRegisterVO {
 	private String departName;
 	
 	
+	
+	
 	/**
 	 * @fieldName: status
 	 * @fieldType: String
 	 * @Description: 状态
 	 */
 	private String status;
+	
+	/**
+	 * @fieldName: 职级名称
+	 * @fieldType: java.lang.String
+	 * @Description: 该人的职位等级或级别等级名称。
+	 */
+	private String inforPostName;
 	
 	public MemberInfoRegisterVO(MemberInfoRegister r){
 		this.id = r.getId();
@@ -79,6 +88,7 @@ public class MemberInfoRegisterVO {
 		this.cardNo = r.getPublicInstitution().getCardNoView();
 		this.departName = r.getPublicInstitution().getDepartName();
 		this.status = convertState(r.getPlanState());
+		this.inforPostName = r.getInforPostName();
 	}
 	
 	public String convertState(Integer state) {
@@ -139,6 +149,14 @@ public class MemberInfoRegisterVO {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getInforPostName() {
+		return inforPostName;
+	}
+
+	public void setInforPostName(String inforPostName) {
+		this.inforPostName = inforPostName;
 	}
 	
 	

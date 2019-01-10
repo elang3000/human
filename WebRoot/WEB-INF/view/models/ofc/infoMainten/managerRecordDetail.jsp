@@ -212,18 +212,9 @@
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="人员类别" infovalue="${servant.personType.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
-								</smart:gridRow>
-								
-								<smart:gridRow>
-									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="参公管理标识" infovalue="${servant.servantLaw.name}"></smart:infoShowerLabel>
-									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:infoShowerLabel infoname="离岗退养标识" infovalue="${servant.isLeavePost.name}"></smart:infoShowerLabel>
 									</smart:gridColumn>
-<%-- 									<smart:gridColumn colPart="4">
-										<smart:infoShowerLabel infoname="公务员登记号" infovalue="${servant.registerNo}"></smart:infoShowerLabel>
-									</smart:gridColumn> --%>
 								</smart:gridRow>
 								
 								<div class="layui-col-md12">

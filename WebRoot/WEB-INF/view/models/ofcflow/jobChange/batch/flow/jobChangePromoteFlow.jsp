@@ -262,7 +262,7 @@
 				smart.show({
 					title : '编辑职务变动信息',
 					size : 'full',
-					url : "ofcflow/jobchangeB/promote/"+data.data.id+"<c:if test="${isStep13}">/1</c:if>",
+					url : "ofcflow/jobchangeB/promoteEditPage/"+data.data.id+"<c:if test="${isStep13}">/1</c:if>",
 					scrollbar : false
 				});
 			},
@@ -270,7 +270,7 @@
 				smart.show({
 					title : '编辑职务变动信息',
 					size : 'full',
-					url : "ofcflow/jobchangeB/promote/"+data.data.id+"<c:if test="${isStep13}">/1</c:if>",
+					url : "ofcflow/jobchangeB/promoteEditPage/"+data.data.id+"<c:if test="${isStep13}">/1</c:if>",
 					scrollbar : false
 				});
 			},

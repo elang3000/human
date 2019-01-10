@@ -16,6 +16,7 @@
 package com.wondersgroup.human.service.pubinst;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.criterion.DetachedCriteria;
 
@@ -23,7 +24,9 @@ import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.bo.Sorts;
 import com.wondersgroup.framework.core.dao.support.Predicate;
 import com.wondersgroup.framework.core.service.GenericService;
+import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
+import com.wondersgroup.human.dto.businesspersonel.BusinessParam;
 import com.wondersgroup.human.vo.pubinst.PublicInstitutionVO;
 
 /** 
@@ -80,4 +83,46 @@ public interface PublicInstitutionService extends GenericService<PublicInstituti
 	 * @return 是否通知到人
 	 */
 	public boolean getPublicQuLeadersToNotice(String id, String type, String title, String content);
+	
+	/**
+	 * 进行控编
+	 * @param nowJobLevel  职级
+	 * @return
+	 */
+	public boolean saveFormationControl(CodeInfo nowJobLevel);
+
+	
+	
+	
+	/**************************************事业单位综合查询*************************************************************************/
+	 
+	
+	/**
+	 * 
+	 * @Title: getAllActiveBusiness 
+	 * @Description: 获取所有在职人员
+	 * @return
+	 * @return: List<Servant>
+	 */
+	List<PublicInstitution> getAllActiveBusiness();
+
+	/** 
+	 * @param m 
+	 * @Title: queryBusinessInfoBySeniorCondation 
+	 * @Description: 综合查询
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<ServantVO>
+	 */
+	Page<PublicInstitutionVO> queryBusinessInfoBySeniorCondation(List<BusinessParam> spList, Map<String, String> m, Integer page, Integer limit);
+	/**
+	 * 通过姓名和身份证号查询对应的servant
+	 * @param cardNo
+	 * @return
+	 */
+	public List<PublicInstitution> getBusinessByCardNo(String cardNo);
+	
+	
+	
 }

@@ -116,7 +116,8 @@
 				printRMB : function(data) {
 				},
 				goBack : function(data) {
-					window.location.href='company/list';
+					 <!-- window.location.href='publicInstitution/list'; -->
+					window.history.back(-1);
 				}
 	</smart:buttonScriptAction>
 	</smart:scriptHead>

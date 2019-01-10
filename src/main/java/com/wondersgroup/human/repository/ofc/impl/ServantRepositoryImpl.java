@@ -29,9 +29,12 @@ import org.springframework.stereotype.Repository;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.impl.GenericRepositoryImpl;
 import com.wondersgroup.framework.util.StringUtils;
+import com.wondersgroup.human.bo.ofc.PeopleGenericy;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.dto.analysis.ServantParam;
+import com.wondersgroup.human.dto.analysis.ServantQueryParam;
 import com.wondersgroup.human.repository.ofc.ServantRepository;
+import com.wondersgroup.human.vo.ofc.PeopleVO;
 import com.wondersgroup.human.vo.ofc.ServantVO;
 
 /**
@@ -351,4 +354,65 @@ StringBuffer sql = new StringBuffer();
 		return pages;
 	}
 	
+	/** (non Javadoc) 
+	 * @Title: queryPeopleInfo
+	 * @Description: TODO
+	 * @param spList
+	 * @param page
+	 * @param limit
+	 * @return 
+	 * @see com.wondersgroup.human.repository.ofc.ServantRepository#queryPeopleInfo(java.util.List, java.lang.Integer, java.lang.Integer) 
+	 */
+	@Override
+	public Page<PeopleVO> queryPeopleInfo(ServantQueryParam spList,String itype, Integer page, Integer limit) {
+		
+		StringBuffer sql = new StringBuffer();
+		StringBuilder countsql=new StringBuilder();
+		sql.append("select * from V_PEOPLE_INFOS v where  1=1");
+		if (StringUtils.isNotBlank(spList.getName())) {
+			sql.append(" and v.name like '%");
+			sql.append(spList.getName());
+			sql.append("%'");
+		}
+		if(StringUtils.isNotBlank(spList.getDepartName())){//部门名称
+			sql.append(" and v.departName like '%");
+			sql.append(spList.getDepartName());
+			sql.append("%'");
+		}
+		if(StringUtils.isNotBlank(spList.getCardNo())){//身份证号
+			sql.append(" and v.cardNo = '");
+			sql.append(spList.getCardNo());
+			sql.append("'");
+		}
+		if(spList.getSex()!=null&&StringUtils.isNotBlank(spList.getSex().getId())){//性别
+			sql.append(" and v.sex = '");
+			sql.append(spList.getSex().getId());
+			sql.append("'");
+		}
+		if(StringUtils.isNotBlank(itype)){//身份证号
+			sql.append(" and v.itype = '");
+			sql.append(itype);
+			sql.append("'");
+		}
+		
+		countsql.append("select count(*) from ("); 
+		countsql.append(sql.toString());
+		countsql.append(")");
+		Query countquery=this.getSessionFactory().getCurrentSession().createSQLQuery(countsql.toString());
+		int icount=((Number) countquery.uniqueResult()).intValue();
+
+		Query query = this.getSessionFactory().getCurrentSession().createSQLQuery(sql.toString())
+		        .addEntity(PeopleGenericy.class);
+		query.setFirstResult((page - 1) * limit);
+		query.setMaxResults(limit);
+		List<PeopleGenericy> list = query.list();
+		List<PeopleVO> listVO = new ArrayList<>();
+		for (PeopleGenericy s : list) {
+			PeopleVO vo = new PeopleVO(s);
+			listVO.add(vo);
+		}
+		
+		Page<PeopleVO> pages = new Page<>((page - 1) * limit, page, icount, limit, listVO);
+		return pages;
+	}
 }

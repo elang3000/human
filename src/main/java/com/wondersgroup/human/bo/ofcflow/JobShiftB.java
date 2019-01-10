@@ -33,7 +33,7 @@ public class JobShiftB extends GenericEntity {
 	private static final long serialVersionUID = 1L;
 	
 	// 晋升流程的长度
-	public static final int PROMOTE_FLOW_LENGTH = 17;
+	public static final int PROMOTE_FLOW_LENGTH = 13;
 	
 	// 降级流程的长度
 	public static final int DEMOTE_FLOW_LENGTH = 6;
@@ -44,61 +44,13 @@ public class JobShiftB extends GenericEntity {
 	// 轮岗流程的长度
 	public static final int SHIFT_FLOW_LENGTH = 6;
 	
-	// 职务变动流程节点
-	
-	// 1职务降职流程code
-	public static final String JOBSHIFT_PROMOTE_STEP1 = "STATUS_JOBSHIFT_PROMOTE_STEP1";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP2 = "STATUS_JOBSHIFT_PROMOTE_STEP2";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP3 = "STATUS_JOBSHIFT_PROMOTE_STEP3";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP4 = "STATUS_JOBSHIFT_PROMOTE_STEP4";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP5 = "STATUS_JOBSHIFT_PROMOTE_STEP5";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP6 = "STATUS_JOBSHIFT_PROMOTE_STEP6";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP7 = "STATUS_JOBSHIFT_PROMOTE_STEP7";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP8 = "STATUS_JOBSHIFT_PROMOTE_STEP8";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP9 = "STATUS_JOBSHIFT_PROMOTE_STEP9";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP10 = "STATUS_JOBSHIFT_PROMOTE_STEP10";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP11 = "STATUS_JOBSHIFT_PROMOTE_STEP11";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP12 = "STATUS_JOBSHIFT_PROMOTE_STEP12";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP13 = "STATUS_JOBSHIFT_PROMOTE_STEP13";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP14 = "STATUS_JOBSHIFT_PROMOTE_STEP14";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP15 = "STATUS_JOBSHIFT_PROMOTE_STEP15";
-	
-	public static final String JOBSHIFT_PROMOTE_STEP16 = "STATUS_JOBSHIFT_PROMOTE_STEP16";
-	
+
 	// 消息通知变量
 	public static final String PROMOTE_TITLE = "jobShiftPromoteTitle";
 	
 	public static final String PROMOTE_CONTENT = "jobShiftPromoteContent";
 	
-	// 2职务降职流程code
-	public static final String JOBSHIFT_DEMOTE_STEP1 = "STATUS_JOBSHIFT_DEMOTE_STEP1";
-	
-	public static final String JOBSHIFT_DEMOTE_STEP2 = "STATUS_JOBSHIFT_DEMOTE_STEP2";
-	
-	public static final String JOBSHIFT_DEMOTE_STEP3 = "STATUS_JOBSHIFT_DEMOTE_STEP3";
-	
-	public static final String JOBSHIFT_DEMOTE_STEP4 = "STATUS_JOBSHIFT_DEMOTE_STEP4";
-	
-	public static final String JOBSHIFT_DEMOTE_STEP5 = "STATUS_JOBSHIFT_DEMOTE_STEP5";
-	
-	public static final String JOBSHIFT_DEMOTE_STEP6 = "STATUS_JOBSHIFT_DEMOTE_STEP6";
-	
-	public static final String JOBSHIFT_DEMOTE_STEP7 = "STATUS_JOBSHIFT_DEMOTE_STEP7";
-	
+
 	//职务变动计划申请单
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "JOBSHIFTCOLLECT")

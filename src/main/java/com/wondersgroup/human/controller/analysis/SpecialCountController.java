@@ -28,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.ibm.icu.text.DecimalFormat;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.human.service.analysis.SpecialCountService;
@@ -102,13 +103,13 @@ public class SpecialCountController  extends GenericController {
     @RequestMapping("/reward/echarts")
 	@ResponseBody
 	public Map<String, Object> getRewardCountByDepartId(String departId,Integer year) {
-		
+    	DecimalFormat df = new DecimalFormat("0.00");
 		Map<String, BigDecimal> reward = specialCountService.getRewardCountByDepartId(departId,year);
 		Iterator<Entry<String, BigDecimal>> iterator = reward.entrySet().iterator();
 		List<String> xAxis = new ArrayList<String>();
 		List<Integer> series0 = new ArrayList<Integer>();
-		List<Double> series1 = new ArrayList<Double>();
-		Double total = 0d;
+		List<String> series1 = new ArrayList<String>();
+		Integer total = 0;
 		while (iterator.hasNext()) {
 			Entry<String, BigDecimal> entry = iterator.next();
 			xAxis.add(entry.getKey());
@@ -118,12 +119,12 @@ public class SpecialCountController  extends GenericController {
 		iterator = reward.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, BigDecimal> entry = iterator.next();
-			if(total!=0d){
-				series1.add(
-						new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(2, RoundingMode.HALF_UP).doubleValue()
-						* 100);
+			if(total!=0){
+				series1.add(df.format(
+						new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(4, RoundingMode.HALF_UP).doubleValue()
+						*100));
 			}else{
-				series1.add(0d);
+				series1.add(df.format(0.00));
 			}
 		}
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -166,13 +167,13 @@ public class SpecialCountController  extends GenericController {
     @RequestMapping("/punish/echarts")
 	@ResponseBody
 	public Map<String, Object> getPunishCountByDepartId(String departId,Integer year) {
-		
+    	DecimalFormat df = new DecimalFormat("0.00");
 		Map<String, BigDecimal> reward = specialCountService.getPunishCountByDepartId(departId,year);
 		Iterator<Entry<String, BigDecimal>> iterator = reward.entrySet().iterator();
 		List<String> xAxis = new ArrayList<String>();
 		List<Integer> series0 = new ArrayList<Integer>();
-		List<Double> series1 = new ArrayList<Double>();
-		Double total = 0d;
+		List<String> series1 = new ArrayList<String>();
+		Integer total = 0;
 		while (iterator.hasNext()) {
 			Entry<String, BigDecimal> entry = iterator.next();
 			xAxis.add(entry.getKey());
@@ -182,12 +183,12 @@ public class SpecialCountController  extends GenericController {
 		iterator = reward.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, BigDecimal> entry = iterator.next();
-			if(total!=0d){
-				series1.add(
-						new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(2, RoundingMode.HALF_UP).doubleValue()
-						* 100);
+			if(total!=0){
+				series1.add(df.format(
+						new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(4, RoundingMode.HALF_UP).doubleValue()
+						*100));
 			}else{
-				series1.add(0d);
+				series1.add(df.format(0.00));
 			}
 		}
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -230,13 +231,13 @@ public class SpecialCountController  extends GenericController {
     @RequestMapping("/mag/echarts")
 	@ResponseBody
 	public Map<String, Object> getMagCountByDepartId(String departId,Integer year) {
-		
+    	DecimalFormat df = new DecimalFormat("0.00");
 		Map<String, BigDecimal> reward = specialCountService.getMagCountByDepartId(departId,year);
 		Iterator<Entry<String, BigDecimal>> iterator = reward.entrySet().iterator();
 		List<String> xAxis = new ArrayList<String>();
 		List<Integer> series0 = new ArrayList<Integer>();
-		List<Double> series1 = new ArrayList<Double>();
-		Double total = 0d;
+		List<String> series1 = new ArrayList<String>();
+		Integer total = 0;
 		while (iterator.hasNext()) {
 			Entry<String, BigDecimal> entry = iterator.next();
 			xAxis.add(entry.getKey());
@@ -246,12 +247,12 @@ public class SpecialCountController  extends GenericController {
 		iterator = reward.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, BigDecimal> entry = iterator.next();
-			if(total!=0d){
-				series1.add(
-						new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(2, RoundingMode.HALF_UP).doubleValue()
-						* 100);
+			if(total!=0){
+				series1.add(df.format(
+						new BigDecimal(new Double(entry.getValue().intValue()) / total).setScale(4, RoundingMode.HALF_UP).doubleValue()
+						*100));
 			}else{
-				series1.add(0d);
+				series1.add(df.format(0.00));
 			}
 		}
 		Map<String, Object> result = new HashMap<String, Object>();

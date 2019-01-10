@@ -30,8 +30,10 @@ import com.wondersgroup.framework.dict.bo.CodeInfo;
 import com.wondersgroup.framework.dict.service.DictableService;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.dto.analysis.ServantParam;
+import com.wondersgroup.human.dto.analysis.ServantQueryParam;
 import com.wondersgroup.human.repository.ofc.ServantRepository;
 import com.wondersgroup.human.service.ofc.ServantService;
+import com.wondersgroup.human.vo.ofc.PeopleVO;
 import com.wondersgroup.human.vo.ofc.ServantVO;
 
 /**
@@ -139,5 +141,19 @@ public class ServantServiceImpl extends GenericServiceImpl<Servant> implements S
 	public Page<ServantVO> queryServantInfoBySeniorCondation(List<String> pList, List<String> l, Integer page,
 			Integer limit) {
 		return servantRepository.queryServantInfoBySeniorCondation(pList,l, page, limit);
+	}
+	
+	/** (non Javadoc) 
+	 * @Title: queryPeopleInfo
+	 * @Description: TODO
+	 * @param spList
+	 * @param page
+	 * @param limit
+	 * @return 
+	 * @see com.wondersgroup.human.service.ofc.ServantService#queryPeopleInfo(java.util.List, java.lang.Integer, java.lang.Integer) 
+	 */
+	@Override
+	public Page<PeopleVO> queryPeopleInfo(ServantQueryParam spList,String itype, Integer page, Integer limit) {
+		return servantRepository.queryPeopleInfo(spList,itype, page, limit);
 	}
 }

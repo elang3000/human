@@ -151,6 +151,16 @@
 								<smart:infoShowerLabel infoname="空编人数" infovalue="${orgFormation.vacancyExcessNumber}"></smart:infoShowerLabel>
 							</smart:gridColumn>
 						</smart:gridRow>
+						
+						<smart:gridRow>		
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="尚未调入人数 " infovalue="${orgFormation.notIntoNum}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+							<smart:gridColumn colPart="4">
+								<smart:infoShowerLabel infoname="尚未调出人数" infovalue="${orgFormation.notOutNum}"></smart:infoShowerLabel>
+							</smart:gridColumn>
+						</smart:gridRow>
+						
 						<smart:gridRow>
 							<smart:title title="职数信息" style="margin-top: 5px;" color="blue" />
 						</smart:gridRow>

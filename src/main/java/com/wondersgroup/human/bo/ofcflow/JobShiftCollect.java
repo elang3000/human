@@ -32,6 +32,8 @@ public class JobShiftCollect extends BaseFlowOrgFormation<Object> {
 	
 	public static final Integer JOBSHIFT_TOBESUBMIT=0;
 
+	public static final Integer JOBSHIFT_SUBMIT=1;
+
 	public static  List<String> allSteps;
 
 
@@ -61,6 +63,21 @@ public class JobShiftCollect extends BaseFlowOrgFormation<Object> {
 	public static final String JOBSHIFTB_PROMOTE_STEP12 = "STATUS_JOBSHIFTB_PROMOTE_STEP12";
 	
 	public static final String JOBSHIFTB_PROMOTE_STEP13 = "STATUS_JOBSHIFTB_PROMOTE_STEP13";
+
+	// 2职务降职流程code
+	public static final String JOBSHIFT_DEMOTE_STEP1 = "STATUS_JOBSHIFT_DEMOTE_STEP1";
+
+	public static final String JOBSHIFT_DEMOTE_STEP2 = "STATUS_JOBSHIFT_DEMOTE_STEP2";
+
+	public static final String JOBSHIFT_DEMOTE_STEP3 = "STATUS_JOBSHIFT_DEMOTE_STEP3";
+
+	public static final String JOBSHIFT_DEMOTE_STEP4 = "STATUS_JOBSHIFT_DEMOTE_STEP4";
+
+	public static final String JOBSHIFT_DEMOTE_STEP5 = "STATUS_JOBSHIFT_DEMOTE_STEP5";
+
+	public static final String JOBSHIFT_DEMOTE_STEP6 = "STATUS_JOBSHIFT_DEMOTE_STEP6";
+
+	public static final String JOBSHIFT_DEMOTE_STEP7 = "STATUS_JOBSHIFT_DEMOTE_STEP7";
 	
 	static {
 		allSteps = new ArrayList<>();

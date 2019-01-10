@@ -477,7 +477,7 @@ public class ReferenceExchangeBatchServiceImpl extends GenericServiceImpl<Refere
 			        name
 			}, Locale.CHINESE);
 			AnnouncementManger.send(
-			        new SystemAnnouncementEvent(new AnnouncementEventData(true, z.getCreater(), title, content, "")));
+			        new SystemAnnouncementEvent(new AnnouncementEventData(true, z.getCreater(), title, content, "","参公交流转入")));
 		}
 	}
 	

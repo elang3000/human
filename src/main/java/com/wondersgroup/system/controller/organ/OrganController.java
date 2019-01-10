@@ -462,9 +462,9 @@ public class OrganController extends GenericController {
 	
 	@RequestMapping("node/query")
 	@ResponseBody
-	public List<OrganNodeVO> queryAvailabledOrganNode(String organTreeId, String organNodeName) {
+	public List<OrganNodeVO> queryAvailabledOrganNode(String organTreeId, String organNodeName,String organNodeType) {
 		OrganNode organNode = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());
-		return organizationService.queryAvailabledDepartmentOrganNode(organTreeId, organNodeName, organNode);
+		return organizationService.queryAvailabledDepartmentOrganNode(organTreeId, organNodeName, organNode,organNodeType);
 	}
 	/**
 	 * @Title: queryAllAvailabledOrganNode 

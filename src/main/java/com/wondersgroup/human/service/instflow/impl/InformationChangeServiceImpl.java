@@ -161,7 +161,7 @@ public class InformationChangeServiceImpl extends GenericServiceImpl<Information
 			merge(temp);
 			
 			String title = "事业单位人员信息变更通知!";
-			String content ="请完善"+temp.getPublicInstitution().getName()+"("+temp.getPublicInstitution().getCardNo() + ")+的职级信息";
+			String content =temp.getPublicInstitution().getName()+"("+temp.getPublicInstitution().getCardNo() + ")的职级信息变更为:"+temp.getName();
 
 			//通知人员信息登记
 			publicInstitutionService.getPublicQuLeadersToNotice(temp.getId(), InformationChange.class.getSimpleName(), title, content);
@@ -202,7 +202,7 @@ public class InformationChangeServiceImpl extends GenericServiceImpl<Information
 	    exp.setFormerUnit(currentUnit.getName());//简历 所在单位
 	    exp.setStartDate(new Date());//简历起始日期
 	    
-	    exp.setIntroduce(alter.getPublicInstitution().getName()+"的职级信息变更为:"+"职级名称:"+alter.getName());
+	    exp.setIntroduce("职级信息变更为:"+alter.getName());
 	    
 	    ptExperienceService.save(exp);
 	    

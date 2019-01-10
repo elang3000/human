@@ -195,7 +195,6 @@
         </smart:buttonScriptAction>
         <smart:dateRender id="jobchangeDate"/>
         form.on('submit(save)', function (data) {//表单保存
-        debugger
             var oldJobLevel='${jobLevel.code.id}';
             var oldIsLeader='${jobLevel.isLeader}';
             var newJobLevel=data.field["newJobLevel.id"];

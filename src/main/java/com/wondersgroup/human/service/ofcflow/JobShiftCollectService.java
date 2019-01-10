@@ -41,7 +41,9 @@ public interface JobShiftCollectService extends GenericService<JobShiftCollect>{
 
 	void updatePromoteFlowB(JobShiftCollect jobShiftCollect, String opinion, String result);
 
-	void checkAndLockFormation(JobShiftCollect jobShiftCollect);
+    void updateDemoteFlowB(JobShiftCollect jobShiftCollect, String opinion, String result);
+
+    void checkAndLockFormation(JobShiftCollect jobShiftCollect);
 
     String createFiles(List<JobShiftB> list, JobShiftCollect jobShiftCollect, String id, HttpServletRequest request);
 }

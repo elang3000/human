@@ -130,7 +130,7 @@ public class JobShiftCollectServiceImpl extends GenericServiceImpl<JobShiftColle
 		if (jobShiftCollect.getFlowRecord() == null) {// 提交环节，先生成流程数据
 			// 设置业务流程发起组织部门
 			jobShiftCollect.setSourceOrganNode(userOrg);
-			jobShiftCollect.setStatus(JobShiftCollect.JOBSHIFT_TOBESUBMIT);//流程状态，待提交
+			jobShiftCollect.setStatus(JobShiftCollect.JOBSHIFT_SUBMIT);//流程状态，待提交
 			flow = new FlowRecord();
 			flow.setAppNodeId(appNode.getId());// 流程业务所在系统
 			flow.setBusId(jobShiftCollect.getId());// 流程业务ID
@@ -275,6 +275,162 @@ public class JobShiftCollectServiceImpl extends GenericServiceImpl<JobShiftColle
 		jobShiftCollect.setFlowRecord(flow);
 		this.update(jobShiftCollect);
 		
+	}
+
+
+	@Override
+	public void updateDemoteFlowB(JobShiftCollect jobShiftCollect, String opinion, String result) {
+		SecurityUser user = userService.load(SecurityUtils.getUserId());// 当前登录人
+		OrganNode userOrg = OrganCacheProvider.getOrganNodeInGovNode(SecurityUtils.getUserId());// 当前登录所在单位
+		AppNode appNode = (AppNode) SecurityUtils.getSession().getAttribute("appNode");
+		if (StringUtils.isBlank(jobShiftCollect.getId())) {
+			save(jobShiftCollect);// 保存业务数据
+		}
+		FlowRecord flow;
+		int flowStep=0;
+		if (jobShiftCollect.getFlowRecord() == null) {// 提交环节，先生成流程数据
+			// 设置业务流程发起组织部门
+			jobShiftCollect.setSourceOrganNode(userOrg);
+			jobShiftCollect.setStatus(JobShiftCollect.JOBSHIFT_SUBMIT);//流程状态，待提交
+			flow = new FlowRecord();
+			flow.setAppNodeId(appNode.getId());// 流程业务所在系统
+			flow.setBusId(jobShiftCollect.getId());// 流程业务ID
+			flow.setBusName("职务变动降职");// 流程业务名称
+			flow.setBusType(FlowBusTypeConstant.FLOW_JOBSHIFT_DEMOTE);// 流程业务类型
+			flow.setTargetOrganNode(userOrg);// 流程业务目标组织
+			flow.setTargetSecurityUser(user);// 流程业务目标人员
+			flow = workflowService.createFlowRecord(flow, JobShiftCollect.JOBSHIFT_DEMOTE_STEP1);// 初始节点
+			//校验编制 并且锁定编制
+			this.checkAndLockFormation(jobShiftCollect);
+		}else {
+			flowStep=JobShiftCollect.allSteps.indexOf(jobShiftCollect.getFlowRecord().getOperationCode());
+            //假如是第二步驳回到第一步
+			if (jobShiftCollect.getFlowRecord().getOperationCode().equals(JobShiftCollect.JOBSHIFT_DEMOTE_STEP2)&&FlowRecord.NOPASS.equals(result)) {
+                //操作编制  放出锁定入编制和锁定出编制
+                executeUnLockFormationAndPost(jobShiftCollect);//返编
+			}
+			if (jobShiftCollect.getFlowRecord().getOperationCode().equals(JobShiftCollect.JOBSHIFTB_PROMOTE_STEP1)) {
+				//校验编制 并且锁定编制
+				this.checkAndLockFormation(jobShiftCollect);
+			}
+
+			flow = jobShiftCollect.getFlowRecord();
+			jobShiftCollect.setStatus(jobShiftCollect.getStatus() + 1);
+			flow.setOpinion(opinion);
+			flow.setResult(result);
+			if (result.equals(FlowRecord.PASS)
+			        && (jobShiftCollect.getFlowRecord().getOperationCode().equals(JobShiftCollect.JOBSHIFTB_PROMOTE_STEP6)
+			                || jobShiftCollect.getFlowRecord().getOperationCode().equals(JobShiftCollect.JOBSHIFTB_PROMOTE_STEP11))) {
+				flow = workflowService.completeFlowRecordByAppoint(flow, jobShiftCollect.getSourceOrganNode());
+			} else {
+				flow = workflowService.completeWorkItem(flow);// 提交下个节点
+			}
+		}
+
+		if (null == flow&&FlowRecord.PASS.equals(result)) {
+
+			//解锁编制
+			executeFinish(jobShiftCollect);
+
+			//获取职务变动列表
+			List<JobShiftB> list = this.jobShiftBService.getShiftByCollectId(jobShiftCollect.getId());
+
+			// 2 发送消息 =====================================================
+			String title = messageSource.getMessage(JobShift.PROMOTE_TITLE, new Object[] {
+					jobShiftCollect.getCollectName()
+			}, Locale.CHINESE);
+			String content = messageSource.getMessage(JobShift.PROMOTE_CONTENT, new Object[] {
+					jobShiftCollect.getCollectName()
+			}, Locale.CHINESE);
+			//发送通知
+			AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, jobShiftCollect.getCreater(), title, content, "")));
+
+			for (JobShiftB jobShiftB : list) {
+				Servant servant = jobShiftB.getServant();
+
+				try {
+					//3 流程结束,插入职务变动子集信息   ===================================================
+					JobChange change = new JobChange();
+					BeanUtils.copyProperties(change, jobShiftB);
+					change.setFormerUnitCode(jobShiftCollect.getSourceOrganNode().getId());
+					change.setFormerUnitName(jobShiftCollect.getSourceOrganNode().getAllName());
+					change.setNewUnitCode(jobShiftCollect.getSourceOrganNode().getId());
+					change.setNewUnitName(jobShiftCollect.getSourceOrganNode().getAllName());
+					change.setNewPostName(jobShiftB.getNewPostName());
+					jobChangeService.save(change);
+
+
+					//4 将之前职务设置为不在任职务,加入新职务子集     ==================================================
+
+					//任职状态,DM215 是 和 否
+					CodeInfo yesCodeInfo = dictableService.getCodeInfoByCode("1", "DM215");
+
+					//任职状态,DM007 表示该人是否任职或不任职
+					CodeInfo inOfficeCodeInfo = dictableService.getCodeInfoByCode("2", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
+					CodeInfo notInOfficeCodeInfo = dictableService.getCodeInfoByCode("1", DictTypeCodeContant.CODE_TYPE_POST_STATUS);
+
+					Post prePost = jobShiftB.getPrePost();
+					//在职状态为不在职
+					prePost.setTenureStatus(notInOfficeCodeInfo);
+					postService.update(prePost);
+
+
+					//插入新post子集,将新职务设置为现任职务
+					Post newPost=new Post();
+					newPost.setServant(servant);
+					newPost.setTenureName(servant.getDepartName());
+					newPost.setAttribute(jobShiftB.getNewPostAttribute());
+					newPost.setPostName(jobShiftB.getNewPostCode().getName());
+					newPost.setPostCode(jobShiftB.getNewPostCode());
+					newPost.setApprovalDate(new Date());
+					//设置任职状态为在任
+					newPost.setTenureStatus(inOfficeCodeInfo);
+					//任职变动类别
+					newPost.setTenureChange(jobShiftB.getPostTenureChange());
+					postService.save(newPost);
+
+
+					CodeInfo newJobLevel = jobShiftB.getNewJobLevel();
+
+
+					//5 判断假如新职级不为空且不和老职级相同则生成新职级并保存到servant当中
+					if(null!=newJobLevel&&newJobLevel.getId()!=servant.getNowJobLevel().getId()){
+						JobLevel jobLevel = new JobLevel();
+						jobLevel.setServant(servant);
+						jobLevel.setName(jobShiftB.getNewJobLevel().getName());
+						jobLevel.setCode(jobShiftB.getNewJobLevel());
+						jobLevel.setApprovalDate(new Date());
+						jobLevel.setCurrentIdentification(yesCodeInfo);
+						jobLevel.setIsLeader(jobShiftB.getIsLeader());//是否领导
+						jobLevel.setRealJobLevelCode(jobShiftB.getRealJobLevelCode());
+						jobLevel.setRealLeader(jobShiftB.getRealLeader());//真实占编的是否领导值
+						jobLevelService.save(jobLevel);
+					}
+
+					//7 增加进出管操作 =============================================
+					ManagerRecordDTO dto = new ManagerRecordDTO(jobShiftB.getServant().getId(), ManagerRecord.HUMAN_ZWBD);
+					ManagerManageRecordEvent event = new ManagerManageRecordEvent(dto);
+					EventManager.send(event);
+
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+
+
+			}
+
+		}else if(null == flow&&FlowRecord.STOP.equals(result)){
+			//假如流程状态为终止 并且操作步骤大于第六步(第七步锁编) 操作编制  放出锁定入编制和锁定出编制
+			executeUnLockFormationAndPost(jobShiftCollect);//返编
+            jobShiftCollect.setStatus(FlowRecord.BUS_STOP);
+			//发送消息
+            String title = messageSource.getMessage("stopFlowTitle", new Object[]{"职务变动"}, Locale.CHINESE);
+            String content = messageSource.getMessage("stopFlowContent", new Object[]{"职务变动"}, Locale.CHINESE);
+            AnnouncementManger.send(new SystemAnnouncementEvent(new AnnouncementEventData(true, jobShiftCollect.getCreater(), title, content, "")));
+		}
+		jobShiftCollect.setFlowRecord(flow);
+		this.update(jobShiftCollect);
+
 	}
 
 

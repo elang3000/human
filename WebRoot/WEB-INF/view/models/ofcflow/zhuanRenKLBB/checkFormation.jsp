@@ -27,7 +27,7 @@
 							<smart:gridColumn colPart="4">
 								<smart:singleSelect labelName="人员来源单位：" name="sourceOrgan.id"
 									isSearch="true" display="block"
-									url="system/organ/node/queryAll?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517"
+									url="system/organ/node/queryAll?organTreeId=394e21fa-1eb6-42ee-ba32-50655fa16517&organNodeType=d_class"
 									isAddDefaltOption="true" initSelectedKey="${d.sourceOrgan.id }"
 									isNotNull="true" verify="required" initDidableKey="${organCode}"></smart:singleSelect>
 							</smart:gridColumn>

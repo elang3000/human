@@ -348,7 +348,7 @@ public class WorkFlowController extends GenericController {
 			seq.setIndex(index);
 			seq.setCode(resource.getCode());
 			seq.setName(resource.getResourceName());
-			if (flowRecord.getBusState() != FlowRecord.BUS_DONE
+			if ((flowRecord.getBusState() != FlowRecord.BUS_DONE && flowRecord.getBusState() != FlowRecord.BUS_STOP)
 			        && StringUtils.equals(resource.getCode(), flowRecord.getOperationCode())) {
 				complete = false;
 				active = true;
@@ -361,12 +361,13 @@ public class WorkFlowController extends GenericController {
 		seq.setCode("END");
 		seq.setName("结束");
 		seq.setIndex(index + 1);
-		seq.setComplete(flowRecord.getBusState() == FlowRecord.BUS_DONE);
+		seq.setComplete(flowRecord.getBusState() == FlowRecord.BUS_DONE || flowRecord.getBusState() == FlowRecord.BUS_STOP);
 		seqs.add(seq);
 		model.addAttribute("seqs", seqs);
 		List<FlowRecordVO> records = flowRecordService.findFlowRecordByBusinessId(flowRecord.getBusId(),
 		        flowRecord.getBusType(),flowRecord.getProcessInstanceId(), false);
 		model.addAttribute("records", records);
+		model.addAttribute("busId", flowRecord.getBusId());
 		return WORKFLOW_DETAIL_INDEX;
 	}
 	

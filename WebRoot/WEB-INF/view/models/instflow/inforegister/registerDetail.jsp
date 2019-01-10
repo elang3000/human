@@ -70,6 +70,9 @@
 						</smart:gridRow>
 					</smart:gridRow>
 					<smart:gridRow>
+					         <smart:gridColumn colPart="4">
+ 							     <smart:textInput labelName="职级:" value="${memberInfoRegister.inforPostName}" name="nativePlaceName" placeholder="籍贯:"></smart:textInput>
+ 					         </smart:gridColumn>
 							<smart:gridColumn colPart="4">
 							  <%-- <smart:continuousSelect verify="required" id="nativePlace" labelName="籍贯："  inputName="nativePlace.id" codeTypeCode="GBT_2260_2007"
 							         inputVal="${memberInfoRegister.publicInstitution.nativePlace.id}"  valType="ID" widthPercent="0.3" isSaveShowName="true" inputShowName="nativePlaceName"/> --%>

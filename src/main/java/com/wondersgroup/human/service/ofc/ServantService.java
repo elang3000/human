@@ -23,6 +23,8 @@ import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.service.GenericService;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.dto.analysis.ServantParam;
+import com.wondersgroup.human.dto.analysis.ServantQueryParam;
+import com.wondersgroup.human.vo.ofc.PeopleVO;
 import com.wondersgroup.human.vo.ofc.ServantVO;
 
 /** 
@@ -78,4 +80,15 @@ public interface ServantService extends GenericService<Servant>{
 	 */
 	public Page<ServantVO> queryServantInfoBySeniorCondation(List<String> pList, List<String> l, Integer page,
 			Integer limit);
+	
+	/** 
+	 * @param m 
+	 * @Title: queryServantInfoBySeniorCondation 
+	 * @Description: 综合查询
+	 * @param page
+	 * @param limit
+	 * @return
+	 * @return: Page<ServantVO>
+	 */
+	public Page<PeopleVO> queryPeopleInfo(ServantQueryParam spList,String itype, Integer page, Integer limit);
 }

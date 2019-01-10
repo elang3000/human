@@ -224,17 +224,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									<smart:gridColumn colPart="8">
 										<smart:continuousSelect id="personType" labelName="人员类别：" inputName="personType.id" codeTypeCode="DM199" inputVal="${servant.personType.id}" valType="ID" widthPercent="0.3333" isNotNull="true" verify="required"/>
 									</smart:gridColumn>
+									
 								</smart:gridRow>
-								<smart:gridRow>
-									<smart:gridColumn colPart="4">
-										<smart:singleSelect labelName="参公标识：" name="servantLaw.id" display="block" url="dictquery/sub/code/DM215" initSelectedKey="${servant.servantLaw.id}" isAddDefaltOption="true"></smart:singleSelect>
-									</smart:gridColumn>
 									<smart:gridColumn colPart="4">
 										<smart:singleSelect labelName="离退标识：" name="isLeavePost.id" display="block" url="dictquery/sub/code/DM215" initSelectedKey="${servant.isLeavePost.id}" isAddDefaltOption="true"></smart:singleSelect>
 									</smart:gridColumn>
-									<smart:gridColumn colPart="4">
-										<%-- <smart:infoShowerLabel infoname="公务员登记号" infovalue="${servant.registerNo}"></smart:infoShowerLabel> --%>
-									</smart:gridColumn>
+								<smart:gridRow>
 								</smart:gridRow>
 								
 								<smart:gridRow>

@@ -189,7 +189,7 @@ public class RecordableRecordServiceImpl extends GenericServiceImpl<RecordableRe
 		}
 */
 		String title = "事业单位人员离退备案通知!!";
-		String content ="请查看"+temp.getPublicInstitution().getName()+"("+temp.getPublicInstitution().getCardNo() + ")+的备案信息";
+		String content ="请查看"+temp.getPublicInstitution().getName()+"("+temp.getPublicInstitution().getCardNo() + ")的备案信息";
 
 		//通知人员信息登记
 		publicInstitutionService.getPublicQuLeadersToNotice(temp.getId(), RecordableRecord.class.getSimpleName(), title, content);

@@ -137,6 +137,10 @@ public class SocialWorkerController extends GenericController {
 			Predicate p = new Predicate("cardNo", Operator.LIKE,socialWorker.getCardNo(), "");
 			filter.add(p);
 		}
+		if(StringUtils.isNotBlank(socialWorker.getDepartName())){//单位部门
+			Predicate p = new Predicate("departName", Operator.LIKE, socialWorker.getDepartName(),"");
+			filter.add(p);
+		}
 		if(socialWorker.getSex()!=null&&StringUtils.isNotBlank(socialWorker.getSex().getId())){//性别
 			Predicate p = new Predicate("sex.id", Operator.EQ,socialWorker.getSex().getId(), "");
 			filter.add(p);

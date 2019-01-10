@@ -30,6 +30,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itextpdf.text.Paragraph;
 import com.wondersgroup.common.contant.CommonConst;
 import com.wondersgroup.framework.console.bo.FrameWorkResource;
 import com.wondersgroup.framework.console.service.FrameWorkService;
@@ -37,6 +38,8 @@ import com.wondersgroup.framework.controller.AjaxResult;
 import com.wondersgroup.framework.controller.GenericController;
 import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.exception.BusinessException;
+import com.wondersgroup.framework.dict.bo.CodeInfo;
+import com.wondersgroup.framework.dict.service.CodeInfoService;
 import com.wondersgroup.framework.organization.bo.OrganNode;
 import com.wondersgroup.framework.organization.provider.OrganCacheProvider;
 import com.wondersgroup.framework.organization.service.OrganizationService;
@@ -48,11 +51,18 @@ import com.wondersgroup.framework.workflow.service.FlowRecordService;
 import com.wondersgroup.framework.workflow.vo.FlowRecordVO;
 import com.wondersgroup.human.bo.instflow.MemberInfoRegister;
 import com.wondersgroup.human.bo.ofc.Servant;
+import com.wondersgroup.human.bo.organization.InstitutionOrgFormation;
+import com.wondersgroup.human.bo.organization.OrgFormation;
+import com.wondersgroup.human.bo.organization.OrgInfo;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 import com.wondersgroup.human.controller.workflow.WorkFlowController.FlowRecordSeq;
 import com.wondersgroup.human.dto.instflow.InfoRegisterQueryParam;
 import com.wondersgroup.human.dto.ofcflow.ResignServantQueryParam;
 import com.wondersgroup.human.service.instflow.MemberInfoRegisterService;
+import com.wondersgroup.human.service.organization.FormationControlService;
+import com.wondersgroup.human.service.organization.InstitutionOrgFormationService;
+import com.wondersgroup.human.service.organization.OrgFormationService;
+import com.wondersgroup.human.service.organization.OrgInfoService;
 import com.wondersgroup.human.service.pubinst.PublicInstitutionService;
 import com.wondersgroup.human.vo.instflow.MemberInfoRegisterVO;
 import com.wondersgroup.system.log.annotation.Log;
@@ -108,7 +118,17 @@ public class InfoRegisterController extends GenericController {
 	private OrganizationService organizationService;
 	
 	@Autowired
+	private CodeInfoService codeInfoService;
+	
+	@Autowired
 	private FrameWorkService frameWorkService;
+	
+	@Autowired
+	private OrgInfoService orgInfoService;
+	
+	@Autowired
+	private InstitutionOrgFormationService institutionOrgFormationService;
+	
 	
 	private static String busType = "MemberInfoRegister";
 	
@@ -196,6 +216,17 @@ public class InfoRegisterController extends GenericController {
 		model.addAttribute("OrganNode", x);
 		model.addAttribute("rootOrgan", root);
 		
+		
+		/**********获取编制信息********************/
+		//查询当前单位编制情况
+		OrgInfo org = orgInfoService.findUniqueBy("organ.id", x.getId());
+		InstitutionOrgFormation institutionOrgFormation = null;
+		if(org!=null){
+			institutionOrgFormation = institutionOrgFormationService.findUniqueBy("orgInfo.id", org.getId());
+					
+		}
+		model.addAttribute("d", institutionOrgFormation);
+		
 		return RETURN_REGISTER_PAGE;
 	}
 	
@@ -219,11 +250,28 @@ public class InfoRegisterController extends GenericController {
 		String r = request.getParameter("result");//审批结果
 		String mid = request.getParameter("mid"); //流程主表id
 		
+		
 		try {
 			if (StringUtils.isBlank(r) || (!FlowRecord.PASS.equals(r)&&!FlowRecord.NOPASS.equals(r))) {
 				throw new BusinessException("审批结果信息不正确！");
 			}
 			if (StringUtils.isBlank(temp.getId())) {
+				
+				CodeInfo nowJobLevel = codeInfoService.load(temp.getNowJobLevel().getId());
+				//验证编制职数
+//				boolean flag = publicInstitutionService.saveFormationControl(nowJobLevel);
+//				if (!flag) {
+//					throw new BusinessException("控编控职没有通过！");
+//				}
+				
+				String postName = "";
+				if (nowJobLevel != null) {
+					CodeInfo parentPost = nowJobLevel.parent;
+					if (parentPost != null) {
+						postName = parentPost.getName() + " " + nowJobLevel.getName();
+					}
+				}
+				
 				DictUtils.operationCodeInfo(temp);//将CodeInfo中id为空的属性 设置为null
 				temp.setId(null);
 				publicInstitutionService.saveRegister(temp,opinion,r, planState, mid);

@@ -87,6 +87,7 @@
 								<smart:tableItem field="sex" width=".1" sort="true">性别</smart:tableItem>
 								<smart:tableItem field="cardNo" width=".2" sort="true">身份证号</smart:tableItem>
 								<smart:tableItem field="departName" width=".2">单位名称</smart:tableItem>
+								<smart:tableItem field="inforPostName" width=".2">职级名称</smart:tableItem>
 								<smart:tableItem field="status" width=".15">状态</smart:tableItem>
 								<smart:tableItem align="center" fixed="right" unresize="true"
 									toolbar="navListToolBar">操作</smart:tableItem>

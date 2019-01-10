@@ -15,6 +15,7 @@
 
 package com.wondersgroup.human.vo.pubinst;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wondersgroup.human.bo.pubinst.PublicInstitution;
 
 /**
@@ -71,11 +72,31 @@ public class PublicInstitutionVO {
 	private String postName;
 	
 	/**
+	 * @fieldName: postName
+	 * @fieldType: java.lang.String
+	 * @Description: 现任职务名称 ,该人担任职务的具体名称。
+	 */
+	private String postAttributeName;
+	
+
+	/**
+	 * @fieldName: jobLevel
+	 * @fieldType: java.lang.String
+	 * @Description: 现职务级别
+	 */
+	private String jobLevel;
+	/**
 	 * @fieldName: isOnHold
 	 * @fieldType: com.wondersgroup.framework.dict.bo.CodeInfo
 	 * @Description: 人员管理状态,DM200 该人在管理上的在职、离退等状态。
 	 */
 	private String isOnHold;
+	
+	/**
+	 * @Description: 列表复选框回显。
+	 */
+	@JsonProperty(value = "LAY_CHECKED")
+	private Boolean LAY_CHECKED;
 	
 	public PublicInstitutionVO(){
 		
@@ -96,6 +117,12 @@ public class PublicInstitutionVO {
 		this.cardNo = p.getCardNoView();//身份证加密
 		this.departName=p.getDepartName();
 		this.postName = p.getNowPostName();
+		if(p.getNowJobLevel() != null){
+			this.jobLevel = p.getNowJobLevel().getName();
+		}
+		if(p.getNowPostAttribute() != null){
+			this.postAttributeName = p.getNowPostAttribute().getName();
+		}
 		if(p.getIsOnHold()!=null){
 			this.isOnHold=p.getIsOnHold().getName();
 		}
@@ -170,4 +197,31 @@ public class PublicInstitutionVO {
 		this.postName = postName;
 	}
 
+	public Boolean getLAY_CHECKED() {
+		return LAY_CHECKED;
+	}
+
+	public void setLAY_CHECKED(Boolean lAY_CHECKED) {
+		LAY_CHECKED = lAY_CHECKED;
+	}
+
+	public String getPostAttributeName() {
+		return postAttributeName;
+	}
+
+	public void setPostAttributeName(String postAttributeName) {
+		this.postAttributeName = postAttributeName;
+	}
+
+	public String getJobLevel() {
+		return jobLevel;
+	}
+
+	public void setJobLevel(String jobLevel) {
+		this.jobLevel = jobLevel;
+	}
+
+	
+	
+	
 }

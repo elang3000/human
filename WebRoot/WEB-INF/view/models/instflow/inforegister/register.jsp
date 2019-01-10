@@ -24,6 +24,7 @@
 				<smart:form action="ofcflow/recruit/employPlan/save">
 					<smart:fromTokenTag/>
 					<smart:gridRow>
+						<%@include file="../inforegister/formation.jsp" %>
 						<smart:gridRow>
 							<smart:title title="人员招录登记上报" style="margin-top: 5px;"
 								color="blue" />
@@ -55,22 +56,23 @@
 						</smart:gridRow>
 						<smart:gridRow>
 							<smart:gridColumn colPart="4">
-								<smart:singleSelect labelName="婚姻状况：" name="marriage.id" initSelectedKey="${servant.marriage.id}" display="block" url="dictquery/sub/code/GBT_2261_2_2003" isAddDefaltOption="true"></smart:singleSelect>
-							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
 								<smart:textInput isNotNull="true" verify="required" labelName="身份证:" value="${recruitemployplan.name}" name="cardNo" placeholder="身份证"></smart:textInput>
 							</smart:gridColumn>
-							<smart:gridColumn colPart="4">
-							    <smart:singleSelect labelName="人员进入方式:" name="intoWay.id" initSelectedKey="${servant.marriage.id}" display="block" url="dictquery/sub/code/SY100" isAddDefaltOption="true"></smart:singleSelect>
+							<smart:gridColumn colPart="8">
+								<smart:continuousSelect verify="required" id="nativePlace" labelName="籍贯：" inputName="nativePlace.id" codeTypeCode="GBT_2260_2007" inputVal="${servant.nativePlace.id}" valType="ID" widthPercent="0.3" isSaveShowName="true" inputShowName="nativePlaceName"/>
 							</smart:gridColumn>
 						</smart:gridRow>
 						<smart:gridRow>
-						   <smart:gridColumn colPart="4">
-								<smart:textInput labelName="备注:" value="${recruitemployplan.remark}" name="personRemark" placeholder="备注"></smart:textInput>
+						    <smart:gridColumn colPart="4">
+							    <smart:singleSelect labelName="人员进入方式:" name="intoWay.id" initSelectedKey="${servant.marriage.id}" display="block" url="dictquery/sub/code/SY100" isAddDefaltOption="true"></smart:singleSelect>
 							</smart:gridColumn>
-						    <smart:gridColumn colPart="8">
-								<smart:continuousSelect verify="required" id="nativePlace" labelName="籍贯：" inputName="nativePlace.id" codeTypeCode="GBT_2260_2007" inputVal="${servant.nativePlace.id}" valType="ID" widthPercent="0.3" isSaveShowName="true" inputShowName="nativePlaceName"/>
-							</smart:gridColumn>
+							<smart:gridColumn colPart="8">
+							   <smart:continuousSelect labelName="职级名称："
+															inputName="nowJobLevel.id" codeTypeCode="GBT_12407_2008/9"
+															inputVal="${jobLevel.code.id}" valType="ID"
+														verify="required" isNotNull="true" widthPercent="0.3"
+														isSaveShowName="true"  allOrLast="last" /> 
+						   </smart:gridColumn>
 							<%-- 
 							<smart:gridColumn colPart="4">
 									<smart:linkSelect labelName="所在区：" id="organTreeIdTag" display="block" />
@@ -80,6 +82,14 @@
 							</smart:gridColumn> 
 							--%>
 						</smart:gridRow>
+						<smart:gridRow>
+						   <smart:gridColumn colPart="4">
+								<smart:singleSelect labelName="婚姻状况：" name="marriage.id" initSelectedKey="${servant.marriage.id}" display="block" url="dictquery/sub/code/GBT_2261_2_2003" isAddDefaltOption="true"></smart:singleSelect>
+							</smart:gridColumn>
+						   <smart:gridColumn colPart="4">
+								<smart:textInput labelName="备注:" value="${recruitemployplan.remark}" name="personRemark" placeholder="备注"></smart:textInput>
+						   </smart:gridColumn>
+					    </smart:gridRow>
 						<smart:gridRow>
 							<smart:line color="blue" />
 							<smart:gridColumn colPart="4" deviceType="md" colOffset="4">

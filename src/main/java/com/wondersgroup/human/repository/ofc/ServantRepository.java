@@ -21,6 +21,8 @@ import com.wondersgroup.framework.core.bo.Page;
 import com.wondersgroup.framework.core.dao.GenericRepository;
 import com.wondersgroup.human.bo.ofc.Servant;
 import com.wondersgroup.human.dto.analysis.ServantParam;
+import com.wondersgroup.human.dto.analysis.ServantQueryParam;
+import com.wondersgroup.human.vo.ofc.PeopleVO;
 import com.wondersgroup.human.vo.ofc.ServantVO;
 
 /** 
@@ -113,6 +115,10 @@ public interface ServantRepository extends GenericRepository<Servant>{
 	 * @return: Map<String,Integer>
 	 */
 	public Map<String, Integer> statistServantisshanghailocal(String isHold,List<String> organNodeIds);
+	
+	
+	public Page<PeopleVO> queryPeopleInfo(ServantQueryParam spList,String itype, Integer page, Integer limit);
+	
 
 	/** 
 	 * @Title: queryServantInfoBySeniorCondation 

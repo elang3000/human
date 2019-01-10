@@ -36,7 +36,11 @@ import com.wondersgroup.human.dto.analysis.ServantParam;
 import com.wondersgroup.human.dto.analysis.ServantQueryParam;
 import com.wondersgroup.human.service.analysis.GeneralQueryService;
 import com.wondersgroup.human.service.ofc.ServantService;
+import com.wondersgroup.human.vo.ofc.PeopleVO;
 import com.wondersgroup.human.vo.ofc.ServantVO;
+import com.wondersgroup.system.log.annotation.Log;
+import com.wondersgroup.system.log.conts.BusinessType;
+import com.wondersgroup.system.log.conts.OperatorType;
 
 /**
  * @ClassName: GeneralQueryController
@@ -62,6 +66,8 @@ public class GeneralQueryController {
 	 */
 	private static final String VIEW_ANALYSIS_GENERALQUERY = "models/analysis/generalQuery/generalQueryList";
 	
+	private static final String VIEW_ANALYSIS_PEOPLEQUERY = "models/analysis/generalQuery/peopleQueryList";
+	
 	/**
 	 * @Title: generalQueryList
 	 * @Description:综合查询信息列表
@@ -74,12 +80,26 @@ public class GeneralQueryController {
 	}
 
 	/**
+	 * 人员综合查询
+	 * @Title: generalQueryList 
+	 * @Description: TODO
+	 * @return
+	 * @return: String
+	 */
+	@RequestMapping("/peopleQueryList")
+	public String peopleQueryList() {
+		return VIEW_ANALYSIS_PEOPLEQUERY;
+	}
+	
+	/**
 	 * 
 	 * @Title: queryList 
 	 * @Description: 综合查询下拉列表
 	 * @return
 	 * @return: List<GeneralQuery>
 	 */
+	@Log(title = "查询综合查询列表", operatorType = OperatorType.MANAGE, businessType = BusinessType.QUERY,
+		     isSaveRequestData = true)
 	@ResponseBody
 	@RequestMapping("/queryList/{category}")
 	public List<GeneralQuery> queryList(@PathVariable(name = "category", required = true) String category) {
@@ -270,5 +290,20 @@ public class GeneralQueryController {
 			break;
 		}
 		return o;
+	}
+	
+	/**
+	 * @Title: query
+	 * @Description: 
+	 * @param 查询条件
+	 * @param limit页大小
+	 * @param page页码
+	 * @return: 
+	 */
+	@ResponseBody
+	@RequestMapping("/peoplequery")
+	public Page<PeopleVO> peoplequery(ServantQueryParam param,Integer limit,Integer page,String itype) {
+		Page<PeopleVO> pageInfo = servantService.queryPeopleInfo(param,itype,page, limit);
+		return pageInfo;
 	}
 }
